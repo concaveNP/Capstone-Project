@@ -12,8 +12,8 @@ public class Inspiration {
     public String imageUid;
     public String description;
     public String name;
-    public Date createdDate;
-    public Date lastUpdate;
+    public Long createdDate;
+    public Long lastUpdate;
 
     public Inspiration() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
