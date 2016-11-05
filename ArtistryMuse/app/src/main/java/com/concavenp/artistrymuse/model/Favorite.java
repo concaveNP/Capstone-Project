@@ -10,7 +10,7 @@ public class Favorite {
 
     public String uid;
     public Double rating;
-    public Date favoriteDate;
+    public Long favoriteDate;
 
     public Favorite() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)

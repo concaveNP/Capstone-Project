@@ -17,8 +17,8 @@ public class User {
     public String username;
     public String name;
     public String description;
-    public Date creationDate;
-    public Date lastUpdateDate;
+    public Long creationDate;
+    public Long lastUpdateDate;
     public String avatarImageUid;
     public List<String> artProjects;
     public List<Favorite> favorites;

@@ -14,13 +14,13 @@ public class ArtProject {
     public String name;
     public String description;
     public Boolean published;
-    public Date publishedDate;
+    public Long publishedDate;
     public Double rating;
     public Integer rates;
     public Integer views;
     public Integer favorited;
-    public Date creationDate;
-    public Date lastUpdate;
+    public Long creationDate;
+    public Long lastUpdate;
     public String mainImageUid;
     public List<Inspiration> inspirations;
 
