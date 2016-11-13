@@ -7,6 +7,12 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.concavenp.artistrymuse.fragments.ArtistryFragmentPagerAdapter;
+import com.concavenp.artistrymuse.fragments.FavoritesFragment;
+import com.concavenp.artistrymuse.fragments.FollowingFragment;
+import com.concavenp.artistrymuse.fragments.GalleryFragment;
+import com.concavenp.artistrymuse.fragments.SearchFragment;
+
 public class MainActivity extends AppCompatActivity implements
         FollowingFragment.OnFragmentInteractionListener,
         FavoritesFragment.OnFragmentInteractionListener,

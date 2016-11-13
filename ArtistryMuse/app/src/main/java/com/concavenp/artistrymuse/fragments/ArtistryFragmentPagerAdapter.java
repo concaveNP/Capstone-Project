@@ -1,4 +1,4 @@
-package com.concavenp.artistrymuse;
+package com.concavenp.artistrymuse.fragments;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
