@@ -1,3 +1,11 @@
 <resources>
+
     <string name="app_name">ArtistryMuse</string>
+
+    <!--Strings used to name the tabs within the AppBar of the main activity-->
+    <string name="following">Following</string>
+    <string name="favorites">Favorites</string>
+    <string name="search">Search</string>
+    <string name="gallery">Gallery</string>
+
 </resources>
