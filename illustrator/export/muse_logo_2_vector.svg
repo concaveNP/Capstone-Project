@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <title>ic_material_product_icon_192px</title>
+  <rect x="21.54006" y="21.19904" width="148.97826" height="148.97826" rx="12" ry="12" style="fill: #78909c;stroke: #231f20;stroke-miterlimit: 10;stroke-width: 5px"/>
+  <rect x="78.31534" y="38.57749" width="3.98684" height="114.22136" transform="translate(135.20407 207.90326) rotate(-166.06183)" style="stroke: #231f20;stroke-linecap: round;stroke-linejoin: round"/>
+  <rect x="109.69782" y="38.57749" width="3.98684" height="114.22136" transform="translate(-19.76025 29.72101) rotate(-13.93817)" style="stroke: #231f20;stroke-linecap: round;stroke-linejoin: round"/>
+  <rect x="76.89583" y="56.60417" width="39.375" height="3.95833" style="stroke: #231f20;stroke-linecap: round;stroke-linejoin: round"/>
+  <rect x="61.79167" y="114.64583" width="73.54167" height="3.95833" style="stroke: #231f20;stroke-linecap: round;stroke-linejoin: round"/>
+  <rect x="44.08333" y="61.70833" width="105" height="51.79167" style="fill: #fc9;stroke: #231f20;stroke-miterlimit: 10;stroke-width: 2px"/>
+  <text transform="translate(45.79102 100.48633) scale(0.98398 1)" style="font-size: 44.39051055908203px;fill: #bf360c;font-family: ComicSansMS, Comic Sans MS">muse</text>
+</svg>
