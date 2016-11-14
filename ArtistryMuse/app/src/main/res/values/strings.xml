@@ -90,5 +90,9 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="configure">Configure</string>
     <string name="add_widget">Add widget</string>
+    <string name="LoginName">Login</string>
+    <string name="LoginPassword">Password</string>
+    <string name="LoginButton">Login</string>
+    <string name="LoginSignup">Sign Up</string>
 
 </resources>

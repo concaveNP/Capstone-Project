@@ -1,5 +1,6 @@
 package com.concavenp.artistrymuse;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,4 +27,8 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    public void onLogin(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }

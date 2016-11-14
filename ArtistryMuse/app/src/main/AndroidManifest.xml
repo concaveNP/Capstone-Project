@@ -8,13 +8,32 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+
+        <activity
+            android:name=".LoginActivity"
+            >
+            <!--TODO: donno what to set for "launcher" activities or how to distinguish between being logged in or not - determines what activity to launch-->
+            <!--android:label="@string/title_activity_login"-->
+            <!--android:theme="@style/AppTheme"-->
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
+        <activity
+            android:name=".MainActivity">
+
+            <!--TODO: donno what to set for "launcher" activities or how to distinguish between being logged in or not - determines what activity to launch-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+
+        </activity>
+
         <activity
             android:name=".ProjectActivity"
             android:label="@string/title_activity_project"
@@ -24,6 +43,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.concavenp.artistrymuse.MainActivity" />
         </activity>
+
         <activity
             android:name=".InspirationActivity"
             android:label="@string/title_activity_inspiration"
@@ -33,6 +53,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.concavenp.artistrymuse.ProjectActivity" />
         </activity>
+
         <activity
             android:name=".DetailsActivity"
             android:label="@string/title_activity_details"
@@ -42,10 +63,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.concavenp.artistrymuse.MainActivity" />
         </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme" />
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -70,6 +88,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
