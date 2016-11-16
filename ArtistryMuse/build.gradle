@@ -3,6 +3,8 @@
 buildscript {
     repositories {
         jcenter()
+//        TODO: what does mavenLocal do?
+        mavenLocal()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
@@ -18,6 +20,8 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+        mavenLocal()
     }
 }
 
