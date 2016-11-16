@@ -94,5 +94,6 @@
     <string name="LoginPassword">Password</string>
     <string name="LoginButton">Login</string>
     <string name="LoginSignup">Sign Up</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
