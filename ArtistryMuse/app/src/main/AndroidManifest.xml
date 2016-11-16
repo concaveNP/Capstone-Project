@@ -10,8 +10,8 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".LoginActivity"
-            >
+            android:name=".LoginActivity" >
+
             <!--TODO: donno what to set for "launcher" activities or how to distinguish between being logged in or not - determines what activity to launch-->
             <!--android:label="@string/title_activity_login"-->
             <!--android:theme="@style/AppTheme"-->
