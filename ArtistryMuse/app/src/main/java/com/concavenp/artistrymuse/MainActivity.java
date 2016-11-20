@@ -3,6 +3,7 @@ package com.concavenp.artistrymuse;
 import android.content.Intent;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.annotation.MainThread;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -17,6 +18,13 @@ import com.concavenp.artistrymuse.fragments.FavoritesFragment;
 import com.concavenp.artistrymuse.fragments.FollowingFragment;
 import com.concavenp.artistrymuse.fragments.GalleryFragment;
 import com.concavenp.artistrymuse.fragments.SearchFragment;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
 public class MainActivity extends AppCompatActivity implements
         FollowingFragment.OnFragmentInteractionListener,
@@ -27,6 +35,24 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        // Start the login Activity if needed
+        if (auth.getCurrentUser() == null) {
+
+            // TODO: what is RC_SING_IN used for
+            // TODO: the SVG is not apparently going to work here, need an png export of the logo
+            startActivityForResult(
+                    AuthUI.getInstance().createSignInIntentBuilder()
+                            .setLogo(R.drawable.ic_muse_logo_1_vector)
+                            .setProviders(getSelectedProviders())
+                            .setIsSmartLockEnabled(true)
+                            .build(),
+                    RC_SIGN_IN);
+
+        }
+
         setContentView(R.layout.activity_main);
 
         // If the application has not run before then initialize the preference settings with default values
@@ -46,6 +72,18 @@ public class MainActivity extends AppCompatActivity implements
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @MainThread
+    private List<AuthUI.IdpConfig> getSelectedProviders() {
+        List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
+
+        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
+        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER) .build());
+        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
+        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
+
+        return selectedProviders;
     }
 
     @Override
