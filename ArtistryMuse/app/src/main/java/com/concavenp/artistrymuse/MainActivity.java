@@ -1,9 +1,13 @@
 package com.concavenp.artistrymuse;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.MainThread;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -19,6 +23,8 @@ import com.concavenp.artistrymuse.fragments.FollowingFragment;
 import com.concavenp.artistrymuse.fragments.GalleryFragment;
 import com.concavenp.artistrymuse.fragments.SearchFragment;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -72,6 +78,10 @@ public class MainActivity extends AppCompatActivity implements
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        // Setup the support for creating a menu (ActionBar functionality)
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     @MainThread
@@ -101,11 +111,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        boolean result = false;
+        boolean result;
 
         switch (item.getItemId()) {
 
-            case R.id.action_settings:
+            case R.id.action_settings: {
 
                 // User chose the "Settings" item, show the app settings UI...
 
@@ -114,15 +124,50 @@ public class MainActivity extends AppCompatActivity implements
 
                 result = true;
 
-            default:
+                break;
+
+            }
+            case R.id.action_logoff: {
+
+                // User wants to logoff of the backend service
+
+                AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            recreate();
+                        } else {
+                            showSnackbar(R.string.sign_out_failed);
+                        }
+                    }
+                });
+
+                result = true;
+
+                break;
+
+            }
+            default: {
+
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 result = super.onOptionsItemSelected(item);
+
+                break;
+
+            }
 
         }
 
         return result;
 
+    }
+
+    @MainThread
+    private void showSnackbar(@StringRes int errorMessageRes) {
+        Snackbar.make(findViewById(R.id.coordinatorLayout), errorMessageRes, Snackbar.LENGTH_LONG).show();
     }
 
 }
