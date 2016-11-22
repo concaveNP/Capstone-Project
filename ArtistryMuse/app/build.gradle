@@ -29,14 +29,22 @@ dependencies {
 
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    // TODO: don't this I need this anymore as every other library is specified individually
 //    compile 'com.google.firebase:firebase-core:9.8.0'
+
+    // Support for Firebase Authentication for both backend and frontend
     compile 'com.google.firebase:firebase-auth:9.8.0'
     compile 'com.google.android.gms:play-services-auth:9.8.0'
+    compile 'com.firebaseui:firebase-ui-auth:1.0.0'
+
+    // Support for Firebase Storage
+    compile 'com.google.firebase:firebase-storage:9.8.0'
+
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:support-vector-drawable:24.2.1'
     testCompile 'junit:junit:4.12'
-    compile 'com.firebaseui:firebase-ui-auth:1.0.0'
 
 }
 
