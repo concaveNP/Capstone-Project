@@ -17,6 +17,8 @@ import com.concavenp.artistrymuse.MainActivity;
 import com.concavenp.artistrymuse.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -29,6 +31,8 @@ public class UploadService extends BaseTaskService {
     private static final int NOTIF_ID_DOWNLOAD = 0;
 
     private StorageReference mStorageRef;
+    private FirebaseUser mUser;
+    private String mUid;
 
     /** Intent Actions **/
     public static final String ACTION_UPLOAD = "action_upload";
@@ -52,6 +56,13 @@ public class UploadService extends BaseTaskService {
 
         // Initialize Storage
         mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        // Get the authenticated user
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (mUser != null) {
+            mUid = mUser.getUid();
+        }
 
     }
 
@@ -90,8 +101,9 @@ public class UploadService extends BaseTaskService {
         taskStarted();
         showUploadProgressNotification();
 
+        // TODO: this comment is somewhat confusing... getting the ref before uploading the file?
         // Get a reference to store file at photos/<FILENAME>.jpg
-        final StorageReference photoRef = mStorageRef.child("photos").child(fileUri.getLastPathSegment());
+        final StorageReference photoRef = mStorageRef.child(getString(R.string.users_directory_name)).child(mUid).child(fileUri.getLastPathSegment());
 
         // Upload file to Firebase Storage
         Log.d(TAG, "uploadFromUri:dst:" + photoRef.getPath());

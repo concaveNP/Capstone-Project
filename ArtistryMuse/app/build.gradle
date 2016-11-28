@@ -41,6 +41,9 @@ dependencies {
     // Support for Firebase Storage
     compile 'com.google.firebase:firebase-storage:9.8.0'
 
+    // Permissions support
+    compile 'pub.devrel:easypermissions:0.2.0'
+
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:support-vector-drawable:24.2.1'
