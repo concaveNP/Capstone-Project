@@ -88,6 +88,7 @@ public class UploadService extends BaseTaskService {
             Uri fileUri = intent.getParcelableExtra(EXTRA_FILE_URI);
             uploadFromUri(fileUri);
 
+
         }
 
         return START_REDELIVER_INTENT;
