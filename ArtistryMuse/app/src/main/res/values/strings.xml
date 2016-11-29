@@ -99,5 +99,6 @@
     <string name="sign_out_failed">Signing out has failed</string>
     <string name="users_directory_name">users</string>
     <string name="rationale_storage">This is going to read/write files from storage for photo use</string>
+    <string name="project">Project</string>
 
 </resources>
