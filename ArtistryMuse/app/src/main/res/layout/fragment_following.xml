@@ -16,10 +16,10 @@
             android:text="@string/following" />
 
         <Button
-            android:text="Upload"
+            android:text="Start Project Activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/button_upload" />
+            android:id="@+id/start_project_activity" />
 
     </LinearLayout>
 
