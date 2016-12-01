@@ -82,6 +82,12 @@
             android:exported="false">
         </service>
 
+        <service
+            android:name=".services.DownloadService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
+
         <!--
           Android N SDK has new restrictions around sharing file:// URIs
           https://developer.android.com/reference/android/support/v4/content/FileProvider.html#ProviderDefinition

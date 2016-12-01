@@ -86,6 +86,7 @@ public class UploadService extends BaseTaskService {
         if (ACTION_UPLOAD.equals(intent.getAction())) {
 
             Uri fileUri = intent.getParcelableExtra(EXTRA_FILE_URI);
+
             uploadFromUri(fileUri);
 
 
