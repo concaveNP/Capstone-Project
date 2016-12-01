@@ -21,18 +21,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.concavenp.artistrymuse.services.DownloadService;
 import com.concavenp.artistrymuse.services.UploadService;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -97,22 +95,22 @@ public class ProjectActivity extends AppCompatActivity implements View.OnClickLi
                 hideProgressDialog();
 
                 switch (intent.getAction()) {
-//                    case DownloadService.DOWNLOAD_COMPLETED:
-//                        // Get number of bytes downloaded
-//                        long numBytes = intent.getLongExtra(MyDownloadService.EXTRA_BYTES_DOWNLOADED, 0);
-//
-//                        // Alert success
-//                        showMessageDialog(getString(R.string.success), String.format(Locale.getDefault(),
-//                                "%d bytes downloaded from %s",
-//                                numBytes,
-//                                intent.getStringExtra(MyDownloadService.EXTRA_DOWNLOAD_PATH)));
-//                        break;
-//                    case DownloadService.DOWNLOAD_ERROR:
-//                        // Alert failure
-//                        showMessageDialog("Error", String.format(Locale.getDefault(),
-//                                "Failed to download from %s",
-//                                intent.getStringExtra(MyDownloadService.EXTRA_DOWNLOAD_PATH)));
-//                        break;
+                    case DownloadService.DOWNLOAD_COMPLETED:
+                        // Get number of bytes downloaded
+                        long numBytes = intent.getLongExtra(DownloadService.EXTRA_BYTES_DOWNLOADED, 0);
+
+                        // Alert success
+                        showMessageDialog("Success", String.format(Locale.getDefault(),
+                                "%d bytes downloaded from %s",
+                                numBytes,
+                                intent.getStringExtra(DownloadService.EXTRA_DOWNLOAD_FILENAME)));
+                        break;
+                    case DownloadService.DOWNLOAD_ERROR:
+                        // Alert failure
+                        showMessageDialog("Error", String.format(Locale.getDefault(),
+                                "Failed to download from %s",
+                                intent.getStringExtra(DownloadService.EXTRA_DOWNLOAD_FILENAME)));
+                        break;
                     case UploadService.UPLOAD_COMPLETED:
                     case UploadService.UPLOAD_ERROR:
                         onUploadResultIntent(intent);
@@ -143,7 +141,7 @@ public class ProjectActivity extends AppCompatActivity implements View.OnClickLi
 
         // Register receiver for uploads and downloads
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this);
-//        manager.registerReceiver(mBroadcastReceiver, MyDownloadService.getIntentFilter());
+        manager.registerReceiver(mBroadcastReceiver, DownloadService.getIntentFilter());
         manager.registerReceiver(mBroadcastReceiver, UploadService.getIntentFilter());
     }
 
@@ -194,14 +192,14 @@ public class ProjectActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void beginDownload() {
-        // Get path
-        String path = "photos/" + mFileUri.getLastPathSegment();
+        // Get filename
+        String filename = mFileUri.getLastPathSegment();
 
-//        // Kick off MyDownloadService to download the file
-//        Intent intent = new Intent(this, MyDownloadService.class)
-//                .putExtra(MyDownloadService.EXTRA_DOWNLOAD_PATH, path)
-//                .setAction(MyDownloadService.ACTION_DOWNLOAD);
-//        startService(intent);
+        // Kick off MyDownloadService to download the file
+        Intent intent = new Intent(this, DownloadService.class)
+                .putExtra(DownloadService.EXTRA_DOWNLOAD_FILENAME, filename)
+                .setAction(DownloadService.ACTION_DOWNLOAD);
+        startService(intent);
 
         // Show loading spinner
         showProgressDialog();
@@ -212,13 +210,13 @@ public class ProjectActivity extends AppCompatActivity implements View.OnClickLi
     private void launchCamera() {
         Log.d(TAG, "launchCamera");
 
+        // TODO: what is up with this, need to use the android string for this instead of hardcoded one
         // Check that we have permission to read images from external storage.
 //        public static final String WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE";
 //        String perm = Manifest.permission.WRITE_EXTERNAL_STORAGE;
         String perm = "android.permission.WRITE_EXTERNAL_STORAGE";
         if (!EasyPermissions.hasPermissions(this, perm)) {
-            EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage),
-                    RC_STORAGE_PERMS, perm);
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_storage), RC_STORAGE_PERMS, perm);
             return;
         }
 
@@ -238,20 +236,18 @@ public class ProjectActivity extends AppCompatActivity implements View.OnClickLi
 
         // Create content:// URI for file, required since Android N
         // See: https://developer.android.com/reference/android/support/v4/content/FileProvider.html
-        mFileUri = FileProvider.getUriForFile(this,
-                "com.concavenp.artistrymuse.fileprovider", file);
+        mFileUri = FileProvider.getUriForFile(this, "com.concavenp.artistrymuse.fileprovider", file);
 
         // Create and launch the intent
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
 
         // Grant permission to camera (this is required on KitKat and below)
-        List<ResolveInfo> resolveInfos = getPackageManager()
-                .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        List<ResolveInfo> resolveInfos = getPackageManager() .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
         for (ResolveInfo resolveInfo : resolveInfos) {
             String packageName = resolveInfo.activityInfo.packageName;
-            grantUriPermission(packageName, mFileUri,
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            grantUriPermission(packageName, mFileUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
 
         // Start picture-taking intent
@@ -259,7 +255,7 @@ public class ProjectActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void onUploadResultIntent(Intent intent) {
-        // Got a new intent from MyUploadService with a success or failure
+        // Got a new intent from UploadService with a success or failure
         mDownloadUrl = intent.getParcelableExtra(UploadService.EXTRA_DOWNLOAD_URL);
         mFileUri = intent.getParcelableExtra(UploadService.EXTRA_FILE_URI);
 
