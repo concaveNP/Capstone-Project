@@ -1,32 +1,20 @@
 package com.concavenp.artistrymuse.fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.concavenp.artistrymuse.ProjectActivity;
 import com.concavenp.artistrymuse.R;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
+import com.concavenp.artistrymuse.fragments.viewholder.FollowingViewHolder;
+import com.concavenp.artistrymuse.model.Following;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DatabaseReference;
 
 
 /**
@@ -50,6 +38,14 @@ public class FollowingFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    // [START define_database_reference]
+    private DatabaseReference mDatabase;
+    // [END define_database_reference]
+
+    private FirebaseRecyclerAdapter<Following, FollowingViewHolder> mAdapter;
+    private RecyclerView mRecycler;
+    private LinearLayoutManager mManager;
 
     public FollowingFragment() {
         // Required empty public constructor
@@ -88,23 +84,20 @@ public class FollowingFragment extends Fragment {
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_following, container, false);
 
-        Button uploadButton = (Button) mainView.findViewById(R.id.start_project_activity);
-        uploadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ProjectActivity.class);
-                startActivity(intent);
-            }
-        });
+//        mDatabase = FirebaseDatabase.getInstance().getReference();
+//
+//        mRecycler = (RecyclerView) rootView.findViewById(R.id.messages_list);
+//        mRecycler.setHasFixedSize(true);
+
+
+
+
+
+
+
+
 
         return mainView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
