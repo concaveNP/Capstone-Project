@@ -4,23 +4,36 @@
     android:layout_height="match_parent"
     tools:context="com.concavenp.artistrymuse.fragments.FollowingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/following" />
-
-        <Button
-            android:text="Start Project Activity"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/start_project_activity" />
+            android:layout_height="match_parent"
+            android:scrollbarStyle="outsideOverlay" />
 
-    </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <!--&lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
+    <!--<LinearLayout-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/following" />-->
+
+        <!--<Button-->
+            <!--android:text="Start Project Activity"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/start_project_activity" />-->
+
+    <!--</LinearLayout>-->
 
 </FrameLayout>
