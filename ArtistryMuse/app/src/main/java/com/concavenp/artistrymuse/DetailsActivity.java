@@ -9,6 +9,8 @@ import android.view.View;
 
 public class DetailsActivity extends AppCompatActivity {
 
+    public static final String EXTRA_UID_KEY = "extra_uid_key";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

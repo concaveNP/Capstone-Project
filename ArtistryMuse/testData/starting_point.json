@@ -5,8 +5,8 @@
       "username": "JaDoe",
       "name": "Jane Doe",
       "description": "These are my Art Projects...",
-      "creationDate": "1478300649053",
-      "lastUpdatedDate": "1478301049649",
+      "creationDate": 1478300649053,
+      "lastUpdatedDate": 1478301049649,
       "avatarImageUid": "04a7b062-fcac-4d1d-9b4c-6823f9426ad1",
       "artProjects": [
         {
@@ -20,22 +20,22 @@
         {
           "uid": "82eb2b87-aaa2-4ae8-bc75-56d45616b14c",
           "rating": "2.4",
-          "favoritedDate": "1478301769095"
+          "favoritedDate": 1478301769095
         },
         {
           "uid": "09697c9f-2e19-4ef8-86fb-f8fdbcad7c88",
           "rating": "1.9",
-          "favoritedDate": "1478301790849"
+          "favoritedDate": 1478301790849
         }
       ],
       "following": [
         {
           "uid": "2b1d3365-118d-4dd7-9803-947a7103c730",
-          "lastUpdatedDate": "1478301595413"
+          "lastUpdatedDate": 1478301595413
         },
         {
           "uid": "42452ad7-2bfd-4020-92cf-6461570e9c03",
-          "lastUpdatedDate": "1478301690326"
+          "lastUpdatedDate": 1478301690326
         }
       ]
     },
@@ -44,8 +44,8 @@
       "username": "BabyDoe",
       "name": "Baby Doe",
       "description": "These are my Art Projects...",
-      "creationDate": "1478300649953",
-      "lastUpdatedDate": "1478301049999",
+      "creationDate": 1478300649953,
+      "lastUpdatedDate": 1478301049999,
       "avatarImageUid": "04a7b062-fcac-4444-9b4c-6823f9426ad1",
       "artProjects": [
         {
@@ -59,22 +59,22 @@
         {
           "uid": "82eb2b87-aaa2-4ae8-bc75-56d45616b14c",
           "rating": "2.4",
-          "favoritedDate": "1478301769095"
+          "favoritedDate": 1478301769095
         },
         {
           "uid": "09697c9f-2a19-4ef8-86fb-f8fdbcad7c88",
           "rating": "1.9",
-          "favoritedDate": "1478301790849"
+          "favoritedDate": 1478301790849
         }
       ],
       "following": [
         {
           "uid": "2a1d3365-118d-4dd7-9803-947a7103c730",
-          "lastUpdatedDate": "1478301595413"
+          "lastUpdatedDate": 1478301595413
         },
         {
           "uid": "2b1d3365-118d-4dd7-9803-947a7103c730",
-          "lastUpdatedDate": "1478301690326"
+          "lastUpdatedDate": 1478301690326
         }
       ]
     },
@@ -83,8 +83,8 @@
       "username": "JDoe",
       "name": "John Doe",
       "description": "This is an example piece of work by John Doe.  This is the description for his Art Projects",
-      "creationDate": "1478300645053",
-      "lastUpdatedDate": "1478301040649",
+      "creationDate": 1478300645053,
+      "lastUpdatedDate": 1478301040649,
       "avatarImageUid": "04e7b062-fcac-4d1d-9b4c-6823f9426ad1",
       "artProjects": [
         {
@@ -98,22 +98,22 @@
         {
           "uid": "82eb2b87-aaa2-4ae8-bc75-56d45616b14c",
           "rating": "4.2",
-          "favoritedDate": "1478301760095"
+          "favoritedDate": 1478301760095
         },
         {
           "uid": "09697c9f-2a19-4ef8-86fb-f8fdbcad7c88",
           "rating": "9.1",
-          "favoritedDate": "1478301799849"
+          "favoritedDate": 1478301799849
         }
       ],
       "following": [
         {
           "uid": "2a1d3365-118d-4dd7-9803-947a7103c730",
-          "lastUpdatedDate": "1478301555413"
+          "lastUpdatedDate": 1478301555413
         },
         {
           "uid": "424522d7-2bfd-4020-92cf-6461570e9c03",
-          "lastUpdatedDate": "1478301600326"
+          "lastUpdatedDate": 1478301600326
         }
       ]
     }
@@ -125,13 +125,13 @@
       "name": "Jane Doe's first Project",
       "description": "This is an example piece of work by Jane Doe.  This is the description for her Art Projects",
       "published": "true",
-      "publishedDate": "1478321740406",
+      "publishedDate": 1478321740406,
       "rating": "3.4",
       "ratingsCount": "42",
       "views": "191",
       "favorited": "14",
-      "creationDate": "1478300649353",
-      "lastUpdatedDate": "1478301349649",
+      "creationDate": 1478300649353,
+      "lastUpdatedDate": 1478301349649,
       "mainImageUid": "0a842bd3-8d61-4bdd-b38e-13b3b1d2e62e",
       "inspirations": [
         {
@@ -139,16 +139,16 @@
           "imageUid": "e4ff7abc-be47-4d58-a87a-efb93b9e1b4f",
           "description": "This is what inspired me 1",
           "name": "Jane Doe's first inspiration",
-          "creationDate": "1478300949353",
-          "lastUpdatedDate": "1478391349649"
+          "creationDate": 1478300949353,
+          "lastUpdatedDate": 1478391349649
         },
         {
           "uid": "e4ff7abc-be47-4d58-a879-aab93b9e1b4f",
           "imageUid": "e4ff7abc-be47-4d58-a87a-eeb93b9e1b4f",
           "description": "This is what inspired me 2",
           "name": "Jane Doe's second inspiration",
-          "creationDate": "1478300949443",
-          "lastUpdatedDate": "1478391355649"
+          "creationDate": 1478300949443,
+          "lastUpdatedDate": 1478391355649
         }
       ]
     },
@@ -158,13 +158,13 @@
       "name": "Jane Doe's second Project",
       "description": "This is an example piece of work by Jane Doe.  This is the description for her Art Projects",
       "published": "true",
-      "publishedDate": "1478321748886",
+      "publishedDate": 1478321748886,
       "rating": "3.4",
       "ratingsCount": "42",
       "views": "191",
       "favorited": "14",
-      "creationDate": "1478300649353",
-      "lastUpdatedDate": "1478301349649",
+      "creationDate": 1478300649353,
+      "lastUpdatedDate": 1478301349649,
       "mainImageUid": "03baa2f6-1966-4030-b70b-35a44e16a2d3",
       "inspirations": [
         {
@@ -172,16 +172,16 @@
           "imageUid": "e4ff7abc-be47-4d58-a87a-efb93b9e1b4f",
           "description": "This is what inspired me 1",
           "name": "Jane Doe's first inspiration",
-          "creationDate": "1478300949353",
-          "lastUpdatedDate": "1478391349649"
+          "creationDate": 1478300949353,
+          "lastUpdatedDate": 1478391349649
         },
         {
           "uid": "8fd955a1-f8d3-4b9e-925b-3c3c8ea119bd",
           "imageUid": "e4ff7abc-be47-4d58-a87a-eeb93b9e1b4f",
           "description": "This is what inspired me 2",
           "name": "Jane Doe's second inspiration",
-          "creationDate": "1478300949443",
-          "lastUpdatedDate": "1478391355649"
+          "creationDate": 1478300949443,
+          "lastUpdatedDate": 1478391355649
         }
       ]
     },
@@ -191,13 +191,13 @@
       "name": "Baby Doe's first Project",
       "description": "This is an example piece of work by Baby Doe.  This is the description for her Art Projects",
       "published": "true",
-      "publishedDate": "1478321740406",
+      "publishedDate": 1478321740406,
       "rating": "3.4",
       "ratingsCount": "42",
       "views": "191",
       "favorited": "14",
-      "creationDate": "1478300649353",
-      "lastUpdatedDate": "1478301349649",
+      "creationDate": 1478300649353,
+      "lastUpdatedDate": 1478301349649,
       "mainImageUid": "0a842bd3-8d61-4bdd-b38e-13b3b1d2e62e",
       "inspirations": [
         {
@@ -205,16 +205,16 @@
           "imageUid": "e4ff7abc-be47-4d58-a87a-efb93b9e1b4f",
           "description": "This is what inspired me 1",
           "name": "Baby Doe's first inspiration",
-          "creationDate": "1478300949353",
-          "lastUpdatedDate": "1478391349649"
+          "creationDate": 1478300949353,
+          "lastUpdatedDate": 1478391349649
         },
         {
           "uid": "de896110-997c-4977-8182-f6203c2ec90e",
           "imageUid": "e4ff7abc-be47-4d58-a87a-eeb93b9e1b4f",
           "description": "This is what inspired me 2",
           "name": "Baby Doe's second inspiration",
-          "creationDate": "1478300949443",
-          "lastUpdatedDate": "1478391355649"
+          "creationDate": 1478300949443,
+          "lastUpdatedDate": 1478391355649
         }
       ]
     },
@@ -224,13 +224,13 @@
       "name": "Baby Doe's second Project",
       "description": "This is an example piece of work by Baby Doe.  This is the description for her Art Projects",
       "published": "true",
-      "publishedDate": "1478321748886",
+      "publishedDate": 1478321748886,
       "rating": "3.4",
       "ratingsCount": "42",
       "views": "191",
       "favorited": "14",
-      "creationDate": "1478300649353",
-      "lastUpdatedDate": "1478301349649",
+      "creationDate": 1478300649353,
+      "lastUpdatedDate": 1478301349649,
       "mainImageUid": "03baa2f6-1966-4030-b70b-35a44e16a2d3",
       "inspirations": [
         {
@@ -238,16 +238,16 @@
           "imageUid": "e4ff7abc-be47-4d58-a87a-efb93b9e1b4f",
           "description": "This is what inspired me 1",
           "name": "Baby Doe's first inspiration",
-          "creationDate": "1478300949353",
-          "lastUpdatedDate": "1478391349649"
+          "creationDate": 1478300949353,
+          "lastUpdatedDate": 1478391349649
         },
         {
           "uid": "de0ca516-81a8-493f-9468-d26e0996c8f1",
           "imageUid": "e4ff7abc-be47-4d58-a87a-eeb93b9e1b4f",
           "description": "This is what inspired me 2",
           "name": "Baby Doe's second inspiration",
-          "creationDate": "1478300949443",
-          "lastUpdatedDate": "1478391355649"
+          "creationDate": 1478300949443,
+          "lastUpdatedDate": 1478391355649
         }
       ]
     },
@@ -257,13 +257,13 @@
       "name": "John Doe's first Project",
       "description": "This is an example piece of work by John Doe.  This is the description for his Art Projects",
       "published": "true",
-      "publishedDate": "1478321740406",
+      "publishedDate": 1478321740406,
       "rating": "3.4",
       "ratingsCount": "42",
       "views": "191",
       "favorited": "14",
-      "creationDate": "1478300649353",
-      "lastUpdatedDate": "1478301349649",
+      "creationDate": 1478300649353,
+      "lastUpdatedDate": 1478301349649,
       "mainImageUid": "0a842bd3-8d61-4bdd-b38e-13b3b1d2e62e",
       "inspirations": [
         {
@@ -271,16 +271,16 @@
           "imageUid": "e4ff7abc-be47-4d58-a87a-efb93b9e1b4f",
           "description": "This is what inspired me 1",
           "name": "John Doe's first inspiration",
-          "creationDate": "1478300949353",
-          "lastUpdatedDate": "1478391349649"
+          "creationDate": 1478300949353,
+          "lastUpdatedDate": 1478391349649
         },
         {
           "uid": "8cd80963-6503-4a7e-bd95-8bff6c1ae829",
           "imageUid": "e4ff7abc-be47-4d58-a87a-eeb93b9e1b4f",
           "description": "This is what inspired me 2",
           "name": "John Doe's second inspiration",
-          "creationDate": "1478300949443",
-          "lastUpdatedDate": "1478391355649"
+          "creationDate": 1478300949443,
+          "lastUpdatedDate": 1478391355649
         }
       ]
     },
@@ -290,13 +290,13 @@
       "name": "John Doe's second Project",
       "description": "This is an example piece of work by John Doe.  This is the description for his Art Projects",
       "published": "true",
-      "publishedDate": "1478321748886",
+      "publishedDate": 1478321748886,
       "rating": "3.4",
       "ratingsCount": "42",
       "views": "191",
       "favorited": "14",
-      "creationDate": "1478300649353",
-      "lastUpdatedDate": "1478301349649",
+      "creationDate": 1478300649353,
+      "lastUpdatedDate": 1478301349649,
       "mainImageUid": "03baa2f6-1966-4030-b70b-35a44e16a2d3",
       "inspirations": [
         {
@@ -304,16 +304,16 @@
           "imageUid": "e4ff7abc-be47-4d58-a87a-efb93b9e1b4f",
           "description": "This is what inspired me 1",
           "name": "John Doe's first inspiration",
-          "creationDate": "1478300949353",
-          "lastUpdatedDate": "1478391349649"
+          "creationDate": 1478300949353,
+          "lastUpdatedDate": 1478391349649
         },
         {
           "uid": "9322589b-1a73-4e65-b292-b67f0825f67b",
           "imageUid": "e4ff7abc-be47-4d58-a87a-eeb93b9e1b4f",
           "description": "This is what inspired me 2",
           "name": "John Doe's second inspiration",
-          "creationDate": "1478300949443",
-          "lastUpdatedDate": "1478391355649"
+          "creationDate": 1478300949443,
+          "lastUpdatedDate": 1478391355649
         }
       ]
     }

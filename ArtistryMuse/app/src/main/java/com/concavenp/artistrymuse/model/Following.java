@@ -9,7 +9,7 @@ import java.util.Date;
 public class Following {
 
     public String uid;
-    public Long lastUpdate;
+    public Long lastUpdatedDate;
 
     public Following() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
