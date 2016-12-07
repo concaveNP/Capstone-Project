@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +95,7 @@ public class FollowingFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mRecycler = (RecyclerView) mainView.findViewById(R.id.recycler_view);
-        mRecycler.setHasFixedSize(true);
+        mRecycler.setHasFixedSize(true); // TODO: what is this?
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -137,6 +138,9 @@ public class FollowingFragment extends Fragment {
 
 
                 // TODO: need a better system for this as I believe this will be called multiple times
+                // See the adapter internal class in the "MakeYourAppMaterial" project's ArticleListActivity class.
+                // Should be able to determine the count of items found in the resulting query that would be good to
+                // perform this on after the count is reached.
                 mSwipeRefreshLayout.setRefreshing(false);
 
 
@@ -162,6 +166,11 @@ public class FollowingFragment extends Fragment {
             }
         };
         mRecycler.setAdapter(mAdapter);
+
+
+        int columnCount = getResources().getInteger(R.integer.list_column_count);
+        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        mRecycler.setLayoutManager(sglm);
     }
 
     private Query getQuery(DatabaseReference databaseReference) {
