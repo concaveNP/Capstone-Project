@@ -26,6 +26,7 @@ public class FollowingViewHolder extends RecyclerView.ViewHolder {
         uidTextView = (TextView) itemView.findViewById(R.id.uid);
         lastUpdateEditText = (EditText) itemView.findViewById(R.id.last_update);
 
+
     }
 
     public void bindToPost(Following following, View.OnClickListener clickListener) {
