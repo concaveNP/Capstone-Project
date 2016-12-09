@@ -1,31 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginTop="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        style="@style/AppTheme.Card"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="left">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_account_circle_black_24dp"
+                android:id="@+id/profile_image"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/name"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
         <TextView
-            android:text="UID"
+            android:id="@+id/user_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/uid"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textAlignment="center" />
+            style="@style/AppTheme.Card.Title"
+            android:ellipsize="end"
+            android:maxLines="4"
+            android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
+            android:paddingLeft="@dimen/myapp_text_edge_padding_material"
+            android:paddingRight="@dimen/myapp_text_edge_padding_material"
+            android:paddingTop="@dimen/myapp_text_edge_padding_material"/>
 
-        <EditText
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/myapp_divider_material"
+            android:background="@color/myapp_light_on_dark_dividers"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="date"
-            android:ems="10"
-            android:layout_below="@+id/uid"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="20dp"
-            android:textAlignment="center"
-            android:id="@+id/last_update" />
+            android:orientation="horizontal"
+            android:padding="@dimen/myapp_button_padding_material"
+            android:gravity="right">
 
-    </RelativeLayout>
+            <ImageButton
+                android:id="@+id/share_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/myapp_primary_800"
+                android:clickable="true"
+                android:padding="@dimen/myapp_button_padding_material"
+                android:src="@drawable/ic_share_white_24px" />
+            <!--android:onClick="onShare"-->
+
+            <ImageButton
+                android:id="@+id/hot_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/myapp_primary_800"
+                android:clickable="true"
+                android:padding="@dimen/myapp_button_padding_material"
+                android:src="@drawable/ic_whatshot_white_24px" />
+            <!--android:onClick="onWhatsHot"-->
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/myapp_divider_material"
+            android:background="@color/myapp_light_on_dark_dividers"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/myapp_button_padding_material"
+            android:gravity="right">
+
+            <TextView
+                android:text="UID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/uid"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textAlignment="center" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:layout_below="@+id/uid"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:textAlignment="center"
+                android:id="@+id/last_update" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

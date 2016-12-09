@@ -101,4 +101,10 @@
     <string name="rationale_storage">This is going to read/write files from storage for photo use</string>
     <string name="project">Project</string>
 
+    <!--Material Design values-->
+    <string name="myapp_font_family_title_material">sans-serif-medium</string>
+    <string name="myapp_font_family_headline_material">sans-serif</string>
+    <string name="myapp_font_family_subhead_material">sans-serif</string>
+    <string name="myapp_font_family_body_1_material">sans-serif</string>
+
 </resources>

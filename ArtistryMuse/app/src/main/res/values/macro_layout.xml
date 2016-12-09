@@ -1,0 +1,6 @@
+<resources>
+
+    <dimen name="list_side_margin">4dp</dimen>
+    <integer name="list_column_count">2</integer>
+
+</resources>

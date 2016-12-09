@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +95,7 @@ public class FollowingFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mRecycler = (RecyclerView) mainView.findViewById(R.id.recycler_view);
-        mRecycler.setHasFixedSize(true);
+        mRecycler.setHasFixedSize(true); // TODO: what is this?
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -137,6 +138,9 @@ public class FollowingFragment extends Fragment {
 
 
                 // TODO: need a better system for this as I believe this will be called multiple times
+                // See the adapter internal class in the "MakeYourAppMaterial" project's ArticleListActivity class.
+                // Should be able to determine the count of items found in the resulting query that would be good to
+                // perform this on after the count is reached.
                 mSwipeRefreshLayout.setRefreshing(false);
 
 
@@ -162,14 +166,17 @@ public class FollowingFragment extends Fragment {
             }
         };
         mRecycler.setAdapter(mAdapter);
+
+
+        int columnCount = getResources().getInteger(R.integer.list_column_count);
+        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        mRecycler.setLayoutManager(sglm);
     }
 
     private Query getQuery(DatabaseReference databaseReference) {
 
         String myUserId = getUid();
 
-        // TODO: should not be hard coded
-        myUserId = "1";
         Query myTopPostsQuery = databaseReference.child("users").child(myUserId).child("following");
 
         return myTopPostsQuery;
@@ -177,7 +184,13 @@ public class FollowingFragment extends Fragment {
 
     private String getUid() {
 
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // TODO: this will need to be figured out some other way and probably/maybe saved to local properties
+        // must use the authUid (this is the getUid() call) to get the uid to be the DB primary key index to use as the myUserId value in the query - yuck, i'm doing this wrong
+
+        // TODO: should not be hard coded
+        return "2b1d3365-118d-4dd7-9803-947a7103c730";
 
     }
 

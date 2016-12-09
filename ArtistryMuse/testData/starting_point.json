@@ -1,13 +1,16 @@
 {
   "users": [
     {
+      "authUid": "vmZEWYkMCHXD8ifZ1x7yvNeLW7t1",
       "uid": "2a1d3365-118d-4dd7-9803-947a7103c730",
       "username": "JaDoe",
       "name": "Jane Doe",
       "description": "These are my Art Projects...",
       "creationDate": 1478300649053,
       "lastUpdatedDate": 1478301049649,
-      "avatarImageUid": "04a7b062-fcac-4d1d-9b4c-6823f9426ad1",
+      "profileImageUid": "04a7b062-fcac-4d1d-9b4c-6823f9426ad1",
+      "headerImageUid": "",
+      "followedCount": 0,
       "artProjects": [
         {
           "uid": "82eb2b87-aaa2-4ae8-bc75-56d45616b14c"
@@ -40,13 +43,16 @@
       ]
     },
     {
+      "authUid": "eiDi9xhC00U3ZeTMG7x2MQTXBeE2",
       "uid": "42452ad7-2bfd-4020-92cf-6461570e9c03",
       "username": "BabyDoe",
       "name": "Baby Doe",
       "description": "These are my Art Projects...",
       "creationDate": 1478300649953,
       "lastUpdatedDate": 1478301049999,
-      "avatarImageUid": "04a7b062-fcac-4444-9b4c-6823f9426ad1",
+      "profileImageUid": "04a7b062-fcac-4444-9b4c-6823f9426ad1",
+      "headerImageUid": "",
+      "followedCount": 0,
       "artProjects": [
         {
           "uid": "82eb2b87-aaa2-4ae8-bc75-56d45616b14c"
@@ -79,13 +85,16 @@
       ]
     },
     {
+      "authUid": "38P3k8wi5Lc3g3jhwcV7LXQ8z7h1",
       "uid": "2b1d3365-118d-4dd7-9803-947a7103c730",
       "username": "JDoe",
       "name": "John Doe",
       "description": "This is an example piece of work by John Doe.  This is the description for his Art Projects",
       "creationDate": 1478300645053,
       "lastUpdatedDate": 1478301040649,
-      "avatarImageUid": "04e7b062-fcac-4d1d-9b4c-6823f9426ad1",
+      "profileImageUid": "04e7b062-fcac-4d1d-9b4c-6823f9426ad1",
+      "headerImageUid": "",
+      "followedCount": 0,
       "artProjects": [
         {
           "uid": "82eb2b87-ada2-4ae8-bc75-56d45616b14c"
