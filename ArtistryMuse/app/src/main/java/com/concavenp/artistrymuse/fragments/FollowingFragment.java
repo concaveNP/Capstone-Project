@@ -177,11 +177,6 @@ public class FollowingFragment extends Fragment {
 
         String myUserId = getUid();
 
-        // TODO: this will need to be figured out some other way and probably/maybe saved to local properties
-        // must use the authUid (this is the getUid() call) to get the uid to be the DB primary key index to use as the myUserId value in the query - yuck, i'm doing this wrong
-
-        // TODO: should not be hard coded
-        myUserId = "0";
         Query myTopPostsQuery = databaseReference.child("users").child(myUserId).child("following");
 
         return myTopPostsQuery;
@@ -189,7 +184,13 @@ public class FollowingFragment extends Fragment {
 
     private String getUid() {
 
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // TODO: this will need to be figured out some other way and probably/maybe saved to local properties
+        // must use the authUid (this is the getUid() call) to get the uid to be the DB primary key index to use as the myUserId value in the query - yuck, i'm doing this wrong
+
+        // TODO: should not be hard coded
+        return "2b1d3365-118d-4dd7-9803-947a7103c730";
 
     }
 
