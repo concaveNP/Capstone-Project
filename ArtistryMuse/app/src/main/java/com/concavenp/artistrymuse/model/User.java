@@ -13,16 +13,19 @@ import java.util.List;
  */
 public class User {
 
+    public List<ArtProjectOwner> artProjects;
+    public String authUid;
+    public Long creationDate;
+    public String description;
+    public List<Favorite> favorites;
+    public Integer followedCount;
+    public List<Following> following;
+    public String headerImageUid;
+    public Long lastUpdatedDate;
+    public String name;
+    public String profileImageUid;
     public String uid;
     public String username;
-    public String name;
-    public String description;
-    public Long creationDate;
-    public Long lastUpdateDate;
-    public String avatarImageUid;
-    public List<String> artProjects;
-    public List<Favorite> favorites;
-    public List<Following> followings;
 
     public User() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
