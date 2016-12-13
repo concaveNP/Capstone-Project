@@ -22,12 +22,12 @@
       "favorites": [
         {
           "uid": "82eb2b87-aaa2-4ae8-bc75-56d45616b14c",
-          "rating": "2.4",
+          "rating": 2.4,
           "favoritedDate": 1478301769095
         },
         {
           "uid": "09697c9f-2e19-4ef8-86fb-f8fdbcad7c88",
-          "rating": "1.9",
+          "rating": 1.9,
           "favoritedDate": 1478301790849
         }
       ],
@@ -64,12 +64,12 @@
       "favorites": [
         {
           "uid": "82eb2b87-aaa2-4ae8-bc75-56d45616b14c",
-          "rating": "2.4",
+          "rating": 2.4,
           "favoritedDate": 1478301769095
         },
         {
           "uid": "09697c9f-2a19-4ef8-86fb-f8fdbcad7c88",
-          "rating": "1.9",
+          "rating": 1.9,
           "favoritedDate": 1478301790849
         }
       ],
@@ -106,12 +106,12 @@
       "favorites": [
         {
           "uid": "82eb2b87-aaa2-4ae8-bc75-56d45616b14c",
-          "rating": "4.2",
+          "rating": 4.2,
           "favoritedDate": 1478301760095
         },
         {
           "uid": "09697c9f-2a19-4ef8-86fb-f8fdbcad7c88",
-          "rating": "9.1",
+          "rating": 9.1,
           "favoritedDate": 1478301799849
         }
       ],
@@ -135,10 +135,10 @@
       "description": "This is an example piece of work by Jane Doe.  This is the description for her Art Projects",
       "published": "true",
       "publishedDate": 1478321740406,
-      "rating": "3.4",
-      "ratingsCount": "42",
-      "views": "191",
-      "favorited": "14",
+      "rating": 3.4,
+      "ratingsCount": 42,
+      "views": 191,
+      "favorited": 14,
       "creationDate": 1478300649353,
       "lastUpdatedDate": 1478301349649,
       "mainImageUid": "0a842bd3-8d61-4bdd-b38e-13b3b1d2e62e",
@@ -168,10 +168,10 @@
       "description": "This is an example piece of work by Jane Doe.  This is the description for her Art Projects",
       "published": "true",
       "publishedDate": 1478321748886,
-      "rating": "3.4",
-      "ratingsCount": "42",
-      "views": "191",
-      "favorited": "14",
+      "rating": 3.4,
+      "ratingsCount": 42,
+      "views": 191,
+      "favorited": 14,
       "creationDate": 1478300649353,
       "lastUpdatedDate": 1478301349649,
       "mainImageUid": "03baa2f6-1966-4030-b70b-35a44e16a2d3",
@@ -201,10 +201,10 @@
       "description": "This is an example piece of work by Baby Doe.  This is the description for her Art Projects",
       "published": "true",
       "publishedDate": 1478321740406,
-      "rating": "3.4",
-      "ratingsCount": "42",
-      "views": "191",
-      "favorited": "14",
+      "rating": 3.4,
+      "ratingsCount": 42,
+      "views": 191,
+      "favorited": 14,
       "creationDate": 1478300649353,
       "lastUpdatedDate": 1478301349649,
       "mainImageUid": "0a842bd3-8d61-4bdd-b38e-13b3b1d2e62e",
@@ -234,10 +234,10 @@
       "description": "This is an example piece of work by Baby Doe.  This is the description for her Art Projects",
       "published": "true",
       "publishedDate": 1478321748886,
-      "rating": "3.4",
-      "ratingsCount": "42",
-      "views": "191",
-      "favorited": "14",
+      "rating": 3.4,
+      "ratingsCount": 42,
+      "views": 191,
+      "favorited": 14,
       "creationDate": 1478300649353,
       "lastUpdatedDate": 1478301349649,
       "mainImageUid": "03baa2f6-1966-4030-b70b-35a44e16a2d3",
@@ -267,10 +267,10 @@
       "description": "This is an example piece of work by John Doe.  This is the description for his Art Projects",
       "published": "true",
       "publishedDate": 1478321740406,
-      "rating": "3.4",
-      "ratingsCount": "42",
-      "views": "191",
-      "favorited": "14",
+      "rating": 3.4,
+      "ratingsCount": 42,
+      "views": 191,
+      "favorited": 14,
       "creationDate": 1478300649353,
       "lastUpdatedDate": 1478301349649,
       "mainImageUid": "0a842bd3-8d61-4bdd-b38e-13b3b1d2e62e",
@@ -300,10 +300,10 @@
       "description": "This is an example piece of work by John Doe.  This is the description for his Art Projects",
       "published": "true",
       "publishedDate": 1478321748886,
-      "rating": "3.4",
-      "ratingsCount": "42",
-      "views": "191",
-      "favorited": "14",
+      "rating": 3.4,
+      "ratingsCount": 42,
+      "views": 191,
+      "favorited": 14,
       "creationDate": 1478300649353,
       "lastUpdatedDate": 1478301349649,
       "mainImageUid": "03baa2f6-1966-4030-b70b-35a44e16a2d3",

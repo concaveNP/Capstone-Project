@@ -16,11 +16,12 @@ public class ArtProject {
     public Boolean published;
     public Long publishedDate;
     public Double rating;
+    public Integer ratingsCount;
     public Integer rates;
     public Integer views;
     public Integer favorited;
     public Long creationDate;
-    public Long lastUpdate;
+    public Long lastUpdateDate;
     public String mainImageUid;
     public List<Inspiration> inspirations;
 
