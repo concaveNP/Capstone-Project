@@ -24,6 +24,7 @@ public class User {
     public Long lastUpdatedDate;
     public String name;
     public String profileImageUid;
+    public String summary;
     public String uid;
     public String username;
 
