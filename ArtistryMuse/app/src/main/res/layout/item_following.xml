@@ -38,7 +38,11 @@
                 android:layout_weight="1"
                 android:layout_alignParentBottom="false"
                 tools:layout_alignBottom="@id/summary_textview"
-                android:layout_alignTop="@+id/username_textview" />
+                android:layout_alignTop="@+id/username_textview"
+                android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
+                android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
+                android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
+                android:paddingTop="@dimen/myapp_text_uncommon_padding_material"/>
 
             <TextView
                 android:text="Username"
@@ -48,7 +52,9 @@
                 android:layout_weight="1"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/profile_imageview"
-                android:layout_toEndOf="@+id/profile_imageview" />
+                android:layout_toEndOf="@+id/profile_imageview"
+                android:paddingTop="@dimen/myapp_text_uncommon_padding_material"
+                android:paddingBottom="@dimen/myapp_text_common_padding_material" />
 
             <TextView
                 android:text="Summary"
@@ -57,7 +63,8 @@
                 android:id="@+id/summary_textview"
                 android:layout_below="@+id/username_textview"
                 android:layout_toRightOf="@+id/profile_imageview"
-                android:layout_toEndOf="@+id/profile_imageview" />
+                android:layout_toEndOf="@+id/profile_imageview"
+                android:paddingBottom="@dimen/myapp_text_uncommon_padding_material" />
 
         </RelativeLayout>
 
@@ -65,12 +72,12 @@
             android:id="@+id/description_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/AppTheme.Card.Title"
+            style="@style/AppTheme.Card.Description"
             android:ellipsize="end"
             android:maxLines="3"
             android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
-            android:paddingLeft="@dimen/myapp_text_edge_padding_material"
-            android:paddingRight="@dimen/myapp_text_edge_padding_material"
+            android:paddingStart="@dimen/myapp_text_edge_padding_material"
+            android:paddingEnd="@dimen/myapp_text_edge_padding_material"
             android:paddingTop="@dimen/myapp_text_edge_padding_material"
             android:minLines="1" />
 
@@ -83,43 +90,51 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_people_black_24dp"/>
+                    app:srcCompat="@drawable/ic_people_black_24dp"
+                android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
+                android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
+                android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
+                android:paddingTop="@dimen/myapp_text_uncommon_padding_material"/>
 
                 <TextView
                     android:text="TextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/followed_textview" />
+                    android:id="@+id/followed_textview"
+                    android:layout_gravity="center_vertical" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_people_outline_black_24dp"/>
+                    app:srcCompat="@drawable/ic_people_outline_black_24dp"
+                android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
+                android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
+                android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
+                android:paddingTop="@dimen/myapp_text_uncommon_padding_material"/>
 
                 <TextView
                     android:text="TextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/following_textview" />
+                    android:id="@+id/following_textview"
+                    android:layout_gravity="center_vertical" />
 
             </LinearLayout>
 

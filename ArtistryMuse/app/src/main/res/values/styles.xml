@@ -18,7 +18,7 @@
         <item name="android:background">@color/myapp_primary_800</item>
     </style>
 
-    <style name="AppTheme.Card.Title">
+    <style name="AppTheme.Card.Description">
         <item name="android:textSize">@dimen/myapp_text_size_card_material</item>
         <item name="android:fontFamily">@string/myapp_font_family_headline_material</item>
         <item name="android:textColor">@color/myapp_light_on_dark_primary_text</item>
