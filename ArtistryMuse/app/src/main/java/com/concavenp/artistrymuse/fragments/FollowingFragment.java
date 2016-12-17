@@ -79,11 +79,18 @@ public class FollowingFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
+
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
     }
 
     @Override
@@ -92,30 +99,32 @@ public class FollowingFragment extends Fragment {
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_following, container, false);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        // TODO: what is the purpose of this?????
         mRecycler = (RecyclerView) mainView.findViewById(R.id.recycler_view);
-        mRecycler.setHasFixedSize(true); // TODO: what is this?
+        mRecycler.setHasFixedSize(true);
 
+        // When the user performs the action of swiping down then refresh the data displayed
         mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
+                // Refresh the data displayed
                 refresh();
 
             }
         });
 
-        if (savedInstanceState == null) {
-
-            refresh();
-
-        }
+        // Refresh the data displayed
+        refresh();
 
         return mainView;
     }
 
+    /**
+     * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
+     * is used to translate the data retrieved into the populated displayed view.
+     */
     private void refresh() {
 
         // Let the Swiper know we are swiping
@@ -199,6 +208,7 @@ public class FollowingFragment extends Fragment {
 
         super.onAttach(context);
 
+        // Re-attach to the parent Activity interface
         if (context instanceof OnFragmentInteractionListener) {
 
             mListener = (OnFragmentInteractionListener) context;
@@ -216,6 +226,7 @@ public class FollowingFragment extends Fragment {
 
         super.onDetach();
 
+        // Detach from the parent Activity interface
         mListener = null;
 
     }
