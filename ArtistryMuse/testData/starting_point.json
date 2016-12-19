@@ -1,6 +1,6 @@
 {
-  "users": [
-    {
+  "users": {
+    "2a1d3365-118d-4dd7-9803-947a7103c730" : {
       "authUid": "vmZEWYkMCHXD8ifZ1x7yvNeLW7t1",
       "uid": "2a1d3365-118d-4dd7-9803-947a7103c730",
       "username": "MonroeM",
@@ -43,7 +43,7 @@
         }
       ]
     },
-    {
+    "42452ad7-2bfd-4020-92cf-6461570e9c03" : {
       "authUid": "eiDi9xhC00U3ZeTMG7x2MQTXBeE2",
       "uid": "42452ad7-2bfd-4020-92cf-6461570e9c03",
       "username": "jackie",
@@ -52,8 +52,8 @@
       "summary": "I'm wife of the 35th President of the United States",
       "creationDate": 1478300649953,
       "lastUpdatedDate": 1478301049999,
-      "profileImageUid": "51184079-e951-46c6-ac32-a8896921654f",
-      "headerImageUid": "70fcd9b1-0d34-4955-9d71-467826d62fb0",
+      "profileImageUid": "16d0eed0-d898-48a9-a375-4a7c12043327",
+      "headerImageUid": "6ced62e6-a008-4c18-8e02-aad1631828ad",
       "followedCount": 0,
       "artProjects": [
         {
@@ -86,7 +86,7 @@
         }
       ]
     },
-    {
+    "2b1d3365-118d-4dd7-9803-947a7103c730" : {
       "authUid": "38P3k8wi5Lc3g3jhwcV7LXQ8z7h1",
       "uid": "2b1d3365-118d-4dd7-9803-947a7103c730",
       "username": "bobbyK",
@@ -95,8 +95,8 @@
       "summary": "Robert Francis \"Bobby\" Kennedy (November 20, 1925 – June 6, 1968), commonly known by his initials RFK, was an American politician from Massachusetts. He served as the United States junior senator from New York from January 1965 until his assassination in June 1968. He was previously the 64th U.S. Attorney General from January 1961 to September 1964, serving under his older brother, President John F. Kennedy and his successor, President Lyndon B. Johnson. Kennedy was a member of the Democratic Party, and is seen as an icon of modern American liberalism.",
       "creationDate": 1478300645053,
       "lastUpdatedDate": 1478301040649,
-      "profileImageUid": "16d0eed0-d898-48a9-a375-4a7c12043327",
-      "headerImageUid": "6ced62e6-a008-4c18-8e02-aad1631828ad",
+      "profileImageUid": "51184079-e951-46c6-ac32-a8896921654f",
+      "headerImageUid": "70fcd9b1-0d34-4955-9d71-467826d62fb0",
       "followedCount": 0,
       "artProjects": [
         {
@@ -124,14 +124,14 @@
           "lastUpdatedDate": 1478301555413
         },
         {
-          "uid": "424522d7-2bfd-4020-92cf-6461570e9c03",
+          "uid": "42452ad7-2bfd-4020-92cf-6461570e9c03",
           "lastUpdatedDate": 1478301600326
         }
       ]
     }
-  ],
-  "projects": [
-    {
+  },
+  "projects": {
+    "82eb2b87-aaa2-4ae8-bc75-56d45616b14c" : {
       "uid": "82eb2b87-aaa2-4ae8-bc75-56d45616b14c",
       "ownerUid": "2a1d3365-118d-4dd7-9803-947a7103c730",
       "name": "First oil painted self portrait",
@@ -164,7 +164,7 @@
         }
       ]
     },
-    {
+    "09697c9f-2a19-4ef8-86fb-f8fdbcad7c88" : {
       "uid": "09697c9f-2a19-4ef8-86fb-f8fdbcad7c88",
       "ownerUid": "2a1d3365-118d-4dd7-9803-947a7103c730",
       "name": "Family life for simple Kennedy",
@@ -197,7 +197,7 @@
         }
       ]
     },
-    {
+    "fa2d2987-2e90-4df3-9640-8f838f7a20b0" : {
       "uid": "fa2d2987-2e90-4df3-9640-8f838f7a20b0",
       "ownerUid": "42452ad7-2bfd-4020-92cf-6461570e9c03",
       "name": "Indian art awards at its finest",
@@ -230,7 +230,7 @@
         }
       ]
     },
-    {
+    "9dc904c9-30d2-4773-b600-2174ac04e5c1" : {
       "uid": "9dc904c9-30d2-4773-b600-2174ac04e5c1",
       "ownerUid": "42452ad7-2bfd-4020-92cf-6461570e9c03",
       "name": "My first stab at using acrylic paint",
@@ -263,7 +263,7 @@
         }
       ]
     },
-    {
+    "e2ca57fe-3d6a-4086-a853-027728344a57" : {
       "uid": "e2ca57fe-3d6a-4086-a853-027728344a57",
       "ownerUid": "2b1d3365-118d-4dd7-9803-947a7103c730",
       "name": "Dive! Dive! Dive!",
@@ -296,7 +296,7 @@
         }
       ]
     },
-    {
+    "876bd367-1de6-4d6e-83ec-781567e4a7e8" : {
       "uid": "876bd367-1de6-4d6e-83ec-781567e4a7e8",
       "ownerUid": "2b1d3365-118d-4dd7-9803-947a7103c730",
       "name": "Photo of the old Kennedy family fort",
@@ -329,5 +329,5 @@
         }
       ]
     }
-  ]
+  }
 }

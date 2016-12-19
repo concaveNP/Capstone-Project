@@ -18,7 +18,6 @@ import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.viewholder.FollowingViewHolder;
 import com.concavenp.artistrymuse.model.Following;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -46,10 +45,7 @@ public class FollowingFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    // [START define_database_reference]
     private DatabaseReference mDatabase;
-    // [END define_database_reference]
-
     private FirebaseRecyclerAdapter<Following, FollowingViewHolder> mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
@@ -89,6 +85,7 @@ public class FollowingFragment extends Fragment {
 
         }
 
+        // Establish a connection the database
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
     }
@@ -100,11 +97,11 @@ public class FollowingFragment extends Fragment {
         View mainView = inflater.inflate(R.layout.fragment_following, container, false);
 
         // TODO: what is the purpose of this?????
-        mRecycler = (RecyclerView) mainView.findViewById(R.id.recycler_view);
+        mRecycler = (RecyclerView) mainView.findViewById(R.id.following_recycler_view);
         mRecycler.setHasFixedSize(true);
 
         // When the user performs the action of swiping down then refresh the data displayed
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.following_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
