@@ -22,12 +22,12 @@
       ],
       "favorites": [
         {
-          "uid": "513e2579-c34b-4659-9e98-c47975e0cd8a",
+          "uid": "876bd367-1de6-4d6e-83ec-781567e4a7e8",
           "rating": 2.4,
           "favoritedDate": 1478301769095
         },
         {
-          "uid": "b4e83b55-bcc3-48a5-be4c-153006d56d8f",
+          "uid": "09697c9f-2a19-4ef8-86fb-f8fdbcad7c88",
           "rating": 1.9,
           "favoritedDate": 1478301790849
         }
@@ -65,12 +65,12 @@
       ],
       "favorites": [
         {
-          "uid": "0b496089-334f-41bc-b1d3-f0589402424e",
+          "uid": "82eb2b87-aaa2-4ae8-bc75-56d45616b14c",
           "rating": 2.4,
           "favoritedDate": 1478301769095
         },
         {
-          "uid": "b4e83b55-bcc3-48a5-be4c-153006d56d8f",
+          "uid": "09697c9f-2a19-4ef8-86fb-f8fdbcad7c88",
           "rating": 1.9,
           "favoritedDate": 1478301790849
         }
@@ -91,8 +91,8 @@
       "uid": "2b1d3365-118d-4dd7-9803-947a7103c730",
       "username": "bobbyK",
       "name": "Robert Kennedy",
-      "description": "I am an American politician from Massachusetts",
-      "summary": "Robert Francis \"Bobby\" Kennedy (November 20, 1925 – June 6, 1968), commonly known by his initials RFK, was an American politician from Massachusetts. He served as the United States junior senator from New York from January 1965 until his assassination in June 1968. He was previously the 64th U.S. Attorney General from January 1961 to September 1964, serving under his older brother, President John F. Kennedy and his successor, President Lyndon B. Johnson. Kennedy was a member of the Democratic Party, and is seen as an icon of modern American liberalism.",
+      "summary": "I am an American politician from Massachusetts",
+      "description": "Robert Francis \"Bobby\" Kennedy (November 20, 1925 – June 6, 1968), commonly known by his initials RFK, was an American politician from Massachusetts. He served as the United States junior senator from New York from January 1965 until his assassination in June 1968. He was previously the 64th U.S. Attorney General from January 1961 to September 1964, serving under his older brother, President John F. Kennedy and his successor, President Lyndon B. Johnson. Kennedy was a member of the Democratic Party, and is seen as an icon of modern American liberalism.",
       "creationDate": 1478300645053,
       "lastUpdatedDate": 1478301040649,
       "profileImageUid": "51184079-e951-46c6-ac32-a8896921654f",
@@ -108,12 +108,12 @@
       ],
       "favorites": [
         {
-          "uid": "7dc7b6c1-03b8-4311-8069-943de546d585",
+          "uid": "9dc904c9-30d2-4773-b600-2174ac04e5c1",
           "rating": 4.2,
           "favoritedDate": 1478301760095
         },
         {
-          "uid": "2e1ef983-cc61-4ef5-99cd-76a3708c722c",
+          "uid": "e2ca57fe-3d6a-4086-a853-027728344a57",
           "rating": 9.1,
           "favoritedDate": 1478301799849
         }
@@ -136,7 +136,7 @@
       "ownerUid": "2a1d3365-118d-4dd7-9803-947a7103c730",
       "name": "First oil painted self portrait",
       "description": "This work has been inspired the birds and the bees and such in order to justify some cool oil painting.",
-      "published": "true",
+      "published": true,
       "publishedDate": 1478321740406,
       "rating": 3.4,
       "ratingsCount": 42,
@@ -169,7 +169,7 @@
       "ownerUid": "2a1d3365-118d-4dd7-9803-947a7103c730",
       "name": "Family life for simple Kennedy",
       "description": "This is John and me as boys playing by the water.",
-      "published": "true",
+      "published": true,
       "publishedDate": 1478321748886,
       "rating": 3.4,
       "ratingsCount": 42,
@@ -202,7 +202,7 @@
       "ownerUid": "42452ad7-2bfd-4020-92cf-6461570e9c03",
       "name": "Indian art awards at its finest",
       "description": "Giving away the top awards during the annual Indian \"Movers and Shakers\" ceramony.",
-      "published": "true",
+      "published": true,
       "publishedDate": 1478321740406,
       "rating": 3.4,
       "ratingsCount": 42,
@@ -235,7 +235,7 @@
       "ownerUid": "42452ad7-2bfd-4020-92cf-6461570e9c03",
       "name": "My first stab at using acrylic paint",
       "description": "Acrylic used in the fashion of my old master, Cy Twombly, who inspired its use for a self portrait.",
-      "published": "true",
+      "published": true,
       "publishedDate": 1478321748886,
       "rating": 3.4,
       "ratingsCount": 42,
@@ -268,7 +268,7 @@
       "ownerUid": "2b1d3365-118d-4dd7-9803-947a7103c730",
       "name": "Dive! Dive! Dive!",
       "description": "Photo of me throwing the bouquet of flowers to my bridesmaids.",
-      "published": "true",
+      "published": true,
       "publishedDate": 1478321740406,
       "rating": 3.4,
       "ratingsCount": 42,
@@ -301,7 +301,7 @@
       "ownerUid": "2b1d3365-118d-4dd7-9803-947a7103c730",
       "name": "Photo of the old Kennedy family fort",
       "description": "Photo grandpa took of the fort after it was recently abandoned.",
-      "published": "true",
+      "published": true,
       "publishedDate": 1478321748886,
       "rating": 3.4,
       "ratingsCount": 42,

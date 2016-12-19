@@ -185,7 +185,7 @@ public class FavoritesFragment extends Fragment {
 
         String myUserId = getUid();
 
-        Query myTopPostsQuery = databaseReference.child("users").child(myUserId).child("following");
+        Query myTopPostsQuery = databaseReference.child("users").child(myUserId).child("favorites");
 
         return myTopPostsQuery;
     }
@@ -198,7 +198,7 @@ public class FavoritesFragment extends Fragment {
         // must use the authUid (this is the getUid() call) to get the uid to be the DB primary key index to use as the myUserId value in the query - yuck, i'm doing this wrong
 
         // TODO: should not be hard coded
-        return "2b1d3365-118d-4dd7-9803-947a7103c730";
+        return "2a1d3365-118d-4dd7-9803-947a7103c730";
 
     }
 
