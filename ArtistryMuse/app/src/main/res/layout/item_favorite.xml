@@ -20,7 +20,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/header_imageview"
+            android:id="@+id/main_imageview"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:layout_width="match_parent"
@@ -55,16 +55,6 @@
                 android:layout_toEndOf="@+id/profile_imageview"
                 android:paddingTop="@dimen/myapp_text_uncommon_padding_material"
                 android:paddingBottom="@dimen/myapp_text_common_padding_material" />
-
-            <TextView
-                android:text="Summary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/summary_textview"
-                android:layout_below="@+id/username_textview"
-                android:layout_toRightOf="@+id/profile_imageview"
-                android:layout_toEndOf="@+id/profile_imageview"
-                android:paddingBottom="@dimen/myapp_text_uncommon_padding_material" />
 
         </RelativeLayout>
 
