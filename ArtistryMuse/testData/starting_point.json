@@ -329,5 +329,30 @@
         }
       ]
     }
+  },
+  "search": {
+    "paths":[
+      {
+        "path":"users/2b1d3365-118d-4dd7-9803-947a7103c730",
+        "index":"firebase",
+        "type":"user",
+        "fields":["username","name","summary","description"],
+        "omit":["authUid","uid","creationDate","lastUpdateDate","profileImageUid","headerImageUid","followingCount","artProjects","favorites","following"]
+      },
+      {
+        "path":"users/42452ad7-2bfd-4020-92cf-6461570e9c03",
+        "index":"firebase",
+        "type":"user",
+        "fields":["username","name","summary","description"],
+        "omit":["authUid","uid","creationDate","lastUpdateDate","profileImageUid","headerImageUid","followingCount","artProjects","favorites","following"]
+      },
+      {
+        "path":"users/2a1d3365-118d-4dd7-9803-947a7103c730",
+        "index":"firebase",
+        "type":"user",
+        "fields":["username","name","summary","description"],
+        "omit":["authUid","uid","creationDate","lastUpdateDate","profileImageUid","headerImageUid","followingCount","artProjects","favorites","following"]
+      }
+    ]
   }
 }
