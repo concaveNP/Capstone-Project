@@ -1,5 +1,6 @@
 package com.concavenp.artistrymuse.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,11 +13,11 @@ import java.util.List;
  */
 public class User {
 
-    public List<ArtProjectOwner> artProjects;
+    public List<ArtProjectOwner> artProjects = new ArrayList<>();
     public String authUid;
     public Long creationDate;
     public String description;
-    public List<Favorite> favorites;
+    public List<Favorite> favorites = new ArrayList<>();
     public Integer followedCount;
     public List<Following> following;
     public String headerImageUid;

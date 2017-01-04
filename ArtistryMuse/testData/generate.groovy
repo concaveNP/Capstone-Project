@@ -1,12 +1,11 @@
 
 
-import com.concavenp.artistrymuse.model.User
-import java.util.UUID
+import com.concavenp.artistrymuse.model.*
 
 class Generate {
 
-    private static final String usersDirectoryName = "users";
-    private static final String projectsDirectoryName = "projects";
+    private static final String usersDirectoryName = "users2";
+    private static final String projectsDirectoryName = "projects2";
     private static final String jsonFilename = "testData.json";
 
     private static final int numberOfNewUsers = 100;
@@ -28,22 +27,22 @@ class Generate {
         def jsonData = new Data()
 
         // Loop over the number of new users
-        for (int userIndex : numberOfNewUsers) {
+        for (int userIndex = 0; userIndex < numberOfNewUsers; userIndex++) {
 
             // Create new user object and pre-populate it
             def user = createUser(userIndex);
 
             // TODO: checking
-            print user
+            println user
 
             // Loop over number of projects per user
-            for (int projectIndex : numberofProjectsPerUser) {
+            for (int projectIndex = 0; projectIndex < numberofProjectsPerUser; projectIndex++) {
 
                 // Create new project object and pre-populate it
                 def project = createProject(projectIndex);
 
                 // TODO: checking
-                print project
+                println project
 
                 // Add the project UID to list of user's projects
                 user.artProjects.add(project.uid)
@@ -88,9 +87,9 @@ class Generate {
         
     }
 
-    static Project createProject(int projectIndex) {
+    static ArtProject createProject(int projectIndex) {
 
-        def result = new Project()
+        def result = new ArtProject()
 
         // TODO: fill out
 
@@ -103,7 +102,7 @@ class Generate {
         String result
 
         // Generate new UUID
-        def uuid = new UUID.randomUUID()
+        def uuid = UUID.randomUUID()
         result = uuid.toString()
 
         // TODO: Copy the base image into the users directory

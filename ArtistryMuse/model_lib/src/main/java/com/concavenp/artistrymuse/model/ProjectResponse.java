@@ -1,5 +1,6 @@
 package com.concavenp.artistrymuse.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ public class ProjectResponse {
 
 
 
-    public List<ProjectResponseHit> hits;
+    public List<ProjectResponseHit> hits = new ArrayList<>();
     public float max_score;
     public int total;
 

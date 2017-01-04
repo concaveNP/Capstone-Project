@@ -1,5 +1,6 @@
 package com.concavenp.artistrymuse.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class ArtProject {
     public Long creationDate;
     public Long lastUpdateDate;
     public String mainImageUid;
-    public List<Inspiration> inspirations;
+    public List<Inspiration> inspirations = new ArrayList<>();
 
     public ArtProject() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
