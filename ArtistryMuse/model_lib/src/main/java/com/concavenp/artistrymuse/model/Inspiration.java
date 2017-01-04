@@ -1,17 +1,19 @@
 package com.concavenp.artistrymuse.model;
 
-import java.util.Date;
-
 /**
  * Created by dave on 11/3/2016.
  */
 
-public class Following {
+public class Inspiration {
 
     public String uid;
-    public Long lastUpdatedDate;
+    public String imageUid;
+    public String description;
+    public String name;
+    public Long createdDate;
+    public Long lastUpdate;
 
-    public Following() {
+    public Inspiration() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 }

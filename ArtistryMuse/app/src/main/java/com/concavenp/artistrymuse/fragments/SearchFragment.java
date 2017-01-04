@@ -52,6 +52,7 @@ public class SearchFragment extends Fragment {
     private DatabaseReference mDatabase;
     private FirebaseRecyclerAdapter<UserResponseHit, UserResponseViewHolder> mAdapter;
     private RecyclerView mRecycler;
+    private EndlessRecyclerOnScrollListener mScrollListener;
     private LinearLayoutManager mManager;
     private EditText mSearchEditText;
 
@@ -102,19 +103,32 @@ public class SearchFragment extends Fragment {
 
         mSearchEditText = (EditText) mainView.findViewById(R.id.search_editText);
 
-        //
-        // TODO: what is the purpose of this?????
-        // https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html#setHasFixedSize(boolean)
-        //
         mRecycler = (RecyclerView) mainView.findViewById(R.id.search_recycler_view);
-        //mRecycler.setHasFixedSize(true);
+
+        // Use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
+        mRecycler.setHasFixedSize(true);
+
+        // Setup Layout Manager, reverse layout
+        mManager = new LinearLayoutManager(getActivity());
+        mManager.setReverseLayout(true);
+        mManager.setStackFromEnd(true);
+        mRecycler.setLayoutManager(mManager);
+
+        // Setup the endless scrolling
+        mScrollListener = new EndlessRecyclerOnScrollListener(mManager) {
+            @Override
+            public void onLoadMore(int currentPage) {
+                search(currentPage);
+            }
+        };
+        mRecycler.addOnScrollListener(mScrollListener);
 
         ImageButton button = (ImageButton) mainView.findViewById(R.id.search_imageButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Perform a search and display the data
-                search();
+                search(0);
             }
         });
 
@@ -126,15 +140,9 @@ public class SearchFragment extends Fragment {
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    private void search() {
+    private void search(int currentPage) {
 
         UUID requestId = UUID.randomUUID();
-
-        // Set up Layout Manager, reverse layout
-        mManager = new LinearLayoutManager(getActivity());
-        mManager.setReverseLayout(true);
-        mManager.setStackFromEnd(true);
-        mRecycler.setLayoutManager(mManager);
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase, requestId);
@@ -161,12 +169,11 @@ public class SearchFragment extends Fragment {
         };
         mRecycler.setAdapter(mAdapter);
 
-
         int columnCount = getResources().getInteger(R.integer.list_column_count);
         StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecycler.setLayoutManager(sglm);
 
-        Request request = new Request("firebase", mSearchEditText.getText().toString(), "user");
+        Request request = new Request("firebase", mSearchEditText.getText().toString(), "user", currentPage);
 
         mDatabase.child("search").child("request").child(requestId.toString()).setValue(request);
     }

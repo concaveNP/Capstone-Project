@@ -45,6 +45,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.firebaseui:firebase-ui-storage:1.0.0'
+    compile project(':model_lib')
 }
 
 // ADD THIS AT THE BOTTOM

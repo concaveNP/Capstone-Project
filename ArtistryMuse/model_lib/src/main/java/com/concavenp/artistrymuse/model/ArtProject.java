@@ -1,6 +1,5 @@
 package com.concavenp.artistrymuse.model;
 
-import java.util.Date;
 import java.util.List;
 
 /**
