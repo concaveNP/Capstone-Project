@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.model.ArtProject;
+import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.Favorite;
 import com.concavenp.artistrymuse.model.User;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
@@ -74,7 +74,7 @@ public class ProjectViewHolder extends RecyclerView.ViewHolder {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 // Perform the JSON to Object conversion
-                ArtProject project = dataSnapshot.getValue(ArtProject.class);
+                Project project = dataSnapshot.getValue(Project.class);
 
                 // TODO: what to do when it is null
 

@@ -12,4 +12,20 @@ public class Following {
     public Following() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public Long getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setLastUpdatedDate(Long lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
 }

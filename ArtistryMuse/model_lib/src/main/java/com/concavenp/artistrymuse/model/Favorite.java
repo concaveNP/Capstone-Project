@@ -14,4 +14,27 @@ public class Favorite {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public Long getFavoritedDate() {
+        return favoritedDate;
+    }
+
+    public void setFavoritedDate(Long favoritedDate) {
+        this.favoritedDate = favoritedDate;
+    }
 }

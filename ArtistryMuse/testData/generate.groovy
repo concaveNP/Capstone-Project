@@ -1,70 +1,194 @@
 
 
 import com.concavenp.artistrymuse.model.*
+import groovy.json.JsonOutput
+import groovy.json.JsonBuilder
+
+import org.apache.batik.transcoder.image.JPEGTranscoder;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
 
 class Generate {
 
-    private static final String usersDirectoryName = "users2";
-    private static final String projectsDirectoryName = "projects2";
-    private static final String jsonFilename = "testData.json";
+    private static final String usersDirectoryName = "users"
+    private static final String projectsDirectoryName = "projects"
+    private static final String jsonFilename = "testData.json"
 
-    private static final int numberOfNewUsers = 100;
-    private static final int numberofProjectsPerUser = 15;
-    private static final int numberofFavoritesPerUser = 25;
-    private static final int numberofFollowingsPerUser = 15;
+    private static final int numberOfNewUsers = 10
+    //private static final int numberOfNewUsers = 100
+    private static final int numberofProjectsPerUser = 15
+    private static final int numberofFavoritesPerUser = 25
+    private static final int numberofFollowingsPerUser = numberOfNewUsers
+    private static final int numberofInspirations = 15
     
     private static final int startingAuthUid = 1000
 
+    private static File usersDirectory
+    private static File projectsDirectory
+    private static File jsonFile
+    private static Data jsonData
+
+    private static JPEGTranscoder transcoder
+
+    private static String baseSvg =
+    "<svg height=\"HEIGHT\" viewBox=\"0 0 WIDTH HEIGHT\" width=\"WIDTH\" xmlns=\"http://www.w3.org/2000/svg\">" +
+    "<title>BaseTestDataIlustration</title>" +
+    "<text style=\"fill: #231f20; font-family: MyriadPro-Regular, Myriad Pro\" transform=\"translate(10 30)\">" +
+    "<tspan style=\"font-size: 26px\" x=\"0\" y=\"0\">FIRST</tspan>" +
+    "<tspan style=\"font-size: 16px\" x=\"0\" y=\"21\">SECOND</tspan>" +
+    "<tspan style=\"font-size: 12px\" x=\"0\" y=\"42\">THIRD</tspan>" +
+    "</text>" +
+    "</svg>";
+
     static void main(String[] args) {
 
+        // Create a JPEG transcoder
+        transcoder = new JPEGTranscoder();
+
+        // Set the transcoding hints.
+        transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(0.8));
+
         // Get the data directories
-        def usersDirectory = getDirectory(usersDirectoryName)
-        def projectsDirectory = getDirectory(projectsDirectoryName)
+        usersDirectory = getDirectory(usersDirectoryName, true)
+        projectsDirectory = getDirectory(projectsDirectoryName, true)
 
-        // Get the JSON file
-        def jsonFile = getFile(jsonFilename)
+        // Get the JSON file that will be written to
+        jsonFile = getFile(jsonFilename)
 
-        def jsonData = new Data()
+        // The JSON data to be written to the JSON file
+        jsonData = new Data()
 
-        // Loop over the number of new users
+        // Loop over the number of new users and populate the JSON file along with creating images files
         for (int userIndex = 0; userIndex < numberOfNewUsers; userIndex++) {
 
             // Create new user object and pre-populate it
-            def user = createUser(userIndex);
-
-            // TODO: checking
-            println user
+            def user = createUser(userIndex)
 
             // Loop over number of projects per user
             for (int projectIndex = 0; projectIndex < numberofProjectsPerUser; projectIndex++) {
 
                 // Create new project object and pre-populate it
-                def project = createProject(projectIndex);
+                def project = createProject(projectIndex, user.uid)
 
-                // TODO: checking
-                println project
+                // Loop over number of projects per user
+                for (int inspirationIndex = 0; inspirationIndex < numberofInspirations; inspirationIndex++) {
+
+                    def inspiration = createInspiration(inspirationIndex, project.uid)
+
+                    // Add the inspiration to the project
+                    project.inspirations.add(inspiration)
+
+                    // Create the image file associated with this inspiration
+                    createInspirationJpg(projectsDirectory, project.uid, inspiration.imageUid, "Inspiration", inspiration.name, inspiration.uid)
+
+                }
 
                 // Add the project UID to list of user's projects
-                user.artProjects.add(project.uid)
+                user.projects.add(project.uid)
 
                 // Add the project to the overall data
-                jsonData.projects.add(project)
+                jsonData.projects.put(project.uid, project)
+
+                // Create the image file associated with this project
+                createProjectJpg(projectsDirectory, project.uid, project.mainImageUid, "Project", project.name, project.uid)
 
             }
 
             // Add the user to the overall data
-            jsonData.users.add(user)
+            jsonData.users.put(user.uid,user)
+
+            // Create the image file associated with this user
+            createHeaderJpg(usersDirectory, user.uid, user.headerImageUid, "Header", user.name, user.uid)
+            createProfileJpg(usersDirectory, user.uid, user.profileImageUid, "Profile", user.name, user.uid)
 
         }
 
-        // Loop over the number of new users
-        for (int userIndex : numberOfNewUsers) {
+        // Loop over the number of new users and perform some "favoriting" and "following" of others and their work
+        for (User userObject : jsonData.users.values()) {
 
-            // TODO: Randomly follow other users
+            // Keep track of the users we are following
+            def userMap = [:]
+            def arrayUsers = jsonData.users.values().toArray()
 
-            // TODO: Randomly favorite other user's projects
+            // Randomly follow other users
+            for (int followingIndex = 0; followingIndex < numberofFollowingsPerUser; followingIndex++) {
+
+                User userRandom = arrayUsers[new Random().nextInt(arrayUsers.size()-1)]
+
+                // Check it is not the same user
+                if (userRandom.uid == userObject.uid) {
+                    continue
+                }
+
+                // Check if we already have this user
+                if (userMap.containsKey(userRandom.uid)) {
+                    continue
+                }
+
+                // Add this user as being followed
+                userObject.following.add(userRandom.uid)
+
+                // Increment the followed count of the user being followed
+                userRandom.followedCount++
+
+                // Keep track of the users being followed
+                userMap[userRandom.uid] = true
+            }
+
+            // Keep track of the projects we have favorited
+            def projectMap = [:]
+            def arrayProjects = jsonData.projects.values().toArray()
+
+            // Randomly favorite other user's projects
+            for (int favoriteIndex = 0; favoriteIndex < numberofFavoritesPerUser; favoriteIndex++) {
+
+                Project projectRandom = arrayProjects[new Random().nextInt(arrayProjects.size()-1)]
+
+                // Check that the project is not one of our own
+                boolean found = false;
+                for (String uid : userObject.projects) {
+                    if (uid == projectRandom.uid) {
+                        found = true
+                        break;
+                    }
+                }
+                if (found) {
+                    continue
+                }
+
+                // Check if we already have marked this project as a favorite of ours
+                if (projectMap.containsKey(projectRandom.uid)) {
+                    continue
+                }
+
+                // Make sure the project is published before continuing
+                if (!projectRandom.published) {
+                    continue
+                }
+
+                // Add this project as a favorite
+                userObject.favorites.add(projectRandom.uid)
+
+                // Increment the favorited count of this project
+                projectRandom.favorited++
+
+                // View the project a random number of times
+                projectRandom.views += new Random().nextInt(10)
+
+                // Rate the project
+                projectRandom.ratingsCount++
+                projectRandom.rating = (projectRandom.rating + (new Random().nextDouble()*10.0)) / projectRandom.ratingsCount
+
+                // Keep track of the project being favorited
+                projectMap[projectRandom.uid] = true
+
+            }
 
         }
+
+        // Convert the generated Data (user and project objects) to JSON
+        def json = JsonOutput.toJson(jsonData)
+        jsonFile.write(JsonOutput.prettyPrint(json))
 
     }
 
@@ -76,10 +200,12 @@ class Generate {
         result.authUid = startingAuthUid++
         result.creationDate = new Date().getTime()
         result.description = "some description"
-        result.headerImageUid = generateUserImage(result.uid)
+        result.description = "This is the User number ${userIndex} generated for user ${result.uid}"
+        result.followedCount = 0
+        result.headerImageUid = UUID.randomUUID()
         result.lastUpdatedDate = new Date().getTime()
-        result.name = "User" + userIndex
-        result.profileImageUid = generateUserImage(result.uid)
+        result.name = "User Name"
+        result.profileImageUid = UUID.randomUUID()
         result.summary = "some summary"
         result.username = "Username" + userIndex
 
@@ -87,42 +213,107 @@ class Generate {
         
     }
 
-    static ArtProject createProject(int projectIndex) {
+    static Project createProject(int projectIndex, String uid) {
 
-        def result = new ArtProject()
+        def result = new Project()
 
-        // TODO: fill out
-
-        return result
-
-    }
-
-    static String generateUserImage(String uid) {
-
-        String result
-
-        // Generate new UUID
-        def uuid = UUID.randomUUID()
-        result = uuid.toString()
-
-        // TODO: Copy the base image into the users directory
-
-        // TODO: rename the image to the UUID name
+        result.uid = UUID.randomUUID()
+        result.ownerUid = uid
+        result.name = "Project Name"
+        result.description = "This is the ${projectIndex} piece of artwork generated by user ${uid}"
+        result.favorited = 0
+        result.published = new Random().nextBoolean()
+        result.publishedDate = new Date().getTime()
+        result.rating = 0.0
+        result.ratingsCount = 0
+        result.views = 0
+        result.creationDate = new Date().getTime()
+        result.lastUpdateDate = new Date().getTime()
+        result.mainImageUid = UUID.randomUUID()
 
         return result
 
     }
 
+    static Inspiration createInspiration(int inspirationIndex, String uid) {
+
+        def result = new Inspiration()
+
+        result.uid = UUID.randomUUID()
+        result.imageUid = UUID.randomUUID()
+        result.description = "This is the ${inspirationIndex} piece of artwork generated in project ${uid}"
+        result.name = "Inspiration Name"
+        result.creationDate = new Date().getTime()
+        result.lastUpdateDate = new Date().getTime()
+
+        return result
+
+    }
+
+    static void createHeaderJpg(File baseDirectory, String directoryUid, String imageUid, String first, String second, String third) {
+        createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 300, 200)
+    }
+
+    static void createProfileJpg(File baseDirectory, String directoryUid, String imageUid, String first, String second, String third) {
+        createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 20, 20)
+    }
+
+    static void createProjectJpg(File baseDirectory, String directoryUid, String imageUid, String first, String second, String third) {
+        createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 300, 200)
+    }
+
+    static void createInspirationJpg(File baseDirectory, String directoryUid, String imageUid, String first, String second, String third) {
+        createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 300, 200)
+    }
+
+    static void createJpg(File baseDirectory, String directoryUid, String imageUid, String first, String second, String third, int width, int height) {
+
+        File directory = getDirectory(baseDirectory.getName() + File.separator + directoryUid)
+        String svgString = baseSvg
+
+        svgString = svgString.replaceAll("WIDTH", width.toString())
+        svgString = svgString.replaceAll("HEIGHT", height.toString())
+        svgString = svgString.replaceAll("FIRST", first.toString())
+        svgString = svgString.replaceAll("SECOND", second.toString())
+        svgString = svgString.replaceAll("THIRD", third.toString())
+
+        // Create the transcoder input.
+        TranscoderInput input = new TranscoderInput(new StringReader(svgString));
+
+        // Create the transcoder output.
+        OutputStream ostream = new FileOutputStream(baseDirectory.getName() + File.separator + directory.getName() + File.separator + imageUid + ".jpg");
+        TranscoderOutput output = new TranscoderOutput(ostream);
+
+        // Save the image.
+        transcoder.transcode(input, output);
+
+        // Flush and close the stream.
+        ostream.flush();
+        ostream.close();
+
+    }
 
     static File getDirectory(String dirName) {
 
+        return getDirectory(dirName, false)
+
+    }
+
+    static File getDirectory(String dirName, boolean delete) {
+
         def result = new File(dirName)
+
+        if (delete) {
+            result.delete()
+            sleep(3000)
+            result = new File(dirName)
+        }
 
         // If it doesn't exist
         if( !result.exists() ) {
 
             // Warn the user
-            println("WARNING: the \"${dirName}\" did not appear to exist and will be created")
+            println("WARNING: the \"${dirName}\" directory did not appear to exist and will be created")
 
             // Create the directory
             boolean success = result.mkdirs()
@@ -130,12 +321,12 @@ class Generate {
             if (success) {
 
                 // Inform the user
-                println("INFO: the \"${dirName}\" was created")
+                println("INFO: the \"${dirName}\" directory was created")
 
             } else {
 
                 // Tell the user about the error
-                println("ERROR: the \"${dirName}\" could NOT be created!")
+                println("ERROR: the \"${dirName}\" directory could NOT be created!")
 
             }
 
@@ -146,17 +337,19 @@ class Generate {
 
         }
 
+        return result
+
     }
 
     static File getFile(String fileName) {
 
-        def result = new File(fileName)
+        File result = new File(fileName)
 
         // If it doesn't exist
         if( !result.exists() ) {
 
             // Warn the user
-            println("WARNING: the \"${fileName}\" did not appear to exist and will be created")
+            println("WARNING: the \"${fileName}\" file did not appear to exist and will be created")
 
             // Create the file
             boolean success = result.createNewFile()
@@ -164,12 +357,12 @@ class Generate {
             if (success) {
 
                 // Inform the user
-                println("INFO: the \"${fileName}\" was created")
+                println("INFO: the \"${fileName}\" file was created")
 
             } else {
 
                 // Tell the user about the error
-                println("ERROR: the \"${fileName}\" could NOT be created!")
+                println("ERROR: the \"${fileName}\" file could NOT be created!")
 
             }
 
@@ -179,6 +372,8 @@ class Generate {
             println("INFO: found the \"${fileName}\" file that will be used")
 
         }
+
+        return result
 
     }
 
