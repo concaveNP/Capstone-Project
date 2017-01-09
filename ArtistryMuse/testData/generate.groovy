@@ -1,12 +1,19 @@
 
 
-import com.concavenp.artistrymuse.model.*
-import groovy.json.JsonOutput
-import groovy.json.JsonBuilder
 
-import org.apache.batik.transcoder.image.JPEGTranscoder;
-import org.apache.batik.transcoder.TranscoderInput;
-import org.apache.batik.transcoder.TranscoderOutput;
+import groovy.json.JsonOutput
+
+import com.concavenp.artistrymuse.model.Data
+import com.concavenp.artistrymuse.model.User
+import com.concavenp.artistrymuse.model.Project
+import com.concavenp.artistrymuse.model.Inspiration
+
+import org.apache.batik.transcoder.image.JPEGTranscoder
+import org.apache.batik.transcoder.TranscoderInput
+import org.apache.batik.transcoder.TranscoderOutput
+
+import com.thedeanda.lorem.Lorem
+import com.thedeanda.lorem.LoremIpsum
 
 class Generate {
 
@@ -14,7 +21,7 @@ class Generate {
     private static final String projectsDirectoryName = "projects"
     private static final String jsonFilename = "testData.json"
 
-    private static final int numberOfNewUsers = 10
+    private static final int numberOfNewUsers = 1
     //private static final int numberOfNewUsers = 100
     private static final int numberofProjectsPerUser = 15
     private static final int numberofFavoritesPerUser = 25
@@ -208,6 +215,11 @@ class Generate {
         result.profileImageUid = UUID.randomUUID()
         result.summary = "some summary"
         result.username = "Username" + userIndex
+
+        // Lorem library to generate text, names and such...
+        Lorem lorem = LoremIpsum.getInstance();
+
+        result.name = lorem.getName()
 
         return result
         
