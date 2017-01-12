@@ -9,20 +9,20 @@ import java.util.List;
 
 public class Project {
 
-    public String uid;
-    public String ownerUid;
-    public String name;
+    public Long creationDate;
     public String description;
+    public Integer favorited;
+    public List<Inspiration> inspirations = new ArrayList<>();
+    public Long lastUpdateDate;
+    public String mainImageUid;
+    public String name;
+    public String ownerUid;
     public Boolean published;
     public Long publishedDate;
     public Double rating;
     public Integer ratingsCount;
+    public String uid;
     public Integer views;
-    public Integer favorited;
-    public Long creationDate;
-    public Long lastUpdateDate;
-    public String mainImageUid;
-    public List<Inspiration> inspirations = new ArrayList<>();
 
     public Project() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)

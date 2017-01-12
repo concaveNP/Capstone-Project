@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class User {
 
-    public List<String> projects = new ArrayList<>();
     public String authUid;
     public Long creationDate;
     public String description;
@@ -24,6 +23,7 @@ public class User {
     public Long lastUpdatedDate;
     public String name;
     public String profileImageUid;
+    public List<String> projects = new ArrayList<>();
     public String summary;
     public String uid;
     public String username;

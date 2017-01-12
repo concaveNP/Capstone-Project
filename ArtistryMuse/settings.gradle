@@ -1,1 +1,1 @@
-include ':app', ':model_lib'
+include ':app', ':model_lib', ':test_data_generation'

@@ -6,12 +6,12 @@ package com.concavenp.artistrymuse.model;
 
 public class Inspiration {
 
-    public String uid;
-    public String imageUid;
-    public String description;
-    public String name;
     public Long creationDate;
+    public String description;
+    public String imageUid;
     public Long lastUpdateDate;
+    public String name;
+    public String uid;
 
     public Inspiration() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)

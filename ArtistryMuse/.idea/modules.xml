@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/ArtistryMuse.iml" filepath="$PROJECT_DIR$/ArtistryMuse.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/model_lib/model_lib.iml" filepath="$PROJECT_DIR$/model_lib/model_lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test_data_generation/test_data_generation.iml" filepath="$PROJECT_DIR$/test_data_generation/test_data_generation.iml" />
     </modules>
   </component>
 </project>

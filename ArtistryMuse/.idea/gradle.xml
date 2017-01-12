@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/model_lib" />
+            <option value="$PROJECT_DIR$/test_data_generation" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
