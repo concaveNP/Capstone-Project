@@ -1,0 +1,11 @@
+apply plugin: 'java'
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(include: ['*.groovy'], dir: 'libs')
+    compile files('libs/batik-transcoder-1.8.jar')
+    compile files('libs/lorem-2.2-SNAPSHOT.jar')
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
