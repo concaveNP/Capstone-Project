@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.DetailsActivity;
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.fragments.viewholder.FollowingViewHolder;
+import com.concavenp.artistrymuse.fragments.viewholder.UserViewHolder;
 import com.concavenp.artistrymuse.model.Following;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
@@ -46,7 +46,7 @@ public class FollowingFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private DatabaseReference mDatabase;
-    private FirebaseRecyclerAdapter<Following, FollowingViewHolder> mAdapter;
+    private FirebaseRecyclerAdapter<Following, UserViewHolder> mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
@@ -137,9 +137,9 @@ public class FollowingFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
-        mAdapter = new FirebaseRecyclerAdapter<Following, FollowingViewHolder>(Following.class, R.layout.item_following, FollowingViewHolder.class, postsQuery) {
+        mAdapter = new FirebaseRecyclerAdapter<Following, UserViewHolder>(Following.class, R.layout.item_following, UserViewHolder.class, postsQuery) {
             @Override
-            protected void populateViewHolder(final FollowingViewHolder viewHolder, final Following model, final int position) {
+            protected void populateViewHolder(final UserViewHolder viewHolder, final Following model, final int position) {
 
 
 

@@ -9,6 +9,9 @@ import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.model.Following;
 import com.concavenp.artistrymuse.model.User;
+import com.concavenp.artistrymuse.model.UserResponse;
+import com.concavenp.artistrymuse.model.UserResponseHit;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -16,8 +19,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -25,7 +26,7 @@ import com.google.firebase.storage.StorageReference;
  * Created by dave on 12/2/2016.
  */
 
-public class FollowingViewHolder extends RecyclerView.ViewHolder {
+public class UserResponseViewHolder extends RecyclerView.ViewHolder {
 
     DatabaseReference mDatabase;
 
@@ -41,7 +42,7 @@ public class FollowingViewHolder extends RecyclerView.ViewHolder {
     public TextView followedTextView;
     public TextView followingTextView;
 
-    public FollowingViewHolder(View itemView) {
+    public UserResponseViewHolder(View itemView) {
 
         super(itemView);
 
@@ -61,7 +62,8 @@ public class FollowingViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void bindToPost(Following following, View.OnClickListener clickListener) {
+    public void bindToPost(UserResponseHit response, View.OnClickListener clickListener) {
+
         // Display items to be populated
         headerImageView = (ImageView) itemView.findViewById(R.id.header_imageview);
         profileImageView = (ImageView) itemView.findViewById(R.id.profile_imageview);
@@ -71,37 +73,42 @@ public class FollowingViewHolder extends RecyclerView.ViewHolder {
         followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
         followingTextView = (TextView) itemView.findViewById(R.id.following_textview);
 
-        mDatabase.child("users").child(following.uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        if (response._source != null) {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            mDatabase.child("users").child(response._source.uid).addListenerForSingleValueEvent(new ValueEventListener() {
 
-                // Perform the JSON to Object conversion
-                User user = dataSnapshot.getValue(User.class);
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                // TODO: what to do when it is null
+                    // Perform the JSON to Object conversion
+                    User user = dataSnapshot.getValue(User.class);
 
-                // Verify there is a user to work with
-                if (user != null) {
+                    // TODO: what to do when it is null
 
-                    populateImageView(user.uid, user.headerImageUid, headerImageView);
-                    populateImageView(user.uid, user.profileImageUid, profileImageView);
-                    populateTextView(user.username, usernameTextView);
-                    populateTextView(user.summary, summaryTextView);
-                    populateTextView(user.description, descriptionTextView);
-                    populateTextView(Integer.toString(user.followedCount), followedTextView);
-                    populateTextView(Integer.toString(user.following.size()), followingTextView);
+                    // Verify there is a user to work with
+                    if (user != null) {
+
+                        populateImageView(user.uid, user.headerImageUid, headerImageView);
+                        populateImageView(user.uid, user.profileImageUid, profileImageView);
+                        populateTextView(user.username, usernameTextView);
+                        populateTextView(user.summary, summaryTextView);
+                        populateTextView(user.description, descriptionTextView);
+                        populateTextView(Integer.toString(user.followedCount), followedTextView);
+                        populateTextView(Integer.toString(user.following.size()), followingTextView);
+
+                    }
 
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                }
 
-            }
+            });
 
-        });
+
+        }
 
     }
 

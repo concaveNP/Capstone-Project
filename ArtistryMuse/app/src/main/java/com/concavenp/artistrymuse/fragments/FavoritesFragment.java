@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.DetailsActivity;
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.fragments.viewholder.FavoritesViewHolder;
+import com.concavenp.artistrymuse.fragments.viewholder.ProjectViewHolder;
 import com.concavenp.artistrymuse.model.Favorite;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
@@ -46,7 +46,7 @@ public class FavoritesFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private DatabaseReference mDatabase;
-    private FirebaseRecyclerAdapter<Favorite, FavoritesViewHolder> mAdapter;
+    private FirebaseRecyclerAdapter<Favorite, ProjectViewHolder> mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
@@ -139,9 +139,9 @@ public class FavoritesFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
-        mAdapter = new FirebaseRecyclerAdapter<Favorite, FavoritesViewHolder>(Favorite.class, R.layout.item_favorite, FavoritesViewHolder.class, postsQuery) {
+        mAdapter = new FirebaseRecyclerAdapter<Favorite, ProjectViewHolder>(Favorite.class, R.layout.item_favorite, ProjectViewHolder.class, postsQuery) {
             @Override
-            protected void populateViewHolder(final FavoritesViewHolder viewHolder, final Favorite model, final int position) {
+            protected void populateViewHolder(final ProjectViewHolder viewHolder, final Favorite model, final int position) {
 
 
 

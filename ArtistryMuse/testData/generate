@@ -1,0 +1,1 @@
+groovy -classpath ../model_lib/build/libs/model_lib.jar -classpath ../../../lorem/target/lorem-2.2-SNAPSHOT.jar -classpath ../../../../batik-bin-1.8/batik-1.8/lib/batik-transcoder-1.8.jar generate.groovy
