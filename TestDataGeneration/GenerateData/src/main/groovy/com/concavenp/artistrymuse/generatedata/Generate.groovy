@@ -1,4 +1,4 @@
-package com.concavenp.artistrymuse.testdata
+package com.concavenp.artistrymuse.generatedata
 
 import groovy.json.JsonOutput
 
@@ -46,15 +46,15 @@ class Generate {
                     "<tspan style=\"font-size: 16px\" x=\"0\" y=\"21\">SECOND</tspan>" +
                     "<tspan style=\"font-size: 12px\" x=\"0\" y=\"42\">THIRD</tspan>" +
                     "</text>" +
-                    "</svg>";
+                    "</svg>"
 
     static void main(String[] args) {
 
         // Create a JPEG transcoder
-        transcoder = new JPEGTranscoder();
+        transcoder = new JPEGTranscoder()
 
         // Set the transcoding hints.
-        transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(0.8));
+        transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(0.8))
 
         // Get the data directories
         usersDirectory = getDirectory(usersDirectoryName, true)
@@ -153,11 +153,11 @@ class Generate {
                 Project projectRandom = arrayProjects[new Random().nextInt(arrayProjects.size()-1)]
 
                 // Check that the project is not one of our own
-                boolean found = false;
+                boolean found = false
                 for (String uid : userObject.projects) {
                     if (uid == projectRandom.uid) {
                         found = true
-                        break;
+                        break
                     }
                 }
                 if (found) {
@@ -299,18 +299,18 @@ class Generate {
         svgString = svgString.replaceAll("THIRD", third.toString())
 
         // Create the transcoder input.
-        TranscoderInput input = new TranscoderInput(new StringReader(svgString));
+        TranscoderInput input = new TranscoderInput(new StringReader(svgString))
 
         // Create the transcoder output.
-        OutputStream ostream = new FileOutputStream(baseDirectory.getName() + File.separator + directory.getName() + File.separator + imageUid + ".jpg");
-        TranscoderOutput output = new TranscoderOutput(ostream);
+        OutputStream ostream = new FileOutputStream(baseDirectory.getName() + File.separator + directory.getName() + File.separator + imageUid + ".jpg")
+        TranscoderOutput output = new TranscoderOutput(ostream)
 
         // Save the image.
-        transcoder.transcode(input, output);
+        transcoder.transcode(input, output)
 
         // Flush and close the stream.
-        ostream.flush();
-        ostream.close();
+        ostream.flush()
+        ostream.close()
 
     }
 

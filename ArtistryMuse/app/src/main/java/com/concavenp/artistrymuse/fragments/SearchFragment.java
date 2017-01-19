@@ -195,7 +195,9 @@ public class SearchFragment extends Fragment {
         // must use the authUid (this is the getUid() call) to get the uid to be the DB primary key index to use as the myUserId value in the query - yuck, i'm doing this wrong
 
         // TODO: should not be hard coded
-        return "2a1d3365-118d-4dd7-9803-947a7103c730";
+        //return "2a1d3365-118d-4dd7-9803-947a7103c730";
+        //return "8338c7c0-e6b9-4432-8461-f7047b262fbc";
+        return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
 
     }
 
