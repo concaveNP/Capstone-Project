@@ -1,12 +1,16 @@
 
 
 
+package com.concavenp.artistrymuse.generatedata
+
 import groovy.json.JsonOutput
 
 import com.concavenp.artistrymuse.model.Data
 import com.concavenp.artistrymuse.model.User
 import com.concavenp.artistrymuse.model.Project
 import com.concavenp.artistrymuse.model.Inspiration
+import com.concavenp.artistrymuse.model.Favorite
+import com.concavenp.artistrymuse.model.Following
 
 import org.apache.batik.transcoder.image.JPEGTranscoder
 import org.apache.batik.transcoder.TranscoderInput
@@ -15,19 +19,21 @@ import org.apache.batik.transcoder.TranscoderOutput
 import com.thedeanda.lorem.Lorem
 import com.thedeanda.lorem.LoremIpsum
 
+/**
+ * Created by dave on 1/8/2017.
+ */
 class Generate {
 
     private static final String usersDirectoryName = "users"
     private static final String projectsDirectoryName = "projects"
     private static final String jsonFilename = "testData.json"
 
-    private static final int numberOfNewUsers = 1
-    //private static final int numberOfNewUsers = 100
-    private static final int numberofProjectsPerUser = 15
-    private static final int numberofFavoritesPerUser = 25
+    private static final int numberOfNewUsers = 10
+    private static final int numberofProjectsPerUser = numberOfNewUsers * 0.15
+    private static final int numberofFavoritesPerUser = numberOfNewUsers * 0.25
     private static final int numberofFollowingsPerUser = numberOfNewUsers
-    private static final int numberofInspirations = 15
-    
+    private static final int numberofInspirations = numberOfNewUsers * 0.10
+
     private static final int startingAuthUid = 1000
 
     private static File usersDirectory
@@ -38,22 +44,22 @@ class Generate {
     private static JPEGTranscoder transcoder
 
     private static String baseSvg =
-    "<svg height=\"HEIGHT\" viewBox=\"0 0 WIDTH HEIGHT\" width=\"WIDTH\" xmlns=\"http://www.w3.org/2000/svg\">" +
-    "<title>BaseTestDataIlustration</title>" +
-    "<text style=\"fill: #231f20; font-family: MyriadPro-Regular, Myriad Pro\" transform=\"translate(10 30)\">" +
-    "<tspan style=\"font-size: 26px\" x=\"0\" y=\"0\">FIRST</tspan>" +
-    "<tspan style=\"font-size: 16px\" x=\"0\" y=\"21\">SECOND</tspan>" +
-    "<tspan style=\"font-size: 12px\" x=\"0\" y=\"42\">THIRD</tspan>" +
-    "</text>" +
-    "</svg>";
+            "<svg height=\"HEIGHT\" viewBox=\"0 0 WIDTH HEIGHT\" width=\"WIDTH\" xmlns=\"http://www.w3.org/2000/svg\">" +
+                    "<title>BaseTestDataIlustration</title>" +
+                    "<text style=\"fill: #231f20; font-family: MyriadPro-Regular, Myriad Pro\" transform=\"translate(10 30)\">" +
+                    "<tspan style=\"font-size: 26px\" x=\"0\" y=\"0\">FIRST</tspan>" +
+                    "<tspan style=\"font-size: 16px\" x=\"0\" y=\"21\">SECOND</tspan>" +
+                    "<tspan style=\"font-size: 12px\" x=\"0\" y=\"42\">THIRD</tspan>" +
+                    "</text>" +
+                    "</svg>"
 
     static void main(String[] args) {
 
         // Create a JPEG transcoder
-        transcoder = new JPEGTranscoder();
+        transcoder = new JPEGTranscoder()
 
         // Set the transcoding hints.
-        transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(0.8));
+        transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(0.8))
 
         // Get the data directories
         usersDirectory = getDirectory(usersDirectoryName, true)
@@ -132,8 +138,12 @@ class Generate {
                     continue
                 }
 
+                Following following = new Following()
+                following.uid = userRandom.uid
+                following.lastUpdatedDate = new Date().getTime()
+
                 // Add this user as being followed
-                userObject.following.add(userRandom.uid)
+                userObject.following.add(following)
 
                 // Increment the followed count of the user being followed
                 userRandom.followedCount++
@@ -152,11 +162,11 @@ class Generate {
                 Project projectRandom = arrayProjects[new Random().nextInt(arrayProjects.size()-1)]
 
                 // Check that the project is not one of our own
-                boolean found = false;
+                boolean found = false
                 for (String uid : userObject.projects) {
                     if (uid == projectRandom.uid) {
                         found = true
-                        break;
+                        break
                     }
                 }
                 if (found) {
@@ -173,8 +183,13 @@ class Generate {
                     continue
                 }
 
+                Favorite favorite = new Favorite()
+                favorite.uid = projectRandom.uid
+                favorite.rating = new Random().nextDouble()*10.0
+                favorite.favoritedDate = new Date().getTime()
+
                 // Add this project as a favorite
-                userObject.favorites.add(projectRandom.uid)
+                userObject.favorites.add(favorite)
 
                 // Increment the favorited count of this project
                 projectRandom.favorited++
@@ -201,47 +216,52 @@ class Generate {
 
     static User createUser(int userIndex) {
 
+        // Lorem library to generate text, names and such...
+        Lorem lorem = LoremIpsum.getInstance()
+
         def result = new User()
 
-        result.uid = UUID.randomUUID()
         result.authUid = startingAuthUid++
         result.creationDate = new Date().getTime()
-        result.description = "some description"
-        result.description = "This is the User number ${userIndex} generated for user ${result.uid}"
+        result.description = lorem.getParagraphs(1,3)
+        result.favorites.clear()
         result.followedCount = 0
+        result.following.clear()
         result.headerImageUid = UUID.randomUUID()
         result.lastUpdatedDate = new Date().getTime()
-        result.name = "User Name"
+        String firstName = lorem.getFirstName()
+        String lastName = lorem.getLastName()
+        result.name = firstName + " " + lastName
         result.profileImageUid = UUID.randomUUID()
-        result.summary = "some summary"
-        result.username = "Username" + userIndex
-
-        // Lorem library to generate text, names and such...
-        Lorem lorem = LoremIpsum.getInstance();
-
-        result.name = lorem.getName()
+        result.summary = lorem.getTitle(1,10)
+        result.uid = UUID.randomUUID()
+        result.username = firstName.substring(0,0).toLowerCase() + lastName.toLowerCase()
 
         return result
-        
+
     }
 
     static Project createProject(int projectIndex, String uid) {
 
+        // Lorem library to generate text, names and such...
+        Lorem lorem = LoremIpsum.getInstance()
+
         def result = new Project()
 
-        result.uid = UUID.randomUUID()
-        result.ownerUid = uid
-        result.name = "Project Name"
-        result.description = "This is the ${projectIndex} piece of artwork generated by user ${uid}"
+        result.creationDate = new Date().getTime()
+        result.description = lorem.getParagraphs(1,3)
         result.favorited = 0
+        result.inspirations.clear()
+        result.lastUpdateDate = new Date().getTime()
+        result.mainImageUid = UUID.randomUUID()
+        result.name = lorem.getTitle(1,10)
+        result.ownerUid = uid
         result.published = new Random().nextBoolean()
         result.publishedDate = new Date().getTime()
         result.rating = 0.0
         result.ratingsCount = 0
+        result.uid = UUID.randomUUID()
         result.views = 0
-        result.creationDate = new Date().getTime()
-        result.lastUpdateDate = new Date().getTime()
-        result.mainImageUid = UUID.randomUUID()
 
         return result
 
@@ -249,14 +269,17 @@ class Generate {
 
     static Inspiration createInspiration(int inspirationIndex, String uid) {
 
+        // Lorem library to generate text, names and such...
+        Lorem lorem = LoremIpsum.getInstance()
+
         def result = new Inspiration()
 
-        result.uid = UUID.randomUUID()
-        result.imageUid = UUID.randomUUID()
-        result.description = "This is the ${inspirationIndex} piece of artwork generated in project ${uid}"
-        result.name = "Inspiration Name"
         result.creationDate = new Date().getTime()
+        result.description = lorem.getParagraphs(1,3)
+        result.imageUid = UUID.randomUUID()
         result.lastUpdateDate = new Date().getTime()
+        result.name = lorem.getTitle(1,10)
+        result.uid = UUID.randomUUID()
 
         return result
 
@@ -290,18 +313,18 @@ class Generate {
         svgString = svgString.replaceAll("THIRD", third.toString())
 
         // Create the transcoder input.
-        TranscoderInput input = new TranscoderInput(new StringReader(svgString));
+        TranscoderInput input = new TranscoderInput(new StringReader(svgString))
 
         // Create the transcoder output.
-        OutputStream ostream = new FileOutputStream(baseDirectory.getName() + File.separator + directory.getName() + File.separator + imageUid + ".jpg");
-        TranscoderOutput output = new TranscoderOutput(ostream);
+        OutputStream ostream = new FileOutputStream(baseDirectory.getName() + File.separator + directory.getName() + File.separator + imageUid + ".jpg")
+        TranscoderOutput output = new TranscoderOutput(ostream)
 
         // Save the image.
-        transcoder.transcode(input, output);
+        transcoder.transcode(input, output)
 
         // Flush and close the stream.
-        ostream.flush();
-        ostream.close();
+        ostream.flush()
+        ostream.close()
 
     }
 

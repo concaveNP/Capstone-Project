@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="com.dude.deleteme_main" target="1.5" />
+      <module name="com.dude.deleteme_test" target="1.5" />
+      <module name="GenerateData_main" target="1.5" />
+      <module name="GenerateData_test" target="1.5" />
+      <module name="MoveData_main" target="1.8" />
+      <module name="MoveData_test" target="1.8" />
+      <module name="TestDataGeneration_main" target="1.5" />
+      <module name="TestDataGeneration_test" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

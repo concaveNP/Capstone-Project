@@ -47,3 +47,5 @@ captures/
 # The file containing the various Keys and Secrets used for cloud and services interaction.
 /values/KEYS_and_SECRETS.xml
 /app/src/main/res/values/KEYS_and_SECRETS.xml
+/testData/users/
+/testData/projects/

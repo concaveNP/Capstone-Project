@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TestDataGeneration.iml" filepath="$PROJECT_DIR$/TestDataGeneration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GenerateData.iml" filepath="$PROJECT_DIR$/.idea/modules/GenerateData.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GenerateData_main.iml" filepath="$PROJECT_DIR$/.idea/modules/GenerateData_main.iml" group="GenerateData" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GenerateData_test.iml" filepath="$PROJECT_DIR$/.idea/modules/GenerateData_test.iml" group="GenerateData" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MoveData.iml" filepath="$PROJECT_DIR$/.idea/modules/MoveData.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MoveData_main.iml" filepath="$PROJECT_DIR$/.idea/modules/MoveData_main.iml" group="MoveData" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MoveData_test.iml" filepath="$PROJECT_DIR$/.idea/modules/MoveData_test.iml" group="MoveData" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TestDataGeneration.iml" filepath="$PROJECT_DIR$/.idea/modules/TestDataGeneration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TestDataGeneration_main.iml" filepath="$PROJECT_DIR$/.idea/modules/TestDataGeneration_main.iml" group="TestDataGeneration" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TestDataGeneration_test.iml" filepath="$PROJECT_DIR$/.idea/modules/TestDataGeneration_test.iml" group="TestDataGeneration" />
     </modules>
   </component>
 </project>
