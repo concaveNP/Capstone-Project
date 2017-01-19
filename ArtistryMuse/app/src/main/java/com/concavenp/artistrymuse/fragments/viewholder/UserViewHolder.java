@@ -62,6 +62,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindToPost(Following following, View.OnClickListener clickListener) {
+
         // Display items to be populated
         headerImageView = (ImageView) itemView.findViewById(R.id.header_imageview);
         profileImageView = (ImageView) itemView.findViewById(R.id.profile_imageview);
