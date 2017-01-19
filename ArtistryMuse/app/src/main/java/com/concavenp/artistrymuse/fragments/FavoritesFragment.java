@@ -200,7 +200,8 @@ public class FavoritesFragment extends Fragment {
         // TODO: should not be hard coded
         //return "2a1d3365-118d-4dd7-9803-947a7103c730";
         //return "8338c7c0-e6b9-4432-8461-f7047b262fbc";
-        return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
+        //return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
+        return "54d1e146-a114-45ea-ab66-389f5fd53e53";
 
     }
 

@@ -18,6 +18,8 @@ import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.viewholder.UserViewHolder;
 import com.concavenp.artistrymuse.model.Following;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -141,16 +143,11 @@ public class FollowingFragment extends Fragment {
             @Override
             protected void populateViewHolder(final UserViewHolder viewHolder, final Following model, final int position) {
 
-
-
                 // TODO: need a better system for this as I believe this will be called multiple times
                 // See the adapter internal class in the "MakeYourAppMaterial" project's ArticleListActivity class.
                 // Should be able to determine the count of items found in the resulting query that would be good to
                 // perform this on after the count is reached.
                 mSwipeRefreshLayout.setRefreshing(false);
-
-
-
 
                 final DatabaseReference postRef = getRef(position);
 
@@ -165,14 +162,10 @@ public class FollowingFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
-
-
-
-
             }
+
         };
         mRecycler.setAdapter(mAdapter);
-
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
         StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
@@ -196,7 +189,12 @@ public class FollowingFragment extends Fragment {
         // must use the authUid (this is the getUid() call) to get the uid to be the DB primary key index to use as the myUserId value in the query - yuck, i'm doing this wrong
 
         // TODO: should not be hard coded
-        return "2a1d3365-118d-4dd7-9803-947a7103c730";
+        //return "2a1d3365-118d-4dd7-9803-947a7103c730";
+        //return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
+        return "54d1e146-a114-45ea-ab66-389f5fd53e53";
+
+
+
 
     }
 
