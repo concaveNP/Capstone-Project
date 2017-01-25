@@ -18,8 +18,11 @@ import com.concavenp.artistrymuse.DetailsActivity;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.viewholder.UserResponseViewHolder;
 import com.concavenp.artistrymuse.model.Request;
+import com.concavenp.artistrymuse.model.UserResponse;
 import com.concavenp.artistrymuse.model.UserResponseHit;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -50,6 +53,7 @@ public class SearchFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private DatabaseReference mDatabase;
+    //private FirebaseRecyclerAdapter<UserResponse, UserResponseViewHolder> mAdapter;
     private FirebaseRecyclerAdapter<UserResponseHit, UserResponseViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private EndlessRecyclerOnScrollListener mScrollListener;
@@ -148,6 +152,7 @@ public class SearchFragment extends Fragment {
         Query postsQuery = getQuery(mDatabase, requestId);
         mAdapter = new FirebaseRecyclerAdapter<UserResponseHit, UserResponseViewHolder>(UserResponseHit.class, R.layout.item_following, UserResponseViewHolder.class, postsQuery) {
 
+            //protected void populateViewHolder(final UserResponseViewHolder viewHolder, final UserResponse model, final int position) {
             @Override
             protected void populateViewHolder(final UserResponseViewHolder viewHolder, final UserResponseHit model, final int position) {
 
@@ -164,6 +169,7 @@ public class SearchFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
+
             }
 
         };
@@ -182,7 +188,7 @@ public class SearchFragment extends Fragment {
 
         String myUserId = getUid();
 
-        Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString()).child("hits");
+        Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString()).child("hits").child("hits");
 
         return myTopPostsQuery;
     }
