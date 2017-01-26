@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ import java.util.UUID;
  */
 public class SearchFragment extends Fragment {
 
-    private static final String TAG = "FollowingFragment";
+    private static final String TAG = "SearchFragment";
 
     // TODO: Rename parameter arguments, choose names that match the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -122,7 +123,13 @@ public class SearchFragment extends Fragment {
         mScrollListener = new EndlessRecyclerOnScrollListener(mManager) {
             @Override
             public void onLoadMore(int currentPage) {
+
+                // Log that we are doing another search of data on a different "page"
+                Log.d(TAG, "Searching for more paginated data from position: " + (currentPage*10));
+
+                // Get the data
                 search(currentPage);
+
             }
         };
         mRecycler.addOnScrollListener(mScrollListener);
@@ -131,8 +138,13 @@ public class SearchFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // Log that we are doing another search of data on a different "page"
+                Log.d(TAG, "Searching for more paginated data on page: " + 0);
+
                 // Perform a search and display the data
                 search(0);
+
             }
         });
 
@@ -144,7 +156,7 @@ public class SearchFragment extends Fragment {
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    private void search(int currentPage) {
+    private void search(int dataPosition) {
 
         UUID requestId = UUID.randomUUID();
 
@@ -179,7 +191,7 @@ public class SearchFragment extends Fragment {
         StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecycler.setLayoutManager(sglm);
 
-        Request request = new Request("firebase", mSearchEditText.getText().toString(), "user", currentPage);
+        Request request = new Request("firebase", mSearchEditText.getText().toString(), "user", dataPosition*10);
 
         mDatabase.child("search").child("request").child(requestId.toString()).setValue(request);
     }
@@ -204,7 +216,8 @@ public class SearchFragment extends Fragment {
         //return "2a1d3365-118d-4dd7-9803-947a7103c730";
         //return "8338c7c0-e6b9-4432-8461-f7047b262fbc";
         //return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
-        return "54d1e146-a114-45ea-ab66-389f5fd53e53";
+        //return "54d1e146-a114-45ea-ab66-389f5fd53e53";
+        return "0045d757-6cac-4a69-81e3-0952a3439a78";
 
     }
 

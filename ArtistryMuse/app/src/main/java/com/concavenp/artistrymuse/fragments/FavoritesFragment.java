@@ -100,6 +100,12 @@ public class FavoritesFragment extends Fragment {
         mRecycler = (RecyclerView) mainView.findViewById(R.id.favorites_recycler_view);
         mRecycler.setHasFixedSize(true);
 
+        // Set up Layout Manager, reverse layout
+        mManager = new LinearLayoutManager(getActivity());
+        mManager.setReverseLayout(true);
+        mManager.setStackFromEnd(true);
+        mRecycler.setLayoutManager(mManager);
+
         // When the user performs the action of swiping down then refresh the data displayed
         mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.favorites_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -130,12 +136,6 @@ public class FavoritesFragment extends Fragment {
         if (!mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(true);
         }
-
-        // Set up Layout Manager, reverse layout
-        mManager = new LinearLayoutManager(getActivity());
-        mManager.setReverseLayout(true);
-        mManager.setStackFromEnd(true);
-        mRecycler.setLayoutManager(mManager);
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
@@ -175,10 +175,10 @@ public class FavoritesFragment extends Fragment {
         };
         mRecycler.setAdapter(mAdapter);
 
-
         int columnCount = getResources().getInteger(R.integer.list_column_count);
         StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecycler.setLayoutManager(sglm);
+
     }
 
     private Query getQuery(DatabaseReference databaseReference) {
@@ -201,7 +201,8 @@ public class FavoritesFragment extends Fragment {
         //return "2a1d3365-118d-4dd7-9803-947a7103c730";
         //return "8338c7c0-e6b9-4432-8461-f7047b262fbc";
         //return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
-        return "54d1e146-a114-45ea-ab66-389f5fd53e53";
+        //return "54d1e146-a114-45ea-ab66-389f5fd53e53";
+        return "0045d757-6cac-4a69-81e3-0952a3439a78";
 
     }
 

@@ -38,7 +38,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         mPreviousTotal = 0;
         mLoading = false;
         mVisibleThreshold = 5;
-        mCurrentPage = 1;
+        mCurrentPage = 0;
     }
 
     @Override
