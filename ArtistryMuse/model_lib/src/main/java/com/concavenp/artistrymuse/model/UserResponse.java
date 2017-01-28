@@ -11,7 +11,7 @@ public class UserResponse {
 
     public Shard _shards;
     public Hits hits;
-    public int timed_out;
+    public boolean timed_out;
     public int took;
 
     public UserResponse() {
@@ -34,11 +34,11 @@ public class UserResponse {
         this.hits = hits;
     }
 
-    public int getTimed_out() {
+    public boolean getTimed_out() {
         return timed_out;
     }
 
-    public void setTimed_out(int timed_out) {
+    public void setTimed_out(boolean timed_out) {
         this.timed_out = timed_out;
     }
 

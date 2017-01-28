@@ -45,7 +45,6 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
 
         super(itemView);
 
-
         // Initialize the Database connection
         mDatabase = FirebaseDatabase.getInstance().getReference();
 

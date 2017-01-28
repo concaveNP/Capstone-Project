@@ -1,6 +1,5 @@
 package com.concavenp.artistrymuse;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -11,18 +10,18 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.concavenp.artistrymuse.fragments.ArtistryFragmentPagerAdapter;
+import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
 import com.concavenp.artistrymuse.fragments.FavoritesFragment;
 import com.concavenp.artistrymuse.fragments.FollowingFragment;
 import com.concavenp.artistrymuse.fragments.GalleryFragment;
 import com.concavenp.artistrymuse.fragments.SearchFragment;
+import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,6 +33,7 @@ import java.util.List;
 import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
 public class MainActivity extends AppCompatActivity implements
+        OnDetailsInteractionListener,
         FollowingFragment.OnFragmentInteractionListener,
         FavoritesFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
@@ -169,6 +169,47 @@ public class MainActivity extends AppCompatActivity implements
     @MainThread
     private void showSnackbar(@StringRes int errorMessageRes) {
         Snackbar.make(findViewById(R.id.coordinatorLayout), errorMessageRes, Snackbar.LENGTH_LONG).show();
+    }
+
+    /**
+     * The purpose of this interface implementation is to start the Details Activity of either a
+     * user or a project.  The point to making the Main Activity implement is to support both the
+     * phone and tablet layout of the app.  Phone layouts will just start a new activity and
+     * tablet layouts will populate a neighboring fragment with the details results.
+     *
+     * @param uid - This will be the UID of other the User or the Project as specified in the type param
+     * @param type - The type will either be a user or a project
+     */
+    @Override
+    public void onDetailsSelection(String uid, DETAILS_TYPE type) {
+
+        // TODO: support the phone and tablet layout, for now it is just phone
+
+        // TODO: implement the details activity(s) for both type
+        // Create and start the details activity along with passing it the Movie Item details information via JSON string
+        Intent intent = new Intent(this, DetailsActivity.class);
+//        intent.putExtra(DetailsActivity.EXTRA_DATA, json);
+        startActivity(intent);
+
+
+//        if (mPhoneLayout) {
+//
+//            // Convert the GSON object back to a JSON string in order to pass to the activity
+//            Gson gson = new Gson();
+//            String json = gson.toJson(item);
+//
+//            // Create and start the details activity along with passing it the Movie Item details information via JSON string
+//            Intent intent = new Intent(this, MovieDetailsActivity.class);
+//            intent.putExtra(MovieDetailsActivity.EXTRA_DATA, json);
+//            startActivity(intent);
+//
+//        } else {
+//
+//            MovieDetailsFragment fragment = (MovieDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.movie_details_fragment);
+//            fragment.updateMovieDetailInfo(item);
+//
+//        }
+
     }
 
 }

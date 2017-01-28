@@ -17,7 +17,10 @@ import android.widget.ImageButton;
 
 import com.concavenp.artistrymuse.DetailsActivity;
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.fragments.adapter.UserSearchResultAdapter;
 import com.concavenp.artistrymuse.fragments.viewholder.UserResponseViewHolder;
+import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.model.Hits;
 import com.concavenp.artistrymuse.model.Request;
 import com.concavenp.artistrymuse.model.UserResponse;
 import com.concavenp.artistrymuse.model.UserResponseHit;
@@ -27,7 +30,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -52,13 +57,17 @@ public class SearchFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private OnDetailsInteractionListener mDetailsListener;
 
     private DatabaseReference mDatabase;
-    //private FirebaseRecyclerAdapter<UserResponse, UserResponseViewHolder> mAdapter;
-    private FirebaseRecyclerAdapter<UserResponseHit, UserResponseViewHolder> mAdapter;
+    private UserSearchResultAdapter mAdapter;
     private RecyclerView mRecycler;
     private EndlessRecyclerOnScrollListener mScrollListener;
+
     private LinearLayoutManager mManager;
+//    private StaggeredGridLayoutManager mManager;
+
+
     private EditText mSearchEditText;
 
     public SearchFragment() {
@@ -117,7 +126,17 @@ public class SearchFragment extends Fragment {
         mManager = new LinearLayoutManager(getActivity());
         mManager.setReverseLayout(true);
         mManager.setStackFromEnd(true);
+
+//        int columnCount = getResources().getInteger(R.integer.list_column_count);
+//        mManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+
         mRecycler.setLayoutManager(mManager);
+
+
+        // Create the adapter that will be used to hold and paginate through the resulting search data
+        mAdapter = new UserSearchResultAdapter(mDetailsListener);
+        mAdapter.clearData();
+        mRecycler.setAdapter(mAdapter);
 
         // Setup the endless scrolling
         mScrollListener = new EndlessRecyclerOnScrollListener(mManager) {
@@ -125,13 +144,14 @@ public class SearchFragment extends Fragment {
             public void onLoadMore(int currentPage) {
 
                 // Log that we are doing another search of data on a different "page"
-                Log.d(TAG, "Searching for more paginated data from position: " + (currentPage*10));
+                Log.i(TAG, "Searching for more paginated data from position: " + (currentPage*10));
 
                 // Get the data
                 search(currentPage);
 
             }
         };
+        mScrollListener.initValues();
         mRecycler.addOnScrollListener(mScrollListener);
 
         ImageButton button = (ImageButton) mainView.findViewById(R.id.search_imageButton);
@@ -140,7 +160,11 @@ public class SearchFragment extends Fragment {
             public void onClick(View v) {
 
                 // Log that we are doing another search of data on a different "page"
-                Log.d(TAG, "Searching for more paginated data on page: " + 0);
+                Log.i(TAG, "Searching for more paginated data on page: " + 0);
+
+                // Clear any results that are being stored within the adapter scroll listener
+                mAdapter.clearData();
+                mScrollListener.initValues();
 
                 // Perform a search and display the data
                 search(0);
@@ -161,46 +185,82 @@ public class SearchFragment extends Fragment {
         UUID requestId = UUID.randomUUID();
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query postsQuery = getQuery(mDatabase, requestId);
-        mAdapter = new FirebaseRecyclerAdapter<UserResponseHit, UserResponseViewHolder>(UserResponseHit.class, R.layout.item_following, UserResponseViewHolder.class, postsQuery) {
+        final Query postsQuery = getQuery(mDatabase, requestId);
 
-            //protected void populateViewHolder(final UserResponseViewHolder viewHolder, final UserResponse model, final int position) {
-            @Override
-            protected void populateViewHolder(final UserResponseViewHolder viewHolder, final UserResponseHit model, final int position) {
+        Log.i(TAG, postsQuery.toString());
 
-                final DatabaseReference postRef = getRef(position);
-
-                // Bind Post to ViewHolder, setting OnClickListener for the star button
-                final String postKey = postRef.getKey();
-                viewHolder.bindToPost(model, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View starView) {
-                        // Launch PostDetailActivity
-                        Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                        intent.putExtra(DetailsActivity.EXTRA_UID_KEY, postKey);
-                        startActivity(intent);
-                    }
-                });
-
-            }
-
-        };
-        mRecycler.setAdapter(mAdapter);
-
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecycler.setLayoutManager(sglm);
 
         Request request = new Request("firebase", mSearchEditText.getText().toString(), "user", dataPosition*10);
-
         mDatabase.child("search").child("request").child(requestId.toString()).setValue(request);
+
+        new Thread(new Runnable() {
+            public void run() {
+
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                postsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        // Convert the JSON to Object
+                        //Hits response = dataSnapshot.getValue(Hits.class);
+                        UserResponse response = dataSnapshot.getValue(UserResponse.class);
+                        //List<UserResponseHit> response = dataSnapshot.getValue(ArrayList<UserResponseHit.class>.getClass());
+
+                        if ( (response != null) && (response.getHits() != null) ) {
+
+                            if  ((response.getHits().getTotal() > 0) && (response.getHits().getHits() != null)) {
+
+                                Log.i(TAG, response.toString());
+                                Log.i(TAG, "Items found: " + response.getHits().getTotal());
+
+                                // Add the new data
+                                mAdapter.add(response.getHits().getHits());
+
+                            }
+                            else {
+                                Log.e(TAG, "There does not appear to be any results from the search query");
+                            }
+
+                        }
+                        else {
+                            Log.e(TAG, "Expected response from search query was null");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                        Log.i(TAG, databaseError.toString());
+
+                    }
+
+                });
+
+
+
+            }
+        }).start();
+
+
+
+
+
     }
 
     private Query getQuery(DatabaseReference databaseReference, UUID uuid) {
 
         String myUserId = getUid();
 
-        Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString()).child("hits").child("hits");
+ //       Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString()).child("hits");
+        //Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString()).child("hits").child("hits");
+        Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString());
 
         return myTopPostsQuery;
     }
@@ -236,6 +296,17 @@ public class SearchFragment extends Fragment {
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
 
         }
+
+        // Re-attach to the parent Activity interface
+        if (context instanceof OnDetailsInteractionListener) {
+
+            mDetailsListener = (OnDetailsInteractionListener) context;
+
+        } else {
+
+            throw new RuntimeException(context.toString() + " must implement OnDetailsInteractionListener");
+
+        }
     }
 
     @Override
@@ -243,8 +314,9 @@ public class SearchFragment extends Fragment {
 
         super.onDetach();
 
-        // Detach from the parent Activity interface
+        // Detach from the parent Activity interface(s)
         mListener = null;
+        mDetailsListener = null;
 
      }
 
@@ -262,5 +334,21 @@ public class SearchFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnUserSelectionListener  {
+        // TODO: Update argument type and name
+        void OnUserSelectionListener(Uri uri);
+    }
+
 
 }

@@ -1,9 +1,14 @@
-package com.concavenp.artistrymuse.fragments;
+package com.concavenp.artistrymuse.fragments.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.concavenp.artistrymuse.fragments.FavoritesFragment;
+import com.concavenp.artistrymuse.fragments.FollowingFragment;
+import com.concavenp.artistrymuse.fragments.GalleryFragment;
+import com.concavenp.artistrymuse.fragments.SearchFragment;
 
 /**
  * Created by dave on 11/12/2016.
