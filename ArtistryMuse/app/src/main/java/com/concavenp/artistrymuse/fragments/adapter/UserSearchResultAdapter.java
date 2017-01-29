@@ -45,7 +45,7 @@ public class UserSearchResultAdapter extends RecyclerView.Adapter<UserResponseVi
 
         LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View result = inflater.inflate(R.layout.item_following, parent, false);
+        View result = inflater.inflate(R.layout.item_user, parent, false);
 
         UserResponseViewHolder viewHolder = new UserResponseViewHolder(result);
 

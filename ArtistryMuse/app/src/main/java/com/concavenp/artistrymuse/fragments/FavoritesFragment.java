@@ -143,7 +143,7 @@ public class FavoritesFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
-        mAdapter = new FirebaseRecyclerAdapter<Favorite, ProjectViewHolder>(Favorite.class, R.layout.item_favorite, ProjectViewHolder.class, postsQuery) {
+        mAdapter = new FirebaseRecyclerAdapter<Favorite, ProjectViewHolder>(Favorite.class, R.layout.item_project, ProjectViewHolder.class, postsQuery) {
             @Override
             protected void populateViewHolder(final ProjectViewHolder viewHolder, final Favorite model, final int position) {
 

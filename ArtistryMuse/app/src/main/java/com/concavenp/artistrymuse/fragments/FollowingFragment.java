@@ -141,7 +141,7 @@ public class FollowingFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
-        mAdapter = new FirebaseRecyclerAdapter<Following, UserViewHolder>(Following.class, R.layout.item_following, UserViewHolder.class, postsQuery) {
+        mAdapter = new FirebaseRecyclerAdapter<Following, UserViewHolder>(Following.class, R.layout.item_user, UserViewHolder.class, postsQuery) {
             @Override
             protected void populateViewHolder(final UserViewHolder viewHolder, final Following model, final int position) {
 
