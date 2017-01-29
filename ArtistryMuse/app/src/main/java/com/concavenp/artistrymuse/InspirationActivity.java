@@ -9,6 +9,12 @@ import android.view.View;
 
 public class InspirationActivity extends AppCompatActivity {
 
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = InspirationActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -9,38 +9,45 @@ import java.util.List;
 
 public class UserResponse {
 
-
-
-    public List<UserResponseHit> hits = new ArrayList<>();
-    public float max_score;
-    public int total;
-
+    public Shard _shards;
+    public Hits hits;
+    public boolean timed_out;
+    public int took;
 
     public UserResponse() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public List<UserResponseHit> getHits() {
+    public Shard get_shards() {
+        return _shards;
+    }
+
+    public void set_shards(Shard _shards) {
+        this._shards = _shards;
+    }
+
+    public Hits getHits() {
         return hits;
     }
 
-    public void setHits(List<UserResponseHit> hits) {
+    public void setHits(Hits hits) {
         this.hits = hits;
     }
 
-    public float getMax_score() {
-        return max_score;
+    public boolean getTimed_out() {
+        return timed_out;
     }
 
-    public void setMax_score(float max_score) {
-        this.max_score = max_score;
+    public void setTimed_out(boolean timed_out) {
+        this.timed_out = timed_out;
     }
 
-    public int getTotal() {
-        return total;
+    public int getTook() {
+        return took;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public void setTook(int took) {
+        this.took = took;
     }
+
 }

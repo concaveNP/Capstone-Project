@@ -28,7 +28,7 @@ class Generate {
     private static final String projectsDirectoryName = "projects"
     private static final String jsonFilename = "testData.json"
 
-    private static final int numberOfNewUsers = 10
+    private static final int numberOfNewUsers = 100
     private static final int numberofProjectsPerUser = numberOfNewUsers * 0.15
     private static final int numberofFavoritesPerUser = numberOfNewUsers * 0.25
     private static final int numberofFollowingsPerUser = numberOfNewUsers

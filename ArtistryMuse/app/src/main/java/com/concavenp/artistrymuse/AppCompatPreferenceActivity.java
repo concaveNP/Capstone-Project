@@ -18,6 +18,12 @@ import android.view.ViewGroup;
  */
 public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = AppCompatPreferenceActivity.class.getSimpleName();
+
     private AppCompatDelegate mDelegate;
 
     @Override

@@ -38,7 +38,11 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class ProjectActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "ProjectActivity";
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = ProjectActivity.class.getSimpleName();
 
     private static final int RC_TAKE_PICTURE = 101;
     private static final int RC_STORAGE_PERMS = 102;

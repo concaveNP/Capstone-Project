@@ -7,28 +7,24 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.model.Following;
-import com.concavenp.artistrymuse.model.User;
-import com.concavenp.artistrymuse.model.UserResponse;
+import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.UserResponseHit;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 /**
  * Created by dave on 12/2/2016.
  */
-
 public class UserResponseViewHolder extends RecyclerView.ViewHolder {
 
-    DatabaseReference mDatabase;
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = UserResponseViewHolder.class.getSimpleName();
 
     private StorageReference mStorageRef;
     private FirebaseUser mUser;
@@ -46,10 +42,6 @@ public class UserResponseViewHolder extends RecyclerView.ViewHolder {
 
         super(itemView);
 
-
-        // Initialize the Database connection
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
          // Initialize the Storage connection
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -62,7 +54,7 @@ public class UserResponseViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void bindToPost(UserResponseHit response, View.OnClickListener clickListener) {
+    public void bindToPost(UserResponseHit response, final OnDetailsInteractionListener listener) {
 
         // Display items to be populated
         headerImageView = (ImageView) itemView.findViewById(R.id.header_imageview);
@@ -73,40 +65,46 @@ public class UserResponseViewHolder extends RecyclerView.ViewHolder {
         followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
         followingTextView = (TextView) itemView.findViewById(R.id.following_textview);
 
+        // Verify there is data to work with
         if (response._source != null) {
 
-            mDatabase.child("users").child(response._source.uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            populateImageView(
+                    response.get_source().getUid(),
+                    response.get_source().getHeaderImageUid(),
+                    headerImageView);
+            populateImageView(
+                    response.get_source().getUid(),
+                    response.get_source().getProfileImageUid(),
+                    profileImageView);
+            populateTextView(
+                    response.get_source().getUsername(),
+                    usernameTextView);
+            populateTextView(
+                    response.get_source().getSummary(),
+                    summaryTextView);
+            populateTextView(
+                    response.get_source().getDescription(),
+                    descriptionTextView);
+            populateTextView(
+                    Integer.toString(response.get_source().getFollowedCount()),
+                    followedTextView);
+            populateTextView(
+                    Integer.toString(response.get_source().getFollowing().size()),
+                    followingTextView);
 
+            // Create stable UID for override
+            final String uid = response.get_source().getUid();
+
+            // Add a click listener to the view in order for the user to get more details about a selected movie
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onClick(View view) {
 
-                    // Perform the JSON to Object conversion
-                    User user = dataSnapshot.getValue(User.class);
-
-                    // TODO: what to do when it is null
-
-                    // Verify there is a user to work with
-                    if (user != null) {
-
-                        populateImageView(user.uid, user.headerImageUid, headerImageView);
-                        populateImageView(user.uid, user.profileImageUid, profileImageView);
-                        populateTextView(user.username, usernameTextView);
-                        populateTextView(user.summary, summaryTextView);
-                        populateTextView(user.description, descriptionTextView);
-                        populateTextView(Integer.toString(user.followedCount), followedTextView);
-                        populateTextView(Integer.toString(user.following.size()), followingTextView);
-
-                    }
+                    // Notify the the listener (aka MainActivity) of the details selection
+                    listener.onDetailsSelection(uid, OnDetailsInteractionListener.DETAILS_TYPE.USER);
 
                 }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-
             });
-
 
         }
 

@@ -27,6 +27,12 @@ import com.google.firebase.storage.StorageReference;
 
 public class UserViewHolder extends RecyclerView.ViewHolder {
 
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = UserViewHolder.class.getSimpleName();
+
     DatabaseReference mDatabase;
 
     private StorageReference mStorageRef;
@@ -44,7 +50,6 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
     public UserViewHolder(View itemView) {
 
         super(itemView);
-
 
         // Initialize the Database connection
         mDatabase = FirebaseDatabase.getInstance().getReference();

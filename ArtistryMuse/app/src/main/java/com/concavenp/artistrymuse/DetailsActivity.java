@@ -9,6 +9,12 @@ import android.view.View;
 
 public class DetailsActivity extends AppCompatActivity {
 
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = DetailsActivity.class.getSimpleName();
+
     public static final String EXTRA_UID_KEY = "extra_uid_key";
 
     @Override
