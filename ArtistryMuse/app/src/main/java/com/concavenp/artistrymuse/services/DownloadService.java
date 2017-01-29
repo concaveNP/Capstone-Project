@@ -41,7 +41,11 @@ import java.io.InputStream;
  */
 public class DownloadService extends BaseTaskService {
 
-    private static final String TAG = "Storage#DownloadService";
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = DownloadService.class.getSimpleName();
 
     /** Actions **/
     public static final String ACTION_DOWNLOAD = "action_download";

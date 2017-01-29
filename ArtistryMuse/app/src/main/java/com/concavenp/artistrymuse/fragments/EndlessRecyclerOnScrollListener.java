@@ -16,6 +16,12 @@ import android.support.v7.widget.RecyclerView;
  */
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
+
     // The total number of items in the dataset after the last load
     private int mPreviousTotal;
 

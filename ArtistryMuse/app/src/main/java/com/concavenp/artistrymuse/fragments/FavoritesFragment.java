@@ -33,7 +33,11 @@ import com.google.firebase.database.Query;
  */
 public class FavoritesFragment extends Fragment {
 
-    private static final String TAG = "FavoritesFragment";
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = FavoritesFragment.class.getSimpleName();
 
     // TODO: Rename parameter arguments, choose names that match/ the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";

@@ -39,6 +39,12 @@ public class MainActivity extends AppCompatActivity implements
         SearchFragment.OnFragmentInteractionListener,
         GalleryFragment.OnFragmentInteractionListener {
 
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

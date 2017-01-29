@@ -26,7 +26,11 @@ import com.google.firebase.storage.UploadTask;
 
 public class UploadService extends BaseTaskService {
 
-    private static final String TAG = "UploadService";
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = UploadService.class.getSimpleName();
 
     private static final int NOTIF_ID_DOWNLOAD = 0;
 

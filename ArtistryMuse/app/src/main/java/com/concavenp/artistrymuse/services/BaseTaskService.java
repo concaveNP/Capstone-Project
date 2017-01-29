@@ -14,7 +14,11 @@ import android.util.Log;
  */
 public abstract class BaseTaskService extends Service {
 
-    private static final String TAG = "BaseTaskService";
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = BaseTaskService.class.getSimpleName();
 
     private int mNumTasks = 0;
 

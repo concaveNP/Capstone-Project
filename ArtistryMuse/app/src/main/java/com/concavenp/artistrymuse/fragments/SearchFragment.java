@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -46,7 +47,11 @@ import java.util.UUID;
  */
 public class SearchFragment extends Fragment {
 
-    private static final String TAG = "SearchFragment";
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = SearchFragment.class.getSimpleName();
 
     // TODO: Rename parameter arguments, choose names that match the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -64,7 +69,8 @@ public class SearchFragment extends Fragment {
     private RecyclerView mRecycler;
     private EndlessRecyclerOnScrollListener mScrollListener;
 
-    private LinearLayoutManager mManager;
+    //private LinearLayoutManager mManager;
+    private GridLayoutManager mManager;
 //    private StaggeredGridLayoutManager mManager;
 
 
@@ -123,14 +129,19 @@ public class SearchFragment extends Fragment {
         mRecycler.setHasFixedSize(true);
 
         // Setup Layout Manager, reverse layout
-        mManager = new LinearLayoutManager(getActivity());
-        mManager.setReverseLayout(true);
-        mManager.setStackFromEnd(true);
+//        mManager = new LinearLayoutManager(getActivity());
+//        mManager.setReverseLayout(true);
+//        mManager.setStackFromEnd(true);
+
+
+        int columnCount = getResources().getInteger(R.integer.list_column_count);
+        mManager = new GridLayoutManager(getContext(), columnCount);
+        mRecycler.setLayoutManager(mManager);
+
 
 //        int columnCount = getResources().getInteger(R.integer.list_column_count);
 //        mManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-
-        mRecycler.setLayoutManager(mManager);
+//        mRecycler.setLayoutManager(mManager);
 
 
         // Create the adapter that will be used to hold and paginate through the resulting search data

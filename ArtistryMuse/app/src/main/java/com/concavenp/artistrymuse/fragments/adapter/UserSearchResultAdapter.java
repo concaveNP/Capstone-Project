@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.fragments.SearchFragment;
 import com.concavenp.artistrymuse.fragments.viewholder.UserResponseViewHolder;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.UserResponseHit;
@@ -18,12 +17,12 @@ import java.util.List;
 /**
  * Created by dave on 12/26/2016.
  */
-
 public class UserSearchResultAdapter extends RecyclerView.Adapter<UserResponseViewHolder> {
 
     /**
      * The logging tag string to be associated with log data for this class
      */
+    @SuppressWarnings("unused")
     private static final String TAG = UserSearchResultAdapter.class.getSimpleName();
 
     private List<UserResponseHit> mResultItems = new ArrayList<>();

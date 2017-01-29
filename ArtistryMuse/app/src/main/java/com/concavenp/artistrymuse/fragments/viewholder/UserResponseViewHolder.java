@@ -20,6 +20,12 @@ import com.google.firebase.storage.StorageReference;
  */
 public class UserResponseViewHolder extends RecyclerView.ViewHolder {
 
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = UserResponseViewHolder.class.getSimpleName();
+
     private StorageReference mStorageRef;
     private FirebaseUser mUser;
     private String mUid;

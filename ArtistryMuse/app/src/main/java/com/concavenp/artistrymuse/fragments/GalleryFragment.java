@@ -20,6 +20,13 @@ import com.concavenp.artistrymuse.R;
  * create an instance of this fragment.
  */
 public class GalleryFragment extends Fragment {
+
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = GalleryFragment.class.getSimpleName();
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";

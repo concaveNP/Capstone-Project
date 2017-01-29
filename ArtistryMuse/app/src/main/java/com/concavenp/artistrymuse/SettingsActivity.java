@@ -35,6 +35,13 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = SettingsActivity.class.getSimpleName();
+
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.

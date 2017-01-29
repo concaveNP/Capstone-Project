@@ -15,6 +15,12 @@ import com.concavenp.artistrymuse.fragments.SearchFragment;
  */
 public class ArtistryFragmentPagerAdapter extends FragmentPagerAdapter {
 
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = ArtistryFragmentPagerAdapter.class.getSimpleName();
+
     final int PAGE_COUNT = 4;
 
     // TODO: can I use the string values for this?
