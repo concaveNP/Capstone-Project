@@ -1,14 +1,11 @@
 package com.concavenp.artistrymuse.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +13,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.concavenp.artistrymuse.DetailsActivity;
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.fragments.adapter.UserSearchResultAdapter;
+import com.concavenp.artistrymuse.fragments.adapter.SearchResultAdapter;
 import com.concavenp.artistrymuse.fragments.viewholder.UserResponseViewHolder;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
-import com.concavenp.artistrymuse.model.Hits;
 import com.concavenp.artistrymuse.model.Request;
 import com.concavenp.artistrymuse.model.UserResponse;
 import com.concavenp.artistrymuse.model.UserResponseHit;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.List;
 import java.util.UUID;
 
 
@@ -65,7 +58,7 @@ public class SearchFragment extends Fragment {
     private OnDetailsInteractionListener mDetailsListener;
 
     private DatabaseReference mDatabase;
-    private UserSearchResultAdapter mAdapter;
+    private SearchResultAdapter<UserResponseHit, UserResponseViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private EndlessRecyclerOnScrollListener mScrollListener;
 
@@ -138,14 +131,14 @@ public class SearchFragment extends Fragment {
         mManager = new GridLayoutManager(getContext(), columnCount);
         mRecycler.setLayoutManager(mManager);
 
+// TODO: see issue (EndlessRecyclerOnScrollListener needs to support StaggeredGridLayoutManager #34) https://github.com/concaveNP/Capstone-Project/issues/34
 
 //        int columnCount = getResources().getInteger(R.integer.list_column_count);
 //        mManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
 //        mRecycler.setLayoutManager(mManager);
 
-
         // Create the adapter that will be used to hold and paginate through the resulting search data
-        mAdapter = new UserSearchResultAdapter(mDetailsListener);
+        mAdapter = new SearchResultAdapter<>(UserResponseViewHolder.class, mDetailsListener, R.layout.item_user);
         mAdapter.clearData();
         mRecycler.setAdapter(mAdapter);
 

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.concavenp.artistrymuse.DetailsActivity;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.viewholder.UserViewHolder;
+import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.Following;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +49,7 @@ public class FollowingFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private OnDetailsInteractionListener mDetailsListener;
 
     private DatabaseReference mDatabase;
     private FirebaseRecyclerAdapter<Following, UserViewHolder> mAdapter;
@@ -151,19 +153,8 @@ public class FollowingFragment extends Fragment {
                 // perform this on after the count is reached.
                 mSwipeRefreshLayout.setRefreshing(false);
 
-                final DatabaseReference postRef = getRef(position);
+                viewHolder.bindToPost(model, mDetailsListener);
 
-                // Bind Post to ViewHolder, setting OnClickListener for the star button
-                final String postKey = postRef.getKey();
-                viewHolder.bindToPost(model, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View starView) {
-                        // Launch PostDetailActivity
-                        Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                        intent.putExtra(DetailsActivity.EXTRA_UID_KEY, postKey);
-                        startActivity(intent);
-                    }
-                });
             }
 
         };

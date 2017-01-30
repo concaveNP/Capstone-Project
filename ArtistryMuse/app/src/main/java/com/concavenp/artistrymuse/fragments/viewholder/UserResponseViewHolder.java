@@ -1,24 +1,18 @@
 package com.concavenp.artistrymuse.fragments.viewholder;
 
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.UserResponseHit;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 /**
  * Created by dave on 12/2/2016.
  */
-public class UserResponseViewHolder extends RecyclerView.ViewHolder {
+public class UserResponseViewHolder extends BaseViewHolder {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -26,55 +20,52 @@ public class UserResponseViewHolder extends RecyclerView.ViewHolder {
     @SuppressWarnings("unused")
     private static final String TAG = UserResponseViewHolder.class.getSimpleName();
 
-    private StorageReference mStorageRef;
-    private FirebaseUser mUser;
-    private String mUid;
-
-    public ImageView headerImageView;
-    public ImageView profileImageView;
-    public TextView usernameTextView;
-    public TextView summaryTextView;
-    public TextView descriptionTextView;
-    public TextView followedTextView;
-    public TextView followingTextView;
-
     public UserResponseViewHolder(View itemView) {
 
         super(itemView);
 
-         // Initialize the Storage connection
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        // Get the authenticated user
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (mUser != null) {
-            mUid = mUser.getUid();
-        }
-
     }
 
-    public void bindToPost(UserResponseHit response, final OnDetailsInteractionListener listener) {
+    @Override
+    public void bindToPost(Object pojoJson, final OnDetailsInteractionListener listener) {
+
+        UserResponseHit response;
+
+        // We are expected an Following object and nothing else
+        if (pojoJson instanceof UserResponseHit) {
+
+            response = (UserResponseHit) pojoJson;
+
+        }
+        else {
+
+            Log.e(TAG, "Unexpected object type found when expecting an UserResponseHit object");
+
+            return;
+
+        }
 
         // Display items to be populated
-        headerImageView = (ImageView) itemView.findViewById(R.id.header_imageview);
-        profileImageView = (ImageView) itemView.findViewById(R.id.profile_imageview);
-        usernameTextView = (TextView) itemView.findViewById(R.id.username_textview);
-        summaryTextView = (TextView) itemView.findViewById(R.id.summary_textview);
-        descriptionTextView = (TextView) itemView.findViewById(R.id.description_textview);
-        followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
-        followingTextView = (TextView) itemView.findViewById(R.id.following_textview);
+        final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_imageview);
+        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_imageview);
+        final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_textview);
+        final TextView summaryTextView = (TextView) itemView.findViewById(R.id.summary_textview);
+        final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textview);
+        final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
+        final TextView followingTextView = (TextView) itemView.findViewById(R.id.following_textview);
 
         // Verify there is data to work with
         if (response._source != null) {
 
             populateImageView(
-                    response.get_source().getUid(),
-                    response.get_source().getHeaderImageUid(),
+                    buildFileReference(
+                            response.get_source().getUid(),
+                            response.get_source().getHeaderImageUid()),
                     headerImageView);
             populateImageView(
-                    response.get_source().getUid(),
-                    response.get_source().getProfileImageUid(),
+                    buildFileReference(
+                            response.get_source().getUid(),
+                            response.get_source().getProfileImageUid()),
                     profileImageView);
             populateTextView(
                     response.get_source().getUsername(),
@@ -110,35 +101,34 @@ public class UserResponseViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    private void populateImageView(String uid, String imageUid, ImageView imageView) {
+    @Override
+    protected String buildFileReference(String uid, String imageUid) {
+
+        String fileReference = null;
+
+        // Verify there is image data to work with
         if ((imageUid != null) && (!imageUid.isEmpty())) {
 
-            final String fileReference = "users" + "/" + uid + "/" + imageUid + ".jpg";
-            StorageReference storageReference = mStorageRef.child(fileReference);
+            // Verify there is user data to work with
+            if ((uid != null) && (!uid.isEmpty())) {
 
-            // Download directly from StorageReference using Glide
-            Glide.with(imageView.getContext())
-                    .using(new FirebaseImageLoader())
-                    .load(storageReference)
-                    .fitCenter()
-                    .crossFade()
-                    .into(imageView);
+                fileReference = "users" + "/" + uid + "/" + imageUid + ".jpg";
 
-        }
-    }
+            }
+            else {
 
-    private void populateTextView(String text, TextView textView) {
+                Log.e(TAG, "Unexpected null user UID");
 
-        // Verify there is text to work with and empty out if nothing is there.
-        if ((text != null) && (!text.isEmpty())) {
-
-            textView.setText(text);
-
-        } else {
-
-            textView.setText("");
+            }
 
         }
+        else {
+
+            Log.e(TAG, "Unexpected null image UID");
+
+        }
+
+        return fileReference;
 
     }
 
