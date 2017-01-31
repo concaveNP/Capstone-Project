@@ -1,11 +1,13 @@
 package com.concavenp.artistrymuse.fragments.viewholder;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,7 +54,35 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     abstract public void bindToPost(Object jsonObject, final OnDetailsInteractionListener listener);
 
-    abstract protected String buildFileReference(String uid, String imageUid);
+    protected String buildFileReference(String uid, String imageUid, StorageDataType type) {
+
+        String fileReference = null;
+
+        // Verify there is image data to work with
+        if ((imageUid != null) && (!imageUid.isEmpty())) {
+
+            // Verify there is user data to work with
+            if ((uid != null) && (!uid.isEmpty())) {
+
+                fileReference = type.getType() + "/" + uid + "/" + imageUid + ".jpg";
+
+            }
+            else {
+
+                Log.e(TAG, "Unexpected null project UID");
+
+            }
+
+        }
+        else {
+
+            Log.e(TAG, "Unexpected null image UID");
+
+        }
+
+        return fileReference;
+
+    }
 
     protected void populateImageView(String fileReference, ImageView imageView) {
 

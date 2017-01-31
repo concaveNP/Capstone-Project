@@ -126,7 +126,6 @@ public class SearchFragment extends Fragment {
 //        mManager.setReverseLayout(true);
 //        mManager.setStackFromEnd(true);
 
-
         int columnCount = getResources().getInteger(R.integer.list_column_count);
         mManager = new GridLayoutManager(getContext(), columnCount);
         mRecycler.setLayoutManager(mManager);
@@ -192,7 +191,6 @@ public class SearchFragment extends Fragment {
         final Query postsQuery = getQuery(mDatabase, requestId);
 
         Log.i(TAG, postsQuery.toString());
-
 
         Request request = new Request("firebase", mSearchEditText.getText().toString(), "user", dataPosition*10);
         mDatabase.child("search").child("request").child(requestId.toString()).setValue(request);
@@ -262,11 +260,10 @@ public class SearchFragment extends Fragment {
 
         String myUserId = getUid();
 
- //       Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString()).child("hits");
-        //Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString()).child("hits").child("hits");
         Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString());
 
         return myTopPostsQuery;
+
     }
 
     private String getUid() {
@@ -311,6 +308,7 @@ public class SearchFragment extends Fragment {
             throw new RuntimeException(context.toString() + " must implement OnDetailsInteractionListener");
 
         }
+
     }
 
     @Override
@@ -338,21 +336,5 @@ public class SearchFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnUserSelectionListener  {
-        // TODO: Update argument type and name
-        void OnUserSelectionListener(Uri uri);
-    }
-
 
 }

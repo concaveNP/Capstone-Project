@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements
      * @param type - The type will either be a user or a project
      */
     @Override
-    public void onDetailsSelection(String uid, DETAILS_TYPE type) {
+    public void onDetailsSelection(String uid, StorageDataType type) {
 
         // TODO: support the phone and tablet layout, for now it is just phone
 

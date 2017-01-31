@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.Following;
 import com.concavenp.artistrymuse.model.User;
@@ -71,8 +72,8 @@ public class UserViewHolder extends BaseViewHolder {
                 // Verify there is a user to work with
                 if (user != null) {
 
-                    populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid()), headerImageView);
-                    populateImageView(buildFileReference(user.getUid(), user.getProfileImageUid()), profileImageView);
+                    populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), headerImageView);
+                    populateImageView(buildFileReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), profileImageView);
                     populateTextView(user.getUsername(), usernameTextView);
                     populateTextView(user.getSummary(), summaryTextView);
                     populateTextView(user.getDescription(), descriptionTextView);
@@ -84,13 +85,15 @@ public class UserViewHolder extends BaseViewHolder {
 
                     // Add a click listener to the view in order for the user to get more details about a selected movie
                     itemView.setOnClickListener(new View.OnClickListener() {
+
                         @Override
                         public void onClick(View view) {
 
                             // Notify the the listener (aka MainActivity) of the details selection
-                            listener.onDetailsSelection(uid, OnDetailsInteractionListener.DETAILS_TYPE.USER);
+                            listener.onDetailsSelection(uid, StorageDataType.USERS);
 
                         }
+
                     });
 
                 }
@@ -105,37 +108,6 @@ public class UserViewHolder extends BaseViewHolder {
             }
 
         });
-
-    }
-
-    @Override
-    protected String buildFileReference(String uid, String imageUid) {
-
-        String fileReference = null;
-
-        // Verify there is image data to work with
-        if ((imageUid != null) && (!imageUid.isEmpty())) {
-
-            // Verify there is user data to work with
-            if ((uid != null) && (!uid.isEmpty())) {
-
-                fileReference = "users" + "/" + uid + "/" + imageUid + ".jpg";
-
-            }
-            else {
-
-                Log.e(TAG, "Unexpected null user UID");
-
-            }
-
-        }
-        else {
-
-            Log.e(TAG, "Unexpected null image UID");
-
-        }
-
-        return fileReference;
 
     }
 

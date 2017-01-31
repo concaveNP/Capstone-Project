@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.UserResponseHit;
 
@@ -60,12 +61,14 @@ public class UserResponseViewHolder extends BaseViewHolder {
             populateImageView(
                     buildFileReference(
                             response.get_source().getUid(),
-                            response.get_source().getHeaderImageUid()),
+                            response.get_source().getHeaderImageUid(),
+                            StorageDataType.USERS),
                     headerImageView);
             populateImageView(
                     buildFileReference(
                             response.get_source().getUid(),
-                            response.get_source().getProfileImageUid()),
+                            response.get_source().getProfileImageUid(),
+                            StorageDataType.USERS),
                     profileImageView);
             populateTextView(
                     response.get_source().getUsername(),
@@ -92,43 +95,12 @@ public class UserResponseViewHolder extends BaseViewHolder {
                 public void onClick(View view) {
 
                     // Notify the the listener (aka MainActivity) of the details selection
-                    listener.onDetailsSelection(uid, OnDetailsInteractionListener.DETAILS_TYPE.USER);
+                    listener.onDetailsSelection(uid, StorageDataType.USERS);
 
                 }
             });
 
         }
-
-    }
-
-    @Override
-    protected String buildFileReference(String uid, String imageUid) {
-
-        String fileReference = null;
-
-        // Verify there is image data to work with
-        if ((imageUid != null) && (!imageUid.isEmpty())) {
-
-            // Verify there is user data to work with
-            if ((uid != null) && (!uid.isEmpty())) {
-
-                fileReference = "users" + "/" + uid + "/" + imageUid + ".jpg";
-
-            }
-            else {
-
-                Log.e(TAG, "Unexpected null user UID");
-
-            }
-
-        }
-        else {
-
-            Log.e(TAG, "Unexpected null image UID");
-
-        }
-
-        return fileReference;
 
     }
 

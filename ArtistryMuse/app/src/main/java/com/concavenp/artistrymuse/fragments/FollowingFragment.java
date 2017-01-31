@@ -1,19 +1,16 @@
 package com.concavenp.artistrymuse.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.concavenp.artistrymuse.DetailsActivity;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.viewholder.UserViewHolder;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
@@ -55,7 +52,6 @@ public class FollowingFragment extends Fragment {
     private FirebaseRecyclerAdapter<Following, UserViewHolder> mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
-    private LinearLayoutManager mManager;
 
     public FollowingFragment() {
         // Required empty public constructor
@@ -106,11 +102,10 @@ public class FollowingFragment extends Fragment {
         mRecycler = (RecyclerView) mainView.findViewById(R.id.following_recycler_view);
         mRecycler.setHasFixedSize(true);
 
-        // Set up Layout Manager, reverse layout
-        mManager = new LinearLayoutManager(getActivity());
-        mManager.setReverseLayout(true);
-        mManager.setStackFromEnd(true);
-        mRecycler.setLayoutManager(mManager);
+        // Set up Layout
+        int columnCount = getResources().getInteger(R.integer.list_column_count);
+        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        mRecycler.setLayoutManager(sglm);
 
         // When the user performs the action of swiping down then refresh the data displayed
         mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.following_swipe_refresh_layout);
@@ -138,12 +133,15 @@ public class FollowingFragment extends Fragment {
 
         // Let the Swiper know we are swiping
         if (!mSwipeRefreshLayout.isRefreshing()) {
+
             mSwipeRefreshLayout.setRefreshing(true);
+
         }
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
         mAdapter = new FirebaseRecyclerAdapter<Following, UserViewHolder>(Following.class, R.layout.item_user, UserViewHolder.class, postsQuery) {
+
             @Override
             protected void populateViewHolder(final UserViewHolder viewHolder, final Following model, final int position) {
 
@@ -158,11 +156,9 @@ public class FollowingFragment extends Fragment {
             }
 
         };
+
         mRecycler.setAdapter(mAdapter);
 
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecycler.setLayoutManager(sglm);
     }
 
     private Query getQuery(DatabaseReference databaseReference) {
@@ -205,6 +201,17 @@ public class FollowingFragment extends Fragment {
 
         }
 
+        // Re-attach to the parent Activity interface
+        if (context instanceof OnDetailsInteractionListener) {
+
+            mDetailsListener = (OnDetailsInteractionListener) context;
+
+        } else {
+
+            throw new RuntimeException(context.toString() + " must implement OnDetailsInteractionListener");
+
+        }
+
     }
 
     @Override
@@ -212,8 +219,9 @@ public class FollowingFragment extends Fragment {
 
         super.onDetach();
 
-        // Detach from the parent Activity interface
+        // Detach from the parent Activity interface(s)
         mListener = null;
+        mDetailsListener = null;
 
     }
 
@@ -235,3 +243,4 @@ public class FollowingFragment extends Fragment {
     }
 
 }
+

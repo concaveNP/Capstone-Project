@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.concavenp.artistrymuse.DetailsActivity;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.viewholder.ProjectViewHolder;
+import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.Favorite;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
@@ -48,12 +49,12 @@ public class FavoritesFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private OnDetailsInteractionListener mDetailsListener;
 
     private DatabaseReference mDatabase;
     private FirebaseRecyclerAdapter<Favorite, ProjectViewHolder> mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
-    private LinearLayoutManager mManager;
 
     public FavoritesFragment() {
         // Required empty public constructor
@@ -104,11 +105,10 @@ public class FavoritesFragment extends Fragment {
         mRecycler = (RecyclerView) mainView.findViewById(R.id.favorites_recycler_view);
         mRecycler.setHasFixedSize(true);
 
-        // Set up Layout Manager, reverse layout
-        mManager = new LinearLayoutManager(getActivity());
-        mManager.setReverseLayout(true);
-        mManager.setStackFromEnd(true);
-        mRecycler.setLayoutManager(mManager);
+        // Set up Layout
+        int columnCount = getResources().getInteger(R.integer.list_column_count);
+        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        mRecycler.setLayoutManager(sglm);
 
         // When the user performs the action of swiping down then refresh the data displayed
         mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.favorites_swipe_refresh_layout);
@@ -138,16 +138,17 @@ public class FavoritesFragment extends Fragment {
 
         // Let the Swiper know we are swiping
         if (!mSwipeRefreshLayout.isRefreshing()) {
+
             mSwipeRefreshLayout.setRefreshing(true);
+
         }
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
         mAdapter = new FirebaseRecyclerAdapter<Favorite, ProjectViewHolder>(Favorite.class, R.layout.item_project, ProjectViewHolder.class, postsQuery) {
+
             @Override
             protected void populateViewHolder(final ProjectViewHolder viewHolder, final Favorite model, final int position) {
-
-
 
                 // TODO: need a better system for this as I believe this will be called multiple times
                 // See the adapter internal class in the "MakeYourAppMaterial" project's ArticleListActivity class.
@@ -155,33 +156,13 @@ public class FavoritesFragment extends Fragment {
                 // perform this on after the count is reached.
                 mSwipeRefreshLayout.setRefreshing(false);
 
-
-
-
-                final DatabaseReference postRef = getRef(position);
-
-                // Bind Post to ViewHolder, setting OnClickListener for the star button
-                final String postKey = postRef.getKey();
-                viewHolder.bindToPost(model, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View starView) {
-                        // Launch PostDetailActivity
-                        Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                        intent.putExtra(DetailsActivity.EXTRA_UID_KEY, postKey);
-                        startActivity(intent);
-                    }
-                });
-
-
-
+                viewHolder.bindToPost(model, mDetailsListener);
 
             }
-        };
-        mRecycler.setAdapter(mAdapter);
 
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecycler.setLayoutManager(sglm);
+        };
+
+        mRecycler.setAdapter(mAdapter);
 
     }
 
@@ -210,27 +191,44 @@ public class FavoritesFragment extends Fragment {
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
+
         super.onAttach(context);
+
+        // Re-attach to the parent Activity interface
         if (context instanceof OnFragmentInteractionListener) {
+
             mListener = (OnFragmentInteractionListener) context;
+
         } else {
+
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+
         }
+
+        // Re-attach to the parent Activity interface
+        if (context instanceof OnDetailsInteractionListener) {
+
+            mDetailsListener = (OnDetailsInteractionListener) context;
+
+        } else {
+
+            throw new RuntimeException(context.toString() + " must implement OnDetailsInteractionListener");
+
+        }
+
     }
 
     @Override
     public void onDetach() {
+
         super.onDetach();
+
+        // Detach from the parent Activity interface(s)
         mListener = null;
+        mDetailsListener = null;
+
     }
 
     /**
@@ -244,7 +242,11 @@ public class FavoritesFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+
     }
+
 }
+
