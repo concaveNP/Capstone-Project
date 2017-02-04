@@ -64,8 +64,8 @@ public class SearchFragment extends Fragment {
 
     //private LinearLayoutManager mManager;
     private GridLayoutManager mManager;
+    private ValueEventListener mValueEventListener;
 //    private StaggeredGridLayoutManager mManager;
-
 
     private EditText mSearchEditText;
 
@@ -149,6 +149,12 @@ public class SearchFragment extends Fragment {
                 // Log that we are doing another search of data on a different "page"
                 Log.i(TAG, "Searching for more paginated data from position: " + (currentPage*10));
 
+                // Check that listener for the previous search results is removed
+                if (mValueEventListener != null) {
+                    Log.i(TAG, "Search listener removed");
+                   mDatabase.removeEventListener(mValueEventListener);
+                }
+
                 // Get the data
                 search(currentPage);
 
@@ -169,6 +175,12 @@ public class SearchFragment extends Fragment {
                 mAdapter.clearData();
                 mScrollListener.initValues();
 
+                // Check that listener for the previous search results is removed
+                if (mValueEventListener != null) {
+                    Log.i(TAG, "Search listener removed");
+                    mDatabase.removeEventListener(mValueEventListener);
+                }
+
                 // Perform a search and display the data
                 search(0);
 
@@ -187,76 +199,73 @@ public class SearchFragment extends Fragment {
 
         UUID requestId = UUID.randomUUID();
 
-        // Set up FirebaseRecyclerAdapter with the Query
-        final Query postsQuery = getQuery(mDatabase, requestId);
+        // Build the query to be used
+        final Query responseQuery = getResponseQuery(mDatabase, requestId);
 
-        Log.i(TAG, postsQuery.toString());
-
+        // Create the JSON request object that will be placed into the database
         Request request = new Request("firebase", mSearchEditText.getText().toString(), "user", dataPosition*10);
+
+        // Add the search request to the database.  The Flashlight service will see this and
+        // consume the request and generate a response containing the results of the elasticsearch.
         mDatabase.child("search").child("request").child(requestId.toString()).setValue(request);
 
-        new Thread(new Runnable() {
-            public void run() {
+        // Listen for the result.
+        //
+        // NOTE: this cannot be done as a one off due to the unpredictable time nature of
+        // the processed response becoming available.
+        mValueEventListener = responseQuery.addValueEventListener(new ValueEventListener() {
 
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                // Check to see if the data is there yet
+                if (dataSnapshot.exists()) {
 
-                postsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    // Convert the JSON to Object
+                    UserResponse response = dataSnapshot.getValue(UserResponse.class);
 
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    if ( (response != null) && (response.getHits() != null) ) {
 
-                        // Convert the JSON to Object
-                        //Hits response = dataSnapshot.getValue(Hits.class);
-                        UserResponse response = dataSnapshot.getValue(UserResponse.class);
-                        //List<UserResponseHit> response = dataSnapshot.getValue(ArrayList<UserResponseHit.class>.getClass());
+                        if  ((response.getHits().getTotal() > 0) && (response.getHits().getHits() != null)) {
 
-                        if ( (response != null) && (response.getHits() != null) ) {
-
-                            if  ((response.getHits().getTotal() > 0) && (response.getHits().getHits() != null)) {
-
-                                Log.i(TAG, response.toString());
-                                Log.i(TAG, "Items found: " + response.getHits().getTotal());
-
-                                // Add the new data
-                                mAdapter.add(response.getHits().getHits());
-
-                            }
-                            else {
-                                Log.e(TAG, "There does not appear to be any results from the search query");
-                            }
+                            // Add the new data
+                            mAdapter.add(response.getHits().getHits());
 
                         }
                         else {
-                            Log.e(TAG, "Expected response from search query was null");
+
+                            Log.e(TAG, "There does not appear to be any results from the search query");
+
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                        Log.i(TAG, databaseError.toString());
 
                     }
+                    else {
 
-                });
+                        Log.e(TAG, "Expected response from search query was null");
 
+                    }
 
+                }
+                else {
+
+                    Log.e(TAG, "There is no data in the snapshot");
+
+                }
 
             }
-        }).start();
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
+                Log.w(TAG, databaseError.toString());
 
+            }
 
+        });
 
     }
 
-    private Query getQuery(DatabaseReference databaseReference, UUID uuid) {
+    private Query getResponseQuery(DatabaseReference databaseReference, UUID uuid) {
 
         String myUserId = getUid();
 

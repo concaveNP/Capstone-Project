@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.fragments.viewholder.BaseViewHolder;
-import com.concavenp.artistrymuse.fragments.viewholder.UserResponseViewHolder;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
-import com.concavenp.artistrymuse.model.UserResponseHit;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
