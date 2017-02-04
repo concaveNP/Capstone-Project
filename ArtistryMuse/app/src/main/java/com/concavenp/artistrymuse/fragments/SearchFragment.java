@@ -28,6 +28,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 
 /**
@@ -66,6 +68,14 @@ public class SearchFragment extends Fragment {
     private GridLayoutManager mManager;
 //    private StaggeredGridLayoutManager mManager;
 
+    enum ResponseState {
+        STARTED,
+        WAITING,
+        FINISHED,
+        ERROR
+    }
+
+    private ConcurrentMap<Query, ResponseState> mStateMap = new ConcurrentHashMap<>();
 
     private EditText mSearchEditText;
 
@@ -188,71 +198,124 @@ public class SearchFragment extends Fragment {
         UUID requestId = UUID.randomUUID();
 
         // Set up FirebaseRecyclerAdapter with the Query
-        final Query postsQuery = getQuery(mDatabase, requestId);
+        final Query responseQuery = getQuery(mDatabase, requestId);
 
-        Log.i(TAG, postsQuery.toString());
-
+        // Create the JSON request object that will be placed into the database
         Request request = new Request("firebase", mSearchEditText.getText().toString(), "user", dataPosition*10);
+
+        // Log the request
+        Log.i(TAG, request.toString());
+
+        // Save the response within the map in order to keep track of its state
+        mStateMap.putIfAbsent(responseQuery, ResponseState.STARTED);
+
+        // Add the search request to the database.  The Flashlight service will see this and
+        // consume the request and generate a response containing the results of the elasticsearch.
         mDatabase.child("search").child("request").child(requestId.toString()).setValue(request);
 
+        // Create a worker thread to monitor for the response
         new Thread(new Runnable() {
+
             public void run() {
 
+                // We are now waiting for the data to complete
+                mStateMap.replace(responseQuery, ResponseState.WAITING);
 
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                // The request takes time to process as the new "request" entry needs to be
+                // read in by the Firebase Database Flashlight service that uses elasticsearch to
+                // find the results and generate a response placed back into the database.  This
+                // loop will try several time to retrieve the response database entry.
+                for (int retryCount = 0; (retryCount < 5) && (mStateMap.get(responseQuery) == ResponseState.WAITING); retryCount++) {
 
-                postsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    // The multiplier to use in having this thread sleep before trying again
+                    final int multiplier = retryCount + 1;
 
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    responseQuery.addListenerForSingleValueEvent(new ValueEventListener() {
 
-                        // Convert the JSON to Object
-                        //Hits response = dataSnapshot.getValue(Hits.class);
-                        UserResponse response = dataSnapshot.getValue(UserResponse.class);
-                        //List<UserResponseHit> response = dataSnapshot.getValue(ArrayList<UserResponseHit.class>.getClass());
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        if ( (response != null) && (response.getHits() != null) ) {
+                            // Check to see if the data is there yet.  If not then wait a little bit for the request to be processed
+                            if (dataSnapshot.exists()) {
 
-                            if  ((response.getHits().getTotal() > 0) && (response.getHits().getHits() != null)) {
+                                // Convert the JSON to Object
+                                UserResponse response = dataSnapshot.getValue(UserResponse.class);
 
-                                Log.i(TAG, response.toString());
-                                Log.i(TAG, "Items found: " + response.getHits().getTotal());
+                                if ( (response != null) && (response.getHits() != null) ) {
 
-                                // Add the new data
-                                mAdapter.add(response.getHits().getHits());
+                                    if  ((response.getHits().getTotal() > 0) && (response.getHits().getHits() != null)) {
+
+                                        Log.i(TAG, response.toString());
+                                        Log.i(TAG, "Items found: " + response.getHits().getTotal());
+
+                                        // Add the new data
+                                        mAdapter.add(response.getHits().getHits());
+
+                                        // We are now done with this query
+                                        mStateMap.replace(responseQuery, ResponseState.FINISHED);
+
+                                    }
+                                    else {
+
+                                        Log.e(TAG, "There does not appear to be any results from the search query");
+
+                                        mStateMap.replace(responseQuery, ResponseState.ERROR);
+
+                                    }
+
+                                }
+                                else {
+
+                                    Log.e(TAG, "Expected response from search query was null");
+
+                                    mStateMap.replace(responseQuery, ResponseState.ERROR);
+
+                                }
 
                             }
                             else {
-                                Log.e(TAG, "There does not appear to be any results from the search query");
+
+                                try {
+
+                                    Log.i(TAG, "Waiting " + multiplier + " seconds for the search data to become available within the database");
+
+                                    Thread.sleep(1000 * multiplier);
+
+                                } catch (InterruptedException e) {
+
+                                    e.printStackTrace();
+
+                                    mStateMap.replace(responseQuery, ResponseState.ERROR);
+
+                                }
+
                             }
 
                         }
-                        else {
-                            Log.e(TAG, "Expected response from search query was null");
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                            Log.w(TAG, databaseError.toString());
+
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    });
 
-                        Log.i(TAG, databaseError.toString());
+                }
 
-                    }
+                if (mStateMap.get(responseQuery) == ResponseState.ERROR) {
 
-                });
+                    Log.e(TAG, "Unable to process search query: " + responseQuery.toString());
 
+                }
 
+                // In any case, we are now done with the state map entry
+                mStateMap.remove(responseQuery);
 
             }
+
         }).start();
-
-
-
-
 
     }
 
