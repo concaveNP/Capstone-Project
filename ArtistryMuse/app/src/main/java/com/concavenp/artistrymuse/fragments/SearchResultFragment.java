@@ -3,22 +3,16 @@ package com.concavenp.artistrymuse.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TabHost;
 
-import com.concavenp.artistrymuse.MainActivity;
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.fragments.adapter.SearchFragmentPagerAdapter;
 import com.concavenp.artistrymuse.fragments.adapter.SearchResultAdapter;
 import com.concavenp.artistrymuse.fragments.viewholder.ProjectResponseViewHolder;
@@ -38,35 +32,40 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.UUID;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SearchFragment.OnFragmentInteractionListener} interface
+ * {@link SearchResultFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SearchFragment#newInstance} factory method to
+ * Use the {@link SearchResultFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment {
+public class SearchResultFragment extends Fragment implements SearchFragmentPagerAdapter.OnSearchInteractionListener {
 
     /**
      * The logging tag string to be associated with log data for this class
      */
     @SuppressWarnings("unused")
-    private static final String TAG = SearchFragment.class.getSimpleName();
+    private static final String TAG = SearchResultFragment.class.getSimpleName();
 
-    // TODO: Rename parameter arguments, choose names that match the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TYPE_PARAM = "type";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private StorageDataType mType;
 
     private OnFragmentInteractionListener mListener;
     private OnDetailsInteractionListener mDetailsListener;
 
     private DatabaseReference mDatabase;
+
+
+
     private SearchResultAdapter<UserResponseHit, UserResponseViewHolder> mUsersAdapter;
     private SearchResultAdapter<ProjectResponseHit, ProjectResponseViewHolder> mProjectsAdapter;
     private RecyclerView mUsersRecycler;
@@ -81,10 +80,12 @@ public class SearchFragment extends Fragment {
     private ValueEventListener mProjectsValueEventListener;
 //    private StaggeredGridLayoutManager mUsersManager;
 
-    private EditText mSearchEditText;
-    private SearchFragmentPagerAdapter mSearchPagerAdapter;
+    private String mSearchText;
 
-    public SearchFragment() {
+
+
+
+    public SearchResultFragment() {
         // Required empty public constructor
     }
 
@@ -94,14 +95,15 @@ public class SearchFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
+     * @return A new instance of fragment SearchResultFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
+    public static SearchResultFragment newInstance(String param1, String param2, StorageDataType type) {
+        SearchResultFragment fragment = new SearchResultFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putInt(TYPE_PARAM, type.ordinal());
         fragment.setArguments(args);
         return fragment;
     }
@@ -115,6 +117,7 @@ public class SearchFragment extends Fragment {
 
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            mType = StorageDataType.values()[getArguments().getInt(TYPE_PARAM)];
 
         }
 
@@ -127,155 +130,93 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View mainView = inflater.inflate(R.layout.fragment_search, container, false);
-
-        // The search text the user will input
-        mSearchEditText = (EditText) mainView.findViewById(R.id.search_editText);
-
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) mainView.findViewById(R.id.search_results_viewpager);
-        //mSearchPagerAdapter = new SearchFragmentPagerAdapter(getActivity().getSupportFragmentManager());
-        mSearchPagerAdapter = new SearchFragmentPagerAdapter(getChildFragmentManager());
-        viewPager.setAdapter(mSearchPagerAdapter);
-
-        // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) mainView.findViewById(R.id.search_tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        ImageButton button = (ImageButton) mainView.findViewById(R.id.search_imageButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                mSearchPagerAdapter.onSearchButtonInteraction(mSearchEditText.getText().toString());
-
-            }
-        });
-
-        /*
-
-
-        TabHost tabHost = (TabHost) mainView.findViewById(R.id.search_tabHost);
-        tabHost.addTab(new TabHost.TabSpec());
-
-
-
+        View mainView = inflater.inflate(R.layout.fragment_search_result, container, false);
 
 
         // The widgets that will "view" the search result data contained within their corresponding adapters
-        mUsersRecycler = (RecyclerView) mainView.findViewById(R.id.users_search_recycler_view);
-        mProjectsRecycler = (RecyclerView) mainView.findViewById(R.id.projects_search_recycler_view);
+        switch (mType) {
+            case PROJECTS: {
+                mProjectsRecycler = (RecyclerView) mainView.findViewById(R.id.search_recycler_view);
 
-        // Use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
-        mUsersRecycler.setHasFixedSize(true);
-        mProjectsRecycler.setHasFixedSize(true);
+                // Use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
+                mProjectsRecycler.setHasFixedSize(true);
 
-        // Setup Layout Manager, reverse layout
-//        mUsersManager = new LinearLayoutManager(getActivity());
-//        mUsersManager.setReverseLayout(true);
-//        mUsersManager.setStackFromEnd(true);
+                int columnCount = getResources().getInteger(R.integer.list_column_count);
 
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
+                mProjectsManager = new GridLayoutManager(getContext(), columnCount);
+                mProjectsRecycler.setLayoutManager(mProjectsManager);
 
-        mUsersManager = new GridLayoutManager(getContext(), columnCount);
-        mUsersRecycler.setLayoutManager(mUsersManager);
-
-        mProjectsManager = new GridLayoutManager(getContext(), columnCount);
-        mProjectsRecycler.setLayoutManager(mProjectsManager);
-
-// TODO: see issue (EndlessRecyclerOnScrollListener needs to support StaggeredGridLayoutManager #34) https://github.com/concaveNP/Capstone-Project/issues/34
-
-//        int columnCount = getResources().getInteger(R.integer.list_column_count);
-//        mUsersManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-//        mUsersRecycler.setLayoutManager(mUsersManager);
-
-        // Create the adapter that will be used to hold and paginate through the resulting search data
-        mUsersAdapter = new SearchResultAdapter<>(UserResponseViewHolder.class, mDetailsListener, R.layout.item_user);
-        mUsersAdapter.clearData();
-        mUsersRecycler.setAdapter(mUsersAdapter);
-
-        // Setup the endless scrolling
-        mUsersScrollListener = new EndlessRecyclerOnScrollListener(mUsersManager) {
-            @Override
-            public void onLoadMore(int currentPage) {
-
-                // Log that we are doing another search of data on a different "page"
-                Log.i(TAG, "Searching for more paginated data from position: " + (currentPage*10));
-
-                // Check that listener for the previous search results is removed
-                if (mUsersValueEventListener != null) {
-                    Log.i(TAG, "Search listener removed");
-                   mDatabase.removeEventListener(mUsersValueEventListener);
-                }
-
-                // Get the data
-                usersSearch(currentPage);
-
-            }
-        };
-        mUsersScrollListener.initValues();
-        mUsersRecycler.addOnScrollListener(mUsersScrollListener);
-
-        ImageButton button = (ImageButton) mainView.findViewById(R.id.search_imageButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // Log that we are doing another search of data on a different "page"
-                Log.i(TAG, "Searching for more paginated data on page: " + 0);
-
-                // Clear any results that are being stored within the adapter scroll listener
-                mUsersAdapter.clearData();
-                mUsersScrollListener.initValues();
+                // Create the adapter that will be used to hold and paginate through the resulting search data
+                mProjectsAdapter = new SearchResultAdapter<>(ProjectResponseViewHolder.class, mDetailsListener, R.layout.item_project);
                 mProjectsAdapter.clearData();
+                mProjectsRecycler.setAdapter(mProjectsAdapter);
+
+                // Setup the endless scrolling
+                mProjectsScrollListener = new EndlessRecyclerOnScrollListener(mProjectsManager) {
+                    @Override
+                    public void onLoadMore(int currentPage) {
+
+                        // Log that we are doing another search of data on a different "page"
+                        Log.i(TAG, "Searching for more paginated data from position: " + (currentPage*10));
+
+                        // Check that listener for the previous search results is removed
+                        if (mProjectsValueEventListener != null) {
+                            Log.i(TAG, "Search listener removed");
+                            mDatabase.removeEventListener(mProjectsValueEventListener);
+                        }
+
+                        // Get the data
+                        projectsSearch(currentPage);
+
+                    }
+                };
                 mProjectsScrollListener.initValues();
+                mProjectsRecycler.addOnScrollListener(mProjectsScrollListener);
 
-                // Check that listener for the previous search results is removed
-                if (mUsersValueEventListener != null) {
-                    Log.i(TAG, "Search listener removed");
-                    mDatabase.removeEventListener(mUsersValueEventListener);
-                }
-
-                // Check that listener for the previous search results is removed
-                if (mProjectsValueEventListener != null) {
-                    Log.i(TAG, "Search listener removed");
-                    mDatabase.removeEventListener(mProjectsValueEventListener);
-                }
-
-                // Perform a search and display the data
-                usersSearch(0);
-                projectsSearch(0);
-
+                break;
             }
-        });
+            case USERS: {
+                mUsersRecycler = (RecyclerView) mainView.findViewById(R.id.search_recycler_view);
 
-        // Create the adapter that will be used to hold and paginate through the resulting search data
-        mProjectsAdapter = new SearchResultAdapter<>(ProjectResponseViewHolder.class, mDetailsListener, R.layout.item_project);
-        mProjectsAdapter.clearData();
-        mProjectsRecycler.setAdapter(mProjectsAdapter);
+                // Use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
+                mUsersRecycler.setHasFixedSize(true);
 
-        // Setup the endless scrolling
-        mProjectsScrollListener = new EndlessRecyclerOnScrollListener(mProjectsManager) {
-            @Override
-            public void onLoadMore(int currentPage) {
+                int columnCount = getResources().getInteger(R.integer.list_column_count);
 
-                // Log that we are doing another search of data on a different "page"
-                Log.i(TAG, "Searching for more paginated data from position: " + (currentPage*10));
+                mUsersManager = new GridLayoutManager(getContext(), columnCount);
+                mUsersRecycler.setLayoutManager(mUsersManager);
 
-                // Check that listener for the previous search results is removed
-                if (mProjectsValueEventListener != null) {
-                    Log.i(TAG, "Search listener removed");
-                    mDatabase.removeEventListener(mProjectsValueEventListener);
-                }
+                // Create the adapter that will be used to hold and paginate through the resulting search data
+                mUsersAdapter = new SearchResultAdapter<>(UserResponseViewHolder.class, mDetailsListener, R.layout.item_user);
+                mUsersAdapter.clearData();
+                mUsersRecycler.setAdapter(mUsersAdapter);
 
-                // Get the data
-                projectsSearch(currentPage);
+                // Setup the endless scrolling
+                mUsersScrollListener = new EndlessRecyclerOnScrollListener(mUsersManager) {
+                    @Override
+                    public void onLoadMore(int currentPage) {
 
+                        // Log that we are doing another search of data on a different "page"
+                        Log.i(TAG, "Searching for more paginated data from position: " + (currentPage*10));
+
+                        // Check that listener for the previous search results is removed
+                        if (mUsersValueEventListener != null) {
+                            Log.i(TAG, "Search listener removed");
+                            mDatabase.removeEventListener(mUsersValueEventListener);
+                        }
+
+                        // Get the data
+                        usersSearch(currentPage);
+
+                    }
+                };
+                mUsersScrollListener.initValues();
+                mUsersRecycler.addOnScrollListener(mUsersScrollListener);
+
+                break;
             }
-        };
-        mProjectsScrollListener.initValues();
-        mProjectsRecycler.addOnScrollListener(mProjectsScrollListener);
-*/
+        }
+
         return mainView;
 
     }
@@ -292,7 +233,7 @@ public class SearchFragment extends Fragment {
         final Query responseQuery = getResponseQuery(mDatabase, requestId);
 
         // Create the JSON request object that will be placed into the database
-        Request request = new Request("firebase", mSearchEditText.getText().toString(), "user", dataPosition*10);
+        Request request = new Request("firebase", mSearchText, "user", dataPosition*10);
 
         // Add the search request to the database.  The Flashlight service will see this and
         // consume the request and generate a response containing the results of the elasticsearch.
@@ -366,7 +307,7 @@ public class SearchFragment extends Fragment {
         final Query responseQuery = getResponseQuery(mDatabase, requestId);
 
         // Create the JSON request object that will be placed into the database
-        Request request = new Request("firebase", mSearchEditText.getText().toString(), "project", dataPosition*10);
+        Request request = new Request("firebase", mSearchText, "project", dataPosition*10);
 
         // Add the search request to the database.  The Flashlight service will see this and
         // consume the request and generate a response containing the results of the elasticsearch.
@@ -492,7 +433,56 @@ public class SearchFragment extends Fragment {
         mListener = null;
         mDetailsListener = null;
 
-     }
+    }
+
+    @Override
+    public void onSearchInteraction(String searchString) {
+
+       mSearchText = searchString;
+
+        // The widgets that will "view" the search result data contained within their corresponding adapters
+        switch (mType) {
+            case PROJECTS: {
+
+                // Log that we are doing another search of data on a different "page"
+                Log.i(TAG, "Searching for more paginated data on page: " + 0);
+
+                // Clear any results that are being stored within the adapter scroll listener
+                mProjectsAdapter.clearData();
+                mProjectsScrollListener.initValues();
+
+                // Check that listener for the previous search results is removed
+                if (mProjectsValueEventListener != null) {
+                    Log.i(TAG, "Search listener removed");
+                    mDatabase.removeEventListener(mProjectsValueEventListener);
+                }
+
+                // Perform a search and display the data
+                projectsSearch(0);
+                break;
+            }
+            case USERS: {
+                // Log that we are doing another search of data on a different "page"
+                Log.i(TAG, "Searching for more paginated data on page: " + 0);
+
+                // Clear any results that are being stored within the adapter scroll listener
+                mUsersAdapter.clearData();
+                mUsersScrollListener.initValues();
+
+                // Check that listener for the previous search results is removed
+                if (mUsersValueEventListener != null) {
+                    Log.i(TAG, "Search listener removed");
+                    mDatabase.removeEventListener(mUsersValueEventListener);
+                }
+
+                // Perform a search and display the data
+                usersSearch(0);
+                break;
+
+            }
+        }
+
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -509,8 +499,4 @@ public class SearchFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public interface OnSearchButtonListener {
-        // TODO: Update argument type and name
-        void onSearchButtonInteraction(String search);
-    }
 }

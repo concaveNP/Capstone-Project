@@ -7,13 +7,13 @@ import java.util.List;
  * Created by dave on 1/23/2017.
  */
 
-public class Hits {
+public class ProjectHits {
 
-    public List<UserResponseHit> hits = new ArrayList<>();
+    public List<ProjectResponseHit> hits = new ArrayList<>();
     public float max_score;
     public int total;
 
-    public Hits() {
+    public ProjectHits() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
@@ -25,11 +25,11 @@ public class Hits {
         this.total = total;
     }
 
-    public List<UserResponseHit> getHits() {
+    public List<ProjectResponseHit> getHits() {
         return hits;
     }
 
-    public void setHits(List<UserResponseHit> hits) {
+    public void setHits(List<ProjectResponseHit> hits) {
         this.hits = hits;
     }
 

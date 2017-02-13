@@ -1,8 +1,5 @@
 package com.concavenp.artistrymuse.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by dave on 12/22/2016.
  */
@@ -10,7 +7,7 @@ import java.util.List;
 public class UserResponse {
 
     public Shard _shards;
-    public Hits hits;
+    public UserHits hits;
     public boolean timed_out;
     public int took;
 
@@ -26,11 +23,11 @@ public class UserResponse {
         this._shards = _shards;
     }
 
-    public Hits getHits() {
+    public UserHits getHits() {
         return hits;
     }
 
-    public void setHits(Hits hits) {
+    public void setHits(UserHits hits) {
         this.hits = hits;
     }
 
