@@ -107,13 +107,10 @@ public class GalleryFragment extends Fragment {
         mRecycler.setHasFixedSize(true);
 
         // Set up Layout
-//        int columnCount = getResources().getInteger(R.integer.list_column_count);
-//        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-//        mRecycler.setLayoutManager(sglm);
         mRecycler.setLayoutManager(linearLayoutManager);
 
-        // When the user performs the ction of swiping down then refresh the data displayed
+        // When the user performs the action of swiping down then refresh the data displayed
         mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.gallery_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
