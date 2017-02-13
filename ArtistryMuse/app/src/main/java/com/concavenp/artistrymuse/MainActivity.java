@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.concavenp.artistrymuse.fragments.SearchResultFragment;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
 import com.concavenp.artistrymuse.fragments.FavoritesFragment;
 import com.concavenp.artistrymuse.fragments.FollowingFragment;
@@ -37,7 +38,9 @@ public class MainActivity extends AppCompatActivity implements
         FollowingFragment.OnFragmentInteractionListener,
         FavoritesFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
-        GalleryFragment.OnFragmentInteractionListener {
+        GalleryFragment.OnFragmentInteractionListener,
+        SearchResultFragment.OnFragmentInteractionListener
+{
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new ArtistryFragmentPagerAdapter(getSupportFragmentManager(), MainActivity.this));
+        viewPager.setAdapter(new ArtistryFragmentPagerAdapter(getSupportFragmentManager()));
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);

@@ -107,4 +107,5 @@
     <string name="myapp_font_family_subhead_material">sans-serif</string>
     <string name="myapp_font_family_body_1_material">sans-serif</string>
 
+    <item name="users" type="id">Users</item>
 </resources>

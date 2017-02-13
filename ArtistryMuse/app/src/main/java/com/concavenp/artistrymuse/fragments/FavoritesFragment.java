@@ -1,19 +1,16 @@
 package com.concavenp.artistrymuse.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.concavenp.artistrymuse.DetailsActivity;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.viewholder.ProjectViewHolder;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
