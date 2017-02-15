@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements
         FavoritesFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         GalleryFragment.OnFragmentInteractionListener,
+        GalleryFragment.OnCreateProjectInteractionListener,
         SearchResultFragment.OnFragmentInteractionListener
 {
 
@@ -221,4 +222,12 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onCreateProjectInteraction(Uri uri) {
+
+        // TODO: implement the details activity(s) for both type
+        Intent intent = new Intent(this, CreateProjectActivity.class);
+        startActivity(intent);
+
+    }
 }

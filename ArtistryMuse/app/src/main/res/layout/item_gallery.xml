@@ -17,14 +17,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/AppTheme.Card"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/main_imageview"
+            android:id="@+id/main_imageView"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,40 +32,15 @@
             style="@style/AppTheme.Card"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <TextView
+                android:text="Title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_account_circle_black_24dp"
-                    android:id="@+id/profile_imageview"
-                    android:layout_weight="1"
-                    android:layout_alignParentBottom="false"
-                    tools:layout_alignBottom="@id/summary_textview"
-                    android:layout_alignTop="@+id/username_textview"
-                    android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
-                    android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
-                    android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
-                    android:paddingTop="@dimen/myapp_text_uncommon_padding_material"/>
-
-                <TextView
-                    android:text="Username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/username_textview"
-                    android:layout_weight="1"
-                    android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/profile_imageview"
-                    android:layout_toEndOf="@+id/profile_imageview"
-                    android:paddingTop="@dimen/myapp_text_uncommon_padding_material"
-                    android:paddingBottom="@dimen/myapp_text_common_padding_material" />
-
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                style="@style/AppTheme.Card.Title"
+                android:id="@+id/title_textView" />
 
             <TextView
-                android:id="@+id/description_textview"
+                android:id="@+id/description_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/AppTheme.Card.Description"
@@ -77,59 +52,79 @@
                 android:paddingTop="@dimen/myapp_text_edge_padding_material"
                 android:minLines="1" />
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/myapp_divider_material"
-                android:background="@color/myapp_light_on_dark_dividers"
-                android:visibility="gone" />
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/AppTheme.Card.Byline"
+                android:id="@+id/publication_textView" />
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="right">
+
 
                 <LinearLayout
                     android:orientation="horizontal"
+                    android:padding="@dimen/myapp_button_padding_material"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_people_black_24dp"
-                        android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
-                        android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
-                        android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
-                        android:paddingTop="@dimen/myapp_text_uncommon_padding_material"/>
+                        app:srcCompat="@drawable/ic_star_black_24dp"
+                        android:paddingRight="4dp" />
 
                     <TextView
                         android:text="TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/followed_textview"
+                        android:id="@+id/rating_textView"
                         android:layout_gravity="center_vertical" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:orientation="horizontal"
+                    android:padding="@dimen/myapp_button_padding_material"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_people_outline_black_24dp"
-                        android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
-                        android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
-                        android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
-                        android:paddingTop="@dimen/myapp_text_uncommon_padding_material"/>
+                        app:srcCompat="@drawable/ic_remove_red_eye_black_24dp"
+                        android:paddingRight="4dp" />
 
                     <TextView
                         android:text="TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/following_textview"
+                        android:id="@+id/views_textView"
+                        android:layout_gravity="center_vertical" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:padding="@dimen/myapp_button_padding_material"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_thumb_up_black_24dp"
+                        android:paddingRight="4dp" />
+
+                    <TextView
+                        android:text="TextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/favorited_textView"
                         android:layout_gravity="center_vertical" />
 
                 </LinearLayout>

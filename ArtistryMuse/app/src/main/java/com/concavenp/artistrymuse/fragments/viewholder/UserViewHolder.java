@@ -55,9 +55,9 @@ public class UserViewHolder extends BaseViewHolder {
         final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_imageview);
         final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_textview);
         final TextView summaryTextView = (TextView) itemView.findViewById(R.id.summary_textview);
-        final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textview);
+        final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
         final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
-        final TextView followingTextView = (TextView) itemView.findViewById(R.id.following_textview);
+        final TextView followingTextView = (TextView) itemView.findViewById(R.id.views_textView);
 
         mDatabase.child("users").child(following.uid).addListenerForSingleValueEvent(new ValueEventListener() {
 
