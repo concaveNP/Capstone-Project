@@ -60,10 +60,6 @@ public class GalleryViewHolder extends BaseViewHolder {
         final TextView viewsTextView = (TextView) itemView.findViewById(R.id.views_textView);
         final TextView ratingTextView = (TextView) itemView.findViewById(R.id.rating_textView);
 
-
-        final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
-        final TextView followingTextView = (TextView) itemView.findViewById(R.id.views_textView);
-
         mDatabase.child("projects").child(projectUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override

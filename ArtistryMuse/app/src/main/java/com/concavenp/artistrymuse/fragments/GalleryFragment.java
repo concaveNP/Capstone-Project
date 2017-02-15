@@ -3,6 +3,8 @@ package com.concavenp.artistrymuse.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -48,6 +51,7 @@ public class GalleryFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private OnDetailsInteractionListener mDetailsListener;
+    private OnCreateProjectInteractionListener mCreateProjectListener;
 
     private DatabaseReference mDatabase;
     private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
@@ -101,6 +105,17 @@ public class GalleryFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_gallery, container, false);
+
+        FloatingActionButton fab = (FloatingActionButton) mainView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Notify the the listener (aka MainActivity) of the Create New Project selection
+                mCreateProjectListener.onCreateProjectInteraction(null);
+
+            }
+        });
 
         // TODO: what is the purpose of this?????
         mRecycler = (RecyclerView) mainView.findViewById(R.id.gallery_recycler_view);
@@ -218,6 +233,17 @@ public class GalleryFragment extends Fragment {
 
         }
 
+        // Re-attach to the parent Activity interface
+        if (context instanceof OnCreateProjectInteractionListener) {
+
+            mCreateProjectListener = (OnCreateProjectInteractionListener) context;
+
+        } else {
+
+            throw new RuntimeException(context.toString() + " must implement OnCreateProjectInteractionListener");
+
+        }
+
     }
 
     @Override
@@ -228,6 +254,7 @@ public class GalleryFragment extends Fragment {
         // Detach from the parent Activity interface(s)
         mListener = null;
         mDetailsListener = null;
+        mCreateProjectListener = null;
 
     }
 
@@ -245,6 +272,13 @@ public class GalleryFragment extends Fragment {
 
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+
+    }
+
+    public interface OnCreateProjectInteractionListener {
+
+        // TODO: Update argument type and name
+        void onCreateProjectInteraction(Uri uri);
 
     }
 

@@ -10,6 +10,7 @@
     <string name="title_activity_project">ProjectActivity</string>
     <string name="title_activity_inspiration">InspirationActivity</string>
     <string name="title_activity_details">DetailsActivity</string>
+    <string name="title_activity_create_project">CreateProjectActivity</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_settings">Settings</string>
 
