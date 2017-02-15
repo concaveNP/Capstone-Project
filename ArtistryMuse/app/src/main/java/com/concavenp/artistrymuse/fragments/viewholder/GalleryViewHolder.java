@@ -35,7 +35,7 @@ public class GalleryViewHolder extends BaseViewHolder {
     @Override
     public void bindToPost(Object pojoJson, final OnDetailsInteractionListener listener) {
 
-        String projectUid;
+        final String projectUid;
 
         // We are expected an Following object and nothing else
         if (pojoJson instanceof String) {
@@ -92,50 +92,18 @@ public class GalleryViewHolder extends BaseViewHolder {
                         populateTextView("Unpublished", publicationTextView);
                     }
 
-//                    populateTextView(Integer.toString(user.getfollowedCount), followedTextView);
-//                    populateTextView(Integer.toString(user.getfollowing.size()), followingTextView);
+                    // Add a click listener to the view in order for the user to get more details about a selected movie
+                    itemView.setOnClickListener(new View.OnClickListener() {
 
-//                    mDatabase.child("users").child(project.ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//                        @Override
-//                        public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                            // Perform the JSON to Object conversion
-//                            User user = dataSnapshot.getValue(User.class);
-//
-//                            // TODO: what to do when it is null
-//
-//                            // Verify there is a user to work with
-//                            if (user != null) {
-//
-////                                populateTextView(user.username, usernameTextView);
-//
-//                                // Create stable UID for override
-//                                final String uid = user.getUid();
-//
-//                                // Add a click listener to the view in order for the user to get more details about a selected movie
-//                                itemView.setOnClickListener(new View.OnClickListener() {
-//
-//                                    @Override
-//                                    public void onClick(View view) {
-//
-//                                        // Notify the the listener (aka MainActivity) of the details selection
-//                                        listener.onDetailsSelection(uid, StorageDataType.USERS);
-//
-//                                    }
-//
-//                                });
-//
-//                            }
-//
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(DatabaseError databaseError) {
-//
-//                        }
-//
-//                    });
+                        @Override
+                        public void onClick(View view) {
+
+                            // Notify the the listener (aka MainActivity) of the details selection
+                            listener.onDetailsSelection(projectUid, StorageDataType.PROJECTS);
+
+                        }
+
+                    });
 
                 }
 
