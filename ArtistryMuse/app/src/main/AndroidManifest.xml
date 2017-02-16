@@ -88,11 +88,11 @@
         <service
             android:name=".services.UploadService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
         <service
             android:name=".services.DownloadService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <!--
           Android N SDK has new restrictions around sharing file:// URIs
@@ -108,6 +108,15 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity
+            android:name=".UserDetailsActivity"
+            android:label="@string/title_activity_user_details"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.concavenp.artistrymuse.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

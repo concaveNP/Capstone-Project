@@ -193,14 +193,34 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDetailsSelection(String uid, StorageDataType type) {
 
+        switch(type) {
+
+            case PROJECTS: {
+
+                // Create and start the details activity along with passing it the Movie Item details information via JSON string
+                Intent intent = new Intent(this, DetailsActivity.class);
+                // intent.putExtra(DetailsActivity.EXTRA_DATA, json);
+                startActivity(intent);
+
+                break;
+            }
+            case USERS: {
+
+                // Create and start the details activity along with passing it the Movie Item details information via JSON string
+                Intent intent = new Intent(this, UserDetailsActivity.class);
+                // intent.putExtra(DetailsActivity.EXTRA_DATA, json);
+                startActivity(intent);
+
+                break;
+
+            }
+            default: {
+                // TODO: log an error and whatnot
+            }
+
+        }
+
         // TODO: support the phone and tablet layout, for now it is just phone
-
-        // TODO: implement the details activity(s) for both type
-        // Create and start the details activity along with passing it the Movie Item details information via JSON string
-        Intent intent = new Intent(this, DetailsActivity.class);
-//        intent.putExtra(DetailsActivity.EXTRA_DATA, json);
-        startActivity(intent);
-
 
 //        if (mPhoneLayout) {
 //
