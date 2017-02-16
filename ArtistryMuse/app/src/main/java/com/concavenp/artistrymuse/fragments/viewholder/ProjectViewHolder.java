@@ -35,7 +35,7 @@ public class ProjectViewHolder extends BaseViewHolder {
     @Override
     public void bindToPost(Object pojoJson, final OnDetailsInteractionListener listener) {
 
-        Favorite favorite;
+        final Favorite favorite;
 
         // We are expected an Following object and nothing else
         if (pojoJson instanceof Favorite) {
@@ -65,7 +65,7 @@ public class ProjectViewHolder extends BaseViewHolder {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 // Perform the JSON to Object conversion
-                Project project = dataSnapshot.getValue(Project.class);
+                final Project project = dataSnapshot.getValue(Project.class);
 
                 // TODO: what to do when it is null
 
@@ -77,6 +77,20 @@ public class ProjectViewHolder extends BaseViewHolder {
 //                    populateTextView(Integer.toString(user.getfollowedCount), followedTextView);
 //                    populateTextView(Integer.toString(user.getfollowing.size()), followingTextView);
 
+                    // Add a click listener to the view in order for the user to get more details about a selected movie
+                    itemView.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+
+                            // Notify the the listener (aka MainActivity) of the details selection
+                            listener.onDetailsSelection(project.getUid(), StorageDataType.PROJECTS);
+
+                        }
+
+                    });
+
+                    // Query for the User specific data (aka the Project Owner)
                     mDatabase.child("users").child(project.ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
@@ -92,22 +106,6 @@ public class ProjectViewHolder extends BaseViewHolder {
 
                                 populateImageView(buildFileReference(user.uid, user.profileImageUid, StorageDataType.USERS), profileImageView);
                                 populateTextView(user.username, usernameTextView);
-
-                                // Create stable UID for override
-                                final String uid = user.getUid();
-
-                                // Add a click listener to the view in order for the user to get more details about a selected movie
-                                itemView.setOnClickListener(new View.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(View view) {
-
-                                        // Notify the the listener (aka MainActivity) of the details selection
-                                        listener.onDetailsSelection(uid, StorageDataType.USERS);
-
-                                    }
-
-                                });
 
                             }
 

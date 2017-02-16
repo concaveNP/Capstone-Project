@@ -46,7 +46,7 @@ public class FollowingFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    private OnDetailsInteractionListener mDetailsListener;
+    private OnDetailsInteractionListener detailsInteractionListener;
 
     private DatabaseReference mDatabase;
     private FirebaseRecyclerAdapter<Following, UserViewHolder> mAdapter;
@@ -151,7 +151,7 @@ public class FollowingFragment extends Fragment {
                 // perform this on after the count is reached.
                 mSwipeRefreshLayout.setRefreshing(false);
 
-                viewHolder.bindToPost(model, mDetailsListener);
+                viewHolder.bindToPost(model, detailsInteractionListener);
 
             }
 
@@ -204,11 +204,11 @@ public class FollowingFragment extends Fragment {
         // Re-attach to the parent Activity interface
         if (context instanceof OnDetailsInteractionListener) {
 
-            mDetailsListener = (OnDetailsInteractionListener) context;
+            detailsInteractionListener = (OnDetailsInteractionListener) context;
 
         } else {
 
-            throw new RuntimeException(context.toString() + " must implement OnDetailsInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement OnUserDetailsInteractionListener");
 
         }
 
@@ -221,7 +221,7 @@ public class FollowingFragment extends Fragment {
 
         // Detach from the parent Activity interface(s)
         mListener = null;
-        mDetailsListener = null;
+        detailsInteractionListener = null;
 
     }
 
