@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
+
         // Start the login Activity if needed
         if (auth.getCurrentUser() == null) {
 
