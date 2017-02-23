@@ -1,5 +1,7 @@
 package com.concavenp.artistrymuse;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.concavenp.artistrymuse.fragments.UserDetailsFragment;
 import com.concavenp.artistrymuse.model.User;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,15 +26,19 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import static com.concavenp.artistrymuse.StorageDataType.USERS;
-
-public class UserDetailsActivity extends AppCompatActivity {
+public class UserDetailsActivity extends AppCompatActivity implements UserDetailsFragment.OnFragmentInteractionListener {
 
     /**
      * The logging tag string to be associated with log data for this class
      */
     @SuppressWarnings("unused")
     private static final String TAG = UserDetailsActivity.class.getSimpleName();
+
+    /**
+     * String used when creating the activity via intent.  This key will be used to retrieve the
+     * UID associated with the USER in question.
+     */
+    public static final String EXTRA_DATA = "uid_string_data";
 
     protected DatabaseReference mDatabase;
     protected StorageReference mStorageRef;
@@ -61,6 +68,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -73,10 +81,14 @@ public class UserDetailsActivity extends AppCompatActivity {
         // Capture the AppBar for manipulating it after data is available to do so
         final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
-        // Set the Article backdrop image
+        // ImageView for setting the User backdrop
         final ImageView backdropImageView = (ImageView) appBarLayout.findViewById(R.id.user_details_backdrop);
 
-        mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        // Extract the UID from the Activity parameters
+        Intent intent = getIntent();
+        final String uidForDetails = intent.getStringExtra(EXTRA_DATA);
+
+        mDatabase.child("users").child(uidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -102,22 +114,11 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         });
 
+        // Create the new fragment and give it the user data
+        UserDetailsFragment fragment = UserDetailsFragment.newInstance(uidForDetails);
 
-    }
-
-    private String getUid() {
-
-//        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // TODO: this will need to be figured out some other way and probably/maybe saved to local properties
-        // must use the authUid (this is the getUid() call) to get the uid to be the DB primary key index to use as the myUserId value in the query - yuck, i'm doing this wrong
-
-        // TODO: should not be hard coded
-        //return "2a1d3365-118d-4dd7-9803-947a7103c730";
-        //return "8338c7c0-e6b9-4432-8461-f7047b262fbc";
-        //return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
-        //return "54d1e146-a114-45ea-ab66-389f5fd53e53";
-        return "0045d757-6cac-4a69-81e3-0952a3439a78";
+        // Add the fragment to the 'fragment_container' FrameLayout
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_user_details_container, fragment).commit();
 
     }
 
@@ -170,4 +171,10 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        // TODO: fill in later if needed
+    }
+
 }
+

@@ -198,18 +198,18 @@ public class MainActivity extends AppCompatActivity implements
 
             case PROJECTS: {
 
-                // Create and start the details activity along with passing it the Movie Item details information via JSON string
-                Intent intent = new Intent(this, DetailsActivity.class);
-                // intent.putExtra(DetailsActivity.EXTRA_DATA, json);
+                // Create and start the details activity along with passing it the UID of the Project in question
+                Intent intent = new Intent(this, ProjectDetailsActivity.class);
+                intent.putExtra(ProjectDetailsActivity.EXTRA_DATA, uid);
                 startActivity(intent);
 
                 break;
             }
             case USERS: {
 
-                // Create and start the details activity along with passing it the Movie Item details information via JSON string
+                // Create and start the details activity along with passing it the UID of the User in question
                 Intent intent = new Intent(this, UserDetailsActivity.class);
-                // intent.putExtra(DetailsActivity.EXTRA_DATA, json);
+                intent.putExtra(UserDetailsActivity.EXTRA_DATA, uid);
                 startActivity(intent);
 
                 break;

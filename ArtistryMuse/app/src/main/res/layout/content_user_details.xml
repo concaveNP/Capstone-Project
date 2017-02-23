@@ -1,17 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    android:id="@+id/content_user_details_FrameLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.concavenp.artistrymuse.UserDetailsActivity"
-    tools:showIn="@layout/activity_user_details">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+    <android.support.v4.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</android.support.v4.widget.NestedScrollView>
+        <GridLayout
+            android:id="@+id/gridLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:padding="@dimen/details_margin">
+
+            <TextView
+                android:id="@+id/author_TextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="2"
+                android:layout_marginBottom="@dimen/details_margin"
+                android:text="Author"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+            <TextView
+                android:id="@+id/username_TextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="2"
+                android:layout_marginBottom="@dimen/details_margin"
+                android:text="Username"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <ImageView
+                android:id="@+id/profile_ImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"/>
+
+            <RelativeLayout
+                android:id="@+id/details_Layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_marginLeft="@dimen/details_margin"
+                android:layout_marginStart="@dimen/details_margin">
+
+                <TextView
+                    android:id="@+id/favorited_Label_TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/favorited_label_string"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+                <TextView
+                    android:id="@+id/popularity_TextView"
+                    android:text="Combined Favorited Over Owned Projects"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/favorited_Label_TextView"
+                    android:layout_toEndOf="@+id/favorited_Label_TextView"
+                    android:layout_toRightOf="@+id/favorited_Label_TextView"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+                <TextView
+                    android:id="@+id/ratings_Label_TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/popularity_TextView"
+                    android:text="@string/rating_label_string"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+                <TextView
+                    android:id="@+id/ratings_TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/ratings_Label_TextView"
+                    android:layout_toEndOf="@+id/ratings_Label_TextView"
+                    android:layout_toRightOf="@+id/ratings_Label_TextView"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+                <ImageButton
+                    android:id="@+id/following_imageButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/ratings_TextView"
+                    android:background="#00ffffff"
+                    android:src="@android:drawable/btn_star"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/summary_TextView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_columnSpan="2"
+                android:layout_marginTop="@dimen/details_margin"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <!--<include-->
+                <!--layout="@layout/reviews_card"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_columnSpan="2"-->
+                <!--android:layout_marginTop="@dimen/details_margin"/>-->
+
+            <!--<include-->
+                <!--layout="@layout/trailers_card"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_columnSpan="2"-->
+                <!--android:layout_marginTop="@dimen/details_margin"/>-->
+
+        </GridLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</FrameLayout>
+
+
+
+
+<!--<android.support.v4.widget.NestedScrollView-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+<!--tools:context="com.concavenp.artistrymuse.UserDetailsActivity"-->
+<!--tools:showIn="@layout/activity_user_details">-->
+
+<!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="@dimen/text_margin"-->
+    <!--android:text="@string/large_text" />-->
+
+<!--</android.support.v4.widget.NestedScrollView>-->

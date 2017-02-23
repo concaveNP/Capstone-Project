@@ -14,6 +14,10 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_settings">Settings</string>
 
+
+
+
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
@@ -199,4 +203,6 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="rating_label_string">Rating:</string>
+    <string name="favorited_label_string">Favorited:</string>
 </resources>
