@@ -60,8 +60,8 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
 
                 <TextView
-                    android:id="@+id/popularity_TextView"
-                    android:text="Combined Favorited Over Owned Projects"
+                    android:id="@+id/favorited_TextView"
+                    android:text="Favorited Count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/favorited_Label_TextView"
@@ -73,12 +73,13 @@
                     android:id="@+id/ratings_Label_TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/popularity_TextView"
+                    android:layout_below="@+id/favorited_TextView"
                     android:text="@string/rating_label_string"
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
 
                 <TextView
                     android:id="@+id/ratings_TextView"
+                    android:text="Average Rating Value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/ratings_Label_TextView"
@@ -86,12 +87,57 @@
                     android:layout_toRightOf="@+id/ratings_Label_TextView"
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
 
+
+
+
+                <TextView
+                    android:id="@+id/following_Label_TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ratings_TextView"
+                    android:text="@string/following_label_string"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+                <TextView
+                    android:id="@+id/following_TextView"
+                    android:text="Following Count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/following_Label_TextView"
+                    android:layout_toEndOf="@+id/following_Label_TextView"
+                    android:layout_toRightOf="@+id/following_Label_TextView"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+
+
+                <TextView
+                    android:id="@+id/followed_Label_TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/following_TextView"
+                    android:text="@string/followed_label_string"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+                <TextView
+                    android:id="@+id/followed_TextView"
+                    android:text="Followed By Count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/followed_Label_TextView"
+                    android:layout_toEndOf="@+id/followed_Label_TextView"
+                    android:layout_toRightOf="@+id/followed_Label_TextView"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+
+
+
+
                 <ImageButton
                     android:id="@+id/following_imageButton"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_below="@+id/ratings_TextView"
+                    android:layout_below="@+id/followed_TextView"
                     android:background="#00ffffff"
                     android:src="@android:drawable/btn_star"/>
 

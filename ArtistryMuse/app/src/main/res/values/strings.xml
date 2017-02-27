@@ -205,4 +205,6 @@
     </string>
     <string name="rating_label_string">Rating:</string>
     <string name="favorited_label_string">Favorited:</string>
+    <string name="following_label_string">Following</string>
+    <string name="followed_label_string">Followed</string>
 </resources>

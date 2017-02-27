@@ -4,13 +4,19 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.model.User;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +36,12 @@ import com.google.firebase.storage.StorageReference;
  * create an instance of this fragment.
  */
 public class UserDetailsFragment extends Fragment {
+
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = UserDetailsFragment.class.getSimpleName();
 
     // The key lookup name to the parameter passed into this Fragment
     private static final String UID_PARAM = "uid";
@@ -186,6 +198,113 @@ public class UserDetailsFragment extends Fragment {
             // There is no data to display so tell the user
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_user_details_TextView)));
 //            setMenuVisibility(false);
+
+        }
+
+
+
+        TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
+        TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
+        ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.profile_ImageView);
+        TextView favoritedTextView = (TextView) getActivity().findViewById(R.id.favorited_TextView);
+        TextView ratingsTextView = (TextView) getActivity().findViewById(R.id.ratings_TextView);
+
+        TextView followingTextView = (TextView) getActivity().findViewById(R.id.following_TextView);
+        TextView followedTextView = (TextView) getActivity().findViewById(R.id.followed_TextView);
+
+
+        TextView summaryTextView = (TextView) getActivity().findViewById(R.id.summary_TextView);
+
+        // Set the name of the user
+        populateTextView(mModel.getName(), authorTextView);
+
+        // Set the username of the user
+        populateTextView(mModel.getUsername(), usernameTextView);
+
+        // Set the profile image
+        // TODO: This value needs the image size problem fixed !!!
+//        populateImageView(buildFileReference(mModel.getUid(), mModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+
+        // Set the favorited number
+        populateTextView(Integer.toString(mModel.getFavorites().size()), favoritedTextView);
+
+        // Set the ratings
+        // TODO:
+        populateTextView("hmmm, this needs thought", ratingsTextView);
+
+        // Display a follow or un-follow
+        // TODO:
+
+        // Set the following number
+        populateTextView(Integer.toString(mModel.getFollowing().size()), followingTextView);
+
+        // Set the followed number
+        populateTextView(Integer.toString(mModel.getFollowedCount()), followedTextView);
+
+        // Setup the recycler view
+        // TODO:
+
+    }
+
+    protected String buildFileReference(String uid, String imageUid, StorageDataType type) {
+
+        String fileReference = null;
+
+        // Verify there is image data to work with
+        if ((imageUid != null) && (!imageUid.isEmpty())) {
+
+            // Verify there is user data to work with
+            if ((uid != null) && (!uid.isEmpty())) {
+
+                fileReference = type.getType() + "/" + uid + "/" + imageUid + ".jpg";
+
+            }
+            else {
+
+                Log.e(TAG, "Unexpected null project UID");
+
+            }
+
+        }
+        else {
+
+            Log.e(TAG, "Unexpected null image UID");
+
+        }
+
+        return fileReference;
+
+    }
+
+    protected void populateImageView(String fileReference, ImageView imageView) {
+
+        // It is possible for the file reference string to be null, so check for it
+        if (fileReference != null) {
+
+            StorageReference storageReference = mStorageRef.child(fileReference);
+
+            // Download directly from StorageReference using Glide
+            Glide.with(imageView.getContext())
+                    .using(new FirebaseImageLoader())
+                    .load(storageReference)
+                    .fitCenter()
+                    .crossFade()
+                    .into(imageView);
+
+        }
+
+    }
+
+    protected void populateTextView(String text, TextView textView) {
+
+        // Verify there is text to work with and empty out if nothing is there.
+        if ((text != null) && (!text.isEmpty())) {
+
+            textView.setText(text);
+
+        } else {
+
+            textView.setText("");
 
         }
 
