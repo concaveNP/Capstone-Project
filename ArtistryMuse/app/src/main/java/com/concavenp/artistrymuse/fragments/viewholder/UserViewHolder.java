@@ -74,7 +74,7 @@ public class UserViewHolder extends BaseViewHolder {
 
                     populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), headerImageView);
                     populateImageView(buildFileReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), profileImageView);
-                    populateTextView(user.getUsername(), usernameTextView);
+                    populateTextView("@" + user.getUsername(), usernameTextView);
                     populateTextView(user.getSummary(), summaryTextView);
                     populateTextView(user.getDescription(), descriptionTextView);
                     populateTextView(Integer.toString(user.getFollowedCount()), followedTextView);

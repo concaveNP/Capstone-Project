@@ -201,29 +201,24 @@ public class UserDetailsFragment extends Fragment {
 
         }
 
-
-
         TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
         TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
         ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.profile_ImageView);
         TextView favoritedTextView = (TextView) getActivity().findViewById(R.id.favorited_TextView);
         TextView ratingsTextView = (TextView) getActivity().findViewById(R.id.ratings_TextView);
-
         TextView followingTextView = (TextView) getActivity().findViewById(R.id.following_TextView);
         TextView followedTextView = (TextView) getActivity().findViewById(R.id.followed_TextView);
-
-
         TextView summaryTextView = (TextView) getActivity().findViewById(R.id.summary_TextView);
 
         // Set the name of the user
         populateTextView(mModel.getName(), authorTextView);
 
         // Set the username of the user
-        populateTextView(mModel.getUsername(), usernameTextView);
+        populateTextView("@" + mModel.getUsername(), usernameTextView);
 
         // Set the profile image
         // TODO: This value needs the image size problem fixed !!!
-//        populateImageView(buildFileReference(mModel.getUid(), mModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+        populateImageView(buildFileReference(mModel.getUid(), mModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
 
         // Set the favorited number
         populateTextView(Integer.toString(mModel.getFavorites().size()), favoritedTextView);
@@ -240,6 +235,9 @@ public class UserDetailsFragment extends Fragment {
 
         // Set the followed number
         populateTextView(Integer.toString(mModel.getFollowedCount()), followedTextView);
+
+        // Set the summary
+        populateTextView(mModel.getSummary(), summaryTextView);
 
         // Setup the recycler view
         // TODO:

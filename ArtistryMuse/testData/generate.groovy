@@ -235,7 +235,7 @@ class Generate {
         result.profileImageUid = UUID.randomUUID()
         result.summary = lorem.getTitle(1,10)
         result.uid = UUID.randomUUID()
-        result.username = firstName.substring(0,0).toLowerCase() + lastName.toLowerCase()
+        result.username = firstName.substring(0,1).toLowerCase() + lastName.toLowerCase()
 
         return result
 

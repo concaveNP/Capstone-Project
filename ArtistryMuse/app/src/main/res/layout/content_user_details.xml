@@ -25,7 +25,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_columnSpan="2"
-                android:layout_marginBottom="@dimen/details_margin"
                 android:text="Author"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
@@ -42,7 +41,8 @@
                 android:id="@+id/profile_ImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="0"/>
+                android:layout_column="0"
+                app:srcCompat="@drawable/ic_account_circle_black_24dp" />
 
             <RelativeLayout
                 android:id="@+id/details_Layout"
@@ -62,7 +62,7 @@
                 <TextView
                     android:id="@+id/favorited_TextView"
                     android:text="Favorited Count"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/favorited_Label_TextView"
                     android:layout_toEndOf="@+id/favorited_Label_TextView"
@@ -80,15 +80,12 @@
                 <TextView
                     android:id="@+id/ratings_TextView"
                     android:text="Average Rating Value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/ratings_Label_TextView"
                     android:layout_toEndOf="@+id/ratings_Label_TextView"
                     android:layout_toRightOf="@+id/ratings_Label_TextView"
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-
-
 
                 <TextView
                     android:id="@+id/following_Label_TextView"
@@ -101,14 +98,12 @@
                 <TextView
                     android:id="@+id/following_TextView"
                     android:text="Following Count"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/following_Label_TextView"
                     android:layout_toEndOf="@+id/following_Label_TextView"
                     android:layout_toRightOf="@+id/following_Label_TextView"
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-
 
                 <TextView
                     android:id="@+id/followed_Label_TextView"
@@ -121,16 +116,12 @@
                 <TextView
                     android:id="@+id/followed_TextView"
                     android:text="Followed By Count"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/followed_Label_TextView"
                     android:layout_toEndOf="@+id/followed_Label_TextView"
                     android:layout_toRightOf="@+id/followed_Label_TextView"
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-
-
-
 
                 <ImageButton
                     android:id="@+id/following_imageButton"

@@ -71,7 +71,7 @@ public class UserResponseViewHolder extends BaseViewHolder {
                             StorageDataType.USERS),
                     profileImageView);
             populateTextView(
-                    response.get_source().getUsername(),
+                    "@" + response.get_source().getUsername(),
                     usernameTextView);
             populateTextView(
                     response.get_source().getSummary(),
