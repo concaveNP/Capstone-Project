@@ -13,29 +13,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/author_TextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Author"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/username_TextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/details_margin"
+            android:layout_weight="1"
+            android:text="Username"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
         <GridLayout
             android:id="@+id/gridLayout"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="2"
             android:padding="@dimen/details_margin">
-
-            <TextView
-                android:id="@+id/author_TextView"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="2"
-                android:text="Author"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-            <TextView
-                android:id="@+id/username_TextView"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="2"
-                android:layout_marginBottom="@dimen/details_margin"
-                android:text="Username"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <ImageView
                 android:id="@+id/profile_ImageView"
@@ -57,17 +65,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/favorited_label_string"
-                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/favorited_TextView"
-                    android:text="Favorited Count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/favorited_Label_TextView"
                     android:layout_toEndOf="@+id/favorited_Label_TextView"
                     android:layout_toRightOf="@+id/favorited_Label_TextView"
-                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+                    android:text="Favorited Count"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/ratings_Label_TextView"
@@ -75,17 +83,17 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/favorited_TextView"
                     android:text="@string/rating_label_string"
-                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/ratings_TextView"
-                    android:text="Average Rating Value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/ratings_Label_TextView"
                     android:layout_toEndOf="@+id/ratings_Label_TextView"
                     android:layout_toRightOf="@+id/ratings_Label_TextView"
-                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+                    android:text="Average Rating Value"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/following_Label_TextView"
@@ -93,17 +101,17 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ratings_TextView"
                     android:text="@string/following_label_string"
-                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/following_TextView"
-                    android:text="Following Count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/following_Label_TextView"
                     android:layout_toEndOf="@+id/following_Label_TextView"
                     android:layout_toRightOf="@+id/following_Label_TextView"
-                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+                    android:text="Following Count"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/followed_Label_TextView"
@@ -111,54 +119,60 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/following_TextView"
                     android:text="@string/followed_label_string"
-                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/followed_TextView"
-                    android:text="Followed By Count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/followed_Label_TextView"
                     android:layout_toEndOf="@+id/followed_Label_TextView"
                     android:layout_toRightOf="@+id/followed_Label_TextView"
-                    android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-                <ImageButton
-                    android:id="@+id/following_imageButton"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_below="@+id/followed_TextView"
-                    android:background="#00ffffff"
-                    android:src="@android:drawable/btn_star"/>
+                    android:text="Followed By Count"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/summary_TextView"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_columnSpan="2"
-                android:layout_marginTop="@dimen/details_margin"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+            <!--<include-->
+            <!--layout="@layout/reviews_card"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_columnSpan="2"-->
+            <!--android:layout_marginTop="@dimen/details_margin"/>-->
 
             <!--<include-->
-                <!--layout="@layout/reviews_card"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_columnSpan="2"-->
-                <!--android:layout_marginTop="@dimen/details_margin"/>-->
-
-            <!--<include-->
-                <!--layout="@layout/trailers_card"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_columnSpan="2"-->
-                <!--android:layout_marginTop="@dimen/details_margin"/>-->
+            <!--layout="@layout/trailers_card"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_columnSpan="2"-->
+            <!--android:layout_marginTop="@dimen/details_margin"/>-->
 
         </GridLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+        <ImageButton
+            android:id="@+id/following_imageButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/followed_TextView"
+            android:layout_weight="1"
+            android:background="#00ffffff"
+            android:src="@android:drawable/btn_star" />
+
+        <TextView
+            android:id="@+id/summary_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_marginTop="@dimen/details_margin"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 
 </FrameLayout>
 
