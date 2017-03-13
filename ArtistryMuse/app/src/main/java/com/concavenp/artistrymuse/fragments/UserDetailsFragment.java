@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,12 @@ import android.widget.ViewFlipper;
 import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
+import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
+import com.concavenp.artistrymuse.fragments.viewholder.ProjectViewHolder;
+import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.model.Favorite;
 import com.concavenp.artistrymuse.model.User;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -50,12 +58,15 @@ public class UserDetailsFragment extends Fragment {
     private String mUidForDetails;
 
     private OnFragmentInteractionListener mListener;
+    private OnDetailsInteractionListener mDetailsListener;
 
     // The Firebase interaction fields
     protected DatabaseReference mDatabase;
     protected StorageReference mStorageRef;
     protected FirebaseUser mUser;
     protected String mUid;
+    private RecyclerView mRecycler;
+    private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
 
     // This flipper allows the content of the fragment to show the User details or a message to
     // the user telling them there is no details to show.
@@ -126,6 +137,14 @@ public class UserDetailsFragment extends Fragment {
         // Save off the flipper for use in decided which view to show
         mFlipper = (ViewFlipper) view.findViewById(R.id.fragment_user_details_ViewFlipper);
 
+        // TODO: what is the purpose of this?????
+        mRecycler = (RecyclerView) view.findViewById(R.id.user_details_RecyclerView);
+        mRecycler.setHasFixedSize(true);
+
+        // Set up Layout
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        mRecycler.setLayoutManager(linearLayoutManager);
+
         return view;
     }
 
@@ -173,6 +192,20 @@ public class UserDetailsFragment extends Fragment {
 
             });
 
+            // Set up FirebaseRecyclerAdapter with the Query
+            Query postsQuery = getQuery(mDatabase);
+            mAdapter = new FirebaseRecyclerAdapter<String, GalleryViewHolder>(String.class, R.layout.item_gallery, GalleryViewHolder.class, postsQuery) {
+
+                @Override
+                protected void populateViewHolder(final GalleryViewHolder viewHolder, final String uid, final int position) {
+
+                    viewHolder.bindToPost(uid, mDetailsListener);
+
+                }
+
+            };
+
+            mRecycler.setAdapter(mAdapter);
 
         } else {
 
@@ -181,6 +214,15 @@ public class UserDetailsFragment extends Fragment {
 
         }
 
+    }
+
+    private Query getQuery(DatabaseReference databaseReference) {
+
+        String userId = mUidForDetails;
+
+        Query resultQuery = databaseReference.child("users").child(userId).child("projects");
+
+        return resultQuery;
     }
 
     private void updateUserDetails(User model) {
@@ -322,6 +364,17 @@ public class UserDetailsFragment extends Fragment {
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
 
         }
+
+        // Re-attach to the parent Activity interface
+        if (context instanceof OnDetailsInteractionListener) {
+
+            mDetailsListener = (OnDetailsInteractionListener) context;
+
+        } else {
+
+            throw new RuntimeException(context.toString() + " must implement OnDetailsInteractionListener");
+
+        }
     }
 
     @Override
@@ -329,7 +382,9 @@ public class UserDetailsFragment extends Fragment {
 
         super.onDetach();
 
+        // Detach from the parent Activity interface(s)
         mListener = null;
+        mDetailsListener = null;
 
     }
 

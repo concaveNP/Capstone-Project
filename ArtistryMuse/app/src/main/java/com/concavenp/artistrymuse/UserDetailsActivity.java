@@ -7,6 +7,9 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.fragments.UserDetailsFragment;
+import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.User;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class UserDetailsActivity extends AppCompatActivity implements UserDetailsFragment.OnFragmentInteractionListener {
+public class UserDetailsActivity extends AppCompatActivity implements
+        OnDetailsInteractionListener,
+        UserDetailsFragment.OnFragmentInteractionListener {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -174,6 +180,66 @@ public class UserDetailsActivity extends AppCompatActivity implements UserDetail
     @Override
     public void onFragmentInteraction(Uri uri) {
         // TODO: fill in later if needed
+    }
+
+    /**
+     * The purpose of this interface implementation is to start the Details Activity of either a
+     * user or a project.  The point to making the Main Activity implement is to support both the
+     * phone and tablet layout of the app.  Phone layouts will just start a new activity and
+     * tablet layouts will populate a neighboring fragment with the details results.
+     *
+     * @param uid - This will be the UID of other the User or the Project as specified in the type param
+     * @param type - The type will either be a user or a project
+     */
+    @Override
+    public void onDetailsSelection(String uid, StorageDataType type) {
+
+        switch(type) {
+
+            case PROJECTS: {
+
+                // Create and start the details activity along with passing it the UID of the Project in question
+                Intent intent = new Intent(this, ProjectDetailsActivity.class);
+                intent.putExtra(ProjectDetailsActivity.EXTRA_DATA, uid);
+                startActivity(intent);
+
+                break;
+            }
+            case USERS: {
+
+                // Create and start the details activity along with passing it the UID of the User in question
+                Intent intent = new Intent(this, UserDetailsActivity.class);
+                intent.putExtra(UserDetailsActivity.EXTRA_DATA, uid);
+                startActivity(intent);
+
+                break;
+
+            }
+            default: {
+                // TODO: log an error and whatnot
+            }
+
+        }
+       // TODO: support the phone and tablet layout, for now it is just phone
+
+//        if (mPhoneLayout) {
+//
+//            // Convert the GSON object back to a JSON string in order to pass to the activity
+//            Gson gson = new Gson();
+//            String json = gson.toJson(item);
+//
+//            // Create and start the details activity along with passing it the Movie Item details information via JSON string
+//            Intent intent = new Intent(this, MovieDetailsActivity.class);
+//            intent.putExtra(MovieDetailsActivity.EXTRA_DATA, json);
+//            startActivity(intent);
+//
+//        } else {
+//
+//            MovieDetailsFragment fragment = (MovieDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.movie_details_fragment);
+//            fragment.updateMovieDetailInfo(item);
+//
+//        }
+
     }
 
 }

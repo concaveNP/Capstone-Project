@@ -165,11 +165,11 @@ public class FavoritesFragment extends Fragment {
 
     private Query getQuery(DatabaseReference databaseReference) {
 
-        String myUserId = getUid();
+        String userId = getUid();
 
-        Query myTopPostsQuery = databaseReference.child("users").child(myUserId).child("favorites");
+        Query resultQuery = databaseReference.child("users").child(userId).child("favorites");
 
-        return myTopPostsQuery;
+        return resultQuery;
     }
 
     private String getUid() {

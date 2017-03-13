@@ -163,11 +163,11 @@ public class FollowingFragment extends Fragment {
 
     private Query getQuery(DatabaseReference databaseReference) {
 
-        String myUserId = getUid();
+        String userId = getUid();
 
-        Query myTopPostsQuery = databaseReference.child("users").child(myUserId).child("following");
+        Query resultQuery = databaseReference.child("users").child(userId).child("following");
 
-        return myTopPostsQuery;
+        return resultQuery;
     }
 
     private String getUid() {

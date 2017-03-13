@@ -26,7 +26,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Author"
+            android:text="@string/default_author_text"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/details_margin"
             android:layout_weight="1"
-            android:text="Username"
+            android:text="@string/default_username_text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <GridLayout
@@ -54,7 +54,7 @@
 
             <RelativeLayout
                 android:id="@+id/details_Layout"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:layout_marginLeft="@dimen/details_margin"
@@ -69,7 +69,7 @@
 
                 <TextView
                     android:id="@+id/favorited_TextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/favorited_Label_TextView"
                     android:layout_toEndOf="@+id/favorited_Label_TextView"
@@ -87,7 +87,7 @@
 
                 <TextView
                     android:id="@+id/ratings_TextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/ratings_Label_TextView"
                     android:layout_toEndOf="@+id/ratings_Label_TextView"
@@ -105,7 +105,7 @@
 
                 <TextView
                     android:id="@+id/following_TextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/following_Label_TextView"
                     android:layout_toEndOf="@+id/following_Label_TextView"
@@ -123,7 +123,7 @@
 
                 <TextView
                     android:id="@+id/followed_TextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/followed_Label_TextView"
                     android:layout_toEndOf="@+id/followed_Label_TextView"
@@ -132,20 +132,6 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </RelativeLayout>
-
-            <!--<include-->
-            <!--layout="@layout/reviews_card"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_columnSpan="2"-->
-            <!--android:layout_marginTop="@dimen/details_margin"/>-->
-
-            <!--<include-->
-            <!--layout="@layout/trailers_card"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_columnSpan="2"-->
-            <!--android:layout_marginTop="@dimen/details_margin"/>-->
 
         </GridLayout>
 
@@ -169,8 +155,9 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/user_details_RecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
