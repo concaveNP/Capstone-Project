@@ -65,7 +65,7 @@ public class UserViewHolder extends BaseViewHolder {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 // Perform the JSON to Object conversion
-                User user = dataSnapshot.getValue(User.class);
+                final User user = dataSnapshot.getValue(User.class);
 
                 // TODO: what to do when it is null, Log message at the least for now....!!!!
 
@@ -74,23 +74,20 @@ public class UserViewHolder extends BaseViewHolder {
 
                     populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), headerImageView);
                     populateImageView(buildFileReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), profileImageView);
-                    populateTextView(user.getUsername(), usernameTextView);
+                    populateTextView("@" + user.getUsername(), usernameTextView);
                     populateTextView(user.getSummary(), summaryTextView);
                     populateTextView(user.getDescription(), descriptionTextView);
                     populateTextView(Integer.toString(user.getFollowedCount()), followedTextView);
                     populateTextView(Integer.toString(user.getFollowing().size()), followingTextView);
 
-                    // Create stable UID for override
-                    final String uid = user.getUid();
-
-                    // Add a click listener to the view in order for the user to get more details about a selected movie
+                    // Add a click listener to the view in order to get more details about the user
                     itemView.setOnClickListener(new View.OnClickListener() {
 
                         @Override
                         public void onClick(View view) {
 
                             // Notify the the listener (aka MainActivity) of the details selection
-                            listener.onDetailsSelection(uid, StorageDataType.USERS);
+                            listener.onDetailsSelection(user.getUid(), StorageDataType.USERS);
 
                         }
 

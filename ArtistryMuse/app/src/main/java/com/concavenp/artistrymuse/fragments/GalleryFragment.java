@@ -178,13 +178,14 @@ public class GalleryFragment extends Fragment {
 
     }
 
+    // TODO: can this method be pulled into a base class - it's used in several other fragments
     private Query getQuery(DatabaseReference databaseReference) {
 
-        String myUserId = getUid();
+        String userId = getUid();
 
-        Query myTopPostsQuery = databaseReference.child("users").child(myUserId).child("projects");
+        Query resultQuery = databaseReference.child("users").child(userId).child("projects");
 
-        return myTopPostsQuery;
+        return resultQuery;
     }
 
     private String getUid() {

@@ -43,7 +43,7 @@
                 android:value="com.concavenp.artistrymuse.ProjectActivity" />
         </activity>
         <activity
-            android:name=".DetailsActivity"
+            android:name=".ProjectDetailsActivity"
             android:label="@string/title_activity_details"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme">
