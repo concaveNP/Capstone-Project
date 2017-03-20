@@ -21,13 +21,9 @@ public class InspirationViewHolder extends BaseViewHolder {
     @SuppressWarnings("unused")
     private static final String TAG = InspirationViewHolder.class.getSimpleName();
 
-    private String mProjectUid;
-
-    public InspirationViewHolder(View itemView, String uid) {
+    public InspirationViewHolder(View itemView) {
 
         super(itemView);
-
-        mProjectUid = uid;
 
     }
 
@@ -51,11 +47,11 @@ public class InspirationViewHolder extends BaseViewHolder {
         }
 
         // Display items to be populated
-        final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
+//        final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
         final TextView titleTextView = (TextView) itemView.findViewById(R.id.title_textView);
         final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
 
-        populateImageView(buildFileReference(mProjectUid, inspiration.getImageUid(), StorageDataType.PROJECTS), mainImageView);
+//        populateImageView(buildFileReference(mProjectUid, inspiration.getImageUid(), StorageDataType.PROJECTS), mainImageView);
         titleTextView.setText(inspiration.getName());
         descriptionTextView.setText(inspiration.getDescription());
 

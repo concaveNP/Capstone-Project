@@ -104,7 +104,7 @@ public class ProjectDetailsActivity extends AppCompatActivity  implements
                 // Verify there is a user to work with
                 if (project != null) {
 
-                    populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.USERS), backdropImageView);
+                    populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.PROJECTS), backdropImageView);
 
                 }
 

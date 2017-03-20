@@ -17,6 +17,7 @@ import android.widget.ViewFlipper;
 import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
+import com.concavenp.artistrymuse.fragments.adapter.GalleryAdapter;
 import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
 import com.concavenp.artistrymuse.fragments.viewholder.ProjectViewHolder;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
@@ -66,7 +67,8 @@ public class UserDetailsFragment extends Fragment {
     protected FirebaseUser mUser;
     protected String mUid;
     private RecyclerView mRecycler;
-    private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
+//    private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
+    private GalleryAdapter mAdapter;
 
     // This flipper allows the content of the fragment to show the User details or a message to
     // the user telling them there is no details to show.
@@ -192,20 +194,6 @@ public class UserDetailsFragment extends Fragment {
 
             });
 
-            // Set up FirebaseRecyclerAdapter with the Query
-            Query postsQuery = getQuery(mDatabase);
-            mAdapter = new FirebaseRecyclerAdapter<String, GalleryViewHolder>(String.class, R.layout.item_gallery, GalleryViewHolder.class, postsQuery) {
-
-                @Override
-                protected void populateViewHolder(final GalleryViewHolder viewHolder, final String uid, final int position) {
-
-                    viewHolder.bindToPost(uid, mDetailsListener);
-
-                }
-
-            };
-
-            mRecycler.setAdapter(mAdapter);
 
         } else {
 
@@ -233,56 +221,61 @@ public class UserDetailsFragment extends Fragment {
         if (mModel != null) {
 
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_user_details_FrameLayout)));
+
+            // TODO: decide if there is a need for some other menu buttons
 //            setMenuVisibility(true);
+
+            TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
+            TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
+            ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.profile_ImageView);
+            TextView favoritedTextView = (TextView) getActivity().findViewById(R.id.favorited_TextView);
+            TextView ratingsTextView = (TextView) getActivity().findViewById(R.id.ratings_TextView);
+            TextView followingTextView = (TextView) getActivity().findViewById(R.id.following_TextView);
+            TextView followedTextView = (TextView) getActivity().findViewById(R.id.followed_TextView);
+            TextView summaryTextView = (TextView) getActivity().findViewById(R.id.summary_TextView);
+
+            // Set the name of the user
+            populateTextView(mModel.getName(), authorTextView);
+
+            // Set the username of the user
+            populateTextView("@" + mModel.getUsername(), usernameTextView);
+
+            // Set the profile image
+            // TODO: This value needs the image size problem fixed !!!
+            populateImageView(buildFileReference(mModel.getUid(), mModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+
+            // Set the favorited number
+            populateTextView(Integer.toString(mModel.getFavorites().size()), favoritedTextView);
+
+            // Set the ratings
+            // TODO:
+            populateTextView("hmmm, this needs thought", ratingsTextView);
+
+            // Display a follow or un-follow
+            // TODO:
+
+            // Set the following number
+            populateTextView(Integer.toString(mModel.getFollowing().size()), followingTextView);
+
+            // Set the followed number
+            populateTextView(Integer.toString(mModel.getFollowedCount()), followedTextView);
+
+            // Set the summary
+            populateTextView(mModel.getSummary(), summaryTextView);
+
+            // Provide the recycler view the list of project strings to display
+            mAdapter = new GalleryAdapter(mModel.getProjects(), mDetailsListener);
+            mRecycler.setAdapter(mAdapter);
 
         } else {
 
             // There is no data to display so tell the user
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_user_details_TextView)));
+
+            // TODO: decide if there is a need for some other menu buttons
 //            setMenuVisibility(false);
 
         }
-
-        TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
-        TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
-        ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.profile_ImageView);
-        TextView favoritedTextView = (TextView) getActivity().findViewById(R.id.favorited_TextView);
-        TextView ratingsTextView = (TextView) getActivity().findViewById(R.id.ratings_TextView);
-        TextView followingTextView = (TextView) getActivity().findViewById(R.id.following_TextView);
-        TextView followedTextView = (TextView) getActivity().findViewById(R.id.followed_TextView);
-        TextView summaryTextView = (TextView) getActivity().findViewById(R.id.summary_TextView);
-
-        // Set the name of the user
-        populateTextView(mModel.getName(), authorTextView);
-
-        // Set the username of the user
-        populateTextView("@" + mModel.getUsername(), usernameTextView);
-
-        // Set the profile image
-        // TODO: This value needs the image size problem fixed !!!
-        populateImageView(buildFileReference(mModel.getUid(), mModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
-
-        // Set the favorited number
-        populateTextView(Integer.toString(mModel.getFavorites().size()), favoritedTextView);
-
-        // Set the ratings
-        // TODO:
-        populateTextView("hmmm, this needs thought", ratingsTextView);
-
-        // Display a follow or un-follow
-        // TODO:
-
-        // Set the following number
-        populateTextView(Integer.toString(mModel.getFollowing().size()), followingTextView);
-
-        // Set the followed number
-        populateTextView(Integer.toString(mModel.getFollowedCount()), followedTextView);
-
-        // Set the summary
-        populateTextView(mModel.getSummary(), summaryTextView);
-
-        // Setup the recycler view
-        // TODO:
 
     }
 
