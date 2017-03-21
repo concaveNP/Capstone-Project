@@ -207,6 +207,7 @@
     <string name="favorited_label_string">Favorited:</string>
     <string name="following_label_string">Following</string>
     <string name="followed_label_string">Followed</string>
+    <string name="projects_label_string">Projects</string>
     <string name="default_author_text">Author</string>
     <string name="default_username_text">Username</string>
     <string name="default_project_name_text">Project Name</string>
