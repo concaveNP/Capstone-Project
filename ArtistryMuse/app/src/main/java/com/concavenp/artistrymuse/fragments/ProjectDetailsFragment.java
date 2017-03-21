@@ -235,22 +235,6 @@ public class ProjectDetailsFragment extends Fragment {
             mAdapter = new InspirationAdapter(mModel.getInspirations(), mDetailsListener);
             mRecycler.setAdapter(mAdapter);
 
-
-//            // Set up FirebaseRecyclerAdapter with the Query
-//            Query postsQuery = getQuery(mDatabase);
-//            mAdapter = new FirebaseRecyclerAdapter<Inspiration, InspirationViewHolder>(Inspiration.class, R.layout.item_inspiration, InspirationViewHolder.class, postsQuery) {
-//
-//                @Override
-//                protected void populateViewHolder(final InspirationViewHolder viewHolder, final Inspiration inspiration, final int position) {
-//
-//                    viewHolder.bindToPost(inspiration, mDetailsListener);
-//
-//                }
-//
-//            };
-//
-//            mRecycler.setAdapter(mAdapter);
-
         } else {
 
             // There is no data to display so tell the user

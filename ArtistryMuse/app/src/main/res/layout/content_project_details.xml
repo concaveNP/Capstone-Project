@@ -12,32 +12,33 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </android.support.v4.widget.NestedScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/name_TextView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/default_project_name_text"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:id="@+id/description_TextView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/default_description_text"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/project_details_RecyclerView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/name_TextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/default_project_name_text"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/description_TextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/default_description_text"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/project_details_RecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </FrameLayout>
