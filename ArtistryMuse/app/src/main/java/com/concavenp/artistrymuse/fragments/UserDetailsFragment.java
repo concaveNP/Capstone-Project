@@ -79,6 +79,7 @@ public class UserDetailsFragment extends Fragment {
     private User mUserModel;
     private User mUserInQuestionModel;
 
+
     public UserDetailsFragment() {
 
         // Required empty public constructor
@@ -267,21 +268,31 @@ public class UserDetailsFragment extends Fragment {
         if (mUserModel != null) {
 
             // The follow/unfollow toggle button
-            ToggleButton followButton = (ToggleButton) getActivity().findViewById(R.id.follow_unfollow_toggleButton);
+            final ToggleButton followButton = (ToggleButton) getActivity().findViewById(R.id.follow_unfollow_toggleButton);
 
             // Determine the initial state of the button given the user's list of "following"
             final List<Following> following = mUserModel.getFollowing();
-            followButton.setChecked(following.contains(mUidForDetails));
 
-            followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        // The toggle is enabled
-                    } else {
-                        // The toggle is disabled
-                    }
+            followButton.setChecked(false);
+            for (Following item : following) {
+                if (item.getUid().equals(mUidForDetails)) {
+                    followButton.setChecked(true);
+                    break;
                 }
-            });
+            }
+
+//            followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//
+//                    if (isChecked) {
+//                        mDatabase.child("users").child(getUid()).child("following").ad
+//                        // The toggle is enabled
+//                    } else {
+//                        // The toggle is disabled
+//                    }
+//
+//                }
+//            });
 
 
         }
