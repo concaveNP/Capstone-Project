@@ -1,7 +1,9 @@
 package com.concavenp.artistrymuse.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dave on 10/14/2016.
@@ -12,7 +14,7 @@ public class Project {
     public Long creationDate;
     public String description;
     public Integer favorited;
-    public List<Inspiration> inspirations = new ArrayList<>();
+    public Map<String, Inspiration> inspirations = new HashMap<>();
     public Long lastUpdateDate;
     public String mainImageUid;
     public String name;
@@ -132,11 +134,11 @@ public class Project {
         this.mainImageUid = mainImageUid;
     }
 
-    public List<Inspiration> getInspirations() {
+    public Map<String, Inspiration> getInspirations() {
         return inspirations;
     }
 
-    public void setInspirations(List<Inspiration> inspirations) {
+    public void setInspirations(Map<String, Inspiration> inspirations) {
         this.inspirations = inspirations;
     }
 }

@@ -11,6 +11,7 @@ import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dave on 3/20/2017.
@@ -21,14 +22,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
     /**
      * The model is a list of Strings that are the UID of the projects that the user has created.
      */
-    private final List<String> mModel;
+    private final Map<String, String> mModel;
 
     /**
      * The listener that will be used when the user requests details for a given project.
      */
     private final OnDetailsInteractionListener mListener;
 
-    public GalleryAdapter(List<String> projects, final OnDetailsInteractionListener listener) {
+    public GalleryAdapter(Map<String, String> projects, final OnDetailsInteractionListener listener) {
 
         // Project UIDs
         mModel = projects;
@@ -54,7 +55,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
     @Override
     public void onBindViewHolder(GalleryViewHolder holder, int position) {
 
-        holder.bindToPost(mModel.get(position), mListener);
+        holder.bindToPost(mModel.values().toArray()[position], mListener);
 
     }
 

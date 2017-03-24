@@ -36,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -256,7 +257,8 @@ public class UserDetailsFragment extends Fragment {
         //return "8338c7c0-e6b9-4432-8461-f7047b262fbc";
         //return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
         //return "54d1e146-a114-45ea-ab66-389f5fd53e53";
-        return "0045d757-6cac-4a69-81e3-0952a3439a78";
+        //return "0045d757-6cac-4a69-81e3-0952a3439a78";
+        return "022ffcf3-38ac-425f-8fbe-382c90d2244f";
 
     }
 
@@ -271,14 +273,12 @@ public class UserDetailsFragment extends Fragment {
             final ToggleButton followButton = (ToggleButton) getActivity().findViewById(R.id.follow_unfollow_toggleButton);
 
             // Determine the initial state of the button given the user's list of "following"
-            final List<Following> following = mUserModel.getFollowing();
+            final Map<String, Following> following = mUserModel.getFollowing();
 
-            followButton.setChecked(false);
-            for (Following item : following) {
-                if (item.getUid().equals(mUidForDetails)) {
-                    followButton.setChecked(true);
-                    break;
-                }
+            if (following.containsKey(mUidForDetails)) {
+                followButton.setChecked(true);
+            } else {
+                followButton.setChecked(false);
             }
 
 //            followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

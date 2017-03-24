@@ -13,6 +13,7 @@ import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.Inspiration;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dave on 3/20/2017.
@@ -21,9 +22,9 @@ import java.util.List;
 public class InspirationAdapter extends RecyclerView.Adapter<InspirationViewHolder> {
 
     /**
-     * The model is a list of the project's inspirations.
+     * The model is a map of the project's inspirations.
      */
-    private final List<Inspiration> mModel;
+    private final Map<String, Inspiration> mModel;
 
     // TODO: dunno about this listener
     /**
@@ -31,7 +32,7 @@ public class InspirationAdapter extends RecyclerView.Adapter<InspirationViewHold
      */
     private final OnDetailsInteractionListener mListener;
 
-    public InspirationAdapter(List<Inspiration> inspirations, final OnDetailsInteractionListener listener) {
+    public InspirationAdapter(Map<String, Inspiration> inspirations, final OnDetailsInteractionListener listener) {
 
         // Project UIDs
         mModel = inspirations;
@@ -57,7 +58,7 @@ public class InspirationAdapter extends RecyclerView.Adapter<InspirationViewHold
     @Override
     public void onBindViewHolder(InspirationViewHolder holder, int position) {
 
-        holder.bindToPost(mModel.get(position), mListener);
+        holder.bindToPost(mModel.values().toArray()[position], mListener);
 
     }
 
