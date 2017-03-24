@@ -35,8 +35,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -170,7 +173,7 @@ public class UserDetailsFragment extends Fragment {
 
         } else if (args != null) {
 
-            // Pull the User info from the Database
+            // Pull the User info from the Database just once
             mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
@@ -198,8 +201,8 @@ public class UserDetailsFragment extends Fragment {
 
             });
 
-            // Pull the User in question info from the Database
-            mDatabase.child("users").child(mUidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
+            // Pull the User in question info from the Database and keep listening for changes
+            mDatabase.child("users").child(mUidForDetails).addValueEventListener(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -281,19 +284,37 @@ public class UserDetailsFragment extends Fragment {
                 followButton.setChecked(false);
             }
 
-//            followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//
-//                    if (isChecked) {
-//                        mDatabase.child("users").child(getUid()).child("following").ad
-//                        // The toggle is enabled
-//                    } else {
-//                        // The toggle is disabled
-//                    }
-//
-//                }
-//            });
+            followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                    if (isChecked) {
+
+                        // The new object that will be added to the DB
+                        Following following = new Following();
+                        following.setLastUpdatedDate(new Date().getTime());
+                        following.setUid(mUidForDetails);
+
+                        // Add the user in question to the map of people the user is following
+                        mDatabase.child("users").child(getUid()).child("following").child(mUidForDetails).setValue(following);
+
+                        // Update the followed count for the user in question
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", Integer.valueOf(mUserInQuestionModel.getFollowedCount() + 1));
+                        mDatabase.updateChildren(childUpdates);
+
+                    } else {
+
+                        // Remove the user in question from the map of people the user is following
+                        mDatabase.child("users").child(getUid()).child("following").child(mUidForDetails).removeValue();
+
+                        // Update the followed count for the user in question
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", Integer.valueOf(mUserInQuestionModel.getFollowedCount() - 1));
+                        mDatabase.updateChildren(childUpdates);
+                    }
+
+                }
+            });
 
         }
 
