@@ -86,10 +86,10 @@ class Generate {
                 // Loop over number of projects per user
                 for (int inspirationIndex = 0; inspirationIndex < numberofInspirations; inspirationIndex++) {
 
-                    def inspiration = createInspiration(inspirationIndex, project.uid)
+                    def inspiration = createInspiration(inspirationIndex)
 
                     // Add the inspiration to the project
-                    project.inspirations.add(inspiration)
+                    project.inspirations.put(inspiration.uid, inspiration)
 
                     // Create the image file associated with this inspiration
                     createInspirationJpg(projectsDirectory, project.uid, inspiration.imageUid, "Inspiration", inspiration.name, inspiration.uid)
@@ -97,7 +97,8 @@ class Generate {
                 }
 
                 // Add the project UID to list of user's projects
-                user.projects.add(project.uid)
+                // NOTE: assumption about the future needed an actual object behind this (just use a string for now)
+                user.projects.put(project.uid, project.uid)
 
                 // Add the project to the overall data
                 jsonData.projects.put(project.uid, project)
@@ -143,7 +144,7 @@ class Generate {
                 following.lastUpdatedDate = new Date().getTime()
 
                 // Add this user as being followed
-                userObject.following.add(following)
+                userObject.following.put(following.uid, following)
 
                 // Increment the followed count of the user being followed
                 userRandom.followedCount++
@@ -189,7 +190,7 @@ class Generate {
                 favorite.favoritedDate = new Date().getTime()
 
                 // Add this project as a favorite
-                userObject.favorites.add(favorite)
+                userObject.favorites.put(favorite.uid, favorite)
 
                 // Increment the favorited count of this project
                 projectRandom.favorited++
@@ -223,7 +224,7 @@ class Generate {
 
         result.authUid = startingAuthUid++
         result.creationDate = new Date().getTime()
-        result.description = lorem.getParagraphs(1,3)
+        result.description = lorem.getParagraphs(2,6)
         result.favorites.clear()
         result.followedCount = 0
         result.following.clear()
@@ -267,7 +268,7 @@ class Generate {
 
     }
 
-    static Inspiration createInspiration(int inspirationIndex, String uid) {
+    static Inspiration createInspiration(int inspirationIndex) {
 
         // Lorem library to generate text, names and such...
         Lorem lorem = LoremIpsum.getInstance()

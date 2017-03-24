@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "artistrymuseudacity",
+  "private_key_id": "7942c19a2c32263775b4006b0bddb18958d26407",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDFxN9b3cJv96ZA\n4ynkwnq3EdG3EwCsnEMapcNEVRnaiTjExL0oc2kxrZusliHPqWjI7w8AwkeZ4pLv\nGEgPMNGoTXzTimRn/bZkUtrEl2FmOrf9Uwnk5B7NH1XWVlR7T3Cp9BccWQ9Bz1qr\nzEkQAKrdo5jh4VGj3y4tm2kMskdFVX/K3YU/oCht7TJFPmFZGGJoQ5AfisP6II0z\nwRe1g2iijQ6ZqNVzAgnYdzC+2cYK/pyNHkC9ggIkk+ku9bqFPcYJJbdtduXJgzYU\nZtQnfAFqIKBODBIBHuVVz6gtSpTED/HAv+F9F9ul4i2CJkI8cmMPoNjd5upefCR4\n2kNvEHG/AgMBAAECggEAc7NSzQb2ytSCgjGj/747VsDpBQbr/Q/KPlu92ktDPdPL\nz2oeE/05DKQ5kAWhMEE3GV6qU1JV21Rvi8uT1LdF4QW8QnITfbczrou+iwbZJ5qw\nq1aaUjuXPX/YkvWcpSt7iSJRJvd/covhyuJP2DnbvKEKPxO31HwsIuhp09C02306\nM6lClY/q2kkasCpcQXQ7HNuWvmo5JWFCT3zsBA3EE+AZKWIEo160bLIhClDGk5Mm\nP0ipN7lUMo4dEk+4kztqTbyP7rCJCbrHoN7sGdn4SkoPHnaf4bv+c+9iJR9QF5cq\nA0QwtZ2UaUoLmPzKupX6ujTG1mM4lCK5acp49r0h6QKBgQD3mQrGL1p9O191E2L2\nLaHDK1I2frDoHFiG1J72D0OhrNkrJhIvPxCHg+EK3mdgLrFv+khBxkIYOGl2jgWG\nCLS+wxKt09nUTAJGh6r7uwqHLkH7lvfI24aq1EvbKvgHwom296EfgGkZQFozvxOP\npI6gfpHuK5LcZMBzL+60rJXFhQKBgQDMevPXm+/M+zqcivQj9ivsaMx/Ayz2ef3z\nJoLuHffFuGMmnkC5RrrfiaGIrBgliF/UpGq4m8WqnNk5t+iG/lkeLmYdMD+gZsGv\nqRtmKbNDp6qUqQvKVhcJE72Ygv9C62ARJTvQ3wdLky2hg0rdpnlavTxySl5Disfa\nrafa8twLcwKBgQDYSx6JYOaYzdwm50elLNnKKDcKmgQq0FBZgLZY157KRrf0JK7w\nDRSAfamDGCSQdlnVK3wh0XL9u5IN2iVjIInct4bCyXXaKog2Wt/4Rj39N2C2yvws\nv/FVnF2j2VaRWNV7O7nKTiAByiDCYaJR8nwSIl+TAwepdm5UccQCm12/DQKBgHuG\n313mFxSmxH6jNt+urFQx7y/flD8F7VMBdeExe2gXftZqjcEfqG64LzxocmHiI7pK\n5SnG+L+b52KF5lP+vYmNECUb66QTz3g12ZZ7JI9/b35FLRk7rsjOAyBqKpibprpU\n2vDQexC9xbgnn4eNNQyK+0Q0BwQYh6lkdN3BDwtfAoGBAJUhN+kNl3WEqQ0SvH7G\nNvmyj7WoULDWtKxa7p/85lVQ7P9RWzgfJp1DT74jHFyXeN1pDf+sAq+11ENHuCGj\nG8vGjSZl4bBMgoykKIgNzz7tc4offIu2hZiO2o3d9nkitiy1tFOaBHbuqy/tTuqh\nt+Dz4pfg+NMRUTAkUQy0FAZi\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-o6nlm@artistrymuseudacity.iam.gserviceaccount.com",
+  "client_id": "102873524879875309716",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-o6nlm%40artistrymuseudacity.iam.gserviceaccount.com"
+}

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "882578320227",
+    "firebase_url": "https://artistrymuseudacity.firebaseio.com",
+    "project_id": "artistrymuseudacity",
+    "storage_bucket": "artistrymuseudacity.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882578320227:android:ce5b6ede9967c4a2",
+        "android_client_info": {
+          "package_name": "com.concavenp.artistrymuse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "882578320227-sadu7pkit4qkbsol37vpg6514n27fnv4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.concavenp.artistrymuse",
+            "certificate_hash": "BCA2DCEC3E97CBECEA8B7318502E97A6778BF62F"
+          }
+        },
+        {
+          "client_id": "882578320227-jlcp1ggqravgnqv28e3q14qgc49pdmsg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFVkMr7vFsn42hgUaJ1tdXIBXry3B3GYE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "882578320227-jlcp1ggqravgnqv28e3q14qgc49pdmsg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

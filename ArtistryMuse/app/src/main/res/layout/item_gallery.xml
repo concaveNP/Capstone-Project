@@ -65,7 +65,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="right">
 
-
                 <LinearLayout
                     android:orientation="horizontal"
                     android:padding="@dimen/myapp_button_padding_material"

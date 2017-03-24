@@ -10,19 +10,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
-import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
-import com.concavenp.artistrymuse.fragments.viewholder.ProjectViewHolder;
+import com.concavenp.artistrymuse.fragments.adapter.GalleryAdapter;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
-import com.concavenp.artistrymuse.model.Favorite;
+import com.concavenp.artistrymuse.model.Following;
 import com.concavenp.artistrymuse.model.User;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,6 +34,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,14 +69,17 @@ public class UserDetailsFragment extends Fragment {
     protected FirebaseUser mUser;
     protected String mUid;
     private RecyclerView mRecycler;
-    private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
+//    private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
+    private GalleryAdapter mAdapter;
 
     // This flipper allows the content of the fragment to show the User details or a message to
     // the user telling them there is no details to show.
     private ViewFlipper mFlipper;
 
     // The model data displayed
-    private User mModel;
+    private User mUserModel;
+    private User mUserInQuestionModel;
+
 
     public UserDetailsFragment() {
 
@@ -157,15 +163,15 @@ public class UserDetailsFragment extends Fragment {
 
         // Determine what kind of state our User data situation is in.  If we have already pulled
         // data down then display it.  Otherwise, go get it.
-        if (mModel != null) {
+        if (mUserInQuestionModel != null) {
 
             // There is data to work with, so display it
-            updateUserDetails(mModel);
+            updateUserInQuestionDetails(mUserInQuestionModel);
 
         } else if (args != null) {
 
             // Pull the User info from the Database
-            mDatabase.child("users").child(mUidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -192,25 +198,39 @@ public class UserDetailsFragment extends Fragment {
 
             });
 
-            // Set up FirebaseRecyclerAdapter with the Query
-            Query postsQuery = getQuery(mDatabase);
-            mAdapter = new FirebaseRecyclerAdapter<String, GalleryViewHolder>(String.class, R.layout.item_gallery, GalleryViewHolder.class, postsQuery) {
+            // Pull the User in question info from the Database
+            mDatabase.child("users").child(mUidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
-                protected void populateViewHolder(final GalleryViewHolder viewHolder, final String uid, final int position) {
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    viewHolder.bindToPost(uid, mDetailsListener);
+                    // Perform the JSON to Object conversion
+                    final User user = dataSnapshot.getValue(User.class);
+
+                    // TODO: what to do when it is null
+
+                    // Verify there is a user to work with
+                    if (user != null) {
+
+                        // Set article based on saved instance state defined during onCreateView
+                        updateUserInQuestionDetails(user);
+
+                    }
 
                 }
 
-            };
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            mRecycler.setAdapter(mAdapter);
+                }
+
+            });
+
 
         } else {
 
             // There is no data to display and nothing to lookup
-            updateUserDetails(null);
+            updateUserInQuestionDetails(null);
 
         }
 
@@ -218,71 +238,120 @@ public class UserDetailsFragment extends Fragment {
 
     private Query getQuery(DatabaseReference databaseReference) {
 
-        String userId = mUidForDetails;
+        String userId = getUid();
 
-        Query resultQuery = databaseReference.child("users").child(userId).child("projects");
+        Query resultQuery = databaseReference.child("users").child(userId);
 
         return resultQuery;
     }
 
+    private String getUid() {
+
+//        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // TODO: this will need to be figured out some other way and probably/maybe saved to local properties
+        // must use the authUid (this is the getUid() call) to get the uid to be the DB primary key index to use as the myUserId value in the query - yuck, i'm doing this wrong
+
+        // TODO: should not be hard coded
+        //return "2a1d3365-118d-4dd7-9803-947a7103c730";
+        //return "8338c7c0-e6b9-4432-8461-f7047b262fbc";
+        //return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
+        //return "54d1e146-a114-45ea-ab66-389f5fd53e53";
+        //return "0045d757-6cac-4a69-81e3-0952a3439a78";
+        return "022ffcf3-38ac-425f-8fbe-382c90d2244f";
+
+    }
+
     private void updateUserDetails(User model) {
 
-        mModel = model;
+        mUserModel = model;
 
         // If there is model data then show the details otherwise tell the user to choose something
-        if (mModel != null) {
+        if (mUserModel != null) {
+
+            // The follow/unfollow toggle button
+            final ToggleButton followButton = (ToggleButton) getActivity().findViewById(R.id.follow_unfollow_toggleButton);
+
+            // Determine the initial state of the button given the user's list of "following"
+            final Map<String, Following> following = mUserModel.getFollowing();
+
+            if (following.containsKey(mUidForDetails)) {
+                followButton.setChecked(true);
+            } else {
+                followButton.setChecked(false);
+            }
+
+//            followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//
+//                    if (isChecked) {
+//                        mDatabase.child("users").child(getUid()).child("following").ad
+//                        // The toggle is enabled
+//                    } else {
+//                        // The toggle is disabled
+//                    }
+//
+//                }
+//            });
+
+
+        }
+
+    }
+
+    private void updateUserInQuestionDetails(User model) {
+
+        mUserInQuestionModel = model;
+
+        // If there is model data then show the details otherwise tell the user to choose something
+        if (mUserInQuestionModel != null) {
 
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_user_details_FrameLayout)));
+
+            // TODO: decide if there is a need for some other menu buttons
 //            setMenuVisibility(true);
+
+            // Set the profile image
+            ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.profile_ImageView);
+            populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+
+            // Set the name of the author and the username
+            TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
+            populateTextView(mUserInQuestionModel.getName(), authorTextView);
+            TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
+            populateTextView("@" + mUserInQuestionModel.getUsername(), usernameTextView);
+
+            // Set the summary description
+            TextView summaryTextView = (TextView) getActivity().findViewById(R.id.summary_TextView);
+            populateTextView(mUserInQuestionModel.getSummary(), summaryTextView);
+
+            // Set the counts for the projects, followed and following
+            TextView projectsTextView = (TextView) getActivity().findViewById(R.id.project_count_textView);
+            populateTextView(Integer.toString(mUserInQuestionModel.getProjects().size()), projectsTextView);
+            TextView followingTextView = (TextView) getActivity().findViewById(R.id.following_TextView);
+            populateTextView(Integer.toString(mUserInQuestionModel.getFollowing().size()), followingTextView);
+            TextView followedTextView = (TextView) getActivity().findViewById(R.id.followed_TextView);
+            populateTextView(Integer.toString(mUserInQuestionModel.getFollowedCount()), followedTextView);
+
+            // Set the favorited number
+            TextView favoritedTextView = (TextView) getActivity().findViewById(R.id.favorited_TextView);
+            populateTextView(Integer.toString(mUserInQuestionModel.getFavorites().size()), favoritedTextView);
+            TextView ratingsTextView = (TextView) getActivity().findViewById(R.id.ratings_TextView);
+            populateTextView("hmmm, this needs thought", ratingsTextView);
+
+            // Provide the recycler view the list of project strings to display
+            mAdapter = new GalleryAdapter(mUserInQuestionModel.getProjects(), mDetailsListener);
+            mRecycler.setAdapter(mAdapter);
 
         } else {
 
             // There is no data to display so tell the user
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_user_details_TextView)));
+
+            // TODO: decide if there is a need for some other menu buttons
 //            setMenuVisibility(false);
 
         }
-
-        TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
-        TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
-        ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.profile_ImageView);
-        TextView favoritedTextView = (TextView) getActivity().findViewById(R.id.favorited_TextView);
-        TextView ratingsTextView = (TextView) getActivity().findViewById(R.id.ratings_TextView);
-        TextView followingTextView = (TextView) getActivity().findViewById(R.id.following_TextView);
-        TextView followedTextView = (TextView) getActivity().findViewById(R.id.followed_TextView);
-        TextView summaryTextView = (TextView) getActivity().findViewById(R.id.summary_TextView);
-
-        // Set the name of the user
-        populateTextView(mModel.getName(), authorTextView);
-
-        // Set the username of the user
-        populateTextView("@" + mModel.getUsername(), usernameTextView);
-
-        // Set the profile image
-        // TODO: This value needs the image size problem fixed !!!
-        populateImageView(buildFileReference(mModel.getUid(), mModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
-
-        // Set the favorited number
-        populateTextView(Integer.toString(mModel.getFavorites().size()), favoritedTextView);
-
-        // Set the ratings
-        // TODO:
-        populateTextView("hmmm, this needs thought", ratingsTextView);
-
-        // Display a follow or un-follow
-        // TODO:
-
-        // Set the following number
-        populateTextView(Integer.toString(mModel.getFollowing().size()), followingTextView);
-
-        // Set the followed number
-        populateTextView(Integer.toString(mModel.getFollowedCount()), followedTextView);
-
-        // Set the summary
-        populateTextView(mModel.getSummary(), summaryTextView);
-
-        // Setup the recycler view
-        // TODO:
 
     }
 

@@ -1,7 +1,9 @@
 package com.concavenp.artistrymuse.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dave on 10/14/2016.
@@ -16,14 +18,14 @@ public class User {
     public String authUid;
     public Long creationDate;
     public String description;
-    public List<Favorite> favorites = new ArrayList<>();
+    public Map<String, Favorite> favorites = new HashMap<>();
     public Integer followedCount;
-    public List<Following> following = new ArrayList<>();
+    public Map<String, Following> following = new HashMap<>();
     public String headerImageUid;
     public Long lastUpdatedDate;
     public String name;
     public String profileImageUid;
-    public List<String> projects = new ArrayList<>();
+    public Map<String, String> projects = new HashMap<>();
     public String summary;
     public String uid;
     public String username;
@@ -32,11 +34,11 @@ public class User {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public List<String> getProjects() {
+    public Map<String, String> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<String> projects) {
+    public void setProjects(Map<String, String> projects) {
         this.projects = projects;
     }
 
@@ -72,11 +74,11 @@ public class User {
         this.description = description;
     }
 
-    public List<Favorite> getFavorites() {
+    public Map<String, Favorite> getFavorites() {
         return favorites;
     }
 
-    public void setFavorites(List<Favorite> favorites) {
+    public void setFavorites(Map<String, Favorite> favorites) {
         this.favorites = favorites;
     }
 
@@ -88,11 +90,11 @@ public class User {
         this.followedCount = followedCount;
     }
 
-    public List<Following> getFollowing() {
+    public Map<String, Following> getFollowing() {
         return following;
     }
 
-    public void setFollowing(List<Following> following) {
+    public void setFollowing(Map<String, Following> following) {
         this.following = following;
     }
 
