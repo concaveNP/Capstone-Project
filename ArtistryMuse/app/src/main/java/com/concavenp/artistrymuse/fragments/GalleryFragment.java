@@ -159,6 +159,16 @@ public class GalleryFragment extends BaseFragment {
 
             }
 
+            @Override
+            public void onViewRecycled(GalleryViewHolder holder) {
+
+                super.onViewRecycled(holder);
+
+                // Clear out the Glide memory used for the images associated with this ViewHolder
+                holder.clearImages();
+
+            }
+
         };
 
         mRecycler.setAdapter(mAdapter);

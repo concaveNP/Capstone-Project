@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
@@ -111,6 +112,14 @@ public class GalleryViewHolder extends BaseViewHolder {
             }
 
         });
+
+    }
+
+    public void clearImages() {
+
+        final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
+
+        Glide.clear(mainImageView);
 
     }
 

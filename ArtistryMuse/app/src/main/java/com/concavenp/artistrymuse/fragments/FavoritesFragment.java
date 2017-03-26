@@ -142,6 +142,16 @@ public class FavoritesFragment extends BaseFragment {
 
             }
 
+            @Override
+            public void onViewRecycled(ProjectViewHolder holder) {
+
+                super.onViewRecycled(holder);
+
+                // Clear out the Glide memory used for the images associated with this ViewHolder
+                holder.clearImages();
+
+            }
+
         };
 
         mRecycler.setAdapter(mAdapter);
