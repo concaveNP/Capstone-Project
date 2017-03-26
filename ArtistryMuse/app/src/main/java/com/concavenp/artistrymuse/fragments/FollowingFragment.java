@@ -140,6 +140,16 @@ public class FollowingFragment extends BaseFragment {
 
             }
 
+            @Override
+            public void onViewRecycled(UserViewHolder holder) {
+
+                super.onViewRecycled(holder);
+
+                // Clear out the Glide memory used for the images associated with this ViewHolder
+                holder.clearImages();
+
+            }
+
         };
 
         mRecycler.setAdapter(mAdapter);

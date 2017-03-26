@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +29,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
     protected FirebaseAuth mAuth;
     protected FirebaseUser mUser;
     protected String mUid;
+    protected FirebaseImageLoader mImageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,9 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
         if (mUser != null) {
             mUid = mUser.getUid();
         }
+
+        // Create the Firebase image loader
+        mImageLoader = new FirebaseImageLoader();
 
     }
 
@@ -97,10 +102,11 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
             // Download directly from StorageReference using Glide
             Glide.with(imageView.getContext())
-                    .using(new FirebaseImageLoader())
+                    .using(mImageLoader)
                     .load(storageReference)
                     .fitCenter()
-                    .crossFade()
+//                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
 
         }

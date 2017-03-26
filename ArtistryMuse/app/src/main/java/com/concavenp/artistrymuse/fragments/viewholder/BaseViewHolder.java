@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
@@ -26,6 +27,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     protected StorageReference mStorageRef;
     protected FirebaseUser mUser;
     protected String mUid;
+    protected FirebaseImageLoader mImageLoader;
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -49,6 +51,9 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         if (mUser != null) {
             mUid = mUser.getUid();
         }
+
+        // Create the Firebase image loader
+        mImageLoader = new FirebaseImageLoader();
 
     }
 
@@ -93,10 +98,11 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
             // Download directly from StorageReference using Glide
             Glide.with(imageView.getContext())
-                    .using(new FirebaseImageLoader())
+                    .using(mImageLoader)
                     .load(storageReference)
                     .fitCenter()
-                    .crossFade()
+//                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
 
         }
