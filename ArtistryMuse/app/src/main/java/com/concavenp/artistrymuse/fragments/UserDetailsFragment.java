@@ -1,12 +1,8 @@
 package com.concavenp.artistrymuse.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,40 +12,29 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
-import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.fragments.adapter.GalleryAdapter;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.Following;
 import com.concavenp.artistrymuse.model.User;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link UserDetailsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ * A simple {@link BaseFragment} subclass.
  * Use the {@link UserDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserDetailsFragment extends Fragment {
+public class UserDetailsFragment extends BaseFragment {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -63,14 +48,6 @@ public class UserDetailsFragment extends Fragment {
     // The UID for the User in question to display the details about
     private String mUidForDetails;
 
-    private OnFragmentInteractionListener mListener;
-    private OnDetailsInteractionListener mDetailsListener;
-
-    // The Firebase interaction fields
-    protected DatabaseReference mDatabase;
-    protected StorageReference mStorageRef;
-    protected FirebaseUser mUser;
-    protected String mUid;
     private RecyclerView mRecycler;
 //    private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
     private GalleryAdapter mAdapter;
@@ -82,7 +59,6 @@ public class UserDetailsFragment extends Fragment {
     // The model data displayed
     private User mUserModel;
     private User mUserInQuestionModel;
-
 
     public UserDetailsFragment() {
 
@@ -117,19 +93,6 @@ public class UserDetailsFragment extends Fragment {
 
             mUidForDetails = getArguments().getString(UID_PARAM);
 
-        }
-
-        // Initialize the Database connection
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        // Initialize the Storage connection
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        // Get the authenticated user
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (mUser != null) {
-            mUid = mUser.getUid();
         }
 
     }
@@ -239,32 +202,6 @@ public class UserDetailsFragment extends Fragment {
 
     }
 
-    private Query getQuery(DatabaseReference databaseReference) {
-
-        String userId = getUid();
-
-        Query resultQuery = databaseReference.child("users").child(userId);
-
-        return resultQuery;
-    }
-
-    private String getUid() {
-
-//        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // TODO: this will need to be figured out some other way and probably/maybe saved to local properties
-        // must use the authUid (this is the getUid() call) to get the uid to be the DB primary key index to use as the myUserId value in the query - yuck, i'm doing this wrong
-
-        // TODO: should not be hard coded
-        //return "2a1d3365-118d-4dd7-9803-947a7103c730";
-        //return "8338c7c0-e6b9-4432-8461-f7047b262fbc";
-        //return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
-        //return "54d1e146-a114-45ea-ab66-389f5fd53e53";
-        //return "0045d757-6cac-4a69-81e3-0952a3439a78";
-        return "022ffcf3-38ac-425f-8fbe-382c90d2244f";
-
-    }
-
     private void updateUserDetails(User model) {
 
         mUserModel = model;
@@ -278,10 +215,15 @@ public class UserDetailsFragment extends Fragment {
             // Determine the initial state of the button given the user's list of "following"
             final Map<String, Following> following = mUserModel.getFollowing();
 
+            // Set the initial state of the button
             if (following.containsKey(mUidForDetails)) {
+
                 followButton.setChecked(true);
+
             } else {
+
                 followButton.setChecked(false);
+
             }
 
             followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -303,6 +245,8 @@ public class UserDetailsFragment extends Fragment {
                         mDatabase.updateChildren(childUpdates);
 
                     } else {
+
+                        // TODO: this needs an addition user confirmation dialog to get express desire to un-follow the user in question
 
                         // Remove the user in question from the map of people the user is following
                         mDatabase.child("users").child(getUid()).child("following").child(mUidForDetails).removeValue();
@@ -373,125 +317,6 @@ public class UserDetailsFragment extends Fragment {
 //            setMenuVisibility(false);
 
         }
-
-    }
-
-    protected String buildFileReference(String uid, String imageUid, StorageDataType type) {
-
-        String fileReference = null;
-
-        // Verify there is image data to work with
-        if ((imageUid != null) && (!imageUid.isEmpty())) {
-
-            // Verify there is user data to work with
-            if ((uid != null) && (!uid.isEmpty())) {
-
-                fileReference = type.getType() + "/" + uid + "/" + imageUid + ".jpg";
-
-            }
-            else {
-
-                Log.e(TAG, "Unexpected null project UID");
-
-            }
-
-        }
-        else {
-
-            Log.e(TAG, "Unexpected null image UID");
-
-        }
-
-        return fileReference;
-
-    }
-
-    protected void populateImageView(String fileReference, ImageView imageView) {
-
-        // It is possible for the file reference string to be null, so check for it
-        if (fileReference != null) {
-
-            StorageReference storageReference = mStorageRef.child(fileReference);
-
-            // Download directly from StorageReference using Glide
-            Glide.with(imageView.getContext())
-                    .using(new FirebaseImageLoader())
-                    .load(storageReference)
-                    .fitCenter()
-                    .crossFade()
-                    .into(imageView);
-
-        }
-
-    }
-
-    protected void populateTextView(String text, TextView textView) {
-
-        // Verify there is text to work with and empty out if nothing is there.
-        if ((text != null) && (!text.isEmpty())) {
-
-            textView.setText(text);
-
-        } else {
-
-            textView.setText("");
-
-        }
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-
-        super.onAttach(context);
-
-        if (context instanceof OnFragmentInteractionListener) {
-
-            mListener = (OnFragmentInteractionListener) context;
-
-        } else {
-
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-
-        }
-
-        // Re-attach to the parent Activity interface
-        if (context instanceof OnDetailsInteractionListener) {
-
-            mDetailsListener = (OnDetailsInteractionListener) context;
-
-        } else {
-
-            throw new RuntimeException(context.toString() + " must implement OnDetailsInteractionListener");
-
-        }
-    }
-
-    @Override
-    public void onDetach() {
-
-        super.onDetach();
-
-        // Detach from the parent Activity interface(s)
-        mListener = null;
-        mDetailsListener = null;
-
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
 
     }
 

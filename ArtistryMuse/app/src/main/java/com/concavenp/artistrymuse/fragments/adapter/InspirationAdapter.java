@@ -7,12 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
 import com.concavenp.artistrymuse.fragments.viewholder.InspirationViewHolder;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.Inspiration;
 
-import java.util.List;
 import java.util.Map;
 
 /**

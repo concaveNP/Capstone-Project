@@ -2,6 +2,7 @@ package com.concavenp.artistrymuse;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
@@ -10,39 +11,23 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.concavenp.artistrymuse.fragments.SearchResultFragment;
-import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
-import com.concavenp.artistrymuse.fragments.FavoritesFragment;
-import com.concavenp.artistrymuse.fragments.FollowingFragment;
 import com.concavenp.artistrymuse.fragments.GalleryFragment;
-import com.concavenp.artistrymuse.fragments.SearchFragment;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
-public class MainActivity extends AppCompatActivity implements
-        OnDetailsInteractionListener,
-        FollowingFragment.OnFragmentInteractionListener,
-        FavoritesFragment.OnFragmentInteractionListener,
-        SearchFragment.OnFragmentInteractionListener,
-        GalleryFragment.OnFragmentInteractionListener,
-        GalleryFragment.OnCreateProjectInteractionListener,
-        SearchResultFragment.OnFragmentInteractionListener
-{
+public class MainActivity extends BaseAppCompatActivity implements
+        GalleryFragment.OnCreateProjectInteractionListener {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -52,15 +37,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-
-        // Enable Firebase disk persistence
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
         // Start the login Activity if needed
-        if (auth.getCurrentUser() == null) {
+        if (mUser == null) {
 
             // TODO: what is RC_SING_IN used for
             // TODO: the SVG is not apparently going to work here, need an png export of the logo
@@ -109,11 +90,6 @@ public class MainActivity extends AppCompatActivity implements
         selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
 
         return selectedProviders;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-       // TODO: determine if this needs to be here, this is used by all of the fragments for interaction.
     }
 
     @Override
@@ -183,67 +159,6 @@ public class MainActivity extends AppCompatActivity implements
     @MainThread
     private void showSnackbar(@StringRes int errorMessageRes) {
         Snackbar.make(findViewById(R.id.coordinatorLayout), errorMessageRes, Snackbar.LENGTH_LONG).show();
-    }
-
-    /**
-     * The purpose of this interface implementation is to start the Details Activity of either a
-     * user or a project.  The point to making the Main Activity implement is to support both the
-     * phone and tablet layout of the app.  Phone layouts will just start a new activity and
-     * tablet layouts will populate a neighboring fragment with the details results.
-     *
-     * @param uid - This will be the UID of other the User or the Project as specified in the type param
-     * @param type - The type will either be a user or a project
-     */
-    @Override
-    public void onDetailsSelection(String uid, StorageDataType type) {
-
-        switch(type) {
-
-            case PROJECTS: {
-
-                // Create and start the details activity along with passing it the UID of the Project in question
-                Intent intent = new Intent(this, ProjectDetailsActivity.class);
-                intent.putExtra(ProjectDetailsActivity.EXTRA_DATA, uid);
-                startActivity(intent);
-
-                break;
-            }
-            case USERS: {
-
-                // Create and start the details activity along with passing it the UID of the User in question
-                Intent intent = new Intent(this, UserDetailsActivity.class);
-                intent.putExtra(UserDetailsActivity.EXTRA_DATA, uid);
-                startActivity(intent);
-
-                break;
-
-            }
-            default: {
-                // TODO: log an error and whatnot
-            }
-
-        }
-
-        // TODO: support the phone and tablet layout, for now it is just phone
-
-//        if (mPhoneLayout) {
-//
-//            // Convert the GSON object back to a JSON string in order to pass to the activity
-//            Gson gson = new Gson();
-//            String json = gson.toJson(item);
-//
-//            // Create and start the details activity along with passing it the Movie Item details information via JSON string
-//            Intent intent = new Intent(this, MovieDetailsActivity.class);
-//            intent.putExtra(MovieDetailsActivity.EXTRA_DATA, json);
-//            startActivity(intent);
-//
-//        } else {
-//
-//            MovieDetailsFragment fragment = (MovieDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.movie_details_fragment);
-//            fragment.updateMovieDetailInfo(item);
-//
-//        }
-
     }
 
     @Override

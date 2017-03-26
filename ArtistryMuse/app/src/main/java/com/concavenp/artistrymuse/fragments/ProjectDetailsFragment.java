@@ -1,49 +1,30 @@
 package com.concavenp.artistrymuse.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.fragments.adapter.InspirationAdapter;
-import com.concavenp.artistrymuse.fragments.viewholder.InspirationViewHolder;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
-import com.concavenp.artistrymuse.model.Inspiration;
 import com.concavenp.artistrymuse.model.Project;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ProjectDetailsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link ProjectDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProjectDetailsFragment extends Fragment {
+public class ProjectDetailsFragment extends BaseFragment {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -57,14 +38,6 @@ public class ProjectDetailsFragment extends Fragment {
     // The UID for the User in question to display the details about
     private String mUidForDetails;
 
-    private OnFragmentInteractionListener mListener;
-    private OnDetailsInteractionListener mDetailsListener;
-
-    // The Firebase interaction fields
-    protected DatabaseReference mDatabase;
-    protected StorageReference mStorageRef;
-    protected FirebaseUser mUser;
-    protected String mUid;
     private RecyclerView mRecycler;
     //private FirebaseRecyclerAdapter<Inspiration, InspirationViewHolder> mAdapter;
     private InspirationAdapter mAdapter;
@@ -109,19 +82,6 @@ public class ProjectDetailsFragment extends Fragment {
 
             mUidForDetails = getArguments().getString(UID_PARAM);
 
-        }
-
-        // Initialize the Database connection
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        // Initialize the Storage connection
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        // Get the authenticated user
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (mUser != null) {
-            mUid = mUser.getUid();
         }
 
     }
@@ -244,125 +204,6 @@ public class ProjectDetailsFragment extends Fragment {
 //            setMenuVisibility(false);
 
         }
-
-    }
-
-    protected String buildFileReference(String uid, String imageUid, StorageDataType type) {
-
-        String fileReference = null;
-
-        // Verify there is image data to work with
-        if ((imageUid != null) && (!imageUid.isEmpty())) {
-
-            // Verify there is user data to work with
-            if ((uid != null) && (!uid.isEmpty())) {
-
-                fileReference = type.getType() + "/" + uid + "/" + imageUid + ".jpg";
-
-            }
-            else {
-
-                Log.e(TAG, "Unexpected null project UID");
-
-            }
-
-        }
-        else {
-
-            Log.e(TAG, "Unexpected null image UID");
-
-        }
-
-        return fileReference;
-
-    }
-
-    protected void populateImageView(String fileReference, ImageView imageView) {
-
-        // It is possible for the file reference string to be null, so check for it
-        if (fileReference != null) {
-
-            StorageReference storageReference = mStorageRef.child(fileReference);
-
-            // Download directly from StorageReference using Glide
-            Glide.with(imageView.getContext())
-                    .using(new FirebaseImageLoader())
-                    .load(storageReference)
-                    .fitCenter()
-                    .crossFade()
-                    .into(imageView);
-
-        }
-
-    }
-
-    protected void populateTextView(String text, TextView textView) {
-
-        // Verify there is text to work with and empty out if nothing is there.
-        if ((text != null) && (!text.isEmpty())) {
-
-            textView.setText(text);
-
-        } else {
-
-            textView.setText("");
-
-        }
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-
-        super.onAttach(context);
-
-        if (context instanceof OnFragmentInteractionListener) {
-
-            mListener = (OnFragmentInteractionListener) context;
-
-        } else {
-
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-
-        }
-
-        // Re-attach to the parent Activity interface
-        if (context instanceof OnDetailsInteractionListener) {
-
-            mDetailsListener = (OnDetailsInteractionListener) context;
-
-        } else {
-
-            throw new RuntimeException(context.toString() + " must implement OnDetailsInteractionListener");
-
-        }
-    }
-
-    @Override
-    public void onDetach() {
-
-        super.onDetach();
-
-        // Detach from the parent Activity interface(s)
-        mListener = null;
-        mDetailsListener = null;
-
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
 
     }
 

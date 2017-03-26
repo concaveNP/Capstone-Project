@@ -212,4 +212,6 @@
     <string name="default_username_text">Username</string>
     <string name="default_project_name_text">Project Name</string>
     <string name="default_description_text">Description</string>
+    <string name="following_off_text">follow</string>
+    <string name="follow_on_text">following</string>
 </resources>
