@@ -1,7 +1,5 @@
 package com.concavenp.artistrymuse.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -20,7 +18,6 @@ import com.concavenp.artistrymuse.fragments.adapter.SearchFragmentPagerAdapter;
 import com.concavenp.artistrymuse.fragments.adapter.SearchResultAdapter;
 import com.concavenp.artistrymuse.fragments.viewholder.ProjectResponseViewHolder;
 import com.concavenp.artistrymuse.fragments.viewholder.UserResponseViewHolder;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.ProjectResponse;
 import com.concavenp.artistrymuse.model.ProjectResponseHit;
 import com.concavenp.artistrymuse.model.Request;
@@ -29,7 +26,6 @@ import com.concavenp.artistrymuse.model.UserResponseHit;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -38,13 +34,10 @@ import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SearchFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends BaseFragment {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -60,10 +53,6 @@ public class SearchFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
-    private OnDetailsInteractionListener mDetailsListener;
-
-    private DatabaseReference mDatabase;
     private SearchResultAdapter<UserResponseHit, UserResponseViewHolder> mUsersAdapter;
     private SearchResultAdapter<ProjectResponseHit, ProjectResponseViewHolder> mProjectsAdapter;
     private RecyclerView mUsersRecycler;
@@ -114,9 +103,6 @@ public class SearchFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
 
         }
-
-        // Establish a connection the database
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
     }
 
@@ -433,78 +419,6 @@ public class SearchFragment extends Fragment {
 
         return myTopPostsQuery;
 
-    }
-
-    private String getUid() {
-
-//        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // TODO: this will need to be figured out some other way and probably/maybe saved to local properties
-        // must use the authUid (this is the getUid() call) to get the uid to be the DB primary key index to use as the myUserId value in the query - yuck, i'm doing this wrong
-
-        // TODO: should not be hard coded
-        //return "2a1d3365-118d-4dd7-9803-947a7103c730";
-        //return "8338c7c0-e6b9-4432-8461-f7047b262fbc";
-        //return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
-        //return "54d1e146-a114-45ea-ab66-389f5fd53e53";
-        //return "0045d757-6cac-4a69-81e3-0952a3439a78";
-        return "022ffcf3-38ac-425f-8fbe-382c90d2244f";
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-
-        super.onAttach(context);
-
-        // Re-attach to the parent Activity interface
-        if (context instanceof OnFragmentInteractionListener) {
-
-            mListener = (OnFragmentInteractionListener) context;
-
-        } else {
-
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-
-        }
-
-        // Re-attach to the parent Activity interface
-        if (context instanceof OnDetailsInteractionListener) {
-
-            mDetailsListener = (OnDetailsInteractionListener) context;
-
-        } else {
-
-            throw new RuntimeException(context.toString() + " must implement OnDetailsInteractionListener");
-
-        }
-
-    }
-
-    @Override
-    public void onDetach() {
-
-        super.onDetach();
-
-        // Detach from the parent Activity interface(s)
-        mListener = null;
-        mDetailsListener = null;
-
-     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     public interface OnSearchButtonListener {

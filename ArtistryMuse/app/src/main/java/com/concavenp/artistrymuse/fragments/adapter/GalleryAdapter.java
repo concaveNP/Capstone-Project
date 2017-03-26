@@ -10,7 +10,6 @@ import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 
-import java.util.List;
 import java.util.Map;
 
 /**

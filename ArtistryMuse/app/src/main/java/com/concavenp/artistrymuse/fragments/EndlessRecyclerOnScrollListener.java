@@ -57,7 +57,8 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         int firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
 
         if (mLinearLayoutManager instanceof GridLayoutManager) {
-            // The minimum amount of items to have below your current scroll position before loading more.  This should be equal to the number of columns in the grid.  Thus, one row.
+            // The minimum amount of items to have below your current scroll position before loading more.
+            // This should be equal to the number of columns in the grid.  Thus, one row.
             mVisibleThreshold = ((GridLayoutManager) mLinearLayoutManager).getSpanCount();
         }
 

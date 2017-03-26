@@ -2,11 +2,9 @@ package com.concavenp.artistrymuse.fragments.viewholder;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.Inspiration;
 
