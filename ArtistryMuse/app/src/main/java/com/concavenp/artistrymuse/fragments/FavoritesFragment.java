@@ -1,8 +1,6 @@
 package com.concavenp.artistrymuse.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -12,11 +10,9 @@ import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.viewholder.ProjectViewHolder;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.Favorite;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 

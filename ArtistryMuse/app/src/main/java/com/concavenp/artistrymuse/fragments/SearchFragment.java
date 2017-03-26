@@ -1,6 +1,5 @@
 package com.concavenp.artistrymuse.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,6 @@ import com.concavenp.artistrymuse.fragments.adapter.SearchFragmentPagerAdapter;
 import com.concavenp.artistrymuse.fragments.adapter.SearchResultAdapter;
 import com.concavenp.artistrymuse.fragments.viewholder.ProjectResponseViewHolder;
 import com.concavenp.artistrymuse.fragments.viewholder.UserResponseViewHolder;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.concavenp.artistrymuse.model.ProjectResponse;
 import com.concavenp.artistrymuse.model.ProjectResponseHit;
 import com.concavenp.artistrymuse.model.Request;
@@ -28,7 +26,6 @@ import com.concavenp.artistrymuse.model.UserResponseHit;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 

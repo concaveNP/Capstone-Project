@@ -1,10 +1,8 @@
 package com.concavenp.artistrymuse.fragments;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,10 +12,8 @@ import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 
