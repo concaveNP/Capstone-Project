@@ -47,10 +47,10 @@ public class UserResponseViewHolder extends BaseViewHolder {
         }
 
         // Display items to be populated
-        final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_imageview);
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_imageview);
+        final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_ImageView);
+        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_ImageView);
+        final TextView authorTextView = (TextView) itemView.findViewById(R.id.author_TextView);
         final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_textview);
-        final TextView summaryTextView = (TextView) itemView.findViewById(R.id.summary_textview);
         final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
         final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
         final TextView followingTextView = (TextView) itemView.findViewById(R.id.views_textView);
@@ -75,7 +75,7 @@ public class UserResponseViewHolder extends BaseViewHolder {
                     usernameTextView);
             populateTextView(
                     response.get_source().getSummary(),
-                    summaryTextView);
+                    authorTextView);
             populateTextView(
                     response.get_source().getDescription(),
                     descriptionTextView);

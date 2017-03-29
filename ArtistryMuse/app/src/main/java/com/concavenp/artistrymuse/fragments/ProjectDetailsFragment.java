@@ -7,12 +7,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.fragments.adapter.InspirationAdapter;
 import com.concavenp.artistrymuse.model.Project;
+import com.concavenp.artistrymuse.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,16 +41,22 @@ public class ProjectDetailsFragment extends BaseFragment {
     // The UID for the User in question to display the details about
     private String mUidForDetails;
 
+    // Widgets for displaying all of the recycled items
     private RecyclerView mRecycler;
-    //private FirebaseRecyclerAdapter<Inspiration, InspirationViewHolder> mAdapter;
     private InspirationAdapter mAdapter;
 
     // This flipper allows the content of the fragment to show the User details or a message to
     // the user telling them there is no details to show.
     private ViewFlipper mFlipper;
 
-    // The model data displayed
-    private Project mModel;
+    // The model data that is the user's, which will be used to link with following, favoriting, etc.
+    private User mUserModel;
+
+    // The model data of the Project in question that the user wants to see the details of.
+    private Project mProjectInQuestionModel;
+
+    // The Owner of the Project in question
+    private User mUserInQuestionModel;
 
     public ProjectDetailsFragment() {
 
@@ -116,17 +125,61 @@ public class ProjectDetailsFragment extends BaseFragment {
 
         Bundle args = getArguments();
 
-        // Determine what kind of state our Project data situation is in.  If we have already pulled
+        // Determine what kind of state our User data situation is in.  If we have already pulled
         // data down then display it.  Otherwise, go get it.
-        if (mModel != null) {
+        if (mUserModel != null) {
 
             // There is data to work with, so display it
-            updateProjectDetails(mModel);
+            updateUserDetails(mUserModel);
 
         } else if (args != null) {
 
-            // Pull the Project info from the Database
-            mDatabase.child("projects").child(mUidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
+            // Pull the User info from the Database just once
+            mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    // Perform the JSON to Object conversion
+                    final User user = dataSnapshot.getValue(User.class);
+
+                    // TODO: what to do when it is null
+
+                    // Verify there is a user to work with
+                    if (user != null) {
+
+                        // Set article based on saved instance state defined during onCreateView
+                        updateUserDetails(user);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+
+            });
+
+        } else {
+
+            // There is no data to display and nothing to lookup
+            updateUserDetails(null);
+
+        }
+
+        // Determine what kind of state our User In Question data is in.  If we have already pulled
+        // data down then display it.  Otherwise, go get it.
+        if (mProjectInQuestionModel != null) {
+
+            // There is data to work with, so display it
+            updateProjectInQuestionDetails(mProjectInQuestionModel);
+
+        } else if (args != null) {
+
+            // Pull the User in question info from the Database and keep listening for changes
+            mDatabase.child("projects").child(mUidForDetails).addValueEventListener(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -140,7 +193,7 @@ public class ProjectDetailsFragment extends BaseFragment {
                     if (project != null) {
 
                         // Set article based on saved instance state defined during onCreateView
-                        updateProjectDetails(project);
+                        updateProjectInQuestionDetails(project);
 
                     }
 
@@ -157,43 +210,139 @@ public class ProjectDetailsFragment extends BaseFragment {
         } else {
 
             // There is no data to display and nothing to lookup
-            updateProjectDetails(null);
+            updateProjectInQuestionDetails(null);
 
         }
 
     }
 
-    private Query getQuery(DatabaseReference databaseReference) {
+    private void updateUserDetails(User model) {
 
-        String projectId = mUidForDetails;
-
-        Query resultQuery = databaseReference.child("projects").child(projectId).child("inspirations");
-
-        return resultQuery;
-    }
-
-    private void updateProjectDetails(Project model) {
-
-        mModel = model;
+        mUserModel = model;
 
         // If there is model data then show the details otherwise tell the user to choose something
-        if (mModel != null) {
+        if (mUserModel != null) {
+
+//            // The follow/unfollow toggle button
+//            final ToggleButton followButton = (ToggleButton) getActivity().findViewById(R.id.follow_unfollow_toggleButton);
+//
+//            // Determine the initial state of the button given the user's list of "following"
+//            final Map<String, Following> following = mUserModel.getFollowing();
+//
+//            // Set the initial state of the button
+//            if (following.containsKey(mUidForDetails)) {
+//
+//                followButton.setChecked(true);
+//
+//            } else {
+//
+//                followButton.setChecked(false);
+//
+//            }
+//
+//            followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//
+//                    if (isChecked) {
+//
+//                        // The new object that will be added to the DB
+//                        Following following = new Following();
+//                        following.setLastUpdatedDate(new Date().getTime());
+//                        following.setUid(mUidForDetails);
+//
+//                        // Add the user in question to the map of people the user is following
+//                        mDatabase.child("users").child(getUid()).child("following").child(mUidForDetails).setValue(following);
+//
+//                        // Update the followed count for the user in question
+//                        Map<String, Object> childUpdates = new HashMap<>();
+//                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", Integer.valueOf(mUserInQuestionModel.getFollowedCount() + 1));
+//                        mDatabase.updateChildren(childUpdates);
+//
+//                    } else {
+//
+//                        // TODO: this needs an addition user confirmation dialog to get express desire to un-follow the user in question
+//
+//                        // Remove the user in question from the map of people the user is following
+//                        mDatabase.child("users").child(getUid()).child("following").child(mUidForDetails).removeValue();
+//
+//                        // Update the followed count for the user in question
+//                        Map<String, Object> childUpdates = new HashMap<>();
+//                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", Integer.valueOf(mUserInQuestionModel.getFollowedCount() - 1));
+//                        mDatabase.updateChildren(childUpdates);
+//                    }
+//
+//                }
+//            });
+//
+//        }
+        }
+    }
+
+    private void updateProjectInQuestionDetails(Project model) {
+
+        mProjectInQuestionModel = model;
+
+        // If there is model data then show the details otherwise tell the user to choose something
+        if (mProjectInQuestionModel != null) {
 
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_project_details_FrameLayout)));
 
             // TODO: decide if there is a need for some other menu buttons
 //            setMenuVisibility(true);
 
+
+
+
+
+
+
             // Display items to be populated
-            final TextView nameTextView = (TextView) getActivity().findViewById(R.id.name_TextView);
             final TextView descriptionTextView = (TextView) getActivity().findViewById(R.id.description_TextView);
 
-            populateTextView(mModel.getName(), nameTextView);
-            populateTextView(mModel.getDescription(), descriptionTextView);
+            populateTextView(mProjectInQuestionModel.getDescription(), descriptionTextView);
 
             // Provide the recycler view the list of project strings to display
-            mAdapter = new InspirationAdapter(mModel.getInspirations(), mDetailsListener);
+            mAdapter = new InspirationAdapter(mProjectInQuestionModel.getInspirations(), mDetailsListener);
             mRecycler.setAdapter(mAdapter);
+
+
+
+
+
+            // Retrieve the user associated with the project just once
+            mDatabase.child("users").child(mProjectInQuestionModel.getOwnerUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    // Perform the JSON to Object conversion
+                    mUserInQuestionModel = dataSnapshot.getValue(User.class);
+
+                    // TODO: what to do when it is null
+
+                    // Verify there is a user to work with
+                    if (mUserInQuestionModel != null) {
+
+                        // Set the profile image
+                        ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.profile_ImageView);
+                        populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+
+                        // Set the name of the author and the username
+                        TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
+                        populateTextView(mUserInQuestionModel.getName(), authorTextView);
+                        TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
+                        populateTextView("@" + mUserInQuestionModel.getUsername(), usernameTextView);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+
+            });
 
         } else {
 

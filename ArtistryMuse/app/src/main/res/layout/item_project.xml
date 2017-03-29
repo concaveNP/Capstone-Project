@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_account_circle_black_24dp"
-                android:id="@+id/profile_imageview"
+                android:id="@+id/profile_ImageView"
                 android:layout_weight="1"
                 android:layout_alignParentBottom="false"
                 tools:layout_alignBottom="@id/summary_textview"
@@ -51,8 +51,8 @@
                 android:id="@+id/username_textview"
                 android:layout_weight="1"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/profile_imageview"
-                android:layout_toEndOf="@+id/profile_imageview"
+                android:layout_toRightOf="@+id/profile_ImageView"
+                android:layout_toEndOf="@+id/profile_ImageView"
                 android:paddingTop="@dimen/myapp_text_uncommon_padding_material"
                 android:paddingBottom="@dimen/myapp_text_common_padding_material" />
 
