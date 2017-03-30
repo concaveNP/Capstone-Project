@@ -44,16 +44,18 @@ public class UserDetailsFragment extends BaseFragment {
     // The UID for the User in question to display the details about
     private String mUidForDetails;
 
+    // Widgets for displaying all of the recycled items
     private RecyclerView mRecycler;
-//    private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
     private GalleryAdapter mAdapter;
 
     // This flipper allows the content of the fragment to show the User details or a message to
     // the user telling them there is no details to show.
     private ViewFlipper mFlipper;
 
-    // The model data displayed
+    // The model data that is the user's, which will be used to link with following, favoriting, etc.
     private User mUserModel;
+
+    // The model data of the User in question that the user wants to see the details of.
     private User mUserInQuestionModel;
 
     public UserDetailsFragment() {
@@ -125,10 +127,10 @@ public class UserDetailsFragment extends BaseFragment {
 
         // Determine what kind of state our User data situation is in.  If we have already pulled
         // data down then display it.  Otherwise, go get it.
-        if (mUserInQuestionModel != null) {
+        if (mUserModel != null) {
 
             // There is data to work with, so display it
-            updateUserInQuestionDetails(mUserInQuestionModel);
+            updateUserDetails(mUserModel);
 
         } else if (args != null) {
 
@@ -159,6 +161,23 @@ public class UserDetailsFragment extends BaseFragment {
                 }
 
             });
+
+        } else {
+
+            // There is no data to display and nothing to lookup
+            updateUserDetails(null);
+
+        }
+
+        // Determine what kind of state our User In Question data is in.  If we have already pulled
+        // data down then display it.  Otherwise, go get it.
+        if (mUserInQuestionModel != null) {
+
+            // There is data to work with, so display it
+            updateUserInQuestionDetails(mUserInQuestionModel);
+
+        } else if (args != null) {
+
 
             // Pull the User in question info from the Database and keep listening for changes
             mDatabase.child("users").child(mUidForDetails).addValueEventListener(new ValueEventListener() {

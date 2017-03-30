@@ -147,7 +147,7 @@ public abstract class BaseFragment extends Fragment {
             StorageReference storageReference = mStorageRef.child(fileReference);
 
             // Download directly from StorageReference using Glide
-            Glide.with(imageView.getContext())
+            Glide.with(getContext())
                     .using(mImageLoader)
                     .load(storageReference)
                     .fitCenter()

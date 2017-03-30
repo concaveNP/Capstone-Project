@@ -54,7 +54,7 @@ public class ProjectViewHolder extends BaseViewHolder {
 
         // Display items to be populated
         final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_imageview);
+        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_ImageView);
         final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_textview);
         final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
         final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
@@ -135,7 +135,7 @@ public class ProjectViewHolder extends BaseViewHolder {
     public void clearImages() {
 
         final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_imageview);
+        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_ImageView);
 
         Glide.clear(mainImageView);
         Glide.clear(profileImageView);
