@@ -53,9 +53,11 @@ public class UserViewHolder extends BaseViewHolder {
 
         // Display items to be populated
         final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_ImageView);
+
         final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_ImageView);
         final TextView authorTextView = (TextView) itemView.findViewById(R.id.author_TextView);
         final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_TextView);
+
         final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
         final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
         final TextView followingTextView = (TextView) itemView.findViewById(R.id.views_textView);
@@ -74,9 +76,11 @@ public class UserViewHolder extends BaseViewHolder {
                 if (user != null) {
 
                     populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), headerImageView);
+
                     populateImageView(buildFileReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+                    populateTextView(user.getName(), authorTextView);
                     populateTextView("@" + user.getUsername(), usernameTextView);
-                    populateTextView(user.getSummary(), authorTextView);
+
                     populateTextView(user.getDescription(), descriptionTextView);
                     populateTextView(Integer.toString(user.getFollowedCount()), followedTextView);
                     populateTextView(Integer.toString(user.getFollowing().size()), followingTextView);
