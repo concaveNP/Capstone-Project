@@ -70,7 +70,7 @@
                 android:value="com.concavenp.artistrymuse.MainActivity" />
         </activity>
 
-        <receiver android:name=".widget.ArtistryAppWidget">
+        <receiver android:name=".widget.ArtistryAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -80,18 +80,16 @@
                 android:resource="@xml/artistry_app_widget_info" />
         </receiver>
 
-        <activity android:name=".widget.ArtistryAppWidgetConfigureActivity">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
         <service
             android:name=".services.UploadService"
             android:enabled="true"
             android:exported="false" />
         <service
             android:name=".services.DownloadService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".widget.ArtistryAppWidgetService"
             android:enabled="true"
             android:exported="false" />
 
@@ -118,6 +116,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.concavenp.artistrymuse.MainActivity" />
         </activity>
+
     </application>
 
 </manifest>

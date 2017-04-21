@@ -1,21 +1,46 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
-    android:padding="@dimen/widget_margin">
+    android:padding="@dimen/widget_margin"
+    android:background="@color/cardview_dark_background">
 
-    <TextView
-        android:id="@+id/appwidget_text"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:background="#09C"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
-        android:textColor="#ffffff"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        android:background="@color/background_material_dark"
+        android:padding="10dp"
+        android:id="@+id/widget_header_RelativeLayout">
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/widget_title"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <include layout="@layout/subcontent_ratings_views_favorited"/>
+
+    </LinearLayout>
+
+    <!--<TextView-->
+        <!--android:id="@+id/empty_view"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:gravity="center"-->
+        <!--android:visibility="gone"-->
+        <!--android:text="@string/widget_zero_project_TextView"-->
+        <!--android:textSize="20sp"-->
+        <!--android:theme="@style/WidgetListItemTheme" />-->
+    <!--&lt;!&ndash;android:layout_below="@+id/widget_header_RelativeLayout"&ndash;&gt;-->
+
+</LinearLayout>
+
