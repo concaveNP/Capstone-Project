@@ -50,7 +50,7 @@ public class UserResponseViewHolder extends BaseViewHolder {
         final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_ImageView);
         final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_ImageView);
         final TextView authorTextView = (TextView) itemView.findViewById(R.id.author_TextView);
-        final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_textview);
+        final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_TextView);
         final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
         final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
         final TextView followingTextView = (TextView) itemView.findViewById(R.id.views_textView);

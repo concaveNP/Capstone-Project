@@ -14,6 +14,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="WidgetListItemTheme" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="AppTheme.Card">
         <item name="android:background">@color/myapp_primary_800</item>
     </style>
