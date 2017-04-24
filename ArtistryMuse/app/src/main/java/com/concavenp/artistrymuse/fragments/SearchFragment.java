@@ -328,9 +328,7 @@ public class SearchFragment extends BaseFragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                Log.w(TAG, databaseError.toString());
-
+                // Do nothing
             }
 
         });
@@ -402,9 +400,7 @@ public class SearchFragment extends BaseFragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                Log.w(TAG, databaseError.toString());
-
+                // Do nothing
             }
 
         });

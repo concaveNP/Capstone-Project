@@ -65,8 +65,6 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
                 // Perform the JSON to Object conversion
                 final Project project = dataSnapshot.getValue(Project.class);
 
-                // TODO: what to do when it is null
-
                 // Verify there is a user to work with
                 if (project != null) {
 
@@ -78,7 +76,7 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                // Do nothing
             }
 
         });

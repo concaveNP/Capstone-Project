@@ -4,21 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/widget_margin"
-    android:background="@color/cardview_dark_background">
+    android:background="@color/myapp_primary_500">
 
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_material_dark"
+        android:background="@color/myapp_primary_700"
         android:padding="10dp"
         android:id="@+id/widget_header_RelativeLayout">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/widget_title"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/widget_title"
+            android:id="@+id/widget_title_textView"/>
 
     </RelativeLayout>
 
@@ -30,17 +31,6 @@
         <include layout="@layout/subcontent_ratings_views_favorited"/>
 
     </LinearLayout>
-
-    <!--<TextView-->
-        <!--android:id="@+id/empty_view"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="fill_parent"-->
-        <!--android:gravity="center"-->
-        <!--android:visibility="gone"-->
-        <!--android:text="@string/widget_zero_project_TextView"-->
-        <!--android:textSize="20sp"-->
-        <!--android:theme="@style/WidgetListItemTheme" />-->
-    <!--&lt;!&ndash;android:layout_below="@+id/widget_header_RelativeLayout"&ndash;&gt;-->
 
 </LinearLayout>
 

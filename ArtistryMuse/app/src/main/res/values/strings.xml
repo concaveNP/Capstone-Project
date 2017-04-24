@@ -214,6 +214,6 @@
     <string name="default_description_text">Description</string>
     <string name="following_off_text">follow</string>
     <string name="follow_on_text">following</string>
-    <string name="widget_title">ArtistryMuse Status</string>
+    <string name="widget_title">ArtistryMuse: </string>
     <string name="widget_zero_project_TextView">You have no projects to display</string>
 </resources>

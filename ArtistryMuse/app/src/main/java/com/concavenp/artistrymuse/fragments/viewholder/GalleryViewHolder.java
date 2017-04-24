@@ -69,8 +69,6 @@ public class GalleryViewHolder extends BaseViewHolder {
                 // Perform the JSON to Object conversion
                 Project project = dataSnapshot.getValue(Project.class);
 
-                // TODO: what to do when it is null
-
                 // Verify there is a user to work with
                 if (project != null) {
 
@@ -108,7 +106,7 @@ public class GalleryViewHolder extends BaseViewHolder {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                // Do nothing
             }
 
         });

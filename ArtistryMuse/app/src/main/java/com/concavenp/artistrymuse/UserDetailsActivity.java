@@ -65,8 +65,6 @@ public class UserDetailsActivity extends BaseAppCompatActivity  {
                 // Perform the JSON to Object conversion
                 final User user = dataSnapshot.getValue(User.class);
 
-                // TODO: what to do when it is null
-
                 // Verify there is a user to work with
                 if (user != null) {
 
@@ -78,7 +76,7 @@ public class UserDetailsActivity extends BaseAppCompatActivity  {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                // Do nothing
             }
 
         });
