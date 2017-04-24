@@ -70,8 +70,6 @@ public class UserViewHolder extends BaseViewHolder {
                 // Perform the JSON to Object conversion
                 final User user = dataSnapshot.getValue(User.class);
 
-                // TODO: what to do when it is null, Log message at the least for now....!!!!
-
                 // Verify there is a user to work with
                 if (user != null) {
 
@@ -104,9 +102,7 @@ public class UserViewHolder extends BaseViewHolder {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-                Log.w(TAG, "Unexpected cancellation of a Firebase Database query");
-
+                // Do nothing
             }
 
         });

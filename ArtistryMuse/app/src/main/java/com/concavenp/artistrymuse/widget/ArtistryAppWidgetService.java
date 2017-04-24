@@ -79,11 +79,6 @@ public class ArtistryAppWidgetService extends Service {
 
         int[] allWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 
-// TODO: This block is something Vogella put in, looks like it could be useful
-//                ComponentName thisWidget = new ComponentName(getApplicationContext(),
-//                                MyWidgetProvider.class);
-//                int[] allWidgetIds2 = appWidgetManager.getAppWidgetIds(thisWidget);
-
         final RemoteViews remoteViews = new RemoteViews(this .getApplicationContext().getPackageName(), R.layout.artistry_app_widget);
 
         // Initialize the data points before running the numbers
@@ -100,15 +95,16 @@ public class ArtistryAppWidgetService extends Service {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    Log.d( TAG, "onDataChange: users" );
-
                     // Perform the JSON to Object conversion
                     User user = dataSnapshot.getValue(User.class);
 
-                    // TODO: what to do when it is null
-
                     // Verify there is a user to work with
                     if (user != null) {
+
+                        // Set the title and username for the header of the widget and update it
+                        final String widgetTitle = context.getResources().getString(R.string.widget_title) + "  @" + user.getUsername();
+                        remoteViews.setTextViewText(R.id.widget_title_textView, widgetTitle);
+                        appWidgetManager.updateAppWidget(id, remoteViews);
 
                         // Loop over all of the user's projects and tally up the data
                         for (String projectId : user.getProjects().values()) {
@@ -118,49 +114,47 @@ public class ArtistryAppWidgetService extends Service {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                    Log.d( TAG, "onDataChange: projects" );
-
                                     // Perform the JSON to Object conversion
                                     Project project = dataSnapshot.getValue(Project.class);
-
-                                    // TODO: what to do when it is null
 
                                     // Verify there is a user to work with
                                     if (project != null) {
 
+                                        // Get the needed data out from the JSON
                                         favoritesTotal += project.getFavorited();
                                         averageRatingTotal = (averageRatingTotal + project.getRating()) / 2;
                                         viewsTotal += project.getViews();
 
+                                        // Convert to strings
                                         String favoritesResult = Integer.toString(favoritesTotal);
                                         String ratingsResult = String.format("%.1f", averageRatingTotal);
                                         String viewsResult = Integer.toString(viewsTotal);
 
-                                        populateTextView(remoteViews, favoritesResult, R.id.favorited_textView);
-                                        populateTextView(remoteViews, ratingsResult, R.id.rating_textView);
-                                        populateTextView(remoteViews, viewsResult, R.id.views_textView);
-
-//                                        appWidgetManager.updateAppWidget(id, remoteViews);
+                                        // Update the views
+                                        remoteViews.setTextViewText(R.id.favorited_textView, favoritesResult);
+                                        remoteViews.setTextViewText(R.id.rating_textView, ratingsResult);
+                                        remoteViews.setTextViewText(R.id.views_textView, viewsResult);
 
                                     }
 
-                                    populateImageView(remoteViews, R.drawable.ic_star_black_24dp, R.id.favorited_imageView);
-                                    populateImageView(remoteViews, R.drawable.ic_remove_red_eye_black_24dp , R.id.rating_imageView);
-                                    populateImageView(remoteViews, R.drawable.ic_thumb_up_black_24dp, R.id.views_imageView);
+                                    // Populate the images
+                                    remoteViews.setImageViewResource(R.id.favorited_imageView, R.drawable.ic_star_black_24dp);
+                                    remoteViews.setImageViewResource(R.id.rating_imageView, R.drawable.ic_remove_red_eye_black_24dp);
+                                    remoteViews.setImageViewResource(R.id.views_imageView, R.drawable.ic_thumb_up_black_24dp);
 
+                                    // Update all of the views making up the AppWidget
                                     appWidgetManager.updateAppWidget(id, remoteViews);
 
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-
+                                    // Do nothing
                                 }
 
                             });
 
                         }
-
 
                     }
 
@@ -168,39 +162,10 @@ public class ArtistryAppWidgetService extends Service {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
-                }
-
-                protected void populateImageView(RemoteViews rv, int resourceId, int id) {
-                    rv.setImageViewResource(id, resourceId);
-                }
-
-                protected void populateTextView(RemoteViews rv, String text, int id) {
-
-                    // Verify there is text to work with and empty out if nothing is there.
-                    if ((text != null) && (!text.isEmpty())) {
-
-                        rv.setTextViewText(id, text);
-
-                    } else {
-
-                        rv.setTextViewText(id, "");
-
-                    }
-
+                    // Do nothing
                 }
 
             });
-
-//            // Register an onClickListener
-//            Intent clickIntent = new Intent(this.getApplicationContext(), ArtistryAppWidgetProvider.class);
-//
-//            clickIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//            clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, allWidgetIds);
-//
-//            PendingIntent pendingIntent = PendingIntent.getBroadcast( getApplicationContext(), 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//            remoteViews.setOnClickPendingIntent(R.id.update, pendingIntent);
-//            appWidgetManager.updateAppWidget(widgetId, remoteViews);
 
         }
 
