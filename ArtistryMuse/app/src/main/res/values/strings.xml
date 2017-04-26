@@ -216,4 +216,10 @@
     <string name="follow_on_text">following</string>
     <string name="widget_title">ArtistryMuse: </string>
     <string name="widget_zero_project_TextView">You have no projects to display</string>
+
+    <!--These are values used for the SharedPreferences of the application-->
+    <string name="shared_preferences_filename">ArtistryMusePreferences</string>
+    <string name="application_uid_key">ArtistryMuseUID</string>
+    <string name="default_application_uid_value"></string>
+
 </resources>

@@ -22,7 +22,14 @@ import com.google.firebase.storage.StorageReference;
  */
 
 public abstract class BaseAppCompatActivity extends AppCompatActivity implements
-        OnDetailsInteractionListener {
+        OnDetailsInteractionListener,
+        FirebaseAuth.AuthStateListener {
+
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = BaseAppCompatActivity.class.getSimpleName();
 
     protected DatabaseReference mDatabase;
     protected StorageReference mStorageRef;
@@ -57,11 +64,27 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
     }
 
-    /**
-     * The logging tag string to be associated with log data for this class
-     */
-    @SuppressWarnings("unused")
-    private static final String TAG = BaseAppCompatActivity.class.getSimpleName();
+    @Override
+    protected void onResume() {
+        // Listen for changes in our Firebase authentication state
+        mAuth.addAuthStateListener(this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        // Listen for changes in our Firebase authentication state
+        mAuth.removeAuthStateListener(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onAuthStateChanged(FirebaseAuth auth) {
+
+        // The Firebase Auth has changed
+        mAuth = auth;
+
+    }
 
     protected String buildFileReference(String uid, String imageUid, StorageDataType type) {
 
@@ -155,3 +178,4 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
     }
 
 }
+

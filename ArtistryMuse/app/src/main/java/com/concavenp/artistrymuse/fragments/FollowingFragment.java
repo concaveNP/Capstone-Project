@@ -123,6 +123,9 @@ public class FollowingFragment extends BaseFragment {
 
         }
 
+
+
+
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
         mAdapter = new FirebaseRecyclerAdapter<Following, UserViewHolder>(Following.class, R.layout.item_user, UserViewHolder.class, postsQuery) {

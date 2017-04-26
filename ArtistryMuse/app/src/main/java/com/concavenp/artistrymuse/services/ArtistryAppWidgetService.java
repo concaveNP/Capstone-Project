@@ -1,4 +1,4 @@
-package com.concavenp.artistrymuse.widget;
+package com.concavenp.artistrymuse.services;
 
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.concavenp.artistrymuse.R;
