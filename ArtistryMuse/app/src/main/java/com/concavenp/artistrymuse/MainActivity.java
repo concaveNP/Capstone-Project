@@ -1,8 +1,11 @@
 package com.concavenp.artistrymuse;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
@@ -17,6 +20,7 @@ import android.view.MenuItem;
 
 import com.concavenp.artistrymuse.fragments.GalleryFragment;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
+import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -39,6 +43,10 @@ public class MainActivity extends BaseAppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        // Starts the service that provides data updates to the DB
+        Intent userAuthenticationIntent = new Intent(this, UserAuthenticationService.class);
+        bindService(userAuthenticationIntent,)
 
         // Start the login Activity if needed
         if (mUser == null) {
@@ -80,16 +88,26 @@ public class MainActivity extends BaseAppCompatActivity implements
         setSupportActionBar(toolbar);
     }
 
+    /**
+     * This method is used to set what providers will be used for account authentication.
+     *
+     * @return The list of authentication providers
+     */
     @MainThread
     private List<AuthUI.IdpConfig> getSelectedProviders() {
+
         List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
 
         selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
-        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER) .build());
-        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
-        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
+
+        // Current, we only want to allow user to verify themselves against an Email address.
+        // Future work would include other verification methods that would be enabled here.
+        //        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
+        //        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
+        //        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
 
         return selectedProviders;
+
     }
 
     @Override
@@ -169,4 +187,21 @@ public class MainActivity extends BaseAppCompatActivity implements
         startActivity(intent);
 
     }
+
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mUserServiceConnection = new ServiceConnection() {
+
+                @Override
+                public void onServiceConnected(ComponentName className, IBinder service) {
+                    // We've bound to LocalService, cast the IBinder and get LocalService instance
+                    LocalBinder binder = (LocalBinder) service;
+                    mService = binder.getService();
+                    mBound = true;
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName arg0) {
+                    mBound = false;
+                }
+            };
 }

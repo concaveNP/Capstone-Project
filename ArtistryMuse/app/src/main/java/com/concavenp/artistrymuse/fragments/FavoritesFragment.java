@@ -83,7 +83,7 @@ public class FavoritesFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_favorites, container, false);
 
-        // TODO: what is the purpose of this?????
+        // TODO: what is the purpose of this (setHasFixedSize) seemed to remember making a comment block in another app about it
         mRecycler = (RecyclerView) mainView.findViewById(R.id.favorites_recycler_view);
         mRecycler.setHasFixedSize(true);
 

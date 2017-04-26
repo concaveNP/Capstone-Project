@@ -2,8 +2,12 @@ package com.concavenp.artistrymuse.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +26,7 @@ import com.google.firebase.storage.StorageReference;
 /**
  * Created by dave on 3/25/2017.
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements FirebaseAuth.AuthStateListener {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -35,8 +39,6 @@ public abstract class BaseFragment extends Fragment {
     protected DatabaseReference mDatabase;
     protected StorageReference mStorageRef;
     protected FirebaseAuth mAuth;
-    protected FirebaseUser mUser;
-    protected String mUid;
     protected FirebaseImageLoader mImageLoader;
 
     @Override
@@ -56,12 +58,37 @@ public abstract class BaseFragment extends Fragment {
         // Get the authenticated user
         mUser = mAuth.getCurrentUser();
 
-        if (mUser != null) {
-            mUid = mUser.getUid();
-        }
-
         // Create the Firebase image loader
         mImageLoader = new FirebaseImageLoader();
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        // Listen for changes in our Firebase authentication state
+        mAuth.addAuthStateListener(this);
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+
+    }
+
+    @Override
+    public void onDestroyView() {
+
+        // Listen for changes in our Firebase authentication state
+        mAuth.removeAuthStateListener(this);
+
+        super.onDestroyView();
+
+    }
+
+    @Override
+    public void onAuthStateChanged(FirebaseAuth auth) {
+
+        // The Firebase Auth has changed
+        mAuth = auth;
 
     }
 
@@ -94,7 +121,16 @@ public abstract class BaseFragment extends Fragment {
 
     protected String getUid() {
 
-//        return mUser.getUid();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user == null) {
+            Log.d(TAG, "User UID from Firebase was NULL");
+            return "";
+        }
+
+        //return mUser.getUid();
+        Log.d(TAG, "User UID from Firebase: " + user.getUid());
+        return user.getUid();
 
         // TODO: this will need to be figured out some other way and probably/maybe saved to local properties
         // must use the authUid (this is the getUid() call) to get the uid to be the DB primary key index to use as the myUserId value in the query - yuck, i'm doing this wrong
@@ -105,7 +141,7 @@ public abstract class BaseFragment extends Fragment {
         //return "d0fc4662-30b3-4e87-97b0-d78e8882a518";
         //return "54d1e146-a114-45ea-ab66-389f5fd53e53";
         //return "0045d757-6cac-4a69-81e3-0952a3439a78";
-        return "022ffcf3-38ac-425f-8fbe-382c90d2244f";
+//        return "022ffcf3-38ac-425f-8fbe-382c90d2244f";
 
     }
 
