@@ -92,6 +92,10 @@
             android:name=".services.ArtistryAppWidgetService"
             android:enabled="true"
             android:exported="false" />
+        <service
+            android:name=".services.UserAuthenticationService"
+            android:enabled="true"
+            android:exported="false" />
 
         <!--
           Android N SDK has new restrictions around sharing file:// URIs
@@ -116,7 +120,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.concavenp.artistrymuse.MainActivity" />
         </activity>
-
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.concavenp.artistrymuse.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

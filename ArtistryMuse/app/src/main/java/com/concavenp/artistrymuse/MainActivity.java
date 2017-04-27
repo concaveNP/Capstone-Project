@@ -1,6 +1,7 @@
 package com.concavenp.artistrymuse;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -27,11 +29,14 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
 public class MainActivity extends BaseAppCompatActivity implements
-        GalleryFragment.OnCreateProjectInteractionListener {
+        GalleryFragment.OnCreateProjectInteractionListener,
+        UserAuthenticationService.OnAuthenticationListener {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -39,29 +44,21 @@ public class MainActivity extends BaseAppCompatActivity implements
     @SuppressWarnings("unused")
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private UserAuthenticationService mService;
+
+    private boolean mBound;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-        // Starts the service that provides data updates to the DB
-        Intent userAuthenticationIntent = new Intent(this, UserAuthenticationService.class);
-        bindService(userAuthenticationIntent,)
+        // Bind to the UserAuthenticationService
+        Intent intent = new Intent(this, UserAuthenticationService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        startService(intent);
 
-        // Start the login Activity if needed
-        if (mUser == null) {
-
-            // TODO: what is RC_SING_IN used for
-            // TODO: the SVG is not apparently going to work here, need an png export of the logo
-            startActivityForResult(
-                    AuthUI.getInstance().createSignInIntentBuilder()
-                            .setLogo(R.drawable.ic_muse_logo_1_vector)
-                            .setProviders(getSelectedProviders())
-                            .setIsSmartLockEnabled(true)
-                            .build(),
-                    RC_SIGN_IN);
-
-        }
+        Log.d(TAG, "Service created");
 
         setContentView(R.layout.activity_main);
 
@@ -86,6 +83,7 @@ public class MainActivity extends BaseAppCompatActivity implements
         // Setup the support for creating a menu (ActionBar functionality)
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
     }
 
     /**
@@ -188,20 +186,55 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     }
 
-    /** Defines callbacks for service binding, passed to bindService() */
-    private ServiceConnection mUserServiceConnection = new ServiceConnection() {
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
+    private ServiceConnection mConnection = new ServiceConnection() {
 
-                @Override
-                public void onServiceConnected(ComponentName className, IBinder service) {
-                    // We've bound to LocalService, cast the IBinder and get LocalService instance
-                    LocalBinder binder = (LocalBinder) service;
-                    mService = binder.getService();
-                    mBound = true;
-                }
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            UserAuthenticationService.LocalBinder binder = (UserAuthenticationService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
 
-                @Override
-                public void onServiceDisconnected(ComponentName arg0) {
-                    mBound = false;
-                }
-            };
+            // Register this class as a listener for login and profile events
+            mService.registerAuthenticationListener(MainActivity.this);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+
+    };
+
+
+    @Override
+    public void onLoginInteraction() {
+
+        Log.d(TAG, "Received an LOGIN 'update'");
+
+        // TODO: what is RC_SING_IN used for
+        // TODO: the SVG is not apparently going to work here, need an png export of the logo
+        startActivityForResult(
+                AuthUI.getInstance().createSignInIntentBuilder()
+                        .setLogo(R.drawable.ic_muse_logo_1_vector)
+                        .setProviders(getSelectedProviders())
+                        .setIsSmartLockEnabled(true)
+                        .build(),
+                RC_SIGN_IN);
+
+    }
+
+    @Override
+    public void onProfileInteraction() {
+
+        Log.d(TAG, "Received an PROFILE 'update'");
+
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+
+    }
 }
+

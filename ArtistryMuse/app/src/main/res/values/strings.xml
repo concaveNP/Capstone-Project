@@ -15,9 +15,6 @@
     <string name="title_activity_settings">Settings</string>
 
 
-
-
-
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
@@ -221,5 +218,6 @@
     <string name="shared_preferences_filename">ArtistryMusePreferences</string>
     <string name="application_uid_key">ArtistryMuseUID</string>
     <string name="default_application_uid_value"></string>
+    <string name="title_activity_profile">Profile</string>
 
 </resources>

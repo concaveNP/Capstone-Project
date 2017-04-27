@@ -21,9 +21,7 @@ import com.google.firebase.storage.StorageReference;
  * Created by dave on 3/25/2017.
  */
 
-public abstract class BaseAppCompatActivity extends AppCompatActivity implements
-        OnDetailsInteractionListener,
-        FirebaseAuth.AuthStateListener {
+public abstract class BaseAppCompatActivity extends AppCompatActivity implements OnDetailsInteractionListener {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -33,9 +31,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
     protected DatabaseReference mDatabase;
     protected StorageReference mStorageRef;
-    protected FirebaseAuth mAuth;
-    protected FirebaseUser mUser;
-    protected String mUid;
     protected FirebaseImageLoader mImageLoader;
 
     @Override
@@ -49,40 +44,8 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
         // Initialize the Firebase Storage connection
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        // Initialize the Firebase Authentication connection
-        mAuth = FirebaseAuth.getInstance();
-
-        // Get the authenticated user
-        mUser = mAuth.getCurrentUser();
-
-        if (mUser != null) {
-            mUid = mUser.getUid();
-        }
-
         // Create the Firebase image loader
         mImageLoader = new FirebaseImageLoader();
-
-    }
-
-    @Override
-    protected void onResume() {
-        // Listen for changes in our Firebase authentication state
-        mAuth.addAuthStateListener(this);
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        // Listen for changes in our Firebase authentication state
-        mAuth.removeAuthStateListener(this);
-        super.onPause();
-    }
-
-    @Override
-    public void onAuthStateChanged(FirebaseAuth auth) {
-
-        // The Firebase Auth has changed
-        mAuth = auth;
 
     }
 
