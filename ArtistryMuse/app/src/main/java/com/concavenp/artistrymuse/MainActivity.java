@@ -16,7 +16,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -29,8 +28,6 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
@@ -44,9 +41,16 @@ public class MainActivity extends BaseAppCompatActivity implements
     @SuppressWarnings("unused")
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    /**
+     * This service is used to translate the Firebase UID of the authenticated user to an app
+     * specified ArtistryMuse UID.  The service listens for Firebase authentication events
+     * and sets a SharedPreferences value accordingly.  SharedPreferences is where the app
+     * specific UID will be stored for the duration of the the user's "logged in" experience.
+     *
+     * The rest of the app will use the app specific UID for Firebase database and storage
+     * lookups.
+     */
     private UserAuthenticationService mService;
-
-    private boolean mBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +61,6 @@ public class MainActivity extends BaseAppCompatActivity implements
         Intent intent = new Intent(this, UserAuthenticationService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
-
-        Log.d(TAG, "Service created");
 
         setContentView(R.layout.activity_main);
 
@@ -110,9 +112,12 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
+
         return true;
+
     }
 
     @Override
@@ -187,33 +192,11 @@ public class MainActivity extends BaseAppCompatActivity implements
     }
 
     /**
-     * Defines callbacks for service binding, passed to bindService()
+     * Implementation for the interface that provides the ability for this activity to be
+     * notified when the user needs to login into the Firebase service.
      */
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            UserAuthenticationService.LocalBinder binder = (UserAuthenticationService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-
-            // Register this class as a listener for login and profile events
-            mService.registerAuthenticationListener(MainActivity.this);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-
-    };
-
-
     @Override
     public void onLoginInteraction() {
-
-        Log.d(TAG, "Received an LOGIN 'update'");
 
         // TODO: what is RC_SING_IN used for
         // TODO: the SVG is not apparently going to work here, need an png export of the logo
@@ -221,20 +204,50 @@ public class MainActivity extends BaseAppCompatActivity implements
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setLogo(R.drawable.ic_muse_logo_1_vector)
                         .setProviders(getSelectedProviders())
-                        .setIsSmartLockEnabled(true)
+                        .setIsSmartLockEnabled(false)
                         .build(),
                 RC_SIGN_IN);
 
     }
 
+    /**
+     * Implementation for the interface that provides the ability for this activity to be
+     * notified when the user needs to fill out profile information about themselves.  As in a
+     * new user situation.
+     */
     @Override
     public void onProfileInteraction() {
-
-        Log.d(TAG, "Received an PROFILE 'update'");
 
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
 
     }
+
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            UserAuthenticationService.LocalBinder binder = (UserAuthenticationService.LocalBinder) service;
+            mService = binder.getService();
+
+            // Register this class as a listener for login and profile events
+            mService.registerAuthenticationListener(MainActivity.this);
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+
+            // Do nothing
+
+        }
+
+    };
+
 }
 

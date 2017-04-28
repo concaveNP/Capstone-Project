@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -229,11 +228,15 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
         }
     }
 
+    /**
+     * This interface is used by this service to signal the main activity that the user needs to
+     * either login or fill out profile specific information about themselves.
+     */
     public interface OnAuthenticationListener {
 
         void onLoginInteraction();
         void onProfileInteraction();
 
     }
-}
 
+}
