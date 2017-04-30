@@ -3,6 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--Opens the Profile activity-->
+    <item android:id="@+id/action_profile"
+        android:title="@string/action_profile"
+        app:showAsAction="never"/>
+
     <!--Logoff should always be in the overflow menu.  I don't want the user to hit an Action button and accidently log off.-->
     <item android:id="@+id/action_logoff"
         android:title="@string/action_logoff"

@@ -11,12 +11,12 @@
     android:layout_marginTop="4dp"
     android:clickable="true"
     android:focusable="true"
+    style="@style/AppTheme.Card"
     android:foreground="?selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/AppTheme.Card"
         android:orientation="vertical">
 
         <ImageView

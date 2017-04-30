@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Used to determine how various UI elements are displayed within a Large or Not Large display-->
+    <bool name="large_layout">false</bool>
+
+</resources>

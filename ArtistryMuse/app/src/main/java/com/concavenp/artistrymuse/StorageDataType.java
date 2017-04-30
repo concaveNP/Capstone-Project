@@ -7,7 +7,8 @@ package com.concavenp.artistrymuse;
 public enum StorageDataType {
 
     USERS("users"),
-    PROJECTS("projects");
+    PROJECTS("projects"),
+    AUTH("auth");
 
     private String type;
 

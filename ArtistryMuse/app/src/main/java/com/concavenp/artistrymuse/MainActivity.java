@@ -13,6 +13,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +23,7 @@ import android.view.MenuItem;
 
 import com.concavenp.artistrymuse.fragments.GalleryFragment;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
+import com.concavenp.artistrymuse.fragments.dialog.ProfileDialogFragment;
 import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,6 +54,11 @@ public class MainActivity extends BaseAppCompatActivity implements
      * lookups.
      */
     private UserAuthenticationService mService;
+
+    /**
+     * Field used in determining how various UI elements are displayed within a Large or Not Large display
+     */
+    private boolean mIsLargeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,10 +131,22 @@ public class MainActivity extends BaseAppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        // The default result is that, no, we did not handle the given item
         boolean result;
 
         switch (item.getItemId()) {
 
+            case R.id.action_profile: {
+
+                // User chose to open the User Profile Editor
+                onProfileInteraction();
+
+                // We handled it
+                result = true;
+
+                break;
+
+            }
             case R.id.action_settings: {
 
                 // User chose the "Settings" item, show the app settings UI...
@@ -134,6 +154,7 @@ public class MainActivity extends BaseAppCompatActivity implements
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
 
+                // We handled it
                 result = true;
 
                 break;
@@ -156,6 +177,7 @@ public class MainActivity extends BaseAppCompatActivity implements
                     }
                 });
 
+                // We handled it
                 result = true;
 
                 break;
@@ -218,8 +240,30 @@ public class MainActivity extends BaseAppCompatActivity implements
     @Override
     public void onProfileInteraction() {
 
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ProfileDialogFragment profileDialogFragment = new ProfileDialogFragment();
+
+        if (mIsLargeLayout) {
+
+            // The device is using a large layout, so show the fragment as a dialog
+            profileDialogFragment.show(fragmentManager, "dialog");
+
+        } else {
+
+            // The device is smaller, so show the fragment fullscreen
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+            // For a little polish, specify a transition animation
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+            // To make it fullscreen, use the 'content' root view as the container
+            // for the fragment, which is always the root view for the activity
+            transaction.add(android.R.id.content, profileDialogFragment).addToBackStack(null).commit();
+
+        }
+
+//        Intent intent = new Intent(this, ProfileActivity.class);
+//        startActivity(intent);
 
     }
 
