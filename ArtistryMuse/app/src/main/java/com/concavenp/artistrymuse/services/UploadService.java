@@ -37,7 +37,10 @@ public class UploadService extends BaseTaskService {
 
     /** Intent Extras **/
     public static final String EXTRA_FILE_URI = "extra_file_uri";
+    public static final String EXTRA_FILE_RENAMED_FILENAME = "extra_file_renamed_filename";
     public static final String EXTRA_DOWNLOAD_URL = "extra_download_url";
+
+    private String mLastPathSegment;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -45,6 +48,7 @@ public class UploadService extends BaseTaskService {
         if (ACTION_UPLOAD.equals(intent.getAction())) {
 
             Uri fileUri = intent.getParcelableExtra(EXTRA_FILE_URI);
+            mLastPathSegment = intent.getStringExtra(EXTRA_FILE_RENAMED_FILENAME);
 
             uploadFromUri(fileUri);
 
@@ -59,9 +63,21 @@ public class UploadService extends BaseTaskService {
         taskStarted();
         showUploadProgressNotification();
 
-        // TODO: this comment is somewhat confusing... getting the ref before uploading the file?
+        String filename;
+
+        // Check for having the last path segment already specified via intent extras
+        if (mLastPathSegment != null) {
+            filename = mLastPathSegment;
+
+            // Reset
+            mLastPathSegment = null;
+        }
+        else {
+            filename = fileUri.getLastPathSegment();
+        }
+
         // Get a reference to store file at photos/<FILENAME>.jpg
-        final StorageReference photoRef = mStorageRef.child(getString(R.string.users_directory_name)).child(getUid()).child(fileUri.getLastPathSegment());
+        final StorageReference photoRef = mStorageRef.child(getString(R.string.users_directory_name)).child(getUid()).child(filename);
 
         // Upload file to Firebase Storage
         Log.d(TAG, "uploadFromUri:dst:" + photoRef.getPath());

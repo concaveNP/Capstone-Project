@@ -15,6 +15,16 @@
     <string name="title_activity_settings">Settings</string>
 
 
+    <!--Strings used within the Profile dialog-->
+    <string-array name="profile_image_source_choice">
+        <item>Camera</item>
+        <item>Gallery</item>
+    </string-array>
+    <string name="profile_image_source_title">Choose an image source</string>
+
+
+
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

@@ -91,7 +91,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
                     .using(mImageLoader)
                     .load(storageReference)
                     .fitCenter()
-//                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
 

@@ -3,12 +3,16 @@ package com.concavenp.artistrymuse.fragments.dialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -35,11 +39,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.ref.SoftReference;
 import java.util.Date;
 import java.util.UUID;
 
@@ -80,10 +86,13 @@ public class ProfileDialogFragment extends BaseDialogFragment {
     private String mProfileImagePath;
     private UUID mProfileImageUid;
     private ImageView mProfileImageView;
+    private Uri mSelectedImageUri;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
 
     // The user model
     private User mUser;
@@ -125,7 +134,7 @@ public class ProfileDialogFragment extends BaseDialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_profile_dialog, container, false);
@@ -151,9 +160,63 @@ public class ProfileDialogFragment extends BaseDialogFragment {
             @Override
             public void onClick(View view) {
 
-// TODO: put in the dialog to show a choice of how to get the picture: camera or storage
+                // Determine if this device has "camera" hardware available
+                boolean cameraPresent = getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+                if (cameraPresent) {
 
-                dispatchTakePictureIntent();
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(R.string.profile_image_source_title)
+                            .setItems(R.array.profile_image_source_choice, new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    // Act on the choice made by the user
+                                    switch (which) {
+                                        case 0: {
+
+                                            // Take a picture
+                                            dispatchTakePictureIntent();
+
+                                            break;
+                                        }
+                                        case 1: {
+                                            // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+                                            // browser.
+                                            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+                                            // Filter to only show results that can be "opened", such as a
+                                            // file (as opposed to a list of contacts or timezones)
+                                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+                                            // Filter to show only images, using the image MIME data type.
+                                            // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
+                                            // To search for all documents available via installed storage providers,
+                                            // it would be "*/*".
+                                            intent.setType("image/*");
+
+                                            startActivityForResult(intent, REQUEST_IMAGE_STORE);
+
+                                            break;
+                                        }
+                                    }
+
+                                    // Regardless of the choice, close the dialog
+                                    dialog.dismiss();
+
+                                }
+
+                            })
+                            .show();
+
+                } else {
+
+                    // There is no camera present on this device, so just have the user pick from the gallery
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto, REQUEST_IMAGE_STORE);
+
+                }
+
 
             }
 
@@ -199,31 +262,7 @@ public class ProfileDialogFragment extends BaseDialogFragment {
         if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
 
             // Create the File where the photo should go
-            File photoFile = null;
-            try {
-
-                photoFile = createImageFile();
-
-            } catch (IOException ex) {
-
-                // 1. Instantiate an AlertDialog.Builder with its constructor
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                // 2. Chain together various setter methods to set the dialog characteristics
-                builder.setMessage(getResources().getString(R.string.profile_file_error_message)).setTitle(getResources().getString(R.string.profile_file_error_title));
-
-                // 3. Add buttons
-                builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
-                    }
-                });
-
-                // 4. Create the AlertDialog
-                AlertDialog dialog = builder.create();
-
-                return;
-            }
+            File photoFile = createImageFile();
 
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -255,27 +294,123 @@ public class ProfileDialogFragment extends BaseDialogFragment {
                     // Load the captured image into the ImageView widget
                     populateThumbnailImageView(mProfileImagePath, mProfileImageView);
 
+                    // Add the new (at least to this App) image to the system's Media Provider
+                    galleryAddPic();
+
                     break;
 
                 }
                 case REQUEST_IMAGE_STORE: {
 
-                    // Save the resulting image location
+                    // Use the returned URI by passing it to the content resolver in order to get
+                    // access to he file chosen by the user.  At this point copy the file locally
+                    // so it can be processed in the exact same fashion as the camera retrieved image.
 
-                    // Create a new UUID for the image
-                    mProfileImageUid = UUID.randomUUID();
+                    // The resulting URI of the user's image pick
+                    mSelectedImageUri = data.getData();
 
-                    // Do I rename the image locally or can I do it all in one fell swoop when moving to Firebase
+                    // We are about the retrieve files outside of this App's area.  To do so, we
+                    // must have the right permission.  Check to see if we do and then process the
+                    // image.  If we do not, then request permission by presenting the user a
+                    // popup asking for permission.  Since, we only bring this up when the user
+                    // hits the gallery I've decided to present the obvious reason why this App is
+                    // requesting permission.
+                    int permissionCheck = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE );
 
-// TODO: fill out
+                    if (permissionCheck == PackageManager.PERMISSION_DENIED) {
 
-                    // Load the referenced image into the ImageView widget
-                    populateThumbnailImageView(mProfileImagePath, mProfileImageView);
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+                        // Continue processing in the callback associated with permissions (onRequestPermissionsResult)
+
+                    } else {
+
+                        // Copy the file locally and set the thumbnail
+                        processExternalUri();
+
+                    }
 
                     break;
 
                 }
 
+            }
+
+        }
+
+    }
+
+    /**
+     * Helper method that will add the photo in question to the system's Media Provider
+     */
+    private void galleryAddPic() {
+
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mProfileImagePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        getContext().sendBroadcast(mediaScanIntent);
+
+    }
+
+    private void processExternalUri() {
+
+        try {
+
+            // The output location of the copied file
+            File galleryFile = createImageFile();
+            FileOutputStream fileOutputStream = new FileOutputStream(galleryFile);
+
+            // The input location of the external file
+            ParcelFileDescriptor parcelFileDescriptor = getContext().getContentResolver().openFileDescriptor(mSelectedImageUri, "r");
+            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            FileInputStream fileInputStream = new FileInputStream(fileDescriptor);
+
+            copyFile(fileInputStream, fileOutputStream);
+
+            populateThumbnailImageView(mProfileImagePath, mProfileImageView);
+
+            parcelFileDescriptor.close();
+
+            // Add the new (at least to this App) image to the system's Media Provider
+            galleryAddPic();
+
+        } catch (FileNotFoundException e) {
+
+            // TODO: better error handling
+
+            Log.d(TAG,e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.d(TAG,e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // Copy the file locally and set the thumbnail
+                    processExternalUri();
+
+                } else {
+
+                    // Permission has been denied.  Keep asking the user for permission when
+                    // trying to access the external storage.
+
+                }
+
+                break;
             }
 
         }
@@ -328,14 +463,17 @@ public class ProfileDialogFragment extends BaseDialogFragment {
                     deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            // TODO: better error handling
                             // File deleted successfully
-                            Log.d(TAG, "Deleted old profile image (" + oldProfileUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
+                            Log.d(TAG, "Deleted old profile image (" + oldProfileUid +
+                                    ") from cloud storage for the user (" + mUser.getUid() + ")");
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
                             // Uh-oh, an error occurred!
-                            Log.e(TAG, "Error deleting old profile image (" + oldProfileUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
+                            Log.e(TAG, "Error deleting old profile image (" + oldProfileUid +
+                                    ") from cloud storage for the user (" + mUser.getUid() + ")");
                         }
                     });
 
@@ -349,8 +487,13 @@ public class ProfileDialogFragment extends BaseDialogFragment {
 
                 Log.d(TAG, "New profile image cloud storage location: " + file.toString());
 
-                // Start MyUploadService to upload the file, so that the file is uploaded even if this Activity is killed or put in the background
-                getContext().startService(new Intent(getContext(), UploadService.class).putExtra(UploadService.EXTRA_FILE_URI, file).setAction(UploadService.ACTION_UPLOAD));
+                // Start MyUploadService to upload the file, so that the file is uploaded even if
+                // this Activity is killed or put in the background
+                getContext()
+                        .startService(new Intent(getContext(), UploadService.class)
+                        .putExtra(UploadService.EXTRA_FILE_URI, file)
+                        .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProfileImageUid.toString() + ".jpg")
+                        .setAction(UploadService.ACTION_UPLOAD));
 
                 // Update the user model reference to the profile image uid for database update
                 mUser.setProfileImageUid(mProfileImageUid.toString());
@@ -376,17 +519,15 @@ public class ProfileDialogFragment extends BaseDialogFragment {
         }
 
         return super.onOptionsItemSelected(item);
+
     }
 
-    private File createImageFile() throws IOException {
+    private File createImageFile() {
 
         // Create an image file name
         mProfileImageUid = UUID.randomUUID();
         File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = new File(storageDir + "/" + mProfileImageUid.toString() + ".jpg");
-
-        // Create an empty file
-        image.createNewFile();
 
         // Save a file: path for use with ACTION_VIEW intents
         mProfileImagePath = image.getAbsolutePath();
@@ -394,4 +535,6 @@ public class ProfileDialogFragment extends BaseDialogFragment {
         return image;
 
     }
+
 }
+
