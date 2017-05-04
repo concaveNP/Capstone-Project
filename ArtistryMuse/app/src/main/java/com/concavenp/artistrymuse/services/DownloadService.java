@@ -56,53 +56,21 @@ public class DownloadService extends BaseTaskService {
     public static final String EXTRA_DOWNLOAD_FILENAME = "extra_download_filename";
     public static final String EXTRA_BYTES_DOWNLOADED = "extra_bytes_downloaded";
 
-    private StorageReference mStorageRef;
-    private FirebaseUser mUser;
-    private String mUid;
-
-    @Override
-    public void onCreate() {
-
-        super.onCreate();
-
-        // Initialize Storage
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        // Get the authenticated user
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (mUser != null) {
-            mUid = mUser.getUid();
-        }
-    }
-
-    // TODO: what is this method used for?  The example uses nullable...???
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-    //    @Override
-//    public IBinder onBind(Intent intent) {
-//        // TODO: Return the communication channel to the service.
-//        throw new UnsupportedOperationException("Not yet implemented");
-//    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand:" + intent + ":" + startId);
 
         if (ACTION_DOWNLOAD.equals(intent.getAction())) {
 
             // Get the path to download from the intent
             String filename = intent.getStringExtra(EXTRA_DOWNLOAD_FILENAME);
 
-            final String fileReference = getString(R.string.users_directory_name) + "/" + mUid + "/" + filename;
+            final String fileReference = getString(R.string.users_directory_name) + "/" + getUid() + "/" + filename;
 
             downloadFromPath(fileReference);
         }
 
         return START_REDELIVER_INTENT;
+
     }
 
     private void downloadFromPath(final String downloadPath) {

@@ -178,7 +178,7 @@ public class UserDetailsFragment extends BaseFragment {
 
 
             // Pull the User in question info from the Database and keep listening for changes
-            mDatabase.child("users").child(mUidForDetails).addValueEventListener(new ValueEventListener() {
+            mDatabase.child("users").child(mUidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

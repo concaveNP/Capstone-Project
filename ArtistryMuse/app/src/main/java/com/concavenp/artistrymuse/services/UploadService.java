@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -17,9 +16,6 @@ import com.concavenp.artistrymuse.MainActivity;
 import com.concavenp.artistrymuse.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -34,10 +30,6 @@ public class UploadService extends BaseTaskService {
 
     private static final int NOTIF_ID_DOWNLOAD = 0;
 
-    private StorageReference mStorageRef;
-    private FirebaseUser mUser;
-    private String mUid;
-
     /** Intent Actions **/
     public static final String ACTION_UPLOAD = "action_upload";
     public static final String UPLOAD_COMPLETED = "upload_completed";
@@ -45,54 +37,20 @@ public class UploadService extends BaseTaskService {
 
     /** Intent Extras **/
     public static final String EXTRA_FILE_URI = "extra_file_uri";
+    public static final String EXTRA_FILE_RENAMED_FILENAME = "extra_file_renamed_filename";
     public static final String EXTRA_DOWNLOAD_URL = "extra_download_url";
 
-    public UploadService() {
-
-        // Do nothing
-
-    }
-
-    @Override
-    public void onCreate() {
-
-        super.onCreate();
-
-        // Initialize Storage
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        // Get the authenticated user
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (mUser != null) {
-            mUid = mUser.getUid();
-        }
-
-    }
-
-    // TODO: what is this method used for?  The example uses nullable...???
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-//    @Override
-//    public IBinder onBind(Intent intent) {
-//        // TODO: Return the communication channel to the service.
-//        throw new UnsupportedOperationException("Not yet implemented");
-//    }
+    private String mLastPathSegment;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.d(TAG, "onStartCommand:" + intent + ":" + startId);
-
         if (ACTION_UPLOAD.equals(intent.getAction())) {
 
             Uri fileUri = intent.getParcelableExtra(EXTRA_FILE_URI);
+            mLastPathSegment = intent.getStringExtra(EXTRA_FILE_RENAMED_FILENAME);
 
             uploadFromUri(fileUri);
-
 
         }
 
@@ -102,14 +60,24 @@ public class UploadService extends BaseTaskService {
 
     private void uploadFromUri(final Uri fileUri) {
 
-        Log.d(TAG, "uploadFromUri:src:" + fileUri.toString());
-
         taskStarted();
         showUploadProgressNotification();
 
-        // TODO: this comment is somewhat confusing... getting the ref before uploading the file?
+        String filename;
+
+        // Check for having the last path segment already specified via intent extras
+        if (mLastPathSegment != null) {
+            filename = mLastPathSegment;
+
+            // Reset
+            mLastPathSegment = null;
+        }
+        else {
+            filename = fileUri.getLastPathSegment();
+        }
+
         // Get a reference to store file at photos/<FILENAME>.jpg
-        final StorageReference photoRef = mStorageRef.child(getString(R.string.users_directory_name)).child(mUid).child(fileUri.getLastPathSegment());
+        final StorageReference photoRef = mStorageRef.child(getString(R.string.users_directory_name)).child(getUid()).child(filename);
 
         // Upload file to Firebase Storage
         Log.d(TAG, "uploadFromUri:dst:" + photoRef.getPath());

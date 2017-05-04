@@ -45,8 +45,8 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:25.3.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.firebaseui:firebase-ui-storage:1.0.0'
-    testCompile 'junit:junit:4.12'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    testCompile 'junit:junit:4.12'
 }
 
 // ADD THIS AT THE BOTTOM

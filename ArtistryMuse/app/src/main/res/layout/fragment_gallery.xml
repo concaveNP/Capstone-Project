@@ -6,18 +6,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.concavenp.artistrymuse.fragments.GalleryFragment">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/gallery_swipe_refresh_layout"
+    <ViewFlipper
+        android:id="@+id/fragment_gallery_ViewFlipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/gallery_recycler_view"
+        <TextView
+            android:id="@+id/fragment_gallery_nobody_TextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarStyle="outsideOverlay"/>
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="@dimen/fab_margin"
+            android:text="You need to create some projects"/>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/gallery_swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/gallery_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbarStyle="outsideOverlay"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </ViewFlipper>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

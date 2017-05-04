@@ -1,28 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#3F51B5</color>-->
-    <!--<color name="colorPrimaryDark">#303F9F</color>-->
-    <!--<color name="colorAccent">#FF4081</color>-->
 
-    <!--https://material.google.com/style/color.html#-->
+    <!--I used http://mcg.mbitson.com for generating the color palette-->
 
+    <!--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-->
+    <!-- Purple is this App's Material Design Color -->
+    <!--<color name="myapp_primary_50">#F3E5F6</color>-->
+    <!--<color name="myapp_primary_100">#E1BEE7</color>-->
+    <!--<color name="myapp_primary_200">#CE93D8</color>-->
+    <!--<color name="myapp_primary_300">#BA68C8</color>-->
+    <!--<color name="myapp_primary_400">#AB47BC</color>-->
+    <!--<color name="myapp_primary_500">#9C27B0</color>-->
+    <!--<color name="myapp_primary_600">#9423A9</color>-->
+    <!--<color name="myapp_primary_700">#8A1DA0</color>-->
+    <!--<color name="myapp_primary_800">#801797</color>-->
+    <!--<color name="myapp_primary_900">#6E0E87</color>-->
+    <!--<color name="myapp_primary_A100">#EFB8FF</color>-->
+    <!--<color name="myapp_primary_A200">#E485FF</color>-->
+    <!--<color name="myapp_primary_A400">#D852FF</color>-->
+    <!--<color name="myapp_primary_A700">#D238FF</color>-->
+
+    <!-- Blue Grey App's Material Design Accent Color -->
+    <!--<color name="myapp_accent_50">#ECEFF1</color>-->
+    <!--<color name="myapp_accent_100">#CFD8DC</color>-->
+    <!--<color name="myapp_accent_200">#B0BEC5</color>-->
+    <!--<color name="myapp_accent_300">#90A4AE</color>-->
+    <!--<color name="myapp_accent_400">#78919C</color>-->
+    <!--<color name="myapp_accent_500">#607D8B</color>-->
+    <!--<color name="myapp_accent_600">#587583</color>-->
+    <!--<color name="myapp_accent_700">#4E6A78</color>-->
+    <!--<color name="myapp_accent_800">#44606E</color>-->
+    <!--<color name="myapp_accent_900">#334D5B</color>-->
+    <!--<color name="myapp_accent_A100">#ABE1FF</color>-->
+    <!--<color name="myapp_accent_A200">#78CEFF</color>-->
+    <!--<color name="myapp_accent_A400">#45BCFF</color>-->
+    <!--<color name="myapp_accent_A700">#2BB3FF</color>-->
+    <!--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-->
+
+
+
+    <!--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-->
+    <!-- 644ca1 is this App's Material Design Color -->
+    <color name="myapp_primary_50">#eceaf4</color>
+    <color name="myapp_primary_100">#d1c9e3</color>
+    <color name="myapp_primary_200">#b2a6d0</color>
+    <color name="myapp_primary_300">#9382bd</color>
+    <color name="myapp_primary_400">#7b67af</color>
+    <color name="myapp_primary_500">#644ca1</color>
+    <color name="myapp_primary_600">#5c4599</color>
+    <color name="myapp_primary_700">#523c8f</color>
+    <color name="myapp_primary_800">#483385</color>
+    <color name="myapp_primary_900">#362474</color>
+    <color name="myapp_primary_A100">#c5b5ff</color>
+    <color name="myapp_primary_A200">#9d82ff</color>
+    <color name="myapp_primary_A400">#754fff</color>
+    <color name="myapp_primary_A700">#6136ff</color>
+
+    <!-- c50909 App's Material Design Accent Color -->
+    <color name="myapp_accent_50">#f8e1e1</color>
+    <color name="myapp_accent_100">#eeb5b5</color>
+    <color name="myapp_accent_200">#e28484</color>
+    <color name="myapp_accent_300">#d65353</color>
+    <color name="myapp_accent_400">#ce2e2e</color>
+    <color name="myapp_accent_500">#c50909</color>
+    <color name="myapp_accent_600">#bf0808</color>
+    <color name="myapp_accent_700">#b80606</color>
+    <color name="myapp_accent_800">#b00505</color>
+    <color name="myapp_accent_900">#a30202</color>
+    <color name="myapp_accent_A100">#ffcece</color>
+    <color name="myapp_accent_A200">#ff9b9b</color>
+    <color name="myapp_accent_A400">#ff6868</color>
+    <color name="myapp_accent_A700">#ff4e4e</color>
+    <!--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-->
+
+    <!--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-->
     <!-- RED is this App's Material Design Color -->
-    <color name="myapp_primary_50">#FFEBEE</color>
-    <color name="myapp_primary_100">#FFCDD2</color>
-    <color name="myapp_primary_200">#EF9A9A</color>
-    <color name="myapp_primary_300">#E57373</color>
-    <color name="myapp_primary_400">#EF5350</color>
-    <color name="myapp_primary_500">#F44336</color>
-    <color name="myapp_primary_600">#E53935</color>
-    <color name="myapp_primary_700">#D32F2F</color>
-    <color name="myapp_primary_800">#C62828</color>
-    <color name="myapp_primary_900">#B71C1C</color>
+    <!--<color name="myapp_primary_50">#FFEBEE</color>-->
+    <!--<color name="myapp_primary_100">#FFCDD2</color>-->
+    <!--<color name="myapp_primary_200">#EF9A9A</color>-->
+    <!--<color name="myapp_primary_300">#E57373</color>-->
+    <!--<color name="myapp_primary_400">#EF5350</color>-->
+    <!--<color name="myapp_primary_500">#F44336</color>-->
+    <!--<color name="myapp_primary_600">#E53935</color>-->
+    <!--<color name="myapp_primary_700">#D32F2F</color>-->
+    <!--<color name="myapp_primary_800">#C62828</color>-->
+    <!--<color name="myapp_primary_900">#B71C1C</color>-->
 
-    <!-- Deep Purple is this App's Material Design Accent Color -->
-    <color name="myapp_accent_A100">#B388FF</color>
-    <color name="myapp_accent_A200">#7C4DFF</color>
-    <color name="myapp_accent_A400">#651FFF</color>
-    <color name="myapp_accent_A700">#6200EA</color>
+    <!-- Deep Purple App's Material Design Accent Color -->
+    <!--<color name="myapp_accent_A100">#B388FF</color>-->
+    <!--<color name="myapp_accent_A200">#7C4DFF</color>-->
+    <!--<color name="myapp_accent_A400">#651FFF</color>-->
+    <!--<color name="myapp_accent_A700">#6200EA</color>-->
+    <!--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-->
 
     <color name="myapp_white">#FFFFFF</color>
     <color name="myapp_black">#000000</color>

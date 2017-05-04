@@ -176,8 +176,8 @@ public class ProjectDetailsFragment extends BaseFragment {
 
         } else if (args != null) {
 
-            // Pull the User in question info from the Database and keep listening for changes
-            mDatabase.child("projects").child(mUidForDetails).addValueEventListener(new ValueEventListener() {
+            // Pull the User in question info from the Database
+            mDatabase.child("projects").child(mUidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

@@ -21,14 +21,16 @@ import com.google.firebase.storage.StorageReference;
  * Created by dave on 3/25/2017.
  */
 
-public abstract class BaseAppCompatActivity extends AppCompatActivity implements
-        OnDetailsInteractionListener {
+public abstract class BaseAppCompatActivity extends AppCompatActivity implements OnDetailsInteractionListener {
+
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = BaseAppCompatActivity.class.getSimpleName();
 
     protected DatabaseReference mDatabase;
     protected StorageReference mStorageRef;
-    protected FirebaseAuth mAuth;
-    protected FirebaseUser mUser;
-    protected String mUid;
     protected FirebaseImageLoader mImageLoader;
 
     @Override
@@ -42,26 +44,10 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
         // Initialize the Firebase Storage connection
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        // Initialize the Firebase Authentication connection
-        mAuth = FirebaseAuth.getInstance();
-
-        // Get the authenticated user
-        mUser = mAuth.getCurrentUser();
-
-        if (mUser != null) {
-            mUid = mUser.getUid();
-        }
-
         // Create the Firebase image loader
         mImageLoader = new FirebaseImageLoader();
 
     }
-
-    /**
-     * The logging tag string to be associated with log data for this class
-     */
-    @SuppressWarnings("unused")
-    private static final String TAG = BaseAppCompatActivity.class.getSimpleName();
 
     protected String buildFileReference(String uid, String imageUid, StorageDataType type) {
 
@@ -105,7 +91,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
                     .using(mImageLoader)
                     .load(storageReference)
                     .fitCenter()
-//                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
 
@@ -155,3 +140,4 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
     }
 
 }
+

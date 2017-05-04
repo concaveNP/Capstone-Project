@@ -5,17 +5,32 @@
     android:layout_height="match_parent"
     tools:context="com.concavenp.artistrymuse.fragments.FavoritesFragment">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/favorites_swipe_refresh_layout"
+    <ViewFlipper
+        android:id="@+id/fragment_favorites_ViewFlipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/favorites_recycler_view"
+        <TextView
+            android:id="@+id/fragment_favorites_nobody_TextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarStyle="outsideOverlay" />
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="@dimen/fab_margin"
+            android:text="You need to favorite some projects"/>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/favorites_swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/favorites_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbarStyle="outsideOverlay" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </ViewFlipper>
 
 </FrameLayout>

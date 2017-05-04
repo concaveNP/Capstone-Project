@@ -101,7 +101,6 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                     .using(mImageLoader)
                     .load(storageReference)
                     .fitCenter()
-//                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
 

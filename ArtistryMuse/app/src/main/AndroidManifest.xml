@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
     package="com.concavenp.artistrymuse">
 
-    <!--
-        This permission is not required for Firebase Storage and is only used to read
-        files from the camera and upload them to Firebase Storage as a demonstration.
-    -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--Permission needed for a saving location for user taken images-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!--Feature needed in order to gain access to the camera for taking pictures-->
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
     <application
+        android:name=".ArtistryMuseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".ArtistryMuseApplication"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
@@ -89,22 +92,25 @@
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".widget.ArtistryAppWidgetService"
+            android:name=".services.ArtistryAppWidgetService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".services.UserAuthenticationService"
             android:enabled="true"
             android:exported="false" />
 
-        <!--
-          Android N SDK has new restrictions around sharing file:// URIs
-          https://developer.android.com/reference/android/support/v4/content/FileProvider.html#ProviderDefinition
-        -->
+        <!--For Apps targeting Android 7.0 (API level 24) and higher, passing a file:// URI across a -->
+        <!--package boundary causes a FileUriExposedException. Therefore, we now present a more -->
+        <!--generic way of storing images using a FileProvider.-->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.concavenp.artistrymuse.fileprovider"
+            android:authorities="com.concavenp.artistrymuse"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"/>
         </provider>
 
         <activity
@@ -116,7 +122,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.concavenp.artistrymuse.MainActivity" />
         </activity>
-
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.concavenp.artistrymuse.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

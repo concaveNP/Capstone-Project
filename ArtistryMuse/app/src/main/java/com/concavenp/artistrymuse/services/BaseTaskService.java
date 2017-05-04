@@ -1,6 +1,9 @@
 package com.concavenp.artistrymuse.services;
 
 import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
@@ -12,7 +15,7 @@ import android.util.Log;
  * References:
  * - Essentially copied from the Firebase Quickstart example for Firebase Storage use.
  */
-public abstract class BaseTaskService extends Service {
+public abstract class BaseTaskService extends BaseService {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -44,4 +47,17 @@ public abstract class BaseTaskService extends Service {
         }
 
     }
+
+    // TODO: what is this method used for?  The example uses nullable...???
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+//    @Override
+//    public IBinder onBind(Intent intent) {
+//        // TODO: Return the communication channel to the service.
+//        throw new UnsupportedOperationException("Not yet implemented");
+//    }
+
 }
