@@ -41,4 +41,8 @@
         <item name="android:textColor">@color/myapp_dark_on_light_secondary_text</item>
     </style>
 
+    <style name="AppTheme.EditText">
+        <item name="android:paddingTop">@dimen/myapp_text_edge_padding_material</item>
+    </style>
+
 </resources>

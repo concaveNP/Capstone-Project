@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -67,6 +68,9 @@ import static android.app.Activity.RESULT_OK;
  *
  * Taking Photos Simply
  *      - https://developer.android.com/training/camera/photobasics.html
+ *
+ * Android Material Design Floating Labels for EditText
+ *      - http://www.androidhive.info/2015/09/android-material-design-floating-labels-for-edittext/
  */
 public class ProfileDialogFragment extends BaseDialogFragment {
 
@@ -179,8 +183,10 @@ public class ProfileDialogFragment extends BaseDialogFragment {
                                             dispatchTakePictureIntent();
 
                                             break;
+
                                         }
                                         case 1: {
+
                                             // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
                                             // browser.
                                             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -198,6 +204,7 @@ public class ProfileDialogFragment extends BaseDialogFragment {
                                             startActivityForResult(intent, REQUEST_IMAGE_STORE);
 
                                             break;
+
                                         }
                                     }
 
@@ -239,6 +246,14 @@ public class ProfileDialogFragment extends BaseDialogFragment {
 
                     // Update the profile details
                     populateImageView(buildFileReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), mProfileImageView);
+
+
+
+
+
+
+
+
 // TODO: fill out all other profile details
                 }
             }
@@ -253,6 +268,13 @@ public class ProfileDialogFragment extends BaseDialogFragment {
         return mainView;
 
     }
+
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//
+//        getDialog().getWindow().setLocalFocus(true, false);
+//    }
 
     private void dispatchTakePictureIntent() {
 
@@ -346,6 +368,8 @@ public class ProfileDialogFragment extends BaseDialogFragment {
      * Helper method that will add the photo in question to the system's Media Provider
      */
     private void galleryAddPic() {
+
+// TODO: dunno if this works
 
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(mProfileImagePath);
