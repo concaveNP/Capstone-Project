@@ -240,30 +240,31 @@ public class MainActivity extends BaseAppCompatActivity implements
     @Override
     public void onProfileInteraction() {
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        ProfileDialogFragment profileDialogFragment = new ProfileDialogFragment();
+        // TODO: implement the details activity(s) for both type
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
 
-        if (mIsLargeLayout) {
-
-            // The device is using a large layout, so show the fragment as a dialog
-            profileDialogFragment.show(fragmentManager, "dialog");
-
-        } else {
-
-            // The device is smaller, so show the fragment fullscreen
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-            // For a little polish, specify a transition animation
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-
-            // To make it fullscreen, use the 'content' root view as the container
-            // for the fragment, which is always the root view for the activity
-            transaction.add(android.R.id.content, profileDialogFragment).addToBackStack(null).commit();
-
-        }
-
-//        Intent intent = new Intent(this, ProfileActivity.class);
-//        startActivity(intent);
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        ProfileDialogFragment profileDialogFragment = new ProfileDialogFragment();
+//
+//        if (mIsLargeLayout) {
+//
+//            // The device is using a large layout, so show the fragment as a dialog
+//            profileDialogFragment.show(fragmentManager, "dialog");
+//
+//        } else {
+//
+//            // The device is smaller, so show the fragment fullscreen
+//            FragmentTransaction transaction = fragmentManager.beginTransaction();
+//
+//            // For a little polish, specify a transition animation
+//            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//
+//            // To make it fullscreen, use the 'content' root view as the container
+//            // for the fragment, which is always the root view for the activity
+//            transaction.add(android.R.id.content, profileDialogFragment).addToBackStack(null).commit();
+//
+//        }
 
     }
 
