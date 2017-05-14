@@ -10,7 +10,6 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -156,9 +155,9 @@ public class ProfileDialogFragment extends BaseDialogFragment {
         }
         setHasOptionsMenu(true);
 
-        mProfileImageView = (ImageView) mainView.findViewById(R.id.profile_imageView);
+        mProfileImageView = (ImageView) mainView.findViewById(R.id.profile_avatar_imageView);
 
-        Button profileButton = (Button) mainView.findViewById(R.id.profile_button);
+        Button profileButton = (Button) mainView.findViewById(R.id.profile_avatar_button);
         profileButton.setOnClickListener(new View.OnClickListener() {
 
             @Override

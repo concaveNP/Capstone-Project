@@ -14,16 +14,12 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_settings">Settings</string>
 
-
-    <!--Strings used within the Profile dialog-->
+    <!--Strings used within the Profile dialog for choosing and image source-->
     <string-array name="profile_image_source_choice">
         <item>Camera</item>
         <item>Gallery</item>
     </string-array>
     <string name="profile_image_source_title">Choose an image source</string>
-
-
-
 
     <!-- Strings related to Settings -->
 

@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
+@SuppressWarnings("StatementWithEmptyBody")
 public class ProfileActivity extends BaseAppCompatActivity {
 
     /**
@@ -48,19 +49,31 @@ public class ProfileActivity extends BaseAppCompatActivity {
     @SuppressWarnings("unused")
     private static final String TAG = ProfileActivity.class.getSimpleName();
 
-    private static final int REQUEST_IMAGE_STORE = 0;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_AVATAR_IMAGE_STORE = 0;
+    private static final int REQUEST_AVATAR_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_HEADER_IMAGE_STORE = 2;
+    private static final int REQUEST_HEADER_IMAGE_CAPTURE = 3;
 
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    private static final int REQUEST_AVATAR_PERMISSIONS_READ_EXTERNAL_STORAGE = 0;
+    private static final int REQUEST_HEADER_PERMISSIONS_READ_EXTERNAL_STORAGE = 1;
 
     private String mProfileImagePath;
     private UUID mProfileImageUid;
     private ImageView mProfileImageView;
+
+    private String mHeaderImagePath;
+    private UUID mHeaderImageUid;
+    private ImageView mHeaderImageView;
+
     private Uri mSelectedImageUri;
+
+    private String mImagePath;
+    private UUID mImageUid;
 
     private EditText mNameEditText;
     private EditText mUsernameEditText;
     private EditText mSummaryEditText;
+    private EditText mDescriptionEditText;
 
     // The user model
     private User mUser;
@@ -88,80 +101,18 @@ public class ProfileActivity extends BaseAppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        mProfileImageView = (ImageView) findViewById(R.id.profile_imageView);
+        mProfileImageView = (ImageView) findViewById(R.id.profile_avatar_imageView);
+        mHeaderImageView = (ImageView) findViewById(R.id.profile_header_imageView);
         mNameEditText = (EditText) findViewById(R.id.name_editText);
         mUsernameEditText = (EditText) findViewById(R.id.username_editText);
+        mDescriptionEditText = (EditText) findViewById(R.id.description_editText);
         mSummaryEditText = (EditText) findViewById(R.id.summary_editText);
 
-        Button profileButton = (Button) findViewById(R.id.profile_button);
-        profileButton.setOnClickListener(new View.OnClickListener() {
+        Button avatarButton = (Button) findViewById(R.id.profile_avatar_button);
+        avatarButton.setOnClickListener(new ImageButtonListener(ImageType.AVATAR));
 
-            @Override
-            public void onClick(View view) {
-
-                // Determine if this device has "camera" hardware available
-                boolean cameraPresent = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
-                if (cameraPresent) {
-
-                    new AlertDialog.Builder(ProfileActivity.this)
-                            .setTitle(R.string.profile_image_source_title)
-                            .setItems(R.array.profile_image_source_choice, new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    // Act on the choice made by the user
-                                    switch (which) {
-                                        case 0: {
-
-                                            // Take a picture
-                                            dispatchTakePictureIntent();
-
-                                            break;
-
-                                        }
-                                        case 1: {
-
-                                            // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
-                                            // browser.
-                                            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-
-                                            // Filter to only show results that can be "opened", such as a
-                                            // file (as opposed to a list of contacts or timezones)
-                                            intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-                                            // Filter to show only images, using the image MIME data type.
-                                            // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
-                                            // To search for all documents available via installed storage providers,
-                                            // it would be "*/*".
-                                            intent.setType("image/*");
-
-                                            startActivityForResult(intent, REQUEST_IMAGE_STORE);
-
-                                            break;
-
-                                        }
-                                    }
-
-                                    // Regardless of the choice, close the dialog
-                                    dialog.dismiss();
-
-                                }
-
-                            })
-                            .show();
-
-                } else {
-
-                    // There is no camera present on this device, so just have the user pick from the gallery
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto, REQUEST_IMAGE_STORE);
-
-                }
-
-            }
-
-        });
+        Button headerButton = (Button) findViewById(R.id.profile_header_button);
+        headerButton.setOnClickListener(new ImageButtonListener(ImageType.HEADER));
 
         // Query for the currently saved user uid via the Saved Preferences
         mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -180,11 +131,11 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
                     // Update the profile details
                     populateImageView(buildFileReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), mProfileImageView);
+                    populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), mHeaderImageView);
                     mNameEditText.setText(user.getName());
                     mUsernameEditText.setText(user.getUsername());
+                    mDescriptionEditText.setText(user.getDescription());
                     mSummaryEditText.setText(user.getSummary());
-
-// TODO: fill out all other profile details
 
                 }
             }
@@ -198,7 +149,11 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
     }
 
-    private void dispatchTakePictureIntent() {
+    /**
+     *
+     * @param type - The type is a number that is one of the following: REQUEST_AVATAR_IMAGE_STORE or REQUEST_HEADER_IMAGE_STORE
+     */
+    private void dispatchTakePictureIntent(int type) {
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -216,7 +171,8 @@ public class ProfileActivity extends BaseAppCompatActivity {
                 Log.d(TAG, "New camera image URI location: " + photoURI.toString() );
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+                startActivityForResult(takePictureIntent, type);
 
             }
 
@@ -233,18 +189,37 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
             switch(requestCode) {
 
-                case REQUEST_IMAGE_CAPTURE: {
+                case REQUEST_HEADER_IMAGE_CAPTURE: {
+
+                    // Save off the values generated from the image creation (however it was done)
+                    mHeaderImagePath = mImagePath;
+                    mHeaderImageUid = mImageUid;
+
+                    // Load the captured image into the ImageView widget
+                    populateThumbnailImageView(mHeaderImagePath, mHeaderImageView);
+
+                    // Add the new (at least to this App) image to the system's Media Provider
+                    galleryAddPic(mHeaderImagePath);
+
+                    break;
+
+                }
+                case REQUEST_AVATAR_IMAGE_CAPTURE: {
+
+                    // Save off the values generated from the image creation (however it was done)
+                    mProfileImagePath = mImagePath;
+                    mProfileImageUid = mImageUid;
 
                     // Load the captured image into the ImageView widget
                     populateThumbnailImageView(mProfileImagePath, mProfileImageView);
 
                     // Add the new (at least to this App) image to the system's Media Provider
-                    galleryAddPic();
+                    galleryAddPic(mProfileImagePath);
 
                     break;
 
                 }
-                case REQUEST_IMAGE_STORE: {
+                case REQUEST_HEADER_IMAGE_STORE: {
 
                     // Use the returned URI by passing it to the content resolver in order to get
                     // access to he file chosen by the user.  At this point copy the file locally
@@ -265,14 +240,57 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
                         ActivityCompat.requestPermissions(this,
                                 new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                                REQUEST_HEADER_PERMISSIONS_READ_EXTERNAL_STORAGE);
 
                         // Continue processing in the callback associated with permissions (onRequestPermissionsResult)
 
                     } else {
 
                         // Copy the file locally and set the thumbnail
-                        processExternalUri();
+                        processExternalUri(mHeaderImageView);
+
+                        // Save off the values generated from the image creation (however it was done)
+                        mHeaderImagePath = mImagePath;
+                        mHeaderImageUid = mImageUid;
+
+                    }
+
+                    break;
+
+                }
+                case REQUEST_AVATAR_IMAGE_STORE: {
+
+                    // Use the returned URI by passing it to the content resolver in order to get
+                    // access to he file chosen by the user.  At this point copy the file locally
+                    // so it can be processed in the exact same fashion as the camera retrieved image.
+
+                    // The resulting URI of the user's image pick
+                    mSelectedImageUri = data.getData();
+
+                    // We are about the retrieve files outside of this App's area.  To do so, we
+                    // must have the right permission.  Check to see if we do and then process the
+                    // image.  If we do not, then request permission by presenting the user a
+                    // popup asking for permission.  Since, we only bring this up when the user
+                    // hits the gallery I've decided to present the obvious reason why this App is
+                    // requesting permission.
+                    int permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE );
+
+                    if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                                REQUEST_AVATAR_PERMISSIONS_READ_EXTERNAL_STORAGE);
+
+                        // Continue processing in the callback associated with permissions (onRequestPermissionsResult)
+
+                    } else {
+
+                        // Copy the file locally and set the thumbnail
+                        processExternalUri(mProfileImageView);
+
+                        // Save off the values generated from the image creation (however it was done)
+                        mProfileImagePath = mImagePath;
+                        mProfileImageUid = mImageUid;
 
                     }
 
@@ -289,19 +307,19 @@ public class ProfileActivity extends BaseAppCompatActivity {
     /**
      * Helper method that will add the photo in question to the system's Media Provider
      */
-    private void galleryAddPic() {
+    private void galleryAddPic(String path) {
 
 // TODO: dunno if this works
 
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mProfileImagePath);
+        File f = new File(path);
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         sendBroadcast(mediaScanIntent);
 
     }
 
-    private void processExternalUri() {
+    private void processExternalUri(ImageView view) {
 
         try {
 
@@ -316,12 +334,12 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
             copyFile(fileInputStream, fileOutputStream);
 
-            populateThumbnailImageView(mProfileImagePath, mProfileImageView);
+            populateThumbnailImageView(mImagePath, view);
 
             parcelFileDescriptor.close();
 
             // Add the new (at least to this App) image to the system's Media Provider
-            galleryAddPic();
+            galleryAddPic(mImagePath);
 
         } catch (FileNotFoundException e) {
 
@@ -329,9 +347,12 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
             Log.d(TAG,e.getMessage());
             e.printStackTrace();
+
         } catch (IOException e) {
+
             Log.d(TAG,e.getMessage());
             e.printStackTrace();
+
         }
 
     }
@@ -341,13 +362,38 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
         switch (requestCode) {
 
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+            case REQUEST_HEADER_PERMISSIONS_READ_EXTERNAL_STORAGE: {
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     // Copy the file locally and set the thumbnail
-                    processExternalUri();
+                    processExternalUri(mHeaderImageView);
+
+                    // Save off the values generated from the image creation (however it was done)
+                    mHeaderImagePath = mImagePath;
+                    mHeaderImageUid = mImageUid;
+
+                } else {
+
+                    // Permission has been denied.  Keep asking the user for permission when
+                    // trying to access the external storage.
+
+                }
+
+                break;
+            }
+            case REQUEST_AVATAR_PERMISSIONS_READ_EXTERNAL_STORAGE: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // Copy the file locally and set the thumbnail
+                    processExternalUri(mProfileImageView);
+
+                    // Save off the values generated from the image creation (however it was done)
+                    mProfileImagePath = mImagePath;
+                    mProfileImageUid = mImageUid;
 
                 } else {
 
@@ -395,10 +441,69 @@ public class ProfileActivity extends BaseAppCompatActivity {
                 mUser.setUsername(username);
             }
 
+            // Description
+            String description = mDescriptionEditText.getText().toString();
+            if ((description != null) && (!description.isEmpty())) {
+                mUser.setDescription(description);
+            }
+
             // Summary
             String summary = mSummaryEditText.getText().toString();
             if ((summary != null) && (!summary.isEmpty())) {
                 mUser.setSummary(summary);
+            }
+
+            // Check to see if the user set a new header image
+            if (mHeaderImageUid != null) {
+
+                final String oldHeaderUid = mUser.getHeaderImageUid();
+
+                // Check if the old profile image needs to be deleted
+                if ((oldHeaderUid != null) && (!oldHeaderUid.isEmpty())) {
+
+                    StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + "/" + oldHeaderUid + ".jpg");
+
+                    // Delete the old header image from Firebase storage
+                    deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // TODO: better error handling
+                            // File deleted successfully
+                            Log.d(TAG, "Deleted old header image (" + oldHeaderUid +
+                                    ") from cloud storage for the user (" + mUser.getUid() + ")");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Uh-oh, an error occurred!
+                            Log.e(TAG, "Error deleting old header image (" + oldHeaderUid +
+                                    ") from cloud storage for the user (" + mUser.getUid() + ")");
+                        }
+                    });
+
+                }
+                else {
+                    // The user did not have an old header image to replace - do nothing
+                }
+
+                // Save the new profile image to the cloud storage
+                Uri file = Uri.fromFile(new File(mHeaderImagePath));
+
+                Log.d(TAG, "New header image cloud storage location: " + file.toString());
+
+                // Start MyUploadService to upload the file, so that the file is uploaded even if
+                // this Activity is killed or put in the background
+                startService(new Intent(this, UploadService.class)
+                        .putExtra(UploadService.EXTRA_FILE_URI, file)
+                        .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mHeaderImageUid.toString() + ".jpg")
+                        .setAction(UploadService.ACTION_UPLOAD));
+
+                // Update the user model reference to the header image uid for database update
+                mUser.setHeaderImageUid(mHeaderImageUid.toString());
+
+            }
+            else {
+                // The user did not change the header image - do nothing
             }
 
             // Check to see if the user set a new profile image
@@ -468,16 +573,132 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
     private File createImageFile() {
 
+        // New UUID
+        mImageUid = UUID.randomUUID();
+
         // Create an image file name
-        mProfileImageUid = UUID.randomUUID();
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = new File(storageDir + "/" + mProfileImageUid.toString() + ".jpg");
+        File image = new File(storageDir + "/" + mImageUid.toString() + ".jpg");
 
         // Save a file: path for use with ACTION_VIEW intents
-        mProfileImagePath = image.getAbsolutePath();
+        mImagePath = image.getAbsolutePath();
 
         return image;
 
     }
 
+    private enum ImageType {
+
+        HEADER,
+        AVATAR
+
+    }
+
+    private class ImageButtonListener implements View.OnClickListener {
+
+        private ImageType mImageType;
+
+        ImageButtonListener(ImageType type) {
+
+            mImageType = type;
+
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            // Determine if this device has "camera" hardware available
+            boolean cameraPresent = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+            if (cameraPresent) {
+
+                new AlertDialog.Builder(ProfileActivity.this)
+                        .setTitle(R.string.profile_image_source_title)
+                        .setItems(R.array.profile_image_source_choice, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                // Act on the choice made by the user.  This will be to either
+                                // choose to take a new photo or pick one from the gallery.
+                                switch (which) {
+                                    case 0: {
+
+                                        // Take a picture
+                                        switch (mImageType) {
+                                            case AVATAR: {
+                                                dispatchTakePictureIntent(REQUEST_AVATAR_IMAGE_CAPTURE);
+                                                break;
+                                            }
+                                            case HEADER: {
+                                                dispatchTakePictureIntent(REQUEST_HEADER_IMAGE_CAPTURE);
+                                                break;
+                                            }
+                                        }
+
+                                        break;
+
+                                    }
+                                    case 1: {
+
+                                        // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+                                        // browser.
+                                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+                                        // Filter to only show results that can be "opened", such as a
+                                        // file (as opposed to a list of contacts or timezones)
+                                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+                                        // Filter to show only images, using the image MIME data type.
+                                        // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
+                                        // To search for all documents available via installed storage providers,
+                                        // it would be "*/*".
+                                        intent.setType("image/*");
+
+                                        switch (mImageType) {
+                                            case AVATAR: {
+                                                startActivityForResult(intent, REQUEST_AVATAR_IMAGE_STORE);
+                                                break;
+                                            }
+                                            case HEADER: {
+                                                startActivityForResult(intent, REQUEST_HEADER_IMAGE_STORE);
+                                                break;
+                                            }
+                                        }
+
+                                        break;
+
+                                    }
+                                }
+
+                                // Regardless of the choice, close the dialog
+                                dialog.dismiss();
+
+                            }
+
+                        })
+                        .show();
+
+            } else {
+
+                // There is no camera present on this device, so just have the user pick from the gallery
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                switch (mImageType) {
+                    case AVATAR: {
+                        startActivityForResult(pickPhoto, REQUEST_AVATAR_IMAGE_STORE);
+                        break;
+                    }
+                    case HEADER: {
+                        startActivityForResult(pickPhoto, REQUEST_HEADER_IMAGE_STORE);
+                        break;
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
 }
+
