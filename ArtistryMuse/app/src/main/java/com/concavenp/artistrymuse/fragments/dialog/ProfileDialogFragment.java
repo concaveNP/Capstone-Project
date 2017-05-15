@@ -51,7 +51,6 @@ import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ProfileDialogFragment#newInstance} factory method to
@@ -70,6 +69,9 @@ import static android.app.Activity.RESULT_OK;
  *
  * Android Material Design Floating Labels for EditText
  *      - http://www.androidhive.info/2015/09/android-material-design-floating-labels-for-edittext/
+ *
+ * Disable auto focus on edit text
+ *      - http://stackoverflow.com/questions/7593887/disable-auto-focus-on-edit-text
  */
 public class ProfileDialogFragment extends BaseDialogFragment {
 
@@ -155,9 +157,9 @@ public class ProfileDialogFragment extends BaseDialogFragment {
         }
         setHasOptionsMenu(true);
 
-        mProfileImageView = (ImageView) mainView.findViewById(R.id.profile_avatar_imageView);
+        mProfileImageView = (ImageView) mainView.findViewById(R.id.profile_profile_imageView);
 
-        Button profileButton = (Button) mainView.findViewById(R.id.profile_avatar_button);
+        Button profileButton = (Button) mainView.findViewById(R.id.profile_profile_button);
         profileButton.setOnClickListener(new View.OnClickListener() {
 
             @Override

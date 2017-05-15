@@ -40,6 +40,30 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * TODO: this is wrong, update the comment block
+ *
+ * A simple {@link Fragment} subclass.
+ * Use the {@link ProfileDialogFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ *
+ * References:
+ *
+ * How to achieve a full-screen dialog as described in material guidelines?
+ *      - http://stackoverflow.com/questions/31606871/how-to-achieve-a-full-screen-dialog-as-described-in-material-guidelines
+ *
+ * Dialog to pick image from gallery or from camera
+ *      - http://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
+ *
+ * Taking Photos Simply
+ *      - https://developer.android.com/training/camera/photobasics.html
+ *
+ * Android Material Design Floating Labels for EditText
+ *      - http://www.androidhive.info/2015/09/android-material-design-floating-labels-for-edittext/
+ *
+ * Disable auto focus on edit text
+ *      - http://stackoverflow.com/questions/7593887/disable-auto-focus-on-edit-text
+ */
 @SuppressWarnings("StatementWithEmptyBody")
 public class ProfileActivity extends BaseAppCompatActivity {
 
@@ -49,33 +73,46 @@ public class ProfileActivity extends BaseAppCompatActivity {
     @SuppressWarnings("unused")
     private static final String TAG = ProfileActivity.class.getSimpleName();
 
-    private static final int REQUEST_AVATAR_IMAGE_STORE = 0;
-    private static final int REQUEST_AVATAR_IMAGE_CAPTURE = 1;
+    // The different activity result items given the user can choose an image from either the
+    // camera or an existing image.  Additionally, the user has a couple of places where the resulting
+    // image might be applied (i.e. the profile or header image).
+    private static final int REQUEST_PROFILE_IMAGE_STORE = 0;
+    private static final int REQUEST_PROFILE_IMAGE_CAPTURE = 1;
     private static final int REQUEST_HEADER_IMAGE_STORE = 2;
     private static final int REQUEST_HEADER_IMAGE_CAPTURE = 3;
 
-    private static final int REQUEST_AVATAR_PERMISSIONS_READ_EXTERNAL_STORAGE = 0;
+    // When required, this app can ask for the user's permission to read from external storage if
+    // choosing a image from a gallery is decided.  In this event the result from an activity
+    // needs to specify what the result applies to.  Exactly the same purpose as the block of
+    // constants above only for the needing permission first scenario.
+    private static final int REQUEST_PROFILE_PERMISSIONS_READ_EXTERNAL_STORAGE = 0;
     private static final int REQUEST_HEADER_PERMISSIONS_READ_EXTERNAL_STORAGE = 1;
 
+    // Members used in the user's Profile image (aka the "Avatar")
     private String mProfileImagePath;
     private UUID mProfileImageUid;
     private ImageView mProfileImageView;
 
+    // Members used in the user's Header image (aka the top most image)
     private String mHeaderImagePath;
     private UUID mHeaderImageUid;
     private ImageView mHeaderImageView;
 
+    // The value that will hold the user selected image from a picker (versus a camera taken photo)
     private Uri mSelectedImageUri;
 
+    // The transient values used during the user's choice of what image to use
     private String mImagePath;
     private UUID mImageUid;
 
+    // The other widgets making up part of the user's profile
     private EditText mNameEditText;
     private EditText mUsernameEditText;
     private EditText mSummaryEditText;
     private EditText mDescriptionEditText;
 
-    // The user model
+    // The user model.  This is the POJO that used to pass back and forth between this app and the
+    // cloud service (aka Firebase).
     private User mUser;
 
     @Override
@@ -101,15 +138,15 @@ public class ProfileActivity extends BaseAppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        mProfileImageView = (ImageView) findViewById(R.id.profile_avatar_imageView);
+        mProfileImageView = (ImageView) findViewById(R.id.profile_profile_imageView);
         mHeaderImageView = (ImageView) findViewById(R.id.profile_header_imageView);
         mNameEditText = (EditText) findViewById(R.id.name_editText);
         mUsernameEditText = (EditText) findViewById(R.id.username_editText);
         mDescriptionEditText = (EditText) findViewById(R.id.description_editText);
         mSummaryEditText = (EditText) findViewById(R.id.summary_editText);
 
-        Button avatarButton = (Button) findViewById(R.id.profile_avatar_button);
-        avatarButton.setOnClickListener(new ImageButtonListener(ImageType.AVATAR));
+        Button profileButton = (Button) findViewById(R.id.profile_profile_button);
+        profileButton.setOnClickListener(new ImageButtonListener(ImageType.PROFILE));
 
         Button headerButton = (Button) findViewById(R.id.profile_header_button);
         headerButton.setOnClickListener(new ImageButtonListener(ImageType.HEADER));
@@ -151,7 +188,7 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
     /**
      *
-     * @param type - The type is a number that is one of the following: REQUEST_AVATAR_IMAGE_STORE or REQUEST_HEADER_IMAGE_STORE
+     * @param type - The type is a number that is one of the following: REQUEST_PROFILE_IMAGE_STORE or REQUEST_HEADER_IMAGE_STORE
      */
     private void dispatchTakePictureIntent(int type) {
 
@@ -204,7 +241,7 @@ public class ProfileActivity extends BaseAppCompatActivity {
                     break;
 
                 }
-                case REQUEST_AVATAR_IMAGE_CAPTURE: {
+                case REQUEST_PROFILE_IMAGE_CAPTURE: {
 
                     // Save off the values generated from the image creation (however it was done)
                     mProfileImagePath = mImagePath;
@@ -258,7 +295,7 @@ public class ProfileActivity extends BaseAppCompatActivity {
                     break;
 
                 }
-                case REQUEST_AVATAR_IMAGE_STORE: {
+                case REQUEST_PROFILE_IMAGE_STORE: {
 
                     // Use the returned URI by passing it to the content resolver in order to get
                     // access to he file chosen by the user.  At this point copy the file locally
@@ -279,7 +316,7 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
                         ActivityCompat.requestPermissions(this,
                                 new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                                REQUEST_AVATAR_PERMISSIONS_READ_EXTERNAL_STORAGE);
+                                REQUEST_PROFILE_PERMISSIONS_READ_EXTERNAL_STORAGE);
 
                         // Continue processing in the callback associated with permissions (onRequestPermissionsResult)
 
@@ -383,7 +420,7 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
                 break;
             }
-            case REQUEST_AVATAR_PERMISSIONS_READ_EXTERNAL_STORAGE: {
+            case REQUEST_PROFILE_PERMISSIONS_READ_EXTERNAL_STORAGE: {
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -590,7 +627,7 @@ public class ProfileActivity extends BaseAppCompatActivity {
     private enum ImageType {
 
         HEADER,
-        AVATAR
+        PROFILE
 
     }
 
@@ -625,8 +662,8 @@ public class ProfileActivity extends BaseAppCompatActivity {
 
                                         // Take a picture
                                         switch (mImageType) {
-                                            case AVATAR: {
-                                                dispatchTakePictureIntent(REQUEST_AVATAR_IMAGE_CAPTURE);
+                                            case PROFILE: {
+                                                dispatchTakePictureIntent(REQUEST_PROFILE_IMAGE_CAPTURE);
                                                 break;
                                             }
                                             case HEADER: {
@@ -655,8 +692,8 @@ public class ProfileActivity extends BaseAppCompatActivity {
                                         intent.setType("image/*");
 
                                         switch (mImageType) {
-                                            case AVATAR: {
-                                                startActivityForResult(intent, REQUEST_AVATAR_IMAGE_STORE);
+                                            case PROFILE: {
+                                                startActivityForResult(intent, REQUEST_PROFILE_IMAGE_STORE);
                                                 break;
                                             }
                                             case HEADER: {
@@ -683,8 +720,8 @@ public class ProfileActivity extends BaseAppCompatActivity {
                 // There is no camera present on this device, so just have the user pick from the gallery
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 switch (mImageType) {
-                    case AVATAR: {
-                        startActivityForResult(pickPhoto, REQUEST_AVATAR_IMAGE_STORE);
+                    case PROFILE: {
+                        startActivityForResult(pickPhoto, REQUEST_PROFILE_IMAGE_STORE);
                         break;
                     }
                     case HEADER: {
