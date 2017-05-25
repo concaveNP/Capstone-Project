@@ -46,7 +46,7 @@
     <color name="myapp_primary_100">#F5F5F5</color>
     <color name="myapp_primary_200">#EEEEEE</color>
     <color name="myapp_primary_300">#E0E0E0</color>
-    <color name="myapp_primary_400">#BDBDBD</color>
+    <color name="myapp_primary_400">#bdbdbd</color>
     <color name="myapp_primary_500">#9E9E9E</color>
     <color name="myapp_primary_600">#757575</color>
     <color name="myapp_primary_700">#616161</color>

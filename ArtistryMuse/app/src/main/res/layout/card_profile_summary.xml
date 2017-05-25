@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/AppTheme.Card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/summary_card_title_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/details_margin"
+            android:paddingEnd="@dimen/details_margin"
+            android:paddingLeft="@dimen/details_margin"
+            android:paddingRight="@dimen/details_margin"
+            android:paddingStart="@dimen/details_margin"
+            android:paddingTop="@dimen/card_top_padding"
+            android:text="@string/title_summary_profile_card" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/details_margin"
+            android:paddingEnd="@dimen/details_margin"
+            android:paddingLeft="@dimen/details_margin"
+            android:paddingRight="@dimen/details_margin"
+            android:paddingStart="@dimen/details_margin">
+
+            <EditText
+                android:id="@+id/description_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title_description_profile"
+                android:inputType="textMultiLine"
+                android:maxLength="80"
+                android:maxLines="2" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/card_top_padding"
+            android:paddingEnd="@dimen/details_margin"
+            android:paddingLeft="@dimen/details_margin"
+            android:paddingRight="@dimen/details_margin"
+            android:paddingStart="@dimen/details_margin">
+
+            <EditText
+                android:id="@+id/summary_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title_summary_profile"
+                android:inputType="textMultiLine"
+                android:maxLength="1000"
+                android:maxLines="10" />
+
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
+

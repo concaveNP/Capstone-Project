@@ -228,5 +228,10 @@
     <string name="application_uid_key">ArtistryMuseUID</string>
     <string name="default_application_uid_value"></string>
     <string name="title_activity_profile">Profile</string>
+    <string name="title_summary_profile_card">Information</string>
+    <string name="title_description_profile">Short Description</string>
+    <string name="title_summary_profile">Summary</string>
+    <string name="title_username_profile">Username</string>
+    <string name="title_name_profile">Name</string>
 
 </resources>

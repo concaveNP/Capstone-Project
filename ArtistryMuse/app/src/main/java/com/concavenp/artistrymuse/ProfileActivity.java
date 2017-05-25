@@ -167,7 +167,7 @@ public class ProfileActivity extends BaseAppCompatActivity {
                     mUser = user;
 
                     // Update the profile details
-                    populateImageView(buildFileReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), mProfileImageView);
+                    populateCircularImageView(buildFileReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), mProfileImageView);
                     populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), mHeaderImageView);
                     mNameEditText.setText(user.getName());
                     mUsernameEditText.setText(user.getUsername());
