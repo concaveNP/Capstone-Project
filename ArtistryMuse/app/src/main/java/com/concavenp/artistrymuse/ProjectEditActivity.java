@@ -3,22 +3,24 @@ package com.concavenp.artistrymuse;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class InspirationActivity extends AppCompatActivity {
+public class ProjectEditActivity extends BaseAppCompatActivity {
 
     /**
      * The logging tag string to be associated with log data for this class
      */
     @SuppressWarnings("unused")
-    private static final String TAG = InspirationActivity.class.getSimpleName();
+    private static final String TAG = ProjectEditActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inspiration);
+
+        setContentView(R.layout.activity_project_edit);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -31,6 +33,7 @@ public class InspirationActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
 }

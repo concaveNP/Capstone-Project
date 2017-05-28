@@ -1,5 +1,6 @@
 package com.concavenp.artistrymuse.fragments;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -235,6 +236,34 @@ public class GalleryFragment extends BaseFragment {
         Query resultQuery = databaseReference.child("users").child(userId).child("projects");
 
         return resultQuery;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+
+        super.onAttach(context);
+
+        // Re-attach to the parent Activity interface
+        if (context instanceof OnCreateProjectInteractionListener) {
+
+            mCreateProjectListener = (OnCreateProjectInteractionListener) context;
+
+        } else {
+
+            throw new RuntimeException(context.toString() + " must implement OnCreateProjectInteractionListener");
+
+        }
+
+    }
+
+    @Override
+    public void onDetach() {
+
+        super.onDetach();
+
+        // Detach from the parent Activity interface(s)
+        mCreateProjectListener = null;
+
     }
 
     public interface OnCreateProjectInteractionListener {
