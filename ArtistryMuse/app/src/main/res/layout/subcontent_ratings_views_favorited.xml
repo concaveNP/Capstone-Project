@@ -1,75 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="right"
+    android:gravity="center"
     android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/myapp_button_padding_material">
+        android:orientation="vertical"
+        android:padding="@dimen/myapp_text_edge_padding_material">
 
-        <ImageView
-            android:id="@+id/rating_imageView"
-            app:srcCompat="@drawable/ic_star_black_24dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="4dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/rating_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="4dp"
+                app:srcCompat="@drawable/ic_star_black_24dp" />
+
+            <TextView
+                android:id="@+id/rating_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="TextView" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/rating_textView"
-            android:layout_width="wrap_content"
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="TextView" />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/rating_label_imageView" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/myapp_button_padding_material">
+        android:orientation="vertical"
+        android:padding="@dimen/myapp_text_edge_padding_material">
 
-        <ImageView
-            android:id="@+id/views_imageView"
-            app:srcCompat="@drawable/ic_remove_red_eye_black_24dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="4dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/views_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="4dp"
+                app:srcCompat="@drawable/ic_remove_red_eye_black_24dp" />
+
+            <TextView
+                android:id="@+id/views_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="TextView" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/views_textView"
-            android:layout_width="wrap_content"
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="TextView" />
+            android:gravity="center"
+            android:text="@string/views_label_imageView" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/myapp_button_padding_material">
+        android:orientation="vertical"
+        android:padding="@dimen/myapp_text_edge_padding_material">
 
-        <ImageView
-            android:id="@+id/favorited_imageView"
-            app:srcCompat="@drawable/ic_thumb_up_black_24dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="4dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/favorited_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="4dp"
+                app:srcCompat="@drawable/ic_thumb_up_black_24dp" />
+
+            <TextView
+                android:id="@+id/favorited_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="TextView" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/favorited_textView"
-            android:layout_width="wrap_content"
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="TextView" />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/favorited_label_textView" />
 
     </LinearLayout>
 
