@@ -21,7 +21,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.User;
 import com.concavenp.artistrymuse.services.UploadService;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -111,6 +113,11 @@ public class ProfileActivity extends BaseAppCompatActivity {
     private EditText mSummaryEditText;
     private EditText mDescriptionEditText;
 
+    // Values used to build up the stats
+    private int favoritesTotal = 0;
+    private double averageRatingTotal = 0.0;
+    private int viewsTotal = 0;
+
     // The user model.  This is the POJO that used to pass back and forth between this app and the
     // cloud service (aka Firebase).
     private User mUser;
@@ -144,6 +151,9 @@ public class ProfileActivity extends BaseAppCompatActivity {
         mUsernameEditText = (EditText) findViewById(R.id.username_editText);
         mDescriptionEditText = (EditText) findViewById(R.id.description_editText);
         mSummaryEditText = (EditText) findViewById(R.id.summary_editText);
+        final TextView favoritedTextView = (TextView) findViewById(R.id.favorited_textView);
+        final TextView viewsTextView = (TextView) findViewById(R.id.views_textView);
+        final TextView ratingTextView = (TextView) findViewById(R.id.rating_textView);
 
         Button profileButton = (Button) findViewById(R.id.profile_profile_button);
         profileButton.setOnClickListener(new ImageButtonListener(ImageType.PROFILE));
@@ -173,6 +183,53 @@ public class ProfileActivity extends BaseAppCompatActivity {
                     mUsernameEditText.setText(user.getUsername());
                     mDescriptionEditText.setText(user.getDescription());
                     mSummaryEditText.setText(user.getSummary());
+
+                    // Initialize the data points before running the numbers
+                    favoritesTotal = 0;
+                    averageRatingTotal = 0.0;
+                    viewsTotal = 0;
+
+                    // Loop over all of the user's projects and tally up the data
+                    for (String projectId : user.getProjects().values()) {
+
+                        mDatabase.child("projects").child(projectId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                // Perform the JSON to Object conversion
+                                Project project = dataSnapshot.getValue(Project.class);
+
+                                // Verify there is a user to work with
+                                if (project != null) {
+
+                                    // Get the needed data out from the JSON
+                                    favoritesTotal += project.getFavorited();
+                                    averageRatingTotal = (averageRatingTotal + project.getRating()) / 2;
+                                    viewsTotal += project.getViews();
+
+                                    // Convert to strings
+                                    String favoritesResult = Integer.toString(favoritesTotal);
+                                    String ratingsResult = String.format("%.1f", averageRatingTotal);
+                                    String viewsResult = Integer.toString(viewsTotal);
+
+                                    // Update the views
+                                    favoritedTextView.setText(favoritesResult);
+                                    viewsTextView.setText(ratingsResult);
+                                    ratingTextView.setText(viewsResult);
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                // Do nothing
+                            }
+
+                        });
+
+                    }
 
                 }
             }

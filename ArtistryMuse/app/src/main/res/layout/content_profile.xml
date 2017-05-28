@@ -57,7 +57,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/title_name_profile"
-                android:inputType="none"
+
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+
+                android:inputType="textPersonName"
                 android:maxLength="50"
                 android:maxLines="1" />
 
@@ -78,9 +84,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/title_username_profile"
-                android:inputType="none"
+
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+
+                android:inputType="text"
                 android:maxLength="50"
-                android:maxLines="1"/>
+                android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
 
