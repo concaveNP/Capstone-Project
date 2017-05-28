@@ -14,16 +14,12 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_settings">Settings</string>
 
-
-    <!--Strings used within the Profile dialog-->
+    <!--Strings used within the Profile dialog for choosing and image source-->
     <string-array name="profile_image_source_choice">
         <item>Camera</item>
         <item>Gallery</item>
     </string-array>
     <string name="profile_image_source_title">Choose an image source</string>
-
-
-
 
     <!-- Strings related to Settings -->
 
@@ -232,5 +228,14 @@
     <string name="application_uid_key">ArtistryMuseUID</string>
     <string name="default_application_uid_value"></string>
     <string name="title_activity_profile">Profile</string>
+    <string name="title_summary_profile_card">Information</string>
+    <string name="title_description_profile">Description</string>
+    <string name="title_summary_profile">Summary</string>
+    <string name="title_username_profile">Username</string>
+    <string name="title_name_profile">Name</string>
+    <string name="Rating">rating_label_textView</string>
+    <string name="rating_label_imageView">Rating</string>
+    <string name="views_label_imageView">Views</string>
+    <string name="favorited_label_textView">Favorited</string>
 
 </resources>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/AppTheme.Card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/stats_card_title_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/details_margin"
+            android:paddingEnd="@dimen/details_margin"
+            android:paddingLeft="@dimen/details_margin"
+            android:paddingRight="@dimen/details_margin"
+            android:paddingStart="@dimen/details_margin"
+            android:paddingTop="@dimen/card_top_padding"
+            android:text="Images" />
+
+        <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingBottom="@dimen/card_top_padding"-->
+        <!--android:paddingEnd="@dimen/details_margin"-->
+        <!--android:paddingLeft="@dimen/details_margin"-->
+        <!--android:paddingRight="@dimen/details_margin"-->
+        <!--android:paddingStart="@dimen/details_margin">-->
+
+        <!--<Button-->
+        <!--android:id="@+id/profile_header_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:text="HEADER" />-->
+        <!--&lt;!&ndash;android:layout_toStartOf="@+id/profile_profile_button"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_toLeftOf="@+id/profile_profile_button"&ndash;&gt;-->
+
+        <!--<Button-->
+        <!--android:id="@+id/profile_profile_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:text="AVATAR" />-->
+        <!--&lt;!&ndash;android:layout_toEndOf="@+id/profile_header_button"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_toRightOf="@+id/profile_header_button"&ndash;&gt;-->
+
+        <!--</RelativeLayout>-->
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:paddingBottom="@dimen/card_top_padding"
+            android:paddingEnd="@dimen/details_margin"
+            android:paddingLeft="@dimen/details_margin"
+            android:paddingRight="@dimen/details_margin"
+            android:paddingStart="@dimen/details_margin">
+
+            <Button
+                android:id="@+id/profile_header_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:text="HEADER" />
+
+            <Button
+                android:id="@+id/profile_profile_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:text="AVATAR" />
+
+        </GridLayout>
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingEnd="@dimen/details_margin"-->
+        <!--android:paddingLeft="@dimen/details_margin"-->
+        <!--android:paddingRight="@dimen/details_margin"-->
+        <!--android:paddingStart="@dimen/details_margin"-->
+        <!--android:paddingBottom="@dimen/card_top_padding"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<Button-->
+        <!--android:id="@+id/profile_header_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:text="HEADER" />-->
+
+        <!--<Button-->
+        <!--android:id="@+id/profile_profile_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:text="AVATAR" />-->
+        <!--</LinearLayout>-->
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

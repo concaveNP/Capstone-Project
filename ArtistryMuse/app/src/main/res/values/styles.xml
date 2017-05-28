@@ -4,9 +4,10 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/myapp_primary_300</item>
-        <item name="colorPrimaryDark">@color/myapp_primary_500</item>
-        <item name="colorAccent">@color/myapp_accent_A400</item>
+        <item name="colorPrimary">@color/myapp_primary_500</item>
+        <item name="colorPrimaryDark">@color/myapp_primary_700</item>
+        <item name="colorAccent">@color/myapp_accent_A700</item>
+        <!--<item name="android:background">@color/myapp_primary_300</item>-->
 
     </style>
 
@@ -17,7 +18,11 @@
     <style name="WidgetListItemTheme" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.Card">
-        <item name="android:background">@color/myapp_primary_500</item>
+        <item name="colorPrimary">@color/myapp_primary_300</item>
+        <item name="colorPrimaryDark">@color/myapp_primary_500</item>
+        <item name="colorAccent">@color/myapp_accent_A700</item>
+        <!--<item name="android:padding">@dimen/details_margin</item>-->
+        <!--<item name="android:background">@color/myapp_primary_500</item>-->
     </style>
 
     <style name="AppTheme.Card.Title">

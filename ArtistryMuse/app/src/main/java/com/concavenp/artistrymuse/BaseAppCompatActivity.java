@@ -2,8 +2,15 @@ package com.concavenp.artistrymuse;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
@@ -11,6 +18,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.file_descriptor.FileDescriptorUriLoader;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,8 +36,18 @@ import static java.security.AccessController.getContext;
 
 /**
  * Created by dave on 3/25/2017.
+ *
+ * References:
+ *
+ * How to round an image with Glide library?
+ *      - https://stackoverflow.com/questions/25278821/how-to-round-an-image-with-glide-library
+ *
+ * Get color-int from color resource
+ *      - https://stackoverflow.com/questions/5271387/get-color-int-from-color-resource
+ *
+ * android - How to create a circular ImageView with border
+ *      - https://android--examples.blogspot.com/2015/11/android-how-to-create-circular.html
  */
-
 public abstract class BaseAppCompatActivity extends AppCompatActivity implements OnDetailsInteractionListener {
 
     /**
@@ -112,6 +130,82 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
 
+        }
+
+    }
+
+    protected void populateCircularImageView(String fileReference, final ImageView imageView) {
+
+        // It is possible for the file reference string to be null, so check for it
+        if (fileReference != null) {
+
+            StorageReference storageReference = mStorageRef.child(fileReference);
+
+            Glide.with(imageView.getContext())
+                    .using(mImageLoader)
+                    .load(storageReference)
+                    .asBitmap()
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(new BitmapImageViewTarget(imageView) {
+                        @Override
+                        protected void setResource(Bitmap bitmap) {
+
+
+
+
+// TODO: clean up
+
+
+                            int bitmapWidth = bitmap.getWidth();
+                            int bitmapHeight = bitmap.getHeight();
+                            int borderWidthHalf = 10; // In pixels
+
+                            // Calculate the bitmap radius
+                            int bitmapRadius = Math.min(bitmapWidth,bitmapHeight)/2;
+
+                            int bitmapSquareWidth = Math.min(bitmapWidth,bitmapHeight);
+
+                            int newBitmapSquareWidth = bitmapSquareWidth+borderWidthHalf;
+
+                            Bitmap roundedBitmap = Bitmap.createBitmap(newBitmapSquareWidth,newBitmapSquareWidth,Bitmap.Config.ARGB_8888);
+
+                            // Initialize a new Canvas to draw empty bitmap
+                            Canvas canvas = new Canvas(roundedBitmap);
+
+                            // Draw a solid color to canvas
+                        //    canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.myapp_accent_700, null));
+
+                            // Calculation to draw bitmap at the circular bitmap center position
+                            int x = borderWidthHalf + bitmapSquareWidth - bitmapWidth;
+                            int y = borderWidthHalf + bitmapSquareWidth - bitmapHeight;
+
+                            canvas.drawBitmap(bitmap, x, y, null);
+
+                            // Initializing a new Paint instance to draw circular border
+                            Paint borderPaint = new Paint();
+                            borderPaint.setStyle(Paint.Style.STROKE);
+                            borderPaint.setStrokeWidth(borderWidthHalf*2);
+                            borderPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.myapp_accent_700, null));
+
+                            canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquareWidth/2, borderPaint);
+
+
+                            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(imageView.getContext().getResources(), roundedBitmap);
+                            circularBitmapDrawable.setCircular(true);
+                            imageView.setImageDrawable(circularBitmapDrawable);
+
+
+
+
+
+
+
+//                            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(imageView.getContext().getResources(), bitmap);
+//                            circularBitmapDrawable.setCircular(true);
+//                            imageView.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
         }
 
     }

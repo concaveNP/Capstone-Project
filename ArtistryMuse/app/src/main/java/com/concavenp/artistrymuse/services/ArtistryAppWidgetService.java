@@ -33,6 +33,7 @@ public class ArtistryAppWidgetService extends BaseService {
     @SuppressWarnings("unused")
     private static final String TAG = ArtistryAppWidgetService.class.getSimpleName();
 
+    // Values used to build up the stats
     private int favoritesTotal = 0;
     private double averageRatingTotal = 0.0;
     private int viewsTotal = 0;

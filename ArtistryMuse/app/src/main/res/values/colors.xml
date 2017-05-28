@@ -41,36 +41,68 @@
 
     <!--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-->
     <!-- 644ca1 is this App's Material Design Color -->
-    <color name="myapp_primary_50">#eceaf4</color>
-    <color name="myapp_primary_100">#d1c9e3</color>
-    <color name="myapp_primary_200">#b2a6d0</color>
-    <color name="myapp_primary_300">#9382bd</color>
-    <color name="myapp_primary_400">#7b67af</color>
-    <color name="myapp_primary_500">#644ca1</color>
-    <color name="myapp_primary_600">#5c4599</color>
-    <color name="myapp_primary_700">#523c8f</color>
-    <color name="myapp_primary_800">#483385</color>
-    <color name="myapp_primary_900">#362474</color>
-    <color name="myapp_primary_A100">#c5b5ff</color>
-    <color name="myapp_primary_A200">#9d82ff</color>
-    <color name="myapp_primary_A400">#754fff</color>
-    <color name="myapp_primary_A700">#6136ff</color>
 
-    <!-- c50909 App's Material Design Accent Color -->
-    <color name="myapp_accent_50">#f8e1e1</color>
-    <color name="myapp_accent_100">#eeb5b5</color>
-    <color name="myapp_accent_200">#e28484</color>
-    <color name="myapp_accent_300">#d65353</color>
-    <color name="myapp_accent_400">#ce2e2e</color>
-    <color name="myapp_accent_500">#c50909</color>
-    <color name="myapp_accent_600">#bf0808</color>
-    <color name="myapp_accent_700">#b80606</color>
-    <color name="myapp_accent_800">#b00505</color>
-    <color name="myapp_accent_900">#a30202</color>
-    <color name="myapp_accent_A100">#ffcece</color>
-    <color name="myapp_accent_A200">#ff9b9b</color>
-    <color name="myapp_accent_A400">#ff6868</color>
-    <color name="myapp_accent_A700">#ff4e4e</color>
+    <color name="myapp_primary_50">#FAFAFA</color>
+    <color name="myapp_primary_100">#F5F5F5</color>
+    <color name="myapp_primary_200">#EEEEEE</color>
+    <color name="myapp_primary_300">#E0E0E0</color>
+    <color name="myapp_primary_400">#bdbdbd</color>
+    <color name="myapp_primary_500">#9E9E9E</color>
+    <color name="myapp_primary_600">#757575</color>
+    <color name="myapp_primary_700">#616161</color>
+    <color name="myapp_primary_800">#424242</color>
+    <color name="myapp_primary_900">#212121</color>
+
+
+    <!-- indigo -->
+    <color name="myapp_accent_50">#E8EAF6</color>
+    <color name="myapp_accent_100">#C5CAE9</color>
+    <color name="myapp_accent_200">#9FA8DA</color>
+    <color name="myapp_accent_300">#7986CB</color>
+    <color name="myapp_accent_400">#5C6BC0</color>
+    <color name="myapp_accent_500">#3F51B5</color>
+    <color name="myapp_accent_600">#3949AB</color>
+    <color name="myapp_accent_700">#303F9F</color>
+    <color name="myapp_accent_800">#283593</color>
+    <color name="myapp_accent_900">#1A237E</color>
+    <color name="myapp_accent_A100">#8C9EFF</color>
+    <color name="myapp_accent_A200">#536DFE</color>
+    <color name="myapp_accent_A400">#3D5AFE</color>
+    <color name="myapp_accent_A700">#304FFE</color>
+    <!--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-->
+
+    <!--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-->
+    <!-- 644ca1 is this App's Material Design Color -->
+    <!--<color name="myapp_primary_50">#eceaf4</color>-->
+    <!--<color name="myapp_primary_100">#d1c9e3</color>-->
+    <!--<color name="myapp_primary_200">#b2a6d0</color>-->
+    <!--<color name="myapp_primary_300">#9382bd</color>-->
+    <!--<color name="myapp_primary_400">#7b67af</color>-->
+    <!--<color name="myapp_primary_500">#644ca1</color>-->
+    <!--<color name="myapp_primary_600">#5c4599</color>-->
+    <!--<color name="myapp_primary_700">#523c8f</color>-->
+    <!--<color name="myapp_primary_800">#483385</color>-->
+    <!--<color name="myapp_primary_900">#362474</color>-->
+    <!--<color name="myapp_primary_A100">#c5b5ff</color>-->
+    <!--<color name="myapp_primary_A200">#9d82ff</color>-->
+    <!--<color name="myapp_primary_A400">#754fff</color>-->
+    <!--<color name="myapp_primary_A700">#6136ff</color>-->
+
+    <!--&lt;!&ndash; c50909 App's Material Design Accent Color &ndash;&gt;-->
+    <!--<color name="myapp_accent_50">#f8e1e1</color>-->
+    <!--<color name="myapp_accent_100">#eeb5b5</color>-->
+    <!--<color name="myapp_accent_200">#e28484</color>-->
+    <!--<color name="myapp_accent_300">#d65353</color>-->
+    <!--<color name="myapp_accent_400">#ce2e2e</color>-->
+    <!--<color name="myapp_accent_500">#c50909</color>-->
+    <!--<color name="myapp_accent_600">#bf0808</color>-->
+    <!--<color name="myapp_accent_700">#b80606</color>-->
+    <!--<color name="myapp_accent_800">#b00505</color>-->
+    <!--<color name="myapp_accent_900">#a30202</color>-->
+    <!--<color name="myapp_accent_A100">#ffcece</color>-->
+    <!--<color name="myapp_accent_A200">#ff9b9b</color>-->
+    <!--<color name="myapp_accent_A400">#ff6868</color>-->
+    <!--<color name="myapp_accent_A700">#ff4e4e</color>-->
     <!--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-->
 
     <!--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-->
