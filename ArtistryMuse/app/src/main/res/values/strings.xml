@@ -237,5 +237,7 @@
     <string name="rating_label_imageView">Rating</string>
     <string name="views_label_imageView">Views</string>
     <string name="favorited_label_textView">Favorited</string>
+    <string name="title_project">Title</string>
+    <string name="description_project">Description</string>
 
 </resources>

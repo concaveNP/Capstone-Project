@@ -13,33 +13,67 @@
     tools:context="com.concavenp.artistrymuse.ProjectEditActivity"
     tools:showIn="@layout/activity_project_edit">
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+    <ImageView
+        android:id="@+id/project_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/detail_backdrop_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/textView"
-        tools:text="@string/project" />
+        app:srcCompat="@drawable/ic_photo_size_select_actual_black_24dp" />
 
-    <Button
-        android:text="Upload (via camera)"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/title_textInputLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
+        android:paddingTop="@dimen/details_margin"
+        android:paddingEnd="@dimen/details_margin"
+        android:paddingLeft="@dimen/details_margin"
+        android:paddingRight="@dimen/details_margin"
+        android:paddingStart="@dimen/details_margin"
+        android:layout_below="@+id/project_imageView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="13dp"
-        android:id="@+id/button_upload"/>
+        android:layout_alignParentStart="true">
 
-    <Button
-        android:text="Download (somehow)"
-        android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/title_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title_project"
+            android:inputType="text"
+            android:maxLength="80"
+            android:maxLines="2" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/description_textInputLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button_upload"
+        android:paddingTop="@dimen/details_margin"
+        android:paddingBottom="@dimen/details_margin"
+        android:paddingEnd="@dimen/details_margin"
+        android:paddingLeft="@dimen/details_margin"
+        android:paddingRight="@dimen/details_margin"
+        android:paddingStart="@dimen/details_margin"
+        android:layout_below="@+id/title_textInputLayout"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="13dp"
-        android:id="@+id/button_download"/>
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:id="@+id/description_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/description_project"
+            android:inputType="text"
+            android:maxLength="1000"
+            android:maxLines="10" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/inspirations_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay"/>
+
 </RelativeLayout>
