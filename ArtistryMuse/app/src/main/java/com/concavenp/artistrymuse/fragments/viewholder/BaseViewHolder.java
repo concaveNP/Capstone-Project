@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.concavenp.artistrymuse.StorageDataType;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,7 +57,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    abstract public void bindToPost(Object jsonObject, final OnDetailsInteractionListener listener);
+    abstract public void bindToPost(Object jsonObject, final OnInteractionListener listener);
 
     protected String buildFileReference(String uid, String imageUid, StorageDataType type) {
 

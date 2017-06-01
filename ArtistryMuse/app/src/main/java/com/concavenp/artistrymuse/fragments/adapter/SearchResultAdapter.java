@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.fragments.viewholder.BaseViewHolder;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -35,14 +35,14 @@ public class SearchResultAdapter<E, VH extends BaseViewHolder> extends RecyclerV
     /**
      * Interface that will be used for the signalling the details of a item
      */
-    private OnDetailsInteractionListener mListener;
+    private OnInteractionListener mListener;
 
     /**
      *
      * @param listener
      * @param resource
      */
-    public SearchResultAdapter(Class<VH> viewHolder, OnDetailsInteractionListener listener, int resource) {
+    public SearchResultAdapter(Class<VH> viewHolder, OnInteractionListener listener, int resource) {
 
         super();
 

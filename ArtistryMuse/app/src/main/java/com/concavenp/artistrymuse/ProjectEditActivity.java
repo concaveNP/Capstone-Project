@@ -8,19 +8,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 
-import com.concavenp.artistrymuse.fragments.viewholder.InspirationViewHolder;
-import com.concavenp.artistrymuse.model.Inspiration;
+import com.concavenp.artistrymuse.fragments.adapter.InspirationAdapter;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.concavenp.artistrymuse.model.Project;
-import com.concavenp.artistrymuse.model.User;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Map;
 import java.util.UUID;
 
 
@@ -43,7 +41,7 @@ import java.util.UUID;
  * - Show delete project button (ick)
  *
  */
-public class ProjectEditActivity extends BaseAppCompatActivity {
+public class ProjectEditActivity extends ImageAppCompatActivity {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -57,7 +55,10 @@ public class ProjectEditActivity extends BaseAppCompatActivity {
      */
     public static final String EXTRA_DATA = "uid_string_data";
 
-    private FirebaseRecyclerAdapter<String, InspirationViewHolder> mAdapter;
+    private EditText mTitleEditText;
+    private EditText mDescriptionEditText;
+    private ImageView mProjectImageView;
+    private InspirationAdapter mAdapter;
     private RecyclerView mRecycler;
 
     // The UID of the project in question.  NOTE: this value can be passed into the activity via
@@ -66,7 +67,6 @@ public class ProjectEditActivity extends BaseAppCompatActivity {
 
     // The model data to display and update
     private Project mProjectModel;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +82,23 @@ public class ProjectEditActivity extends BaseAppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                // Create new Inspiration
+
+
+
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        mProjectImageView = (ImageView) findViewById(R.id.project_imageView);
+        mTitleEditText = (EditText) findViewById(R.id.title_editText);
+        mDescriptionEditText = (EditText) findViewById(R.id.description_editText);
+
+
+
 
         // TODO: what is the purpose of this?????
         mRecycler = (RecyclerView) findViewById(R.id.inspirations_recycler_view);
@@ -100,17 +112,9 @@ public class ProjectEditActivity extends BaseAppCompatActivity {
         Intent intent = getIntent();
         mProjectUid = intent.getStringExtra(EXTRA_DATA);
 
-        // If there is a UID to work with then we are dealing with editing and existing project otherwise this is a new project
-        if ((mProjectUid == null) || (mProjectUid.isEmpty())) {
-
-            // This is a new project for the user, so we must create a new UID for it
-            mProjectUid = UUID.randomUUID().toString();
-
-            mProjectModel = new Project();
-
-            //display();
-
-        } else {
+        // If there is a UID to work with then we are dealing with editing an existing project
+        // otherwise this is a new project and we will need to create a new UID for it.
+        if ((mProjectUid != null) && (!mProjectUid.isEmpty())) {
 
             mDatabase.child("projects").child(mProjectUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -123,37 +127,9 @@ public class ProjectEditActivity extends BaseAppCompatActivity {
                     // Verify there is a user to work with
                     if (project != null) {
 
-                        Map<String, Inspiration> projects = project.getInspirations();
+                        mProjectModel = project;
 
-                        // Check to see if the user is following anybody
-                        if ((projects != null) && (!projects.isEmpty())) {
-
-                            // Set up FirebaseRecyclerAdapter with the Query
-                            Query postsQuery = getQuery(mDatabase);
-                            mAdapter = new FirebaseRecyclerAdapter<String, InspirationViewHolder>(String.class, R.layout.item_inspiration, InspirationViewHolder.class, postsQuery) {
-
-                                @Override
-                                protected void populateViewHolder(final InspirationViewHolder viewHolder, final String uid, final int position) {
-
-//                                    viewHolder.bindToPost(uid, mDetailsListener);
-
-                                }
-
-                                @Override
-                                public void onViewRecycled(InspirationViewHolder holder) {
-
-                                    super.onViewRecycled(holder);
-
-                                    // Clear out the Glide memory used for the images associated with this ViewHolder
-//                                    holder.clearImages();
-
-                                }
-
-                            };
-
-                            mRecycler.setAdapter(mAdapter);
-
-                        }
+                        display(mProjectModel);
 
                     }
 
@@ -166,21 +142,45 @@ public class ProjectEditActivity extends BaseAppCompatActivity {
 
             });
 
+        } else {
+
+            // This is a new project for the user, so we must create a new UID for it
+            mProjectUid = UUID.randomUUID().toString();
+
+            mProjectModel = new Project();
+
+            display(mProjectModel);
+
         }
-
-
-
-
 
     }
 
-    private Query getQuery(DatabaseReference databaseReference) {
+    private void display(Project project) {
 
-        String userId = getUid();
+        mTitleEditText.setText(project.getName());
+        mDescriptionEditText.setText(project.getDescription());
+        populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.PROJECTS), mProjectImageView);
 
-        Query resultQuery = databaseReference.child("users").child(userId).child("projects");
+        // Provide the recycler view the list of project strings to display
+        mAdapter = new InspirationAdapter(project.getInspirations(), this, UserInteractionType.EDIT);
+        mRecycler.setAdapter(mAdapter);
+
+    }
+
+    private Query getQuery() {
+
+        Query resultQuery  = mDatabase.child("projects").child(mProjectUid).child("inspirations");
 
         return resultQuery;
     }
 
+    @Override
+    ImageView getSpecificImageView(int type) {
+        return null;
+    }
+
+    @Override
+    void setSpecificImageData(int type) {
+
+    }
 }

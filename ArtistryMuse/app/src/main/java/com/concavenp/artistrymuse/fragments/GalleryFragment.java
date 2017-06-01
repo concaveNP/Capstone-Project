@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
+import com.concavenp.artistrymuse.UserInteractionType;
 import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
 import com.concavenp.artistrymuse.model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -108,7 +110,8 @@ public class GalleryFragment extends BaseFragment {
             public void onClick(View view) {
 
                 // Notify the the listener (aka MainActivity) of the Create New Project selection
-                mCreateProjectListener.onCreateProjectInteraction(null);
+                mInteractionListener.onInteractionSelection(null, StorageDataType.PROJECTS, UserInteractionType.EDIT);
+//                mCreateProjectListener.onCreateProjectInteraction(null);
 
             }
         });
@@ -190,7 +193,7 @@ public class GalleryFragment extends BaseFragment {
                                 // perform this on after the count is reached.
                                 mSwipeRefreshLayout.setRefreshing(false);
 
-                                viewHolder.bindToPost(uid, mDetailsListener);
+                                viewHolder.bindToPost(uid, mInteractionListener);
 
                             }
 

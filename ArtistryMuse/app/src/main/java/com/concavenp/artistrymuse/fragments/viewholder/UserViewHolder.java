@@ -8,7 +8,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.UserInteractionType;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.concavenp.artistrymuse.model.Following;
 import com.concavenp.artistrymuse.model.User;
 import com.google.firebase.database.DataSnapshot;
@@ -33,7 +34,7 @@ public class UserViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void bindToPost(Object pojoJson, final OnDetailsInteractionListener listener) {
+    public void bindToPost(Object pojoJson, final OnInteractionListener listener) {
 
         Following following;
 
@@ -90,7 +91,7 @@ public class UserViewHolder extends BaseViewHolder {
                         public void onClick(View view) {
 
                             // Notify the the listener (aka MainActivity) of the details selection
-                            listener.onDetailsSelection(user.getUid(), StorageDataType.USERS);
+                            listener.onInteractionSelection(user.getUid(), StorageDataType.USERS, UserInteractionType.DETAILS);
 
                         }
 

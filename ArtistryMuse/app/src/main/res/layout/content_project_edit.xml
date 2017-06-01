@@ -74,6 +74,7 @@
         android:id="@+id/inspirations_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/description_textInputLayout"
         android:scrollbarStyle="outsideOverlay"/>
 
 </RelativeLayout>

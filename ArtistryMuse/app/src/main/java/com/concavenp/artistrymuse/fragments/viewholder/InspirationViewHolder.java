@@ -5,7 +5,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.UserInteractionType;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.concavenp.artistrymuse.model.Inspiration;
 
 /**
@@ -19,14 +20,39 @@ public class InspirationViewHolder extends BaseViewHolder {
     @SuppressWarnings("unused")
     private static final String TAG = InspirationViewHolder.class.getSimpleName();
 
+    /**
+     * This will be used by the listeners of the interaction of this view to determine how
+     * it should be interpreted as.
+     */
+    private UserInteractionType mUserInteractionType = UserInteractionType.DETAILS;
+
+    /**
+     * Constructor
+     *
+     * @param itemView - The View in question this class holds
+     */
     public InspirationViewHolder(View itemView) {
 
         super(itemView);
 
     }
 
+    /**
+     * Constructor that allows for the specifying of the user interaction type.
+     *
+     * @param itemView - The View in question this class holds
+     * @param userInteractionType - The type of interaction the user will have with this view
+     */
+    public InspirationViewHolder(View itemView, UserInteractionType userInteractionType) {
+
+        this(itemView);
+
+        mUserInteractionType = userInteractionType;
+
+    }
+
     @Override
-    public void bindToPost(Object pojoJson, final OnDetailsInteractionListener listener) {
+    public void bindToPost(Object pojoJson, final OnInteractionListener listener) {
 
         final Inspiration inspiration;
 
