@@ -10,10 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.fragments.viewholder.UserViewHolder;
 import com.concavenp.artistrymuse.model.Following;
-import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -175,7 +173,7 @@ public class FollowingFragment extends BaseFragment {
                                 // perform this on after the count is reached.
                                 mSwipeRefreshLayout.setRefreshing(false);
 
-                                viewHolder.bindToPost(model, mDetailsListener);
+                                viewHolder.bindToPost(model, mInteractionListener);
 
                             }
 

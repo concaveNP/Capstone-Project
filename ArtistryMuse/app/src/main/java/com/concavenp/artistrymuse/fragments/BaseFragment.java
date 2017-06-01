@@ -3,13 +3,8 @@ package com.concavenp.artistrymuse.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,10 +12,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -39,7 +32,7 @@ public abstract class BaseFragment extends Fragment {
     @SuppressWarnings("unused")
     private static final String TAG = BaseFragment.class.getSimpleName();
 
-    protected OnDetailsInteractionListener mDetailsListener;
+    protected OnInteractionListener mInteractionListener;
 
     protected DatabaseReference mDatabase;
     protected StorageReference mStorageRef;
@@ -73,13 +66,13 @@ public abstract class BaseFragment extends Fragment {
         super.onAttach(context);
 
         // Re-attach to the parent Activity interface
-        if (context instanceof OnDetailsInteractionListener) {
+        if (context instanceof OnInteractionListener) {
 
-            mDetailsListener = (OnDetailsInteractionListener) context;
+            mInteractionListener = (OnInteractionListener) context;
 
         } else {
 
-            throw new RuntimeException(context.toString() + " must implement OnDetailsInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement OnInteractionListener");
 
         }
     }
@@ -90,7 +83,7 @@ public abstract class BaseFragment extends Fragment {
         super.onDetach();
 
         // Detach from the parent Activity interface(s)
-        mDetailsListener = null;
+        mInteractionListener = null;
 
     }
 

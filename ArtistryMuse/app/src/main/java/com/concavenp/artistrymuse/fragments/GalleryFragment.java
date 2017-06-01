@@ -1,5 +1,6 @@
 package com.concavenp.artistrymuse.fragments;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
+import com.concavenp.artistrymuse.UserInteractionType;
 import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
 import com.concavenp.artistrymuse.model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -107,7 +110,8 @@ public class GalleryFragment extends BaseFragment {
             public void onClick(View view) {
 
                 // Notify the the listener (aka MainActivity) of the Create New Project selection
-                mCreateProjectListener.onCreateProjectInteraction(null);
+                mInteractionListener.onInteractionSelection(null, StorageDataType.PROJECTS, UserInteractionType.EDIT);
+//                mCreateProjectListener.onCreateProjectInteraction(null);
 
             }
         });
@@ -189,7 +193,7 @@ public class GalleryFragment extends BaseFragment {
                                 // perform this on after the count is reached.
                                 mSwipeRefreshLayout.setRefreshing(false);
 
-                                viewHolder.bindToPost(uid, mDetailsListener);
+                                viewHolder.bindToPost(uid, mInteractionListener);
 
                             }
 
@@ -235,6 +239,34 @@ public class GalleryFragment extends BaseFragment {
         Query resultQuery = databaseReference.child("users").child(userId).child("projects");
 
         return resultQuery;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+
+        super.onAttach(context);
+
+        // Re-attach to the parent Activity interface
+        if (context instanceof OnCreateProjectInteractionListener) {
+
+            mCreateProjectListener = (OnCreateProjectInteractionListener) context;
+
+        } else {
+
+            throw new RuntimeException(context.toString() + " must implement OnCreateProjectInteractionListener");
+
+        }
+
+    }
+
+    @Override
+    public void onDetach() {
+
+        super.onDetach();
+
+        // Detach from the parent Activity interface(s)
+        mCreateProjectListener = null;
+
     }
 
     public interface OnCreateProjectInteractionListener {

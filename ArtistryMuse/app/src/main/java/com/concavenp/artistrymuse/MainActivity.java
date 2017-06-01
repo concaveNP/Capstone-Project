@@ -13,8 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
@@ -23,7 +21,6 @@ import android.view.MenuItem;
 
 import com.concavenp.artistrymuse.fragments.GalleryFragment;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
-import com.concavenp.artistrymuse.fragments.dialog.ProfileDialogFragment;
 import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -207,8 +204,7 @@ public class MainActivity extends BaseAppCompatActivity implements
     @Override
     public void onCreateProjectInteraction(Uri uri) {
 
-        // TODO: implement the details activity(s) for both type
-        Intent intent = new Intent(this, CreateProjectActivity.class);
+        Intent intent = new Intent(this, ProjectEditActivity.class);
         startActivity(intent);
 
     }

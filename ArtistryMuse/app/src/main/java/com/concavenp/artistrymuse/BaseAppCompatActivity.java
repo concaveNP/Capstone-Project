@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -19,10 +17,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.file_descriptor.FileDescriptorUriLoader;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,8 +27,6 @@ import com.google.firebase.storage.StorageReference;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by dave on 3/25/2017.
@@ -48,7 +42,7 @@ import static java.security.AccessController.getContext;
  * android - How to create a circular ImageView with border
  *      - https://android--examples.blogspot.com/2015/11/android-how-to-create-circular.html
  */
-public abstract class BaseAppCompatActivity extends AppCompatActivity implements OnDetailsInteractionListener {
+public abstract class BaseAppCompatActivity extends AppCompatActivity implements OnInteractionListener {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -62,6 +56,12 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
     protected FileDescriptorUriLoader mUriLoad;
 
     protected SharedPreferences mSharedPreferences;
+
+    /**
+     * String used when creating the activity via intent.  This key will be used to retrieve the
+     * UID associated with the USER in question.
+     */
+    public static final String EXTRA_DATA = "uid_string_data";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,28 +233,81 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
      * tablet layouts will populate a neighboring fragment with the details results.
      *
      * @param uid - This will be the UID of other the User or the Project as specified in the type param
-     * @param type - The type will either be a user or a project
+     * @param storageDataType - The type will either be a user or a project
      */
     @Override
-    public void onDetailsSelection(String uid, StorageDataType type) {
+    public void onInteractionSelection(String uid, StorageDataType storageDataType, UserInteractionType userInteractionType) {
 
-        switch(type) {
+        switch(storageDataType) {
 
             case PROJECTS: {
 
-                // Create and start the details activity along with passing it the UID of the Project in question
-                Intent intent = new Intent(this, ProjectDetailsActivity.class);
-                intent.putExtra(ProjectDetailsActivity.EXTRA_DATA, uid);
-                startActivity(intent);
+                switch(userInteractionType) {
+
+                    case DETAILS: {
+
+                        // Create and start the details activity along with passing it the UID of the Project in question
+                        Intent intent = new Intent(this, ProjectDetailsActivity.class);
+                        intent.putExtra(EXTRA_DATA, uid);
+                        startActivity(intent);
+
+                        break;
+                    }
+                    case EDIT: {
+
+                        // Create and start the inspiration activity along with passing it the UID of the inspiration in question
+                        Intent intent = new Intent(this, ProjectEditActivity.class);
+                        intent.putExtra(EXTRA_DATA, uid);
+                        startActivity(intent);
+
+                    }
+                }
+
 
                 break;
             }
             case USERS: {
 
-                // Create and start the details activity along with passing it the UID of the User in question
-                Intent intent = new Intent(this, UserDetailsActivity.class);
-                intent.putExtra(UserDetailsActivity.EXTRA_DATA, uid);
-                startActivity(intent);
+                switch(userInteractionType) {
+
+                    case DETAILS: {
+
+                        // Create and start the details activity along with passing it the UID of the User in question
+                        Intent intent = new Intent(this, UserDetailsActivity.class);
+                        intent.putExtra(EXTRA_DATA, uid);
+                        startActivity(intent);
+
+                        break;
+                    }
+                    case EDIT: {
+
+                        // NOTE: Currently, there is only the details type of activities
+
+                    }
+                }
+
+                break;
+
+            }
+            case INSPIRATIONS: {
+
+                switch(userInteractionType) {
+
+                    case DETAILS: {
+
+                        // NOTE: Currently, there is only the edit type of activities
+
+                        break;
+                    }
+                    case EDIT: {
+
+                        // Create and start the inspiration activity along with passing it the UID of the inspiration in question
+                        Intent intent = new Intent(this, InspirationEditActivity.class);
+                        intent.putExtra(EXTRA_DATA, uid);
+                        startActivity(intent);
+
+                    }
+                }
 
                 break;
 

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_project"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.concavenp.artistrymuse.ProjectEditActivity"
+    tools:showIn="@layout/activity_project_edit">
+
+    <ImageView
+        android:id="@+id/project_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/detail_backdrop_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        app:srcCompat="@drawable/ic_photo_size_select_actual_black_24dp" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/title_textInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/details_margin"
+        android:paddingEnd="@dimen/details_margin"
+        android:paddingLeft="@dimen/details_margin"
+        android:paddingRight="@dimen/details_margin"
+        android:paddingStart="@dimen/details_margin"
+        android:layout_below="@+id/project_imageView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:id="@+id/title_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title_project"
+            android:inputType="text"
+            android:maxLength="80"
+            android:maxLines="2" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/description_textInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/details_margin"
+        android:paddingBottom="@dimen/details_margin"
+        android:paddingEnd="@dimen/details_margin"
+        android:paddingLeft="@dimen/details_margin"
+        android:paddingRight="@dimen/details_margin"
+        android:paddingStart="@dimen/details_margin"
+        android:layout_below="@+id/title_textInputLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:id="@+id/description_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/description_project"
+            android:inputType="text"
+            android:maxLength="1000"
+            android:maxLines="10" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/inspirations_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/description_textInputLayout"
+        android:scrollbarStyle="outsideOverlay"/>
+
+</RelativeLayout>

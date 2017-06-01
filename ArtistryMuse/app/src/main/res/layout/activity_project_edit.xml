@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.concavenp.artistrymuse.CreateProjectActivity">
+    tools:context="com.concavenp.artistrymuse.ProjectEditActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_project_details" />
+    <include layout="@layout/content_project_edit" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -33,5 +33,3 @@
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
 </android.support.design.widget.CoordinatorLayout>
-
-

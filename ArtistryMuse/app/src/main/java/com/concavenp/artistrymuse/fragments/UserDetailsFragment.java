@@ -316,7 +316,7 @@ public class UserDetailsFragment extends BaseFragment {
             populateTextView("hmmm, this needs thought", ratingsTextView);
 
             // Provide the recycler view the list of project strings to display
-            mAdapter = new GalleryAdapter(mUserInQuestionModel.getProjects(), mDetailsListener);
+            mAdapter = new GalleryAdapter(mUserInQuestionModel.getProjects(), mInteractionListener);
             mRecycler.setAdapter(mAdapter);
 
         } else {

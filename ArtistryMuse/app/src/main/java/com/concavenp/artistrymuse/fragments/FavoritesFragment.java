@@ -172,7 +172,7 @@ public class FavoritesFragment extends BaseFragment {
                                 // perform this on after the count is reached.
                                 mSwipeRefreshLayout.setRefreshing(false);
 
-                                viewHolder.bindToPost(model, mDetailsListener);
+                                viewHolder.bindToPost(model, mInteractionListener);
 
                             }
 

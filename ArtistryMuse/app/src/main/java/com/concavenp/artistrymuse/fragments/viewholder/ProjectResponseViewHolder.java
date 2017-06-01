@@ -7,7 +7,8 @@ import android.widget.TextView;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.UserInteractionType;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.concavenp.artistrymuse.model.ProjectResponseHit;
 import com.concavenp.artistrymuse.model.User;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +33,7 @@ public class ProjectResponseViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void bindToPost(Object pojoJson, final OnDetailsInteractionListener listener) {
+    public void bindToPost(Object pojoJson, final OnInteractionListener listener) {
 
         // TODO: should be able to abstract this code up into the base - the casting part - not the rest
 
@@ -101,7 +102,7 @@ public class ProjectResponseViewHolder extends BaseViewHolder {
                             public void onClick(View view) {
 
                                 // Notify the the listener (aka MainActivity) of the details selection
-                                listener.onDetailsSelection(uid, StorageDataType.USERS);
+                                listener.onInteractionSelection(uid, StorageDataType.USERS, UserInteractionType.DETAILS);
 
                             }
 
@@ -140,7 +141,7 @@ public class ProjectResponseViewHolder extends BaseViewHolder {
                 public void onClick(View view) {
 
                     // Notify the the listener (aka MainActivity) of the details selection
-                    listener.onDetailsSelection(uid, StorageDataType.USERS);
+                    listener.onInteractionSelection(uid, StorageDataType.USERS, UserInteractionType.DETAILS);
 
                 }
             });

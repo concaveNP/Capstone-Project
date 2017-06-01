@@ -86,7 +86,7 @@ class Generate {
                 // Loop over number of projects per user
                 for (int inspirationIndex = 0; inspirationIndex < numberofInspirations; inspirationIndex++) {
 
-                    def inspiration = createInspiration(inspirationIndex)
+                    def inspiration = createInspiration(project.uid)
 
                     // Add the inspiration to the project
                     project.inspirations.put(inspiration.uid, inspiration)
@@ -268,7 +268,7 @@ class Generate {
 
     }
 
-    static Inspiration createInspiration(int inspirationIndex) {
+    static Inspiration createInspiration(String projectUid) {
 
         // Lorem library to generate text, names and such...
         Lorem lorem = LoremIpsum.getInstance()
@@ -281,6 +281,7 @@ class Generate {
         result.lastUpdateDate = new Date().getTime()
         result.name = lorem.getTitle(1,10)
         result.uid = UUID.randomUUID()
+        result.projectUid = projectUid;
 
         return result
 

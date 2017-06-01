@@ -18,8 +18,6 @@ import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -298,7 +296,7 @@ public class ProjectDetailsFragment extends BaseFragment {
             populateTextView(mProjectInQuestionModel.getDescription(), descriptionTextView);
 
             // Provide the recycler view the list of project strings to display
-            mAdapter = new InspirationAdapter(mProjectInQuestionModel.getInspirations(), mDetailsListener);
+            mAdapter = new InspirationAdapter(mProjectInQuestionModel.getInspirations(), mInteractionListener);
             mRecycler.setAdapter(mAdapter);
 
 

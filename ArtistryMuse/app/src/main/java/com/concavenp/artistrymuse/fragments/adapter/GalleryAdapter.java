@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 
 import java.util.Map;
 
@@ -26,9 +26,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
     /**
      * The listener that will be used when the user requests details for a given project.
      */
-    private final OnDetailsInteractionListener mListener;
+    private final OnInteractionListener mListener;
 
-    public GalleryAdapter(Map<String, String> projects, final OnDetailsInteractionListener listener) {
+    public GalleryAdapter(Map<String, String> projects, final OnInteractionListener listener) {
 
         // Project UIDs
         mModel = projects;

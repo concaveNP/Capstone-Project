@@ -20,12 +20,6 @@ public class UserDetailsActivity extends BaseAppCompatActivity  {
     @SuppressWarnings("unused")
     private static final String TAG = UserDetailsActivity.class.getSimpleName();
 
-    /**
-     * String used when creating the activity via intent.  This key will be used to retrieve the
-     * UID associated with the USER in question.
-     */
-    public static final String EXTRA_DATA = "uid_string_data";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

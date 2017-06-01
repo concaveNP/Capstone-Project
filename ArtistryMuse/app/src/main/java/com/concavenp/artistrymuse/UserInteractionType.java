@@ -4,16 +4,14 @@ package com.concavenp.artistrymuse;
  * Created by dave on 1/30/2017.
  */
 
-public enum StorageDataType {
+public enum UserInteractionType {
 
-    USERS("users"),
-    PROJECTS("projects"),
-    INSPIRATIONS("inspirations"),
-    AUTH("auth");
+    DETAILS("details"),
+    EDIT("edit");
 
     private String type;
 
-    StorageDataType(String type) {
+    UserInteractionType(String type) {
 
         setType(type);
 

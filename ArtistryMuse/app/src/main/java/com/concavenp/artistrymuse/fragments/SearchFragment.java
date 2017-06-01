@@ -173,7 +173,7 @@ public class SearchFragment extends BaseFragment {
 //        mUsersRecycler.setLayoutManager(mUsersManager);
 
         // Create the adapter that will be used to hold and paginate through the resulting search data
-        mUsersAdapter = new SearchResultAdapter<>(UserResponseViewHolder.class, mDetailsListener, R.layout.item_user);
+        mUsersAdapter = new SearchResultAdapter<>(UserResponseViewHolder.class, mInteractionListener, R.layout.item_user);
         mUsersAdapter.clearData();
         mUsersRecycler.setAdapter(mUsersAdapter);
 
@@ -233,7 +233,7 @@ public class SearchFragment extends BaseFragment {
         });
 
         // Create the adapter that will be used to hold and paginate through the resulting search data
-        mProjectsAdapter = new SearchResultAdapter<>(ProjectResponseViewHolder.class, mDetailsListener, R.layout.item_project);
+        mProjectsAdapter = new SearchResultAdapter<>(ProjectResponseViewHolder.class, mInteractionListener, R.layout.item_project);
         mProjectsAdapter.clearData();
         mProjectsRecycler.setAdapter(mProjectsAdapter);
 

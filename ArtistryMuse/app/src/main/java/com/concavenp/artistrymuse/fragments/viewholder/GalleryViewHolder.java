@@ -8,7 +8,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.UserInteractionType;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.concavenp.artistrymuse.model.Project;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +35,7 @@ public class GalleryViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void bindToPost(Object pojoJson, final OnDetailsInteractionListener listener) {
+    public void bindToPost(Object pojoJson, final OnInteractionListener listener) {
 
         final String projectUid;
 
@@ -87,14 +88,14 @@ public class GalleryViewHolder extends BaseViewHolder {
                         populateTextView("Unpublished", publicationTextView);
                     }
 
-                    // Add a click listener to the view in order for the user to get more details about a selected movie
+                    // Add a click listener to the view in order for the user to get more details about a selected project
                     itemView.setOnClickListener(new View.OnClickListener() {
 
                         @Override
                         public void onClick(View view) {
 
                             // Notify the the listener (aka MainActivity) of the details selection
-                            listener.onDetailsSelection(projectUid, StorageDataType.PROJECTS);
+                            listener.onInteractionSelection(projectUid, StorageDataType.PROJECTS, UserInteractionType.EDIT);
 
                         }
 

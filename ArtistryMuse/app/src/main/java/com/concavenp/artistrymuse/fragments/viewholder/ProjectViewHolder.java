@@ -8,7 +8,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.UserInteractionType;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.concavenp.artistrymuse.model.Favorite;
 import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.User;
@@ -34,7 +35,7 @@ public class ProjectViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void bindToPost(Object pojoJson, final OnDetailsInteractionListener listener) {
+    public void bindToPost(Object pojoJson, final OnInteractionListener listener) {
 
         final Favorite favorite;
 
@@ -83,7 +84,7 @@ public class ProjectViewHolder extends BaseViewHolder {
                         public void onClick(View view) {
 
                             // Notify the the listener (aka MainActivity) of the details selection
-                            listener.onDetailsSelection(project.getUid(), StorageDataType.PROJECTS);
+                            listener.onInteractionSelection(project.getUid(), StorageDataType.PROJECTS, UserInteractionType.DETAILS);
 
                         }
 

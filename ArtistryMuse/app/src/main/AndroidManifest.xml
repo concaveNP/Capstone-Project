@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProjectActivity"
+            android:name=".ProjectEditActivity"
             android:label="@string/title_activity_project"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme">
@@ -38,26 +38,17 @@
                 android:value="com.concavenp.artistrymuse.MainActivity" />
         </activity>
         <activity
-            android:name=".InspirationActivity"
+            android:name=".InspirationEditActivity"
             android:label="@string/title_activity_inspiration"
-            android:parentActivityName=".ProjectActivity"
+            android:parentActivityName=".ProjectEditActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.concavenp.artistrymuse.ProjectActivity" />
+                android:value="com.concavenp.artistrymuse.ProjectEditActivity" />
         </activity>
         <activity
             android:name=".ProjectDetailsActivity"
             android:label="@string/title_activity_details"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.concavenp.artistrymuse.MainActivity" />
-        </activity>
-        <activity
-            android:name=".CreateProjectActivity"
-            android:label="@string/title_activity_create_project"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme">
             <meta-data

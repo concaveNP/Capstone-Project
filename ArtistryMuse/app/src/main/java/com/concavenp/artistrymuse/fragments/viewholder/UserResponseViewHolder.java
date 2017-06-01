@@ -7,7 +7,8 @@ import android.widget.TextView;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
-import com.concavenp.artistrymuse.interfaces.OnDetailsInteractionListener;
+import com.concavenp.artistrymuse.UserInteractionType;
+import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.concavenp.artistrymuse.model.UserResponseHit;
 
 /**
@@ -28,7 +29,7 @@ public class UserResponseViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void bindToPost(Object pojoJson, final OnDetailsInteractionListener listener) {
+    public void bindToPost(Object pojoJson, final OnInteractionListener listener) {
 
         UserResponseHit response;
 
@@ -95,7 +96,7 @@ public class UserResponseViewHolder extends BaseViewHolder {
                 public void onClick(View view) {
 
                     // Notify the the listener (aka MainActivity) of the details selection
-                    listener.onDetailsSelection(uid, StorageDataType.USERS);
+                    listener.onInteractionSelection(uid, StorageDataType.USERS, UserInteractionType.DETAILS);
 
                 }
             });

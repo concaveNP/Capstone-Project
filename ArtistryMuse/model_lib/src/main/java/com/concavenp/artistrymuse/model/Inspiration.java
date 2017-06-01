@@ -12,6 +12,7 @@ public class Inspiration {
     public Long lastUpdateDate;
     public String name;
     public String uid;
+    public String projectUid;
 
     public Inspiration() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -63,5 +64,13 @@ public class Inspiration {
 
     public void setLastUpdateDate(Long lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public String getProjectUid() {
+        return projectUid;
+    }
+
+    public void setProjectUid(String projectUid) {
+        this.projectUid = projectUid;
     }
 }
