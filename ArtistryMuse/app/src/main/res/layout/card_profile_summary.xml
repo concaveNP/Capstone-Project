@@ -38,8 +38,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/title_description_profile"
                 android:inputType="textMultiLine"
-                android:maxLength="80"
-                android:maxLines="2" />
+                android:maxLength="@integer/maximum_characters_for_title"
+                android:maxLines="@integer/maximum_lines_for_title" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -59,8 +59,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/title_summary_profile"
                 android:inputType="textMultiLine"
-                android:maxLength="1000"
-                android:maxLines="10" />
+                android:maxLength="@integer/maximum_characters_for_summary"
+                android:maxLines="@integer/maximum_lines_for_summary" />
 
         </android.support.design.widget.TextInputLayout>
 
