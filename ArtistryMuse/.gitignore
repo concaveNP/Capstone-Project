@@ -49,3 +49,6 @@ captures/
 /app/src/main/res/values/KEYS_and_SECRETS.xml
 /testData/users/
 /testData/projects/
+/testData/pics/
+/testData/FLICKR_KEYS_and_SECRETS.properties
+
