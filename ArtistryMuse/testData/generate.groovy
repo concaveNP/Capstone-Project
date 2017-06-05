@@ -19,6 +19,22 @@ import org.apache.batik.transcoder.TranscoderOutput
 import com.thedeanda.lorem.Lorem
 import com.thedeanda.lorem.LoremIpsum
 
+import com.flickr4java.flickr.Flickr;
+import com.flickr4java.flickr.FlickrException;
+import com.flickr4java.flickr.REST;
+import com.flickr4java.flickr.photos.Photo;
+import com.flickr4java.flickr.photos.PhotoList;
+import com.flickr4java.flickr.photos.SearchParameters;
+import com.flickr4java.flickr.people.User;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by dave on 1/8/2017.
  */
@@ -26,22 +42,36 @@ class Generate {
 
     private static final String usersDirectoryName = "users"
     private static final String projectsDirectoryName = "projects"
-    private static final String jsonFilename = "testData.json"
+    private static final String jsonTestFilename = "testData.json"
 
-    private static final int numberOfNewUsers = 100
-    private static final int numberofProjectsPerUser = numberOfNewUsers * 0.15
-    private static final int numberofFavoritesPerUser = numberOfNewUsers * 0.25
-    private static final int numberofFollowingsPerUser = numberOfNewUsers
-    private static final int numberofInspirations = numberOfNewUsers * 0.10
-
-    private static final int startingAuthUid = 1000
+    private static final int numberOfNewUsers = 30
+    private static final int numberOfProjectsPerUser = numberOfNewUsers * 0.15
+    private static final int numberOfFavoritesPerUser = numberOfNewUsers * 0.25
+    private static final int numberOfFollowingsPerUser = numberOfNewUsers
+    private static final int numberOfInspirations = numberOfNewUsers * 0.10
 
     private static File usersDirectory
     private static File projectsDirectory
-    private static File jsonFile
-    private static Data jsonData
+    private static File jsonTestFile
+    private static Data jsonTestData
 
     private static JPEGTranscoder transcoder
+
+    // Flag to use the Flickr service to generate the images or not
+    private static boolean useFlickr = true;
+
+    // The key and secret that will be used to interact with the Flickr service
+    private static String flickrApiKey;
+    private static String flickrSecret;
+
+    // The "page" (equivalent to web pagination) from which to group data together in API calls
+    private static int flickrPage = 0;
+
+    static private Flickr flickr;
+    static private SearchParameters flickrSearchParameters;
+    static private PhotoList<Photo> flickrPhotosList;
+    static private Iterator flickrIterator;
+    static private com.flickr4java.flickr.people.User flickrPhotoOwner;
 
     private static String baseSvg =
             "<svg height=\"HEIGHT\" viewBox=\"0 0 WIDTH HEIGHT\" width=\"WIDTH\" xmlns=\"http://www.w3.org/2000/svg\">" +
@@ -53,7 +83,32 @@ class Generate {
                     "</text>" +
                     "</svg>"
 
+    public static final String FLICKR_PROP_FILE = "FLICKR_KEYS_and_SECRETS.properties"
+    public static final String FLICKR_KEY = "flickr_key"
+    public static final String FLICKR_SECRET = "flickr_secret"
+    public static final String FLICKR_TAGS = "sketch"
+    public static final int FLICKR_ITEMS_PER_PAGE = 500
+
     static void main(String[] args) {
+
+        // Get Flickr API properties
+        if (useFlickr) {
+            if (!getFlickrProperties()) {
+
+                // Things have gone bad for interfacing with Flickr, BAIL from the app
+                println("ERROR: unable to extract Flickr properties!")
+                return;
+
+            } else {
+
+                // Create and set the Flickr interfacing object
+                flickr = new Flickr(flickrApiKey, flickrSecret, new REST());
+                flickrSearchParameters = new SearchParameters();
+                flickrSearchParameters.setAccuracy(1);
+                flickrSearchParameters.setTags(FLICKR_TAGS);
+
+            }
+        }
 
         // Create a JPEG transcoder
         transcoder = new JPEGTranscoder()
@@ -65,11 +120,14 @@ class Generate {
         usersDirectory = getDirectory(usersDirectoryName, true)
         projectsDirectory = getDirectory(projectsDirectoryName, true)
 
-        // Get the JSON file that will be written to
-        jsonFile = getFile(jsonFilename)
+        // Get the JSON file that will be written/created
+        jsonTestFile = getFile(jsonTestFilename)
 
         // The JSON data to be written to the JSON file
-        jsonData = new Data()
+        jsonTestData = new Data()
+
+        // Get the next page of flickr data
+        nextFlickrPage();
 
         // Loop over the number of new users and populate the JSON file along with creating images files
         for (int userIndex = 0; userIndex < numberOfNewUsers; userIndex++) {
@@ -78,13 +136,13 @@ class Generate {
             def user = createUser(userIndex)
 
             // Loop over number of projects per user
-            for (int projectIndex = 0; projectIndex < numberofProjectsPerUser; projectIndex++) {
+            for (int projectIndex = 0; projectIndex < numberOfProjectsPerUser; projectIndex++) {
 
                 // Create new project object and pre-populate it
                 def project = createProject(projectIndex, user.uid)
 
                 // Loop over number of projects per user
-                for (int inspirationIndex = 0; inspirationIndex < numberofInspirations; inspirationIndex++) {
+                for (int inspirationIndex = 0; inspirationIndex < numberOfInspirations; inspirationIndex++) {
 
                     def inspiration = createInspiration(project.uid)
 
@@ -101,7 +159,7 @@ class Generate {
                 user.projects.put(project.uid, project.uid)
 
                 // Add the project to the overall data
-                jsonData.projects.put(project.uid, project)
+                jsonTestData.projects.put(project.uid, project)
 
                 // Create the image file associated with this project
                 createProjectJpg(projectsDirectory, project.uid, project.mainImageUid, "Project", project.name, project.uid)
@@ -109,7 +167,10 @@ class Generate {
             }
 
             // Add the user to the overall data
-            jsonData.users.put(user.uid,user)
+            jsonTestData.users.put(user.uid,user)
+
+            // Add the user to the auth data
+            jsonTestData.auth.put(user.authUid, user.uid)
 
             // Create the image file associated with this user
             createHeaderJpg(usersDirectory, user.uid, user.headerImageUid, "Header", user.name, user.uid)
@@ -118,16 +179,16 @@ class Generate {
         }
 
         // Loop over the number of new users and perform some "favoriting" and "following" of others and their work
-        for (User userObject : jsonData.users.values()) {
+        for (com.concavenp.artistrymuse.model.User userObject : jsonTestData.users.values()) {
 
             // Keep track of the users we are following
             def userMap = [:]
-            def arrayUsers = jsonData.users.values().toArray()
+            def arrayUsers = jsonTestData.users.values().toArray()
 
             // Randomly follow other users
-            for (int followingIndex = 0; followingIndex < numberofFollowingsPerUser; followingIndex++) {
+            for (int followingIndex = 0; followingIndex < numberOfFollowingsPerUser; followingIndex++) {
 
-                User userRandom = arrayUsers[new Random().nextInt(arrayUsers.size()-1)]
+                com.concavenp.artistrymuse.model.User userRandom = arrayUsers[new Random().nextInt(arrayUsers.size()-1)]
 
                 // Check it is not the same user
                 if (userRandom.uid == userObject.uid) {
@@ -155,10 +216,10 @@ class Generate {
 
             // Keep track of the projects we have favorited
             def projectMap = [:]
-            def arrayProjects = jsonData.projects.values().toArray()
+            def arrayProjects = jsonTestData.projects.values().toArray()
 
             // Randomly favorite other user's projects
-            for (int favoriteIndex = 0; favoriteIndex < numberofFavoritesPerUser; favoriteIndex++) {
+            for (int favoriteIndex = 0; favoriteIndex < numberOfFavoritesPerUser; favoriteIndex++) {
 
                 Project projectRandom = arrayProjects[new Random().nextInt(arrayProjects.size()-1)]
 
@@ -210,19 +271,19 @@ class Generate {
         }
 
         // Convert the generated Data (user and project objects) to JSON
-        def json = JsonOutput.toJson(jsonData)
-        jsonFile.write(JsonOutput.prettyPrint(json))
+        def json = JsonOutput.toJson(jsonTestData)
+        jsonTestFile.write(JsonOutput.prettyPrint(json))
 
     }
 
-    static User createUser(int userIndex) {
+    static com.concavenp.artistrymuse.model.User createUser(int userIndex) {
 
         // Lorem library to generate text, names and such...
         Lorem lorem = LoremIpsum.getInstance()
 
-        def result = new User()
+        def result = new com.concavenp.artistrymuse.model.User()
 
-        result.authUid = startingAuthUid++
+        result.authUid = UUID.randomUUID()
         result.creationDate = new Date().getTime()
         result.description = lorem.getParagraphs(2,6)
         result.favorites.clear()
@@ -288,21 +349,126 @@ class Generate {
     }
 
     static void createHeaderJpg(File baseDirectory, String directoryUid, String imageUid, String first, String second, String third) {
-        createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 300, 200)
+        if (useFlickr) {
+            createJpg(baseDirectory, directoryUid, imageUid);
+        } else {
+            createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 300, 200)
+        }
     }
 
     static void createProfileJpg(File baseDirectory, String directoryUid, String imageUid, String first, String second, String third) {
-        createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 20, 20)
+        if (useFlickr) {
+            createJpg(baseDirectory, directoryUid, imageUid);
+        } else {
+            createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 20, 20)
+        }
     }
 
     static void createProjectJpg(File baseDirectory, String directoryUid, String imageUid, String first, String second, String third) {
-        createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 300, 200)
+        if (useFlickr) {
+            createJpg(baseDirectory, directoryUid, imageUid);
+        } else {
+            createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 300, 200)
+        }
     }
 
     static void createInspirationJpg(File baseDirectory, String directoryUid, String imageUid, String first, String second, String third) {
-        createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 300, 200)
+        if (useFlickr) {
+            createJpg(baseDirectory, directoryUid, imageUid);
+        } else {
+            createJpg(baseDirectory, directoryUid, imageUid, first, second, third, 300, 200)
+        }
     }
 
+    // convert filename to clean filename
+    private static String convertToFileSystemChar(String name) {
+        String erg = "";
+        Matcher m = Pattern.compile("[a-z0-9 _#&@\\[\\(\\)\\]\\-\\.]", Pattern.CASE_INSENSITIVE).matcher(name);
+        while (m.find()) {
+            erg += name.substring(m.start(), m.end());
+        }
+        if (erg.length() > 200) {
+            erg = erg.substring(0, 200);
+            System.out.println("cut filename: " + erg);
+        }
+        return erg;
+    }
+
+    private static boolean saveImage(File baseDirectory, String directoryUid, String imageUid, Photo photo) {
+
+        String cleanTitle = convertToFileSystemChar(photo.getTitle());
+
+        // Only save small named files (less than 100 characters)
+        if (cleanTitle.length() > 100) {
+            return false;  // too long
+        }
+
+        File directory = getDirectory(baseDirectory.getName() + File.separator + directoryUid);
+        File outputFile = new File(baseDirectory.getName() + File.separator + directory.getName() + File.separator + imageUid + "." + photo.getOriginalFormat());
+
+        try {
+
+            Photo newPhoto = flickr.getPhotosInterface().getInfo(photo.getId(), null);
+
+            if (newPhoto.getOriginalSecret().isEmpty()) {
+                ImageIO.write(photo.getLargeImage(), photo.getOriginalFormat(), outputFile);
+                System.out.println(photo.getTitle() + "\t" + photo.getLargeUrl() + " was written to " + outputFile.getName());
+            } else {
+                photo.setOriginalSecret(newPhoto.getOriginalSecret());
+                ImageIO.write(photo.getOriginalImage(), photo.getOriginalFormat(), outputFile);
+                System.out.println(photo.getTitle() + "\t" + photo.getOriginalUrl() + " was written to " + outputFile.getName());
+            }
+
+        } catch (FlickrException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    static void createJpg(File baseDirectory, String directoryUid, String imageUid) {
+
+        boolean complete = false;
+
+        while (!complete) {
+
+            if (flickrPhotosList.isEmpty() || !flickrIterator.hasNext()) {
+
+                println("-------------------------");
+                println("Unable to get a picture, the list is empty.");
+                println("-------------------------");
+                println("Moving to next page");
+                println("-------------------------");
+
+                // Get the next page of flickr data
+                nextFlickrPage();
+
+                //System.exit(1);
+
+            } else {
+
+                Photo photo = flickrIterator.next();
+                com.flickr4java.flickr.people.User currentOwner = photo.getOwner();
+
+                // I only want one work per user
+                if ((flickrPhotoOwner == null) || (!flickrPhotoOwner.getId().equals(currentOwner.getId()))) {
+                    flickrPhotoOwner = currentOwner;
+                    if (saveImage(baseDirectory, directoryUid, imageUid, photo)) {
+                        complete = true;
+                    }
+                } else {
+                    // skip, we want different peoples work
+                }
+
+            }
+
+        }
+
+    }
     static void createJpg(File baseDirectory, String directoryUid, String imageUid, String first, String second, String third, int width, int height) {
 
         File directory = getDirectory(baseDirectory.getName() + File.separator + directoryUid)
@@ -413,5 +579,65 @@ class Generate {
         return result
 
     }
+
+    private static boolean getFlickrProperties() {
+
+        // Resulting status defaults to fail (aka false)
+        boolean result = false;
+
+        // Obtain the properties
+        Properties prop = new Properties();
+        InputStream input = null;
+
+        try {
+
+            input = new FileInputStream(com.concavenp.artistrymuse.generatedata.Generate.FLICKR_PROP_FILE);
+
+            // load a properties file
+            prop.load(input);
+
+            // get the needed property values
+            flickrApiKey = prop.getProperty(com.concavenp.artistrymuse.generatedata.Generate.FLICKR_KEY);
+            flickrSecret = prop.getProperty(com.concavenp.artistrymuse.generatedata.Generate.FLICKR_SECRET);
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+
+        } finally {
+            if (input != null) {
+                try {
+
+                    // Close the properties file
+                    input.close();
+
+                    // Success
+                    result = true;
+
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+
+                }
+            }
+        }
+
+        return result;
+
+    }
+
+    private static void nextFlickrPage() {
+
+        // Grab a new page full of pictures from Flickr and get an iterator for it
+        flickrPhotosList = flickr.getPhotosInterface().search(flickrSearchParameters, FLICKR_ITEMS_PER_PAGE, flickrPage);
+        flickrIterator = flickrPhotosList.iterator();
+        flickrPhotoOwner = null;
+
+        // Increment page
+        flickrPage++;
+
+    }
+
+
 
 }

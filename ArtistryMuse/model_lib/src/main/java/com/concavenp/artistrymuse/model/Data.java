@@ -11,6 +11,7 @@ public class Data {
 
     public Map<String,User> users = new HashMap<>();
     public Map<String,Project> projects = new HashMap<>();
+    public Map<String,String> auth = new HashMap<>();
 
     public Data() {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -30,5 +31,13 @@ public class Data {
 
     public void setProjects(Map<String, Project> projects) {
         this.projects = projects;
+    }
+
+    public Map<String, String> getAuth() {
+        return auth;
+    }
+
+    public void setAuth(Map<String, String> auth) {
+        this.auth = auth;
     }
 }
