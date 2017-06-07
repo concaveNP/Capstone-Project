@@ -97,7 +97,6 @@ public class FavoritesFragment extends BaseFragment {
         // Save off the flipper for use in decided which view to show
         mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_favorites_ViewFlipper);
 
-        // TODO: what is the purpose of this (setHasFixedSize) seemed to remember making a comment block in another app about it
         mRecycler = (RecyclerView) mainView.findViewById(R.id.favorites_recycler_view);
         mRecycler.setHasFixedSize(true);
 

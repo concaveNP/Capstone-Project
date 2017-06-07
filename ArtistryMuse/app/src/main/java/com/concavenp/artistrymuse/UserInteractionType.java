@@ -7,7 +7,8 @@ package com.concavenp.artistrymuse;
 public enum UserInteractionType {
 
     DETAILS("details"),
-    EDIT("edit");
+    EDIT("edit"),
+    NONE("none");
 
     private String type;
 
@@ -23,6 +24,19 @@ public enum UserInteractionType {
 
     private void setType(String type) {
         this.type = type;
+    }
+
+    public static UserInteractionType fromType(String inputType) {
+        UserInteractionType  result = null;
+
+        for (UserInteractionType checkType : UserInteractionType.values()) {
+            if (checkType.getType().equals(inputType)) {
+                result = checkType;
+                break;
+            }
+        }
+
+        return result;
     }
 
 }

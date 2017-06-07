@@ -32,9 +32,10 @@ public class InspirationAdapter extends RecyclerView.Adapter<InspirationViewHold
 
     /**
      * This will be used by the listeners of the interaction of this view to determine how
-     * it should be interpreted as.
+     * it should be interpreted as.  The default will be none, and thus, no action will be taken
+     * when the user selects this item within the recycler view.
      */
-    private UserInteractionType mUserInteractionType = UserInteractionType.DETAILS;
+    private UserInteractionType mUserInteractionType = UserInteractionType.NONE;
 
     public InspirationAdapter(Map<String, Inspiration> inspirations, final OnInteractionListener listener) {
 

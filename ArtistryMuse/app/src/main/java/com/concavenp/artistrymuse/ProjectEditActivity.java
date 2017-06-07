@@ -18,14 +18,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.concavenp.artistrymuse.fragments.adapter.InspirationAdapter;
-import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.services.UploadService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
@@ -35,23 +33,11 @@ import java.util.UUID;
 
 
 /**
- *
- * FLOW:
- *
- * creation
- * - are we editing an existing project?
- *      - NO:
- *          - Create new UID
- *          - Set title of activity to "New Project"
- *      - YES:
- *          - Set title of activity to projects title
- *
- * - Show publish button
- * - Show +Inspiration button
+ * - Show publish button (ick - implement after Udacity)
+ * - Show +Inspiration button (aka FAB)
  * - Show Save button
- * - Show delete inspiration button (ick)
- * - Show delete project button (ick)
- *
+ * - Show delete inspiration button (ick - implement after Udacity)
+ * - Show delete project button (ick - implement after Udacity)
  */
 public class ProjectEditActivity extends ImageAppCompatActivity {
 
@@ -179,16 +165,17 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
         // Setup the FAB
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
 
-                // Create new Inspiration
+                // Notify the the listener (aka this activity) of the Create New Inspiration selection
+                onInteractionSelection(mProjectUid, StorageDataType.INSPIRATIONS, UserInteractionType.EDIT);
 
-
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
+
         });
+
     }
 
     private void display(Project project) {
