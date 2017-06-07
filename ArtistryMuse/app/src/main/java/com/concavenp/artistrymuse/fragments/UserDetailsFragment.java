@@ -14,6 +14,7 @@ import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
+import com.concavenp.artistrymuse.UserInteractionType;
 import com.concavenp.artistrymuse.fragments.adapter.GalleryAdapter;
 import com.concavenp.artistrymuse.model.Following;
 import com.concavenp.artistrymuse.model.User;
@@ -315,7 +316,7 @@ public class UserDetailsFragment extends BaseFragment {
             populateTextView("hmmm, this needs thought", ratingsTextView);
 
             // Provide the recycler view the list of project strings to display
-            mAdapter = new GalleryAdapter(mUserInQuestionModel.getProjects(), mInteractionListener);
+            mAdapter = new GalleryAdapter(mUserInQuestionModel.getProjects(), mInteractionListener, UserInteractionType.DETAILS);
             mRecycler.setAdapter(mAdapter);
 
         } else {

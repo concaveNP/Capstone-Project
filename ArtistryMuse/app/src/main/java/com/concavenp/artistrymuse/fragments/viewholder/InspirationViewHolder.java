@@ -26,7 +26,7 @@ public class InspirationViewHolder extends BaseViewHolder {
      * This will be used by the listeners of the interaction of this view to determine how
      * it should be interpreted as.
      */
-    private UserInteractionType mUserInteractionType = UserInteractionType.DETAILS;
+    private UserInteractionType mUserInteractionType = UserInteractionType.NONE;
 
     /**
      * Constructor
@@ -82,25 +82,14 @@ public class InspirationViewHolder extends BaseViewHolder {
         descriptionTextView.setText(inspiration.getDescription());
 
         switch (mUserInteractionType) {
-            case DETAILS: {
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        // Notify the the listener of the Inspiration Details selection
-                        listener.onInteractionSelection(inspiration.getUid(), StorageDataType.INSPIRATIONS, UserInteractionType.DETAILS);
-
-                    }
-                });
-               break;
-            }
+            case DETAILS:
             case EDIT: {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        // Notify the the listener of the Inspiration Edit selection
-                        listener.onInteractionSelection(inspiration.getUid(), StorageDataType.INSPIRATIONS, UserInteractionType.EDIT);
+                        // Notify the the listener of the Inspiration selection
+                        listener.onInteractionSelection(inspiration.getUid(), StorageDataType.INSPIRATIONS, mUserInteractionType);
 
                     }
                 });

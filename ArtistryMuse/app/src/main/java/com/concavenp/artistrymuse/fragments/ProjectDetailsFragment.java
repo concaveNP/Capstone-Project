@@ -278,7 +278,7 @@ public class ProjectDetailsFragment extends BaseFragment {
         // If there is model data then show the details otherwise tell the user to choose something
         if (mProjectInQuestionModel != null) {
 
-            mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_project_details_FrameLayout)));
+            mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_project_details)));
 
             // TODO: decide if there is a need for some other menu buttons
 //            setMenuVisibility(true);

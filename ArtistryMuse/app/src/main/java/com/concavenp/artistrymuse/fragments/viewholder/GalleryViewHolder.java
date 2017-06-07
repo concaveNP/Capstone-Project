@@ -28,9 +28,29 @@ public class GalleryViewHolder extends BaseViewHolder {
     @SuppressWarnings("unused")
     private static final String TAG = GalleryViewHolder.class.getSimpleName();
 
+    /**
+     * This will be used by the listeners of the interaction of this view to determine how
+     * it should be interpreted as.
+     */
+    private UserInteractionType mUserInteractionType = UserInteractionType.NONE;
+
     public GalleryViewHolder(View itemView) {
 
         super(itemView);
+
+    }
+
+    /**
+     * Constructor that allows for the specifying of the user interaction type.
+     *
+     * @param itemView - The View in question this class holds
+     * @param userInteractionType - The type of interaction the user will have with this view
+     */
+    public GalleryViewHolder(View itemView, UserInteractionType userInteractionType) {
+
+        this(itemView);
+
+        mUserInteractionType = userInteractionType;
 
     }
 
@@ -89,17 +109,26 @@ public class GalleryViewHolder extends BaseViewHolder {
                     }
 
                     // Add a click listener to the view in order for the user to get more details about a selected project
-                    itemView.setOnClickListener(new View.OnClickListener() {
+                    switch (mUserInteractionType) {
+                        case DETAILS:
+                        case EDIT: {
+                            itemView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                        @Override
-                        public void onClick(View view) {
+                                    // Notify the the listener of the Project selection
+                                    listener.onInteractionSelection(projectUid, StorageDataType.PROJECTS, mUserInteractionType);
 
-                            // Notify the the listener (aka MainActivity) of the details selection
-                            listener.onInteractionSelection(projectUid, StorageDataType.PROJECTS, UserInteractionType.EDIT);
-
+                                }
+                            });
+                            break;
                         }
-
-                    });
+                        case NONE:
+                        default: {
+                            // There is no action to be associated with this list item view
+                            break;
+                        }
+                    }
 
                 }
 
