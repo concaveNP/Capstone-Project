@@ -89,16 +89,6 @@ public class ProfileActivity extends ImageAppCompatActivity {
         // Inflate the layout for this fragment
         setContentView(R.layout.activity_profile);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//            actionBar.setHomeButtonEnabled(true);
-//            actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
-//        }
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -291,6 +281,8 @@ public class ProfileActivity extends ImageAppCompatActivity {
                 startService(new Intent(this, UploadService.class)
                         .putExtra(UploadService.EXTRA_FILE_URI, file)
                         .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mHeaderImageUid.toString() + ".jpg")
+                        .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
+                        .putExtra(UploadService.EXTRA_UPLOAD_UID, mUser.getUid())
                         .setAction(UploadService.ACTION_UPLOAD));
 
                 // Update the user model reference to the header image uid for database update
@@ -344,6 +336,8 @@ public class ProfileActivity extends ImageAppCompatActivity {
                 startService(new Intent(this, UploadService.class)
                         .putExtra(UploadService.EXTRA_FILE_URI, file)
                         .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProfileImageUid.toString() + ".jpg")
+                        .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
+                        .putExtra(UploadService.EXTRA_UPLOAD_UID, mUser.getUid())
                         .setAction(UploadService.ACTION_UPLOAD));
 
                 // Update the user model reference to the profile image uid for database update

@@ -119,7 +119,6 @@ public class GalleryFragment extends BaseFragment {
         // Save off the flipper for use in decided which view to show
         mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_gallery_ViewFlipper);
 
-        // TODO: what is the purpose of this?????
         mRecycler = (RecyclerView) mainView.findViewById(R.id.gallery_recycler_view);
         mRecycler.setHasFixedSize(true);
 

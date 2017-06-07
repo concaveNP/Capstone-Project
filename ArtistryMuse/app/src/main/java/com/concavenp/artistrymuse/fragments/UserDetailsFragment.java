@@ -107,7 +107,6 @@ public class UserDetailsFragment extends BaseFragment {
         // Save off the flipper for use in decided which view to show
         mFlipper = (ViewFlipper) view.findViewById(R.id.fragment_user_details_ViewFlipper);
 
-        // TODO: what is the purpose of this?????
         mRecycler = (RecyclerView) view.findViewById(R.id.user_details_RecyclerView);
         mRecycler.setHasFixedSize(true);
 
