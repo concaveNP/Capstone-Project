@@ -191,6 +191,8 @@ public class GalleryFragment extends BaseFragment {
                                 // perform this on after the count is reached.
                                 mSwipeRefreshLayout.setRefreshing(false);
 
+                                viewHolder.setUserInteractionType(UserInteractionType.EDIT);
+
                                 viewHolder.bindToPost(uid, mInteractionListener);
 
                             }

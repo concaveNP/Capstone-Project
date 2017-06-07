@@ -54,6 +54,10 @@ public class GalleryViewHolder extends BaseViewHolder {
 
     }
 
+    public void setUserInteractionType(UserInteractionType userInteractionType) {
+        mUserInteractionType = userInteractionType;
+    }
+
     @Override
     public void bindToPost(Object pojoJson, final OnInteractionListener listener) {
 
