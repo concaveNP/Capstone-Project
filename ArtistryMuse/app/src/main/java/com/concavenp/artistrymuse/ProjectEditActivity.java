@@ -92,13 +92,9 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         mProjectImageView = (ImageView) findViewById(R.id.project_imageView);
         mTitleEditText = (EditText) findViewById(R.id.title_editText);
         mDescriptionEditText = (EditText) findViewById(R.id.description_editText);
-
-
-
 
         // TODO: what is the purpose of this?????
         mRecycler = (RecyclerView) findViewById(R.id.inspirations_recycler_view);
@@ -115,6 +111,9 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
         // If there is a UID to work with then we are dealing with editing an existing project
         // otherwise this is a new project and we will need to create a new UID for it.
         if ((mProjectUid != null) && (!mProjectUid.isEmpty())) {
+
+            // Set the title
+            setTitle(getString(R.string.edit_project_title));
 
             mDatabase.child("projects").child(mProjectUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -143,6 +142,9 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
             });
 
         } else {
+
+            // Set the title
+            setTitle(getString(R.string.new_project_title));
 
             // This is a new project for the user, so we must create a new UID for it
             mProjectUid = UUID.randomUUID().toString();

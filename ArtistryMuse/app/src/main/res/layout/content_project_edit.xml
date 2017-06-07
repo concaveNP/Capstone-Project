@@ -1,78 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_project"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.concavenp.artistrymuse.ProjectEditActivity"
-    tools:showIn="@layout/activity_project_edit"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true" >
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <ImageView
-        android:id="@+id/project_imageView"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/detail_backdrop_height"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        app:srcCompat="@drawable/ic_photo_size_select_actual_black_24dp" />
+        android:layout_height="match_parent">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/title_textInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/details_margin"
-        android:paddingEnd="@dimen/details_margin"
-        android:paddingLeft="@dimen/details_margin"
-        android:paddingRight="@dimen/details_margin"
-        android:paddingStart="@dimen/details_margin"
-        android:layout_below="@+id/project_imageView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <EditText
-            android:id="@+id/title_editText"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/title_project"
-            android:inputType="text"
-            android:maxLength="@integer/maximum_characters_for_title"
-            android:maxLines="@integer/maximum_lines_for_title" />
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:isScrollContainer="true"
+            android:orientation="vertical"
+            android:background="@color/myapp_primary_300"
+            tools:showIn="@layout/activity_project_edit">
 
-    </android.support.design.widget.TextInputLayout>
+            <ImageView
+                android:id="@+id/project_imageView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/detail_backdrop_height"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                app:srcCompat="@drawable/ic_photo_size_select_actual_black_24dp" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/description_textInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/details_margin"
-        android:paddingBottom="@dimen/details_margin"
-        android:paddingEnd="@dimen/details_margin"
-        android:paddingLeft="@dimen/details_margin"
-        android:paddingRight="@dimen/details_margin"
-        android:paddingStart="@dimen/details_margin"
-        android:layout_below="@+id/title_textInputLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/title_textInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/details_margin"
+                android:paddingEnd="@dimen/details_margin"
+                android:paddingLeft="@dimen/details_margin"
+                android:paddingRight="@dimen/details_margin"
+                android:paddingStart="@dimen/details_margin"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
 
-        <EditText
-            android:id="@+id/description_editText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/description_project"
-            android:inputType="text"
-            android:maxLength="@integer/maximum_characters_for_summary"
-            android:maxLines="@integer/maximum_lines_for_summary" />
+                <EditText
+                    android:id="@+id/title_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title_project"
+                    android:inputType="text"
+                    android:maxLength="@integer/maximum_characters_for_title"
+                    android:maxLines="@integer/maximum_lines_for_title" />
 
-    </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/inspirations_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/description_textInputLayout"
-        android:scrollbarStyle="outsideOverlay"/>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/description_textInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/details_margin"
+                android:paddingBottom="@dimen/details_margin"
+                android:paddingEnd="@dimen/details_margin"
+                android:paddingLeft="@dimen/details_margin"
+                android:paddingRight="@dimen/details_margin"
+                android:paddingStart="@dimen/details_margin"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
 
-</RelativeLayout>
+                <EditText
+                    android:id="@+id/description_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/description_project"
+                    android:inputType="text"
+                    android:maxLength="@integer/maximum_characters_for_summary"
+                    android:maxLines="@integer/maximum_lines_for_summary"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <include
+                layout="@layout/card_project_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/details_margin"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/inspirations_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbarStyle="outsideOverlay"
+                android:nestedScrollingEnabled="false"/>
+
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+</FrameLayout>
