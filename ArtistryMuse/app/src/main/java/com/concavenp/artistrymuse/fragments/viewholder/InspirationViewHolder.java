@@ -2,9 +2,11 @@ package com.concavenp.artistrymuse.fragments.viewholder;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.UserInteractionType;
 import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.concavenp.artistrymuse.model.Inspiration;
@@ -24,7 +26,7 @@ public class InspirationViewHolder extends BaseViewHolder {
      * This will be used by the listeners of the interaction of this view to determine how
      * it should be interpreted as.
      */
-    private UserInteractionType mUserInteractionType = UserInteractionType.DETAILS;
+    private UserInteractionType mUserInteractionType = UserInteractionType.NONE;
 
     /**
      * Constructor
@@ -71,13 +73,34 @@ public class InspirationViewHolder extends BaseViewHolder {
         }
 
         // Display items to be populated
-//        final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
+        final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
         final TextView titleTextView = (TextView) itemView.findViewById(R.id.title_textView);
         final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
 
-//        populateImageView(buildFileReference(mProjectUid, inspiration.getImageUid(), StorageDataType.PROJECTS), mainImageView);
+        populateImageView(buildFileReference(inspiration.getProjectUid(), inspiration.getImageUid(), StorageDataType.PROJECTS), mainImageView);
         titleTextView.setText(inspiration.getName());
         descriptionTextView.setText(inspiration.getDescription());
+
+        switch (mUserInteractionType) {
+            case DETAILS:
+            case EDIT: {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        // Notify the the listener of the Inspiration selection
+                        listener.onInteractionSelection(inspiration.getUid(), StorageDataType.INSPIRATIONS, mUserInteractionType);
+
+                    }
+                });
+                break;
+            }
+            case NONE:
+            default: {
+                // There is no action to be associated with this list item view
+                break;
+            }
+        }
 
     }
 

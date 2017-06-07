@@ -1,1 +1,0 @@
-groovy -classpath ../model_lib/build/libs/model_lib.jar generate.groovy

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.UserInteractionType;
 import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
 import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 
@@ -28,6 +29,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
      */
     private final OnInteractionListener mListener;
 
+    /**
+     * This will be used by the listeners of the interaction of this view to determine how
+     * it should be interpreted as.  The default will be none, and thus, no action will be taken
+     * when the user selects this item within the recycler view.
+     */
+    private UserInteractionType mUserInteractionType = UserInteractionType.NONE;
+
     public GalleryAdapter(Map<String, String> projects, final OnInteractionListener listener) {
 
         // Project UIDs
@@ -38,6 +46,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
 
     }
 
+    public GalleryAdapter(Map<String, String> projects, final OnInteractionListener listener, UserInteractionType userInteractionType) {
+
+        this(projects, listener);
+
+        mUserInteractionType = userInteractionType;
+
+    }
+
     @Override
     public GalleryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -45,7 +61,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
 
         View result = inflater.inflate(R.layout.item_gallery, parent, false);
 
-        GalleryViewHolder viewHolder = new GalleryViewHolder(result);
+        GalleryViewHolder viewHolder = new GalleryViewHolder(result, mUserInteractionType);
 
         return viewHolder;
 

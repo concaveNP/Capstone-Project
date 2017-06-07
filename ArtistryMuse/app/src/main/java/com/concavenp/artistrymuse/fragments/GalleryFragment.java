@@ -111,7 +111,6 @@ public class GalleryFragment extends BaseFragment {
 
                 // Notify the the listener (aka MainActivity) of the Create New Project selection
                 mInteractionListener.onInteractionSelection(null, StorageDataType.PROJECTS, UserInteractionType.EDIT);
-//                mCreateProjectListener.onCreateProjectInteraction(null);
 
             }
         });
@@ -119,7 +118,6 @@ public class GalleryFragment extends BaseFragment {
         // Save off the flipper for use in decided which view to show
         mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_gallery_ViewFlipper);
 
-        // TODO: what is the purpose of this?????
         mRecycler = (RecyclerView) mainView.findViewById(R.id.gallery_recycler_view);
         mRecycler.setHasFixedSize(true);
 
@@ -192,6 +190,8 @@ public class GalleryFragment extends BaseFragment {
                                 // Should be able to determine the count of items found in the resulting query that would be good to
                                 // perform this on after the count is reached.
                                 mSwipeRefreshLayout.setRefreshing(false);
+
+                                viewHolder.setUserInteractionType(UserInteractionType.EDIT);
 
                                 viewHolder.bindToPost(uid, mInteractionListener);
 

@@ -30,6 +30,27 @@ public class Project {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
+    /**
+     * This is a convenience method to clearing out all of the data making up this class.
+     */
+    public void clear() {
+
+        setUid("");
+        setOwnerUid("");
+        setName("");
+        setDescription("");
+        setPublished(false);
+        setPublishedDate(0L);
+        setRating(0.0);
+        setRatingsCount(0);
+        setViews(0);
+        setFavorited(0);
+        setCreationDate(0L);
+        setLastUpdateDate(0L);
+        setMainImageUid("");
+
+    }
+
     public String getUid() {
         return uid;
     }

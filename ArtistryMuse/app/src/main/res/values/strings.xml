@@ -239,5 +239,7 @@
     <string name="favorited_label_textView">Favorited</string>
     <string name="title_project">Title</string>
     <string name="description_project">Description</string>
+    <string name="new_project_title">New Project</string>
+    <string name="edit_project_title">Edit Project</string>
 
 </resources>

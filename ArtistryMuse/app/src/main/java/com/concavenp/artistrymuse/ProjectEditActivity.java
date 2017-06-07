@@ -1,45 +1,43 @@
 package com.concavenp.artistrymuse;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.concavenp.artistrymuse.fragments.adapter.InspirationAdapter;
-import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.concavenp.artistrymuse.model.Project;
+import com.concavenp.artistrymuse.services.UploadService;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.util.Date;
 import java.util.UUID;
 
 
 /**
- *
- * FLOW:
- *
- * creation
- * - are we editing an existing project?
- *      - NO:
- *          - Create new UID
- *          - Set title of activity to "New Project"
- *      - YES:
- *          - Set title of activity to projects title
- *
- * - Show publish button
- * - Show +Inspiration button
+ * - Show publish button (ick - implement after Udacity)
+ * - Show +Inspiration button (aka FAB)
  * - Show Save button
- * - Show delete inspiration button (ick)
- * - Show delete project button (ick)
- *
+ * - Show delete inspiration button (ick - implement after Udacity)
+ * - Show delete project button (ick - implement after Udacity)
  */
 public class ProjectEditActivity extends ImageAppCompatActivity {
 
@@ -57,16 +55,28 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
     private EditText mTitleEditText;
     private EditText mDescriptionEditText;
-    private ImageView mProjectImageView;
     private InspirationAdapter mAdapter;
     private RecyclerView mRecycler;
+
+    // Members used in the project's image (aka the "main" image for the project)
+    private String mProjectImagePath;
+    private UUID mProjectImageUid;
+    private ImageView mProjectImageView;
 
     // The UID of the project in question.  NOTE: this value can be passed into the activity via
     // intent param or generated if this is a new project.
     private String mProjectUid;
 
-    // The model data to display and update
+    // The project model.  This is the POJO that used to pass back and forth between this app and the
+    // cloud service (aka Firebase).
     private Project mProjectModel;
+
+    // The different types of the images that can be processed by the parent class
+    private enum ImageType {
+
+        PROJECT
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,36 +87,22 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // Create new Inspiration
-
-
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         mProjectImageView = (ImageView) findViewById(R.id.project_imageView);
         mTitleEditText = (EditText) findViewById(R.id.title_editText);
         mDescriptionEditText = (EditText) findViewById(R.id.description_editText);
 
-
-
-
-        // TODO: what is the purpose of this?????
         mRecycler = (RecyclerView) findViewById(R.id.inspirations_recycler_view);
         mRecycler.setHasFixedSize(true);
 
         // Set up Layout
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecycler.setLayoutManager(linearLayoutManager);
+
+        Button projectButton = (Button) findViewById(R.id.project_image_button);
+        projectButton.setOnClickListener(new ImageButtonListener(ImageType.PROJECT.ordinal()));
 
         // Extract the UID from the Activity parameters
         Intent intent = getIntent();
@@ -115,6 +111,9 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
         // If there is a UID to work with then we are dealing with editing an existing project
         // otherwise this is a new project and we will need to create a new UID for it.
         if ((mProjectUid != null) && (!mProjectUid.isEmpty())) {
+
+            // Set the title
+            setTitle(getString(R.string.edit_project_title));
 
             mDatabase.child("projects").child(mProjectUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -144,14 +143,38 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
         } else {
 
+            // Set the title
+            setTitle(getString(R.string.new_project_title));
+
             // This is a new project for the user, so we must create a new UID for it
             mProjectUid = UUID.randomUUID().toString();
 
+            // Create and clear a new Project model object to work with
             mProjectModel = new Project();
+            mProjectModel.clear();
+
+            // Set the members according to view of this user
+            mProjectModel.setUid(mProjectUid);
+            mProjectModel.setOwnerUid(getUid());
+            mProjectModel.setCreationDate(new Date().getTime());
 
             display(mProjectModel);
 
         }
+
+        // Setup the FAB
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                // Notify the the listener (aka this activity) of the Create New Inspiration selection
+                onInteractionSelection(mProjectUid, StorageDataType.INSPIRATIONS, UserInteractionType.EDIT);
+
+            }
+
+        });
 
     }
 
@@ -167,20 +190,129 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
     }
 
-    private Query getQuery() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
-        Query resultQuery  = mDatabase.child("projects").child(mProjectUid).child("inspirations");
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
 
-        return resultQuery;
+        return true;
+
     }
 
     @Override
-    ImageView getSpecificImageView(int type) {
-        return null;
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_save) {
+
+            // Move the last update time
+            mProjectModel.setLastUpdateDate(new Date().getTime());
+
+            // Title
+            String title = mTitleEditText.getText().toString();
+            if ((title != null) && (!title.isEmpty())) {
+                mProjectModel.setName(title);
+            }
+
+            // Description
+            String description = mDescriptionEditText.getText().toString();
+            if ((description != null) && (!description.isEmpty())) {
+                mProjectModel.setDescription(description);
+            }
+
+            // Check to see if the user set a new header image
+            if (mProjectImageUid != null) {
+
+                final String oldMainUid = mProjectModel.getMainImageUid();
+
+                // Check if the old profile image needs to be deleted
+                if ((oldMainUid != null) && (!oldMainUid.isEmpty())) {
+
+                    StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + "/" + oldMainUid + ".jpg");
+
+                    // Delete the old image from Firebase storage
+                    deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // TODO: better error handling
+                            // File deleted successfully
+                            Log.d(TAG, "Deleted old image (" + oldMainUid +
+                                    ") from cloud storage for the project (" + mProjectUid + ")");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Uh-oh, an error occurred!
+                            Log.e(TAG, "Error deleting old image (" + oldMainUid +
+                                    ") from cloud storage for the project (" + mProjectUid + ")");
+                        }
+                    });
+
+                }
+                else {
+                    // The user did not have an old image to replace - do nothing
+                }
+
+                // Save the new project image to the cloud storage
+                Uri file = Uri.fromFile(new File(mProjectImagePath));
+
+                Log.d(TAG, "New image cloud storage location: " + file.toString());
+
+                // Start MyUploadService to upload the file, so that the file is uploaded even if
+                // this Activity is killed or put in the background
+                startService(new Intent(this, UploadService.class)
+                        .putExtra(UploadService.EXTRA_FILE_URI, file)
+                        .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProjectImageUid.toString() + ".jpg")
+                        .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.PROJECTS.getType())
+                        .putExtra(UploadService.EXTRA_UPLOAD_UID, mProjectUid)
+                        .setAction(UploadService.ACTION_UPLOAD));
+
+                // Update the project model reference to the project image uid for database update
+                mProjectModel.setMainImageUid(mProjectImageUid.toString());
+
+            }
+            else {
+                // The user did not change the project image - do nothing
+            }
+
+            // Write the project model data it to the database
+            mDatabase.child("projects").child(mProjectUid).setValue(mProjectModel);
+
+            // Update the user's list of projects to add this one if needed (if it was new)
+            mDatabase.child("users").child(getUid()).child("projects").child(mProjectUid).setValue(mProjectUid);
+
+            // We are handling the button click
+            return true;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
-    void setSpecificImageData(int type) {
+    public ImageView getSpecificImageView(int type) {
+
+        ImageView result = null;
+
+        if (type == ImageType.PROJECT.ordinal()) {
+            result = mProjectImageView;
+        }
+
+        return result;
 
     }
+
+    @Override
+    public void setSpecificImageData(int type) {
+
+        if (type == ImageType.PROJECT.ordinal()) {
+            mProjectImagePath = mImagePath;
+            mProjectImageUid = mImageUid;
+        }
+
+    }
+
 }

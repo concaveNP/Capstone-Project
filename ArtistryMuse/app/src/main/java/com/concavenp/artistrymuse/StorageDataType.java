@@ -19,12 +19,25 @@ public enum StorageDataType {
 
     }
 
+    private void setType(String type) {
+        this.type = type;
+    }
+
     public String getType() {
         return type;
     }
 
-    private void setType(String type) {
-        this.type = type;
+    public static StorageDataType fromType(String inputType) {
+        StorageDataType result = null;
+
+        for (StorageDataType checkType : StorageDataType.values()) {
+            if (checkType.getType().equals(inputType)) {
+                result = checkType;
+                break;
+            }
+        }
+
+        return result;
     }
 
 }

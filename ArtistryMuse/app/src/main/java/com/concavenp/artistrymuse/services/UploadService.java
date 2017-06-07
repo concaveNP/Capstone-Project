@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.concavenp.artistrymuse.MainActivity;
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
@@ -38,7 +39,9 @@ public class UploadService extends BaseTaskService {
     /** Intent Extras **/
     public static final String EXTRA_FILE_URI = "extra_file_uri";
     public static final String EXTRA_FILE_RENAMED_FILENAME = "extra_file_renamed_filename";
-    public static final String EXTRA_DOWNLOAD_URL = "extra_download_url";
+    public static final String EXTRA_UPLOAD_URL = "extra_upload_url";
+    public static final String EXTRA_UPLOAD_DATABASE = "extra_upload_database";
+    public static final String EXTRA_UPLOAD_UID = "extra_upload_uid";
 
     private String mLastPathSegment;
 
@@ -47,10 +50,20 @@ public class UploadService extends BaseTaskService {
 
         if (ACTION_UPLOAD.equals(intent.getAction())) {
 
+            // The file in question to upload
             Uri fileUri = intent.getParcelableExtra(EXTRA_FILE_URI);
+
+            // The ending filename to use for the file
             mLastPathSegment = intent.getStringExtra(EXTRA_FILE_RENAMED_FILENAME);
 
-            uploadFromUri(fileUri);
+            // Which database (aka collection in Mongo speak) to use
+            String type = intent.getStringExtra(EXTRA_UPLOAD_DATABASE);
+            StorageDataType dataType = StorageDataType.fromType(type);
+
+            // The UID folder for to the file being loading
+            String uid = intent.getStringExtra(EXTRA_UPLOAD_UID);
+
+            uploadFromUri(fileUri, dataType, uid);
 
         }
 
@@ -58,14 +71,12 @@ public class UploadService extends BaseTaskService {
 
     }
 
-    private void uploadFromUri(final Uri fileUri) {
+    private void uploadFromUri(final Uri fileUri, final StorageDataType dataType, final String uidFolder ) {
 
         taskStarted();
-        showUploadProgressNotification();
-
-        String filename;
 
         // Check for having the last path segment already specified via intent extras
+        String filename;
         if (mLastPathSegment != null) {
             filename = mLastPathSegment;
 
@@ -76,8 +87,28 @@ public class UploadService extends BaseTaskService {
             filename = fileUri.getLastPathSegment();
         }
 
+        // Check for having the specific UID folder being passed to the intent
+        String uid;
+        if (uidFolder != null) {
+            uid = uidFolder;
+        }
+        else {
+            // Default to the user
+            uid = getUid();
+        }
+
+        // Check for having the database type
+        StorageDataType type;
+        if (dataType != null) {
+            type = dataType;
+        }
+        else {
+            // Default to the user
+            type = StorageDataType.USERS;
+        }
+
         // Get a reference to store file at photos/<FILENAME>.jpg
-        final StorageReference photoRef = mStorageRef.child(getString(R.string.users_directory_name)).child(getUid()).child(filename);
+        final StorageReference photoRef = mStorageRef.child(type.getType()).child(uid).child(filename);
 
         // Upload file to Firebase Storage
         Log.d(TAG, "uploadFromUri:dst:" + photoRef.getPath());
@@ -129,7 +160,7 @@ public class UploadService extends BaseTaskService {
         String action = success ? UPLOAD_COMPLETED : UPLOAD_ERROR;
 
         Intent broadcast = new Intent(action)
-                .putExtra(EXTRA_DOWNLOAD_URL, downloadUrl)
+                .putExtra(EXTRA_UPLOAD_URL, downloadUrl)
                 .putExtra(EXTRA_FILE_URI, fileUri);
 
         return LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcast);
@@ -143,7 +174,7 @@ public class UploadService extends BaseTaskService {
 
         // Make Intent to MainActivity
         Intent intent = new Intent(this, MainActivity.class)
-                .putExtra(EXTRA_DOWNLOAD_URL, downloadUrl)
+                .putExtra(EXTRA_UPLOAD_URL, downloadUrl)
                 .putExtra(EXTRA_FILE_URI, fileUri)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 

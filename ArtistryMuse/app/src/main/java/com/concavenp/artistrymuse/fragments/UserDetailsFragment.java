@@ -14,6 +14,7 @@ import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
+import com.concavenp.artistrymuse.UserInteractionType;
 import com.concavenp.artistrymuse.fragments.adapter.GalleryAdapter;
 import com.concavenp.artistrymuse.model.Following;
 import com.concavenp.artistrymuse.model.User;
@@ -107,7 +108,6 @@ public class UserDetailsFragment extends BaseFragment {
         // Save off the flipper for use in decided which view to show
         mFlipper = (ViewFlipper) view.findViewById(R.id.fragment_user_details_ViewFlipper);
 
-        // TODO: what is the purpose of this?????
         mRecycler = (RecyclerView) view.findViewById(R.id.user_details_RecyclerView);
         mRecycler.setHasFixedSize(true);
 
@@ -316,7 +316,7 @@ public class UserDetailsFragment extends BaseFragment {
             populateTextView("hmmm, this needs thought", ratingsTextView);
 
             // Provide the recycler view the list of project strings to display
-            mAdapter = new GalleryAdapter(mUserInQuestionModel.getProjects(), mInteractionListener);
+            mAdapter = new GalleryAdapter(mUserInQuestionModel.getProjects(), mInteractionListener, UserInteractionType.DETAILS);
             mRecycler.setAdapter(mAdapter);
 
         } else {

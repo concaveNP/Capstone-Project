@@ -97,7 +97,6 @@ public class FollowingFragment extends BaseFragment {
         // Save off the flipper for use in decided which view to show
         mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_following_ViewFlipper);
 
-        // TODO: what is the purpose of this?????
         mRecycler = (RecyclerView) mainView.findViewById(R.id.following_recycler_view);
         mRecycler.setHasFixedSize(true);
 
