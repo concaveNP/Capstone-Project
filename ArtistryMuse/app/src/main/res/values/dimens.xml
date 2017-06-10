@@ -21,6 +21,7 @@
     <dimen name="detail_backdrop_height">300dp</dimen>
     <dimen name="details_margin">16dp</dimen>
     <dimen name="widget_margin">8dp</dimen>
+    <dimen name="card_margin">8dp</dimen>
     <dimen name="app_bar_height">300dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="card_top_padding">24dp</dimen>

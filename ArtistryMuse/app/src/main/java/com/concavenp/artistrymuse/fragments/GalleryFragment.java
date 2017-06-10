@@ -192,7 +192,6 @@ public class GalleryFragment extends BaseFragment {
                                 mSwipeRefreshLayout.setRefreshing(false);
 
                                 viewHolder.setUserInteractionType(UserInteractionType.EDIT);
-
                                 viewHolder.bindToPost(uid, mInteractionListener);
 
                             }

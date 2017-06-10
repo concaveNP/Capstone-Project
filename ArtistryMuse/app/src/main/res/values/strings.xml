@@ -238,7 +238,9 @@
     <string name="views_label_imageView">Views</string>
     <string name="favorited_label_textView">Favorited</string>
     <string name="title_project">Title</string>
+    <string name="title_inspiration">Title</string>
     <string name="description_project">Description</string>
+    <string name="description_inspiration">Description</string>
     <string name="new_project_title">New Project</string>
     <string name="edit_project_title">Edit Project</string>
 
