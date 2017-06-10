@@ -89,7 +89,7 @@ public class InspirationViewHolder extends BaseViewHolder {
                     public void onClick(View v) {
 
                         // Notify the the listener of the Inspiration selection
-                        listener.onInteractionSelection(inspiration.getUid(), StorageDataType.INSPIRATIONS, mUserInteractionType);
+                        listener.onInteractionSelection(inspiration.getProjectUid(), inspiration.getUid(), StorageDataType.INSPIRATIONS, mUserInteractionType);
 
                     }
                 });

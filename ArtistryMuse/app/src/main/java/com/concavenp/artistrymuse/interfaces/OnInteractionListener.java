@@ -8,6 +8,6 @@ import com.concavenp.artistrymuse.UserInteractionType;
  */
 public interface OnInteractionListener {
 
-    void onInteractionSelection(String uid, StorageDataType storageDataType, UserInteractionType interactionType);
+    void onInteractionSelection(String firstUid, String secondUid, StorageDataType storageDataType, UserInteractionType interactionType);
 
 }

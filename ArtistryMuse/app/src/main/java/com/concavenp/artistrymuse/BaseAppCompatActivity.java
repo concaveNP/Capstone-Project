@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static com.concavenp.artistrymuse.InspirationEditActivity.EXTRA_DATA_INSPIRATION;
+import static com.concavenp.artistrymuse.InspirationEditActivity.EXTRA_DATA_PROJECT;
+
 /**
  * Created by dave on 3/25/2017.
  *
@@ -232,11 +235,12 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
      * phone and tablet layout of the app.  Phone layouts will just start a new activity and
      * tablet layouts will populate a neighboring fragment with the details results.
      *
-     * @param uid - This will be the UID of other the User or the Project as specified in the type param
+     * @param firstUid - This will be the UID of other the User or the Project as specified in the type param
+     * @param secondUid - This uid will be used for identifying an inspiration
      * @param storageDataType - The type will either be a user or a project
      */
     @Override
-    public void onInteractionSelection(String uid, StorageDataType storageDataType, UserInteractionType userInteractionType) {
+    public void onInteractionSelection(String firstUid, String secondUid, StorageDataType storageDataType, UserInteractionType userInteractionType) {
 
         switch(storageDataType) {
 
@@ -248,7 +252,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
                         // Create and start the details activity along with passing it the UID of the Project in question
                         Intent intent = new Intent(this, ProjectDetailsActivity.class);
-                        intent.putExtra(EXTRA_DATA, uid);
+                        intent.putExtra(EXTRA_DATA, firstUid);
                         startActivity(intent);
 
                         break;
@@ -257,7 +261,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
                         // Create and start the inspiration activity along with passing it the UID of the inspiration in question
                         Intent intent = new Intent(this, ProjectEditActivity.class);
-                        intent.putExtra(EXTRA_DATA, uid);
+                        intent.putExtra(EXTRA_DATA, firstUid);
                         startActivity(intent);
 
                     }
@@ -274,14 +278,14 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
                         // Create and start the details activity along with passing it the UID of the User in question
                         Intent intent = new Intent(this, UserDetailsActivity.class);
-                        intent.putExtra(EXTRA_DATA, uid);
+                        intent.putExtra(EXTRA_DATA, firstUid);
                         startActivity(intent);
 
                         break;
                     }
                     case EDIT: {
 
-                        // NOTE: Currently, there is only the details type of activities
+                        // NOTE: Currently, there is only the details type
 
                     }
                 }
@@ -295,7 +299,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
                     case DETAILS: {
 
-                        // NOTE: Currently, there is only the edit type of activities
+                        // NOTE: Currently, there is only the edit type
 
                         break;
                     }
@@ -303,7 +307,8 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
                         // Create and start the inspiration activity along with passing it the UID of the inspiration in question
                         Intent intent = new Intent(this, InspirationEditActivity.class);
-                        intent.putExtra(EXTRA_DATA, uid);
+                        intent.putExtra(EXTRA_DATA_PROJECT, firstUid);
+                        intent.putExtra(EXTRA_DATA_INSPIRATION, secondUid);
                         startActivity(intent);
 
                     }

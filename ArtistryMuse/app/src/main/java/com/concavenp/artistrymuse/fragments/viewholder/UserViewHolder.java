@@ -91,7 +91,7 @@ public class UserViewHolder extends BaseViewHolder {
                         public void onClick(View view) {
 
                             // Notify the the listener (aka MainActivity) of the details selection
-                            listener.onInteractionSelection(user.getUid(), StorageDataType.USERS, UserInteractionType.DETAILS);
+                            listener.onInteractionSelection(user.getUid(), null, StorageDataType.USERS, UserInteractionType.DETAILS);
 
                         }
 

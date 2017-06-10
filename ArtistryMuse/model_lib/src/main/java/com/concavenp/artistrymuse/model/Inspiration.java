@@ -18,6 +18,20 @@ public class Inspiration {
         // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
+    /**
+     * This is a convenience method to clearing out all of the data making up this class.
+     */
+    public void clear() {
+
+        setCreationDate(0L);
+        setDescription("");
+        setImageUid("");
+        setLastUpdateDate(0L);
+        setName("");
+        setUid("");
+        setProjectUid("");
+
+    }
     public String getUid() {
         return uid;
     }

@@ -74,8 +74,8 @@
                     android:hint="@string/description_inspiration"
                     style="@style/AppTheme.Card.Description"
                     android:inputType="text|textMultiLine"
-                    android:maxLength="@integer/maximum_characters_for_title"
-                    android:maxLines="@integer/maximum_lines_for_title" />
+                    android:maxLength="@integer/maximum_characters_for_summary"
+                    android:maxLines="@integer/maximum_lines_for_summary" />
 
             </android.support.design.widget.TextInputLayout>
 

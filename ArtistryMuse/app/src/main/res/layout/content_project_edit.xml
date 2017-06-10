@@ -90,11 +90,6 @@
                 android:layout_height="match_parent"
                 android:scrollbarStyle="outsideOverlay"
                 android:nestedScrollingEnabled="false"/>
-            <!--android:paddingEnd="@dimen/card_margin"-->
-            <!--android:paddingLeft="@dimen/card_margin"-->
-            <!--android:paddingRight="@dimen/card_margin"-->
-            <!--android:paddingStart="@dimen/card_margin"-->
-            <!--android:paddingBottom="@dimen/card_margin"-->
 
         </LinearLayout>
 
