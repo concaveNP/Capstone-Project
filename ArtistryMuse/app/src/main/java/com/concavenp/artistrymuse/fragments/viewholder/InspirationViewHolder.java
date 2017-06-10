@@ -74,11 +74,11 @@ public class InspirationViewHolder extends BaseViewHolder {
 
         // Display items to be populated
         final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
-        final TextView titleTextView = (TextView) itemView.findViewById(R.id.title_textView);
+        final TextView titleEditText = (TextView) itemView.findViewById(R.id.title_textView);
         final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
 
         populateImageView(buildFileReference(inspiration.getProjectUid(), inspiration.getImageUid(), StorageDataType.PROJECTS), mainImageView);
-        titleTextView.setText(inspiration.getName());
+        titleEditText.setText(inspiration.getName());
         descriptionTextView.setText(inspiration.getDescription());
 
         switch (mUserInteractionType) {

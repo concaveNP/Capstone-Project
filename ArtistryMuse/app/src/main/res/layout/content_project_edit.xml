@@ -81,17 +81,22 @@
                 layout="@layout/card_project_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/details_margin"/>
+                android:layout_margin="@dimen/card_margin"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/inspirations_recycler_view"
+                android:layout_margin="@dimen/card_margin"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbarStyle="outsideOverlay"
                 android:nestedScrollingEnabled="false"/>
+            <!--android:paddingEnd="@dimen/card_margin"-->
+            <!--android:paddingLeft="@dimen/card_margin"-->
+            <!--android:paddingRight="@dimen/card_margin"-->
+            <!--android:paddingStart="@dimen/card_margin"-->
+            <!--android:paddingBottom="@dimen/card_margin"-->
 
         </LinearLayout>
-
 
     </android.support.v4.widget.NestedScrollView>
 

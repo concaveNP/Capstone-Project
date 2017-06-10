@@ -3,10 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
-    android:layout_marginTop="4dp"
+    android:layout_marginBottom="@dimen/card_margin"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
@@ -29,28 +26,62 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:text="Title"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/title_textInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/AppTheme.Card.Title"
-                android:id="@+id/title_textView" />
+                android:paddingTop="@dimen/details_margin"
+                android:paddingEnd="@dimen/details_margin"
+                android:paddingLeft="@dimen/details_margin"
+                android:paddingRight="@dimen/details_margin"
+                android:paddingStart="@dimen/details_margin"
+                android:paddingBottom="@dimen/details_margin"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
 
-            <TextView
-                android:id="@+id/description_textView"
+                <EditText
+                    android:id="@+id/title_textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:enabled="false"
+                    android:hint="@string/title_inspiration"
+                    style="@style/AppTheme.Card.Title"
+                    android:inputType="text|textMultiLine"
+                    android:maxLength="@integer/maximum_characters_for_title"
+                    android:maxLines="@integer/maximum_lines_for_title" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/description_textInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/AppTheme.Card.Description"
-                android:ellipsize="end"
-                android:maxLines="3"
-                android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
-                android:paddingStart="@dimen/myapp_text_edge_padding_material"
-                android:paddingEnd="@dimen/myapp_text_edge_padding_material"
-                android:paddingTop="@dimen/myapp_text_edge_padding_material"
-                android:minLines="1" />
+                android:paddingEnd="@dimen/details_margin"
+                android:paddingLeft="@dimen/details_margin"
+                android:paddingRight="@dimen/details_margin"
+                android:paddingStart="@dimen/details_margin"
+                android:paddingBottom="@dimen/details_margin"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+
+                <EditText
+                    android:id="@+id/description_textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:enabled="false"
+                    android:hint="@string/description_inspiration"
+                    style="@style/AppTheme.Card.Description"
+                    android:inputType="text|textMultiLine"
+                    android:maxLength="@integer/maximum_characters_for_title"
+                    android:maxLines="@integer/maximum_lines_for_title" />
+
+            </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
+
