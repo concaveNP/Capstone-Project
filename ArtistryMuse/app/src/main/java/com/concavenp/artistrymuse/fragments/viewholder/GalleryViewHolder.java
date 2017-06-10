@@ -121,7 +121,7 @@ public class GalleryViewHolder extends BaseViewHolder {
                                 public void onClick(View v) {
 
                                     // Notify the the listener of the Project selection
-                                    listener.onInteractionSelection(projectUid, StorageDataType.PROJECTS, mUserInteractionType);
+                                    listener.onInteractionSelection(projectUid, null, StorageDataType.PROJECTS, mUserInteractionType);
 
                                 }
                             });

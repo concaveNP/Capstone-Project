@@ -110,7 +110,7 @@ public class GalleryFragment extends BaseFragment {
             public void onClick(View view) {
 
                 // Notify the the listener (aka MainActivity) of the Create New Project selection
-                mInteractionListener.onInteractionSelection(null, StorageDataType.PROJECTS, UserInteractionType.EDIT);
+                mInteractionListener.onInteractionSelection(null, null, StorageDataType.PROJECTS, UserInteractionType.EDIT);
 
             }
         });

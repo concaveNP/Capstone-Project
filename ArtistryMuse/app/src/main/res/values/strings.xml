@@ -242,6 +242,8 @@
     <string name="description_project">Description</string>
     <string name="description_inspiration">Description</string>
     <string name="new_project_title">New Project</string>
+    <string name="new_inspiration_title">New Inspiration</string>
     <string name="edit_project_title">Edit Project</string>
+    <string name="edit_inspiration_title">Edit Inspiration</string>
 
 </resources>

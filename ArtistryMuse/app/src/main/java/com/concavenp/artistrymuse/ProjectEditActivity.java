@@ -170,7 +170,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
             public void onClick(View view) {
 
                 // Notify the the listener (aka this activity) of the Create New Inspiration selection
-                onInteractionSelection(mProjectUid, StorageDataType.INSPIRATIONS, UserInteractionType.EDIT);
+                onInteractionSelection(mProjectUid, null, StorageDataType.INSPIRATIONS, UserInteractionType.EDIT);
 
             }
 

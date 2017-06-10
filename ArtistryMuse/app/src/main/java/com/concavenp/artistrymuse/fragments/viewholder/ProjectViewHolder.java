@@ -84,7 +84,7 @@ public class ProjectViewHolder extends BaseViewHolder {
                         public void onClick(View view) {
 
                             // Notify the the listener (aka MainActivity) of the details selection
-                            listener.onInteractionSelection(project.getUid(), StorageDataType.PROJECTS, UserInteractionType.DETAILS);
+                            listener.onInteractionSelection(project.getUid(), null, StorageDataType.PROJECTS, UserInteractionType.DETAILS);
 
                         }
 
