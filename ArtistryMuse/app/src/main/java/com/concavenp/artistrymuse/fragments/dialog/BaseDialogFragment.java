@@ -98,34 +98,44 @@ public abstract class BaseDialogFragment extends DialogFragment {
 
     protected void populateThumbnailImageView(Uri uri, ImageView imageView) {
 
-        // It is possible for the file reference string to be null, so check for it
-        if (uri != null) {
+        // For safety, check as well (I've seen it) ...
+        if (imageView != null) {
 
-            // Download directly from StorageReference using Glide
-            Glide.with(imageView.getContext())
-                    .using(mUriLoad)
-                    .load(uri)
-                    .thumbnail(0.1f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imageView);
+            // It is possible for the file reference string to be null, so check for it
+            if (uri != null) {
+
+                // Download directly from StorageReference using Glide
+                Glide.with(imageView.getContext())
+                        .using(mUriLoad)
+                        .load(uri)
+                        .thumbnail(0.1f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+
+            }
 
         }
 
     }
     protected void populateThumbnailImageView(String fileReference, ImageView imageView) {
 
-        // It is possible for the file reference string to be null, so check for it
-        if (fileReference != null) {
+        // For safety, check as well (I've seen it) ...
+        if (imageView != null) {
 
-            //StorageReference storageReference = mStorageRef.child(fileReference);
+            // It is possible for the file reference string to be null, so check for it
+            if ((fileReference != null) && (!fileReference.isEmpty())) {
 
-            // Download directly from StorageReference using Glide
-            Glide.with(imageView.getContext())
+                //StorageReference storageReference = mStorageRef.child(fileReference);
+
+                // Download directly from StorageReference using Glide
+                Glide.with(imageView.getContext())
 //                    .using(mImageLoader)
-                    .load(fileReference)
-                    .thumbnail(0.1f)
- //                   .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imageView);
+                        .load(fileReference)
+                        .thumbnail(0.1f)
+                        //                   .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+
+            }
 
         }
 

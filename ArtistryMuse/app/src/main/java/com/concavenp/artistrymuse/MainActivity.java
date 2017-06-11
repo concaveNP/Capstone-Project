@@ -63,9 +63,11 @@ public class MainActivity extends BaseAppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         // Bind to the UserAuthenticationService
-        Intent intent = new Intent(this, UserAuthenticationService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        startService(intent);
+        if (mService == null) {
+            Intent intent = new Intent(this, UserAuthenticationService.class);
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            startService(intent);
+        }
 
         setContentView(R.layout.activity_main);
 

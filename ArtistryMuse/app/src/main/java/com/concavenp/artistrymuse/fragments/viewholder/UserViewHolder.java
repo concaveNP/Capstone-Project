@@ -115,8 +115,13 @@ public class UserViewHolder extends BaseViewHolder {
         final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_ImageView);
         final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.avatar_ImageView);
 
-        Glide.clear(headerImageView);
-        Glide.clear(profileImageView);
+        if (headerImageView != null) {
+            Glide.clear(headerImageView);
+        }
+
+        if (profileImageView != null) {
+            Glide.clear(profileImageView);
+        }
 
     }
 
