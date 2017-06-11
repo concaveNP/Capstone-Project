@@ -309,7 +309,7 @@ public class ProjectDetailsFragment extends BaseFragment {
                     if (mUserInQuestionModel != null) {
 
                         // Set the profile image
-                        ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.profile_ImageView);
+                        ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.avatar_ImageView);
                         populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
 
                         // Set the name of the author and the username

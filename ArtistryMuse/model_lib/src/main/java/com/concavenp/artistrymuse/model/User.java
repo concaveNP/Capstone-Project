@@ -1,13 +1,7 @@
 package com.concavenp.artistrymuse.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-/**
- * Created by dave on 10/14/2016.
- */
 
 /**
  * This class represents the the data model of a "User" object.  This data will be stored within

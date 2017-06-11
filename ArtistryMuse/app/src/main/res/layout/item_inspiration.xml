@@ -16,10 +16,11 @@
 
         <ImageView
             android:id="@+id/main_imageView"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/inspiration_image_contentDescription"
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="match_parent"

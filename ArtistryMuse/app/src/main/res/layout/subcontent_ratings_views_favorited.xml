@@ -24,6 +24,7 @@
                 android:id="@+id/rating_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/rating_image_contentDescription"
                 android:paddingRight="4dp"
                 app:srcCompat="@drawable/ic_star_black_24dp" />
 
@@ -61,6 +62,7 @@
                 android:id="@+id/views_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/views_image_contentDescription"
                 android:paddingRight="4dp"
                 app:srcCompat="@drawable/ic_remove_red_eye_black_24dp" />
 
@@ -98,6 +100,7 @@
                 android:id="@+id/favorited_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/favorited_image_contentDescription"
                 android:paddingRight="4dp"
                 app:srcCompat="@drawable/ic_thumb_up_black_24dp" />
 

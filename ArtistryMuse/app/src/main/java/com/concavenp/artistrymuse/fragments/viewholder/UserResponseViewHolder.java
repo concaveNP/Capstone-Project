@@ -49,7 +49,7 @@ public class UserResponseViewHolder extends BaseViewHolder {
 
         // Display items to be populated
         final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_ImageView);
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_ImageView);
+        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.avatar_ImageView);
         final TextView authorTextView = (TextView) itemView.findViewById(R.id.author_TextView);
         final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_TextView);
         final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);

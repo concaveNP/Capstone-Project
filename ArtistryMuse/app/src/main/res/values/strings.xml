@@ -245,5 +245,22 @@
     <string name="new_inspiration_title">New Inspiration</string>
     <string name="edit_project_title">Edit Project</string>
     <string name="edit_inspiration_title">Edit Inspiration</string>
+    <string name="project_details_image_contentDescription">The main image associated with the project.</string>
+    <string name="user_details_image_contentDescription">The main image associated with the user.</string>
+    <string name="inspiration_image_contentDescription">The main image associated with the inspiration.</string>
+    <string name="profile_header_image_contentDescription">The header image associated with the profile.</string>
+    <string name="profile_avatar_image_contentDescription">The avatar image associated with the profile.</string>
+    <string name="project_image_contentDescription">The main image associated with the project.</string>
+    <string name="search_button_image_contentDescription">The button image associated with searching.</string>
+
+    <string name="project_following_image_contentDescription">The following image associated with the project.</string>
+    <string name="project_followed_image_contentDescription">The followed image associated with the project.</string>
+
+    <string name="user_following_image_contentDescription">The following image associated with the user.</string>
+    <string name="user_followed_image_contentDescription">The followed image associated with the user.</string>
+
+    <string name="rating_image_contentDescription">The rating image associated with the user.</string>
+    <string name="views_image_contentDescription">The views image associated with the user.</string>
+    <string name="favorited_image_contentDescription">The favorited image associated with the user.</string>
 
 </resources>

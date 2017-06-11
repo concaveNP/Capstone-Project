@@ -2,7 +2,6 @@ package com.concavenp.artistrymuse.services;
 
 import android.app.Service;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.concavenp.artistrymuse.R;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
@@ -15,7 +14,6 @@ import com.google.firebase.storage.StorageReference;
 /**
  * Created by dave on 4/7/2017.
  */
-
 public abstract class BaseService extends Service {
 
     /**
@@ -49,7 +47,6 @@ public abstract class BaseService extends Service {
 
         // Get ready to read and write to local storage for this app
         mSharedPreferences = getSharedPreferences(getResources().getString(R.string.shared_preferences_filename), MODE_PRIVATE);
-        //mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
     }
 

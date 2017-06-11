@@ -21,28 +21,30 @@
 
         <ImageView
             android:id="@+id/main_imageView"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/project_image_contentDescription"
+            android:scaleType="fitCenter" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/avatar_ImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_account_circle_black_24dp"
-                android:id="@+id/profile_ImageView"
-                android:layout_weight="1"
                 android:layout_alignParentBottom="false"
-                tools:layout_alignBottom="@id/summary_textview"
                 android:layout_alignTop="@+id/username_textview"
+                android:layout_weight="1"
+                android:contentDescription="@string/profile_avatar_image_contentDescription"
                 android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
-                android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
                 android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
-                android:paddingTop="@dimen/myapp_text_uncommon_padding_material"/>
+                android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
+                android:paddingTop="@dimen/myapp_text_uncommon_padding_material"
+                app:srcCompat="@drawable/ic_account_circle_black_24dp"
+                tools:layout_alignBottom="@id/summary_textview" />
 
             <TextView
                 android:text="Username"
@@ -51,8 +53,8 @@
                 android:id="@+id/username_textview"
                 android:layout_weight="1"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/profile_ImageView"
-                android:layout_toEndOf="@+id/profile_ImageView"
+                android:layout_toRightOf="@+id/avatar_ImageView"
+                android:layout_toEndOf="@+id/avatar_ImageView"
                 android:paddingTop="@dimen/myapp_text_uncommon_padding_material"
                 android:paddingBottom="@dimen/myapp_text_common_padding_material" />
 
@@ -90,11 +92,12 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_people_black_24dp"
-                android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
-                android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
-                android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
-                android:paddingTop="@dimen/myapp_text_uncommon_padding_material"/>
+                    android:contentDescription="@string/project_following_image_contentDescription"
+                    android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
+                    android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
+                    android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
+                    android:paddingTop="@dimen/myapp_text_uncommon_padding_material"
+                    app:srcCompat="@drawable/ic_people_black_24dp" />
 
                 <TextView
                     android:text="TextView"
@@ -113,11 +116,12 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_people_outline_black_24dp"
-                android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
-                android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
-                android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
-                android:paddingTop="@dimen/myapp_text_uncommon_padding_material"/>
+                    android:contentDescription="@string/project_followed_image_contentDescription"
+                    android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
+                    android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
+                    android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
+                    android:paddingTop="@dimen/myapp_text_uncommon_padding_material"
+                    app:srcCompat="@drawable/ic_people_outline_black_24dp" />
 
                 <TextView
                     android:text="TextView"
