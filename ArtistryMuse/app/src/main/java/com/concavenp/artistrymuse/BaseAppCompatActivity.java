@@ -53,18 +53,18 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
     @SuppressWarnings("unused")
     private static final String TAG = BaseAppCompatActivity.class.getSimpleName();
 
+    /**
+     * String used when creating the activity via intent.  This key will be used to retrieve the
+     * UID associated with the USER in question.
+     */
+    public static final String EXTRA_DATA = "uid_string_data";
+
     protected DatabaseReference mDatabase;
     protected StorageReference mStorageRef;
     protected FirebaseImageLoader mImageLoader;
     protected FileDescriptorUriLoader mUriLoad;
 
     protected SharedPreferences mSharedPreferences;
-
-    /**
-     * String used when creating the activity via intent.  This key will be used to retrieve the
-     * UID associated with the USER in question.
-     */
-    public static final String EXTRA_DATA = "uid_string_data";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,18 +120,23 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
     protected void populateImageView(String fileReference, ImageView imageView) {
 
-        // It is possible for the file reference string to be null, so check for it
-        if (fileReference != null) {
+        // For safety, check as well (I've seen it) ...
+        if (imageView != null) {
 
-            StorageReference storageReference = mStorageRef.child(fileReference);
+            // It is possible for the file reference string to be null, so check for it
+            if ((fileReference != null) && (!fileReference.isEmpty())) {
 
-            // Download directly from StorageReference using Glide
-            Glide.with(imageView.getContext())
-                    .using(mImageLoader)
-                    .load(storageReference)
-                    .fitCenter()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imageView);
+                StorageReference storageReference = mStorageRef.child(fileReference);
+
+                // Download directly from StorageReference using Glide
+                Glide.with(imageView.getContext())
+                        .using(mImageLoader)
+                        .load(storageReference)
+                        .fitCenter()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+
+            }
 
         }
 
@@ -139,20 +144,23 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
     protected void populateCircularImageView(String fileReference, final ImageView imageView) {
 
-        // It is possible for the file reference string to be null, so check for it
-        if (fileReference != null) {
+        // For safety, check as well (I've seen it) ...
+        if (imageView != null) {
 
-            StorageReference storageReference = mStorageRef.child(fileReference);
+            // It is possible for the file reference string to be null, so check for it
+            if ((fileReference != null) && (!fileReference.isEmpty())) {
 
-            Glide.with(imageView.getContext())
-                    .using(mImageLoader)
-                    .load(storageReference)
-                    .asBitmap()
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(new BitmapImageViewTarget(imageView) {
-                        @Override
-                        protected void setResource(Bitmap bitmap) {
+                StorageReference storageReference = mStorageRef.child(fileReference);
+
+                Glide.with(imageView.getContext())
+                        .using(mImageLoader)
+                        .load(storageReference)
+                        .asBitmap()
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(new BitmapImageViewTarget(imageView) {
+                            @Override
+                            protected void setResource(Bitmap bitmap) {
 
 
 
@@ -160,43 +168,43 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 // TODO: clean up
 
 
-                            int bitmapWidth = bitmap.getWidth();
-                            int bitmapHeight = bitmap.getHeight();
-                            int borderWidthHalf = 10; // In pixels
+                                int bitmapWidth = bitmap.getWidth();
+                                int bitmapHeight = bitmap.getHeight();
+                                int borderWidthHalf = 10; // In pixels
 
-                            // Calculate the bitmap radius
-                            int bitmapRadius = Math.min(bitmapWidth,bitmapHeight)/2;
+                                // Calculate the bitmap radius
+                                int bitmapRadius = Math.min(bitmapWidth,bitmapHeight)/2;
 
-                            int bitmapSquareWidth = Math.min(bitmapWidth,bitmapHeight);
+                                int bitmapSquareWidth = Math.min(bitmapWidth,bitmapHeight);
 
-                            int newBitmapSquareWidth = bitmapSquareWidth+borderWidthHalf;
+                                int newBitmapSquareWidth = bitmapSquareWidth+borderWidthHalf;
 
-                            Bitmap roundedBitmap = Bitmap.createBitmap(newBitmapSquareWidth,newBitmapSquareWidth,Bitmap.Config.ARGB_8888);
+                                Bitmap roundedBitmap = Bitmap.createBitmap(newBitmapSquareWidth,newBitmapSquareWidth,Bitmap.Config.ARGB_8888);
 
-                            // Initialize a new Canvas to draw empty bitmap
-                            Canvas canvas = new Canvas(roundedBitmap);
+                                // Initialize a new Canvas to draw empty bitmap
+                                Canvas canvas = new Canvas(roundedBitmap);
 
-                            // Draw a solid color to canvas
-                        //    canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.myapp_accent_700, null));
+                                // Draw a solid color to canvas
+                                //    canvas.drawColor(ResourcesCompat.getColor(getResources(), R.color.myapp_accent_700, null));
 
-                            // Calculation to draw bitmap at the circular bitmap center position
-                            int x = borderWidthHalf + bitmapSquareWidth - bitmapWidth;
-                            int y = borderWidthHalf + bitmapSquareWidth - bitmapHeight;
+                                // Calculation to draw bitmap at the circular bitmap center position
+                                int x = borderWidthHalf + bitmapSquareWidth - bitmapWidth;
+                                int y = borderWidthHalf + bitmapSquareWidth - bitmapHeight;
 
-                            canvas.drawBitmap(bitmap, x, y, null);
+                                canvas.drawBitmap(bitmap, x, y, null);
 
-                            // Initializing a new Paint instance to draw circular border
-                            Paint borderPaint = new Paint();
-                            borderPaint.setStyle(Paint.Style.STROKE);
-                            borderPaint.setStrokeWidth(borderWidthHalf*2);
-                            borderPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.myapp_accent_700, null));
+                                // Initializing a new Paint instance to draw circular border
+                                Paint borderPaint = new Paint();
+                                borderPaint.setStyle(Paint.Style.STROKE);
+                                borderPaint.setStrokeWidth(borderWidthHalf*2);
+                                borderPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.myapp_accent_700, null));
 
-                            canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquareWidth/2, borderPaint);
+                                canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquareWidth/2, borderPaint);
 
 
-                            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(imageView.getContext().getResources(), roundedBitmap);
-                            circularBitmapDrawable.setCircular(true);
-                            imageView.setImageDrawable(circularBitmapDrawable);
+                                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(imageView.getContext().getResources(), roundedBitmap);
+                                circularBitmapDrawable.setCircular(true);
+                                imageView.setImageDrawable(circularBitmapDrawable);
 
 
 
@@ -207,23 +215,31 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 //                            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(imageView.getContext().getResources(), bitmap);
 //                            circularBitmapDrawable.setCircular(true);
 //                            imageView.setImageDrawable(circularBitmapDrawable);
-                        }
-                    });
+                            }
+                        });
+
+            }
+
         }
 
     }
 
     protected void populateThumbnailImageView(String fileReference, ImageView imageView) {
 
-        // It is possible for the file reference string to be null, so check for it
-        if (fileReference != null) {
+        // For safety, check as well (I've seen it) ...
+        if (imageView != null) {
 
-            // Download directly from StorageReference using Glide
-            Glide.with(imageView.getContext())
-                    .load(fileReference)
-                    .thumbnail(0.1f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imageView);
+            // It is possible for the file reference string to be null, so check for it
+            if ((fileReference != null) && (!fileReference.isEmpty())) {
+
+                // Download directly from StorageReference using Glide
+                Glide.with(imageView.getContext())
+                        .load(fileReference)
+                        .thumbnail(0.1f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+
+            }
 
         }
 
