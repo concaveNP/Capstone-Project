@@ -23,12 +23,13 @@
 
             <ImageView
                 android:id="@+id/project_imageView"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/project_image_contentDescription"
+                android:scaleType="centerCrop"
                 app:srcCompat="@drawable/ic_photo_size_select_actual_black_24dp" />
 
             <android.support.design.widget.TextInputLayout

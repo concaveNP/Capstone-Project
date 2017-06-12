@@ -55,7 +55,7 @@ public class UserViewHolder extends BaseViewHolder {
         // Display items to be populated
         final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_ImageView);
 
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_ImageView);
+        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.avatar_ImageView);
         final TextView authorTextView = (TextView) itemView.findViewById(R.id.author_TextView);
         final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_TextView);
 
@@ -113,10 +113,15 @@ public class UserViewHolder extends BaseViewHolder {
     public void clearImages() {
 
         final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_ImageView);
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.profile_ImageView);
+        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.avatar_ImageView);
 
-        Glide.clear(headerImageView);
-        Glide.clear(profileImageView);
+        if (headerImageView != null) {
+            Glide.clear(headerImageView);
+        }
+
+        if (profileImageView != null) {
+            Glide.clear(profileImageView);
+        }
 
     }
 

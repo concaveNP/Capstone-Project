@@ -451,7 +451,7 @@ class Generate {
 
             } else {
 
-                Photo photo = flickrIterator.next();
+                Photo photo = ++flickrIterator;
                 com.flickr4java.flickr.people.User currentOwner = photo.getOwner();
 
                 // I only want one work per user

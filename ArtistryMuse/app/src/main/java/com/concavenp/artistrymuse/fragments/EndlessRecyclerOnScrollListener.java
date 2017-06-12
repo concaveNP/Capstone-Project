@@ -1,18 +1,17 @@
 package com.concavenp.artistrymuse.fragments;
 
-/**
- * Created by dave on 12/27/2016.
- */
-
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 /**
- * This code started off from the below references and then modified for me use.
- * <p/>
+ * This code started off from the below references and then modified for use for use by this
+ * application.
+ *
  * References:
- * - https://gist.github.com/ssinss/e06f12ef66c51252563e
+ *
+ * Endless RecyclerView OnScrollListener
+ *      - https://gist.github.com/ssinss/e06f12ef66c51252563e
  */
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 

@@ -252,7 +252,7 @@ public class UserDetailsFragment extends BaseFragment {
 
                         // Update the followed count for the user in question
                         Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", Integer.valueOf(mUserInQuestionModel.getFollowedCount() + 1));
+                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", mUserInQuestionModel.getFollowedCount() + 1);
                         mDatabase.updateChildren(childUpdates);
 
                     } else {
@@ -264,7 +264,7 @@ public class UserDetailsFragment extends BaseFragment {
 
                         // Update the followed count for the user in question
                         Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", Integer.valueOf(mUserInQuestionModel.getFollowedCount() - 1));
+                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", mUserInQuestionModel.getFollowedCount() - 1);
                         mDatabase.updateChildren(childUpdates);
                     }
 
@@ -288,7 +288,7 @@ public class UserDetailsFragment extends BaseFragment {
 //            setMenuVisibility(true);
 
             // Set the profile image
-            ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.profile_ImageView);
+            ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.avatar_ImageView);
             populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
 
             // Set the name of the author and the username

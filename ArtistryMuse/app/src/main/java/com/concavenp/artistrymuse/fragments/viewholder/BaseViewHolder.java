@@ -91,18 +91,23 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     protected void populateImageView(String fileReference, ImageView imageView) {
 
-        // It is possible for the file reference string to be null, so check for it
-        if (fileReference != null) {
+        // For safety, check as well (I've seen it) ...
+        if (imageView != null) {
 
-            StorageReference storageReference = mStorageRef.child(fileReference);
+            // It is possible for the file reference string to be null, so check for it
+            if ((fileReference != null) && (!fileReference.isEmpty())) {
 
-            // Download directly from StorageReference using Glide
-            Glide.with(imageView.getContext())
-                    .using(mImageLoader)
-                    .load(storageReference)
-                    .fitCenter()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imageView);
+                StorageReference storageReference = mStorageRef.child(fileReference);
+
+                // Download directly from StorageReference using Glide
+                Glide.with(imageView.getContext())
+                        .using(mImageLoader)
+                        .load(storageReference)
+                        .fitCenter()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+
+            }
 
         }
 
@@ -110,17 +115,23 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     protected void populateTextView(String text, TextView textView) {
 
-        // Verify there is text to work with and empty out if nothing is there.
-        if ((text != null) && (!text.isEmpty())) {
+        // For safety, check as well (I've seen it) ...
+        if (textView != null) {
 
-            textView.setText(text);
+            // Verify there is text to work with and empty out if nothing is there.
+            if ((text != null) && (!text.isEmpty())) {
 
-        } else {
+                textView.setText(text);
 
-            textView.setText("");
+            } else {
+
+                textView.setText("");
+
+            }
 
         }
 
     }
 
 }
+

@@ -49,8 +49,6 @@ public class GalleryFragment extends BaseFragment {
     private String mParam1;
     private String mParam2;
 
-    private OnCreateProjectInteractionListener mCreateProjectListener;
-
     private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
@@ -238,41 +236,6 @@ public class GalleryFragment extends BaseFragment {
         Query resultQuery = databaseReference.child("users").child(userId).child("projects");
 
         return resultQuery;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-
-        super.onAttach(context);
-
-        // Re-attach to the parent Activity interface
-        if (context instanceof OnCreateProjectInteractionListener) {
-
-            mCreateProjectListener = (OnCreateProjectInteractionListener) context;
-
-        } else {
-
-            throw new RuntimeException(context.toString() + " must implement OnCreateProjectInteractionListener");
-
-        }
-
-    }
-
-    @Override
-    public void onDetach() {
-
-        super.onDetach();
-
-        // Detach from the parent Activity interface(s)
-        mCreateProjectListener = null;
-
-    }
-
-    public interface OnCreateProjectInteractionListener {
-
-        // TODO: Update argument type and name
-        void onCreateProjectInteraction(Uri uri);
-
     }
 
 }

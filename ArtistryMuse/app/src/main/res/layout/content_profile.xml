@@ -24,6 +24,7 @@
                 android:id="@+id/profile_header_imageView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/detail_backdrop_height"
+                android:contentDescription="@string/profile_header_image_contentDescription"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/ic_photo_size_select_actual_black_24dp" />
 
@@ -31,10 +32,11 @@
                 android:id="@+id/profile_profile_imageView"
                 android:layout_width="112dp"
                 android:layout_height="112dp"
-                app:srcCompat="@drawable/ic_android_black_24dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="244dp" />
+                android:layout_marginTop="244dp"
+                android:contentDescription="@string/profile_avatar_image_contentDescription"
+                app:srcCompat="@drawable/ic_android_black_24dp" />
 
         </RelativeLayout>
 

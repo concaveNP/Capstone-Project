@@ -32,7 +32,6 @@ import java.util.List;
 import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
 public class MainActivity extends BaseAppCompatActivity implements
-        GalleryFragment.OnCreateProjectInteractionListener,
         UserAuthenticationService.OnAuthenticationListener {
 
     /**
@@ -53,6 +52,11 @@ public class MainActivity extends BaseAppCompatActivity implements
     private UserAuthenticationService mService;
 
     /**
+     * Flag used to indicate if our one time starting/binding of the service has been performed.
+     */
+    private boolean mBound = false;
+
+    /**
      * Field used in determining how various UI elements are displayed within a Large or Not Large display
      */
     private boolean mIsLargeLayout;
@@ -63,9 +67,20 @@ public class MainActivity extends BaseAppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         // Bind to the UserAuthenticationService
-        Intent intent = new Intent(this, UserAuthenticationService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        startService(intent);
+        //
+        // NOTE: this service require a little more explanation as it appears to be started and
+        // never stopped.  That is exactly what we want in this case.  Hence, the "startService"
+        // is used to which allows the service to run indefinitely.  The service monitors the
+        // authentication service provided by Firebase for an authenticated user to log in.
+        // Once the user logs in the service will translate the Firebase authentication ID into
+        // an application specific (ArtistryMuse) ID.  This class will also monitor the login and
+        // logout of the user in order to perform the additional duty of starting a login activity
+        // if needed.
+        if (mBound) {
+            Intent intent = new Intent(this, UserAuthenticationService.class);
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            startService(intent);
+        }
 
         setContentView(R.layout.activity_main);
 
@@ -201,14 +216,6 @@ public class MainActivity extends BaseAppCompatActivity implements
         Snackbar.make(findViewById(R.id.coordinatorLayout), errorMessageRes, Snackbar.LENGTH_LONG).show();
     }
 
-    @Override
-    public void onCreateProjectInteraction(Uri uri) {
-
-        Intent intent = new Intent(this, ProjectEditActivity.class);
-        startActivity(intent);
-
-    }
-
     /**
      * Implementation for the interface that provides the ability for this activity to be
      * notified when the user needs to login into the Firebase service.
@@ -278,6 +285,9 @@ public class MainActivity extends BaseAppCompatActivity implements
 
             // Register this class as a listener for login and profile events
             mService.registerAuthenticationListener(MainActivity.this);
+
+            // Our one time bounding has occurred
+            mBound = true;
 
         }
 

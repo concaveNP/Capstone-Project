@@ -14,6 +14,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginRight="@dimen/details_margin"
+        android:contentDescription="@string/profile_avatar_image_contentDescription"
         app:srcCompat="@drawable/ic_account_circle_black_24dp" />
 
     <LinearLayout
