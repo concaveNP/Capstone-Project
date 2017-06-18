@@ -4,14 +4,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.StyleRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -19,17 +17,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.concavenp.artistrymuse.fragments.GalleryFragment;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
 import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.common.Scopes;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
 public class MainActivity extends BaseAppCompatActivity implements
         UserAuthenticationService.OnAuthenticationListener {
@@ -50,6 +44,8 @@ public class MainActivity extends BaseAppCompatActivity implements
      * lookups.
      */
     private UserAuthenticationService mService;
+
+    private static final int RC_SIGN_IN = 100;
 
     /**
      * Flag used to indicate if our one time starting/binding of the service has been performed.
@@ -82,6 +78,11 @@ public class MainActivity extends BaseAppCompatActivity implements
             startService(intent);
         }
 
+        // If there is not a user logged in, there should be
+        if (getUid().isEmpty()) {
+            onLoginInteraction();
+        }
+
         setContentView(R.layout.activity_main);
 
         // If the application has not run before then initialize the preference settings with default values
@@ -108,27 +109,6 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     }
 
-    /**
-     * This method is used to set what providers will be used for account authentication.
-     *
-     * @return The list of authentication providers
-     */
-    @MainThread
-    private List<AuthUI.IdpConfig> getSelectedProviders() {
-
-        List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
-
-        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
-
-        // Current, we only want to allow user to verify themselves against an Email address.
-        // Future work would include other verification methods that would be enabled here.
-        //        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
-        //        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
-        //        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
-
-        return selectedProviders;
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -176,6 +156,13 @@ public class MainActivity extends BaseAppCompatActivity implements
 
                 // User wants to logoff of the backend service
 
+
+//                mService.logoff();
+
+
+
+
+/*
                 AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -184,10 +171,11 @@ public class MainActivity extends BaseAppCompatActivity implements
                         if (task.isSuccessful()) {
                             recreate();
                         } else {
-                            showSnackbar(R.string.sign_out_failed);
+                            // TODO: failed
                         }
                     }
                 });
+                */
 
                 // We handled it
                 result = true;
@@ -211,11 +199,6 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     }
 
-    @MainThread
-    private void showSnackbar(@StringRes int errorMessageRes) {
-        Snackbar.make(findViewById(R.id.coordinatorLayout), errorMessageRes, Snackbar.LENGTH_LONG).show();
-    }
-
     /**
      * Implementation for the interface that provides the ability for this activity to be
      * notified when the user needs to login into the Firebase service.
@@ -226,15 +209,73 @@ public class MainActivity extends BaseAppCompatActivity implements
         // TODO: what is RC_SING_IN used for
         // TODO: the SVG is not apparently going to work here, need an png export of the logo
         startActivityForResult(
-                AuthUI.getInstance().createSignInIntentBuilder()
-                        .setLogo(R.drawable.ic_muse_logo_1_vector)
-                        .setProviders(getSelectedProviders())
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setTheme(getSelectedTheme())
+                        .setLogo(getSelectedLogo())
+                        .setAvailableProviders(getSelectedProviders())
+//                        .setTosUrl(getSelectedTosUrl())
+//                        .setPrivacyPolicyUrl(getSelectedPrivacyPolicyUrl())
                         .setIsSmartLockEnabled(false)
+//                        .setIsSmartLockEnabled(mEnableCredentialSelector.isChecked(), mEnableHintSelector.isChecked())
+//                        .setAllowNewEmailAccounts(mAllowNewEmailAccounts.isChecked())
                         .build(),
                 RC_SIGN_IN);
-
     }
 
+    @MainThread
+    @StyleRes
+    private int getSelectedTheme() {
+        return R.style.AppTheme;
+    }
+
+    @MainThread
+    @DrawableRes
+    private int getSelectedLogo() {
+        return R.drawable.ic_muse_logo_2_vector;
+    }
+
+//    /**
+//     * This method is used to set what providers will be used for account authentication.
+//     *
+//     * @return The list of authentication providers
+//     */
+//    @MainThread
+//    private List<AuthUI.IdpConfig> getSelectedProviders() {
+//
+//        List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
+//
+//        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
+//
+//        // Current, we only want to allow user to verify themselves against an Email address.
+//        // Future work would include other verification methods that would be enabled here.
+//        //        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
+//        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
+//        //        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
+//
+//        return selectedProviders;
+//
+//    }
+
+    @MainThread
+    private List<AuthUI.IdpConfig> getSelectedProviders() {
+        List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
+
+            selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER) .setPermissions(getGooglePermissions()) .build());
+//            selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER) .setPermissions(getFacebookPermissions()) .build());
+//            selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
+            selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
+//            selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build());
+
+        return selectedProviders;
+    }
+
+    @MainThread
+    private List<String> getGooglePermissions() {
+        List<String> result = new ArrayList<>();
+           result.add(Scopes.DRIVE_FILE);
+        return result;
+    }
     /**
      * Implementation for the interface that provides the ability for this activity to be
      * notified when the user needs to fill out profile information about themselves.  As in a

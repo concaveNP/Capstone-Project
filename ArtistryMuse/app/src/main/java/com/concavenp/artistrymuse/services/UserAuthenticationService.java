@@ -1,9 +1,11 @@
 package com.concavenp.artistrymuse.services;
 
+import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -21,7 +23,6 @@ import java.util.UUID;
 /**
  * Created by dave on 4/7/2017.
  */
-
 public class UserAuthenticationService extends BaseService implements FirebaseAuth.AuthStateListener {
 
     /**
@@ -63,6 +64,19 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
 
         return mBinder ;
 
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+
+        // Fire it
+        onAuthStateChanged(mAuth);
+
+
+
+
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -215,6 +229,27 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
         editor.putString(getResources().getString(R.string.application_uid_key), uid);
         editor.commit();
 
+    }
+
+
+    public void logoff() {
+
+        mAuth.signOut();
+
+//
+//
+//        AuthUI.getInstance()
+//                .signOut(this)
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            recreate();
+//                        } else {
+//                            // TODO: failed
+//                        }
+//                    }
+//                });
     }
 
     /**
