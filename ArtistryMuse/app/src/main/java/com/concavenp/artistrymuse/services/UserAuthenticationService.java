@@ -165,6 +165,9 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
                         // Write it to the DB
                         mDatabase.child("users").child(newUid.toString()).setValue(newUser);
 
+                        // Set the UID in the SharedPreferences
+                        setSharedPreferenceUid(newUid.toString());
+
                         // Signal the need for the profile settings activity to be displayed
                         if (mAuthListener != null) {
                             mAuthListener.onProfileInteraction();
