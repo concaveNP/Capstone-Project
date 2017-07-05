@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.MainThread;
+import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -20,7 +21,8 @@ import android.view.MenuItem;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
 import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.common.Scopes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,12 @@ public class MainActivity extends BaseAppCompatActivity implements
      */
     @SuppressWarnings("unused")
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    /**
+     * URLs for Google specific authentication services explanations to the user
+     */
+    private static final String GOOGLE_TOS_URL = "https://www.google.com/policies/terms/";
+    private static final String GOOGLE_PRIVACY_POLICY_URL = "https://www.google.com/policies/privacy/";
 
     /**
      * This service is used to translate the Firebase UID of the authenticated user to an app
@@ -72,15 +80,19 @@ public class MainActivity extends BaseAppCompatActivity implements
         // an application specific (ArtistryMuse) ID.  This class will also monitor the login and
         // logout of the user in order to perform the additional duty of starting a login activity
         // if needed.
-        if (mBound) {
+        if (!mBound) {
+
             Intent intent = new Intent(this, UserAuthenticationService.class);
             bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
             startService(intent);
-        }
 
-        // If there is not a user logged in, there should be
-        if (getUid().isEmpty()) {
-            onLoginInteraction();
+        } else {
+
+            // If there is not a user logged in, there should be
+            if (getUid().isEmpty()) {
+                onLoginInteraction();
+            }
+
         }
 
         setContentView(R.layout.activity_main);
@@ -108,7 +120,6 @@ public class MainActivity extends BaseAppCompatActivity implements
         setSupportActionBar(toolbar);
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -155,27 +166,17 @@ public class MainActivity extends BaseAppCompatActivity implements
             case R.id.action_logoff: {
 
                 // User wants to logoff of the backend service
+               // mService.logoff();
 
-
-//                mService.logoff();
-
-
-
-
-/*
                 AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            recreate();
-                        } else {
-                            // TODO: failed
-                        }
-                    }
-                });
-                */
+                        .signOut(this);
+//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                // user is now signed out
+//                                startActivity(new Intent(MyActivity.this, SignInActivity.class));
+//                                finish();
+//                            }
+//                        });
 
                 // We handled it
                 result = true;
@@ -201,26 +202,39 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     /**
      * Implementation for the interface that provides the ability for this activity to be
-     * notified when the user needs to login into the Firebase service.
+     * notified when the user needs to login into the Firebase service.  The action will be to
+     * start a new login activity provided by the FirebaseUI library.
      */
     @Override
     public void onLoginInteraction() {
 
-        // TODO: what is RC_SING_IN used for
-        // TODO: the SVG is not apparently going to work here, need an png export of the logo
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setTheme(getSelectedTheme())
                         .setLogo(getSelectedLogo())
                         .setAvailableProviders(getSelectedProviders())
-//                        .setTosUrl(getSelectedTosUrl())
-//                        .setPrivacyPolicyUrl(getSelectedPrivacyPolicyUrl())
+                        .setTosUrl(getSelectedTosUrl())
+                        .setPrivacyPolicyUrl(getSelectedPrivacyPolicyUrl())
                         .setIsSmartLockEnabled(false)
-//                        .setIsSmartLockEnabled(mEnableCredentialSelector.isChecked(), mEnableHintSelector.isChecked())
-//                        .setAllowNewEmailAccounts(mAllowNewEmailAccounts.isChecked())
+                        //
+                        // Enable smartLocking after more research and testing
+                        //.setIsSmartLockEnabled(mEnableCredentialSelector.isChecked(), mEnableHintSelector.isChecked())
+                        //
+                        .setAllowNewEmailAccounts(true)
                         .build(),
                 RC_SIGN_IN);
+
+    }
+
+    @MainThread
+    private String getSelectedTosUrl() {
+        return GOOGLE_TOS_URL;
+    }
+
+    @MainThread
+    private String getSelectedPrivacyPolicyUrl() {
+        return GOOGLE_PRIVACY_POLICY_URL;
     }
 
     @MainThread
@@ -235,47 +249,27 @@ public class MainActivity extends BaseAppCompatActivity implements
         return R.drawable.ic_muse_logo_2_vector;
     }
 
-//    /**
-//     * This method is used to set what providers will be used for account authentication.
-//     *
-//     * @return The list of authentication providers
-//     */
-//    @MainThread
-//    private List<AuthUI.IdpConfig> getSelectedProviders() {
-//
-//        List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
-//
-//        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
-//
-//        // Current, we only want to allow user to verify themselves against an Email address.
-//        // Future work would include other verification methods that would be enabled here.
-//        //        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
-//        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
-//        //        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
-//
-//        return selectedProviders;
-//
-//    }
-
     @MainThread
     private List<AuthUI.IdpConfig> getSelectedProviders() {
+
         List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
 
-            selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER) .setPermissions(getGooglePermissions()) .build());
-//            selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER) .setPermissions(getFacebookPermissions()) .build());
-//            selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
-            selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
-//            selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build());
+        //
+        // Enable the following after doing some other research and testing
+        //
+        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
+        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
+        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build());
+        //
+
+        // These will be the available providers
+        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
+        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
 
         return selectedProviders;
+
     }
 
-    @MainThread
-    private List<String> getGooglePermissions() {
-        List<String> result = new ArrayList<>();
-           result.add(Scopes.DRIVE_FILE);
-        return result;
-    }
     /**
      * Implementation for the interface that provides the ability for this activity to be
      * notified when the user needs to fill out profile information about themselves.  As in a

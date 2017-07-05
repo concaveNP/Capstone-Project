@@ -6,11 +6,15 @@ import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.model.User;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -52,7 +56,7 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
         Log.d(TAG, "Listening for Auth changes");
 
         // Listen for changes in our Firebase authentication state now there is a listener
-        mAuth.addAuthStateListener(this);
+        //mAuth.addAuthStateListener(this);
 
     }
 
@@ -69,9 +73,11 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        // Listen for changes in our Firebase authentication state now there is a listener
+        mAuth.addAuthStateListener(this);
 
         // Fire it
-        onAuthStateChanged(mAuth);
+        //onAuthStateChanged(mAuth);
 
 
 
@@ -102,7 +108,9 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
 
             // Notify the observers of the need for the user to login
             Log.d(TAG, "Notifying listener of a required login");
-            mAuthListener.onLoginInteraction();
+            if (mAuthListener != null) {
+                mAuthListener.onLoginInteraction();
+            }
 
         }
         else {
@@ -158,7 +166,9 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
                         mDatabase.child("users").child(newUid.toString()).setValue(newUser);
 
                         // Signal the need for the profile settings activity to be displayed
-                        mAuthListener.onProfileInteraction();
+                        if (mAuthListener != null) {
+                            mAuthListener.onProfileInteraction();
+                        }
 
                     }
 
@@ -229,27 +239,6 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
         editor.putString(getResources().getString(R.string.application_uid_key), uid);
         editor.commit();
 
-    }
-
-
-    public void logoff() {
-
-        mAuth.signOut();
-
-//
-//
-//        AuthUI.getInstance()
-//                .signOut(this)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            recreate();
-//                        } else {
-//                            // TODO: failed
-//                        }
-//                    }
-//                });
     }
 
     /**

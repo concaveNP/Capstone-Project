@@ -6,6 +6,7 @@ buildscript {
 //        TODO: what does mavenLocal do?
         mavenLocal()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
 
@@ -13,7 +14,7 @@ buildscript {
         // in the individual module build.gradle files
 
         // Add this line
-        classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.google.gms:google-services:3.1.0'
     }
 }
 

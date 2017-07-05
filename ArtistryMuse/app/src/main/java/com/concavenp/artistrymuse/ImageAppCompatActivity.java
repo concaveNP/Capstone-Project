@@ -24,6 +24,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
+import static com.concavenp.artistrymuse.ImageAppCompatActivity.ImageShape.IMAGE_SHAPE_RECTANGLE;
+
 /**
  * TODO: this is wrong, update the comment block
  *
@@ -56,6 +58,7 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
     private static final int REQUEST_IMAGE_STORE = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
+
     // When required, this app can ask for the user's permission to read from external storage if
     // choosing a image from a gallery is decided.  In this event the result from an activity
     // needs to specify what the result applies to.
@@ -76,6 +79,12 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
 
     public int getType() {
         return mType;
+    }
+
+    // The different type of image shapes that can be used
+    public enum ImageShape {
+        IMAGE_SHAPE_RECTANGLE,
+        IMAGE_SHAPE_CIRCLE
     }
 
     public void setType(int type) {
@@ -179,7 +188,18 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
                     setSpecificImageData(getType());
 
                     // Load the captured image into the ImageView widget
-                    populateThumbnailImageView(mImagePath, getSpecificImageView(getType()));
+                    switch(getRectangleOrCircle(getType())) {
+                        case IMAGE_SHAPE_CIRCLE: {
+                            populateCircularImageView(mImagePath, getSpecificImageView(getType()));
+                            break;
+                        }
+                        case IMAGE_SHAPE_RECTANGLE:
+                        default: {
+                            populateThumbnailImageView(mImagePath, getSpecificImageView(getType()));
+                            break;
+                        }
+
+                    }
 
                     // Add the new (at least to this App) image to the system's Media Provider
                     galleryAddPic(mImagePath);
@@ -277,7 +297,19 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
 
             copyFile(fileInputStream, fileOutputStream);
 
-            populateThumbnailImageView(mImagePath, view);
+            // Load the captured image into the ImageView widget
+            switch(getRectangleOrCircle(getType())) {
+                case IMAGE_SHAPE_CIRCLE: {
+                    populateCircularImageView(mImagePath, view);
+                    break;
+                }
+                case IMAGE_SHAPE_RECTANGLE:
+                default: {
+                    populateThumbnailImageView(mImagePath, view);
+                    break;
+                }
+
+            }
 
             parcelFileDescriptor.close();
 
@@ -359,6 +391,21 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
         Uri contentUri = Uri.fromFile(file);
         mediaScanIntent.setData(contentUri);
         sendBroadcast(mediaScanIntent);
+
+    }
+
+    /**
+     * Method that given the image type (value important to sub-classes) the determined shape
+     * will be returned.  Sub-classes that wish to provide a circular image presentation should
+     * overload this method.
+     *
+     * @param type - the type of image the presented shape will be in
+     * @return - the image shape type
+     */
+    protected ImageShape getRectangleOrCircle(int type) {
+
+        // The default will always be to provide a rectangle image shape
+        return IMAGE_SHAPE_RECTANGLE;
 
     }
 
