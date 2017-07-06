@@ -71,21 +71,27 @@ public class UserResponseViewHolder extends BaseViewHolder {
                             response.get_source().getProfileImageUid(),
                             StorageDataType.USERS),
                     profileImageView);
-            populateTextView(
-                    "@" + response.get_source().getUsername(),
-                    usernameTextView);
-            populateTextView(
-                    response.get_source().getSummary(),
-                    authorTextView);
-            populateTextView(
-                    response.get_source().getDescription(),
-                    descriptionTextView);
-            populateTextView(
-                    Integer.toString(response.get_source().getFollowedCount()),
-                    followedTextView);
-            populateTextView(
-                    Integer.toString(response.get_source().getFollowing().size()),
-                    followingTextView);
+            populateTextView( "@" + response.get_source().getUsername(), usernameTextView);
+            populateTextView( response.get_source().getSummary(), authorTextView);
+            populateTextView( response.get_source().getDescription(), descriptionTextView);
+
+            // Testing seems to have introduced situations where data that is to be converted from
+            // string to integer may be null thus needs to handled.
+            try {
+                populateTextView(Integer.toString(response.get_source().getFollowedCount()), followedTextView);
+            }
+            catch (NullPointerException ex) {
+                populateTextView("?", followedTextView);
+            }
+
+            // Testing seems to have introduced situations where data that is to be converted from
+            // string to integer may be null thus needs to handled.
+            try {
+                populateTextView( Integer.toString(response.get_source().getFollowing().size()), followingTextView);
+            }
+            catch (NullPointerException ex) {
+                populateTextView("?", followingTextView);
+            }
 
             // Create stable UID for override
             final String uid = response.get_source().getUid();

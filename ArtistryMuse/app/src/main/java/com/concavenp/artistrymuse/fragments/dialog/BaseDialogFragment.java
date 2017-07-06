@@ -125,14 +125,11 @@ public abstract class BaseDialogFragment extends DialogFragment {
             // It is possible for the file reference string to be null, so check for it
             if ((fileReference != null) && (!fileReference.isEmpty())) {
 
-                //StorageReference storageReference = mStorageRef.child(fileReference);
-
                 // Download directly from StorageReference using Glide
                 Glide.with(imageView.getContext())
-//                    .using(mImageLoader)
                         .load(fileReference)
                         .thumbnail(0.1f)
-                        //                   .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
 
             }

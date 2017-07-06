@@ -128,7 +128,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     mUser = user;
 
                     // Update the profile details
-                    populateCircularImageView(buildFileReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), mProfileImageView);
+                    populateCircularImageView(buildStorageReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), mProfileImageView);
                     populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), mHeaderImageView);
                     mNameEditText.setText(user.getName());
                     mUsernameEditText.setText(user.getUsername());
@@ -390,6 +390,19 @@ public class ProfileActivity extends ImageAppCompatActivity {
 
     }
 
+    @Override
+    protected ImageShape getRectangleOrCircle(int type) {
 
+        ImageShape result = ImageShape.IMAGE_SHAPE_RECTANGLE;
+
+        if (type == ImageType.HEADER.ordinal()) {
+            result = ImageShape.IMAGE_SHAPE_RECTANGLE;
+        }
+        else if (type == ImageType.PROFILE.ordinal()) {
+            result = ImageShape.IMAGE_SHAPE_CIRCLE;
+        }
+
+        return result;
+    }
 }
 

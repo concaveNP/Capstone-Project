@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.model.User;
@@ -21,7 +20,6 @@ import java.util.UUID;
 /**
  * Created by dave on 4/7/2017.
  */
-
 public class UserAuthenticationService extends BaseService implements FirebaseAuth.AuthStateListener {
 
     /**
@@ -44,14 +42,13 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
 
     public void registerAuthenticationListener(OnAuthenticationListener listener) {
 
-        Log.d(TAG, "Auth listener has been registered");
-
         mAuthListener = listener;
 
-        Log.d(TAG, "Listening for Auth changes");
+    }
 
-        // Listen for changes in our Firebase authentication state now there is a listener
-        mAuth.addAuthStateListener(this);
+    public void clearRegisteredAuthenticationListener() {
+
+        mAuthListener = null;
 
     }
 
@@ -59,46 +56,52 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
     @Override
     public IBinder onBind(Intent intent) {
 
-        Log.d(TAG, "Activity is binding");
-
         return mBinder ;
 
     }
 
     @Override
-    public void onAuthStateChanged(FirebaseAuth auth) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.d(TAG, "onAuthStateChanged");
+        // Listen for changes in our Firebase authentication state now there is a listener
+        mAuth.addAuthStateListener(this);
+
+        return super.onStartCommand(intent, flags, startId);
+
+    }
+
+    @Override
+    public synchronized void onAuthStateChanged(FirebaseAuth auth) {
 
         final String oldUid = getSharedPreferenceUid();
 
         // The Firebase Auth has changed
         mAuth = auth;
 
-        FirebaseUser user = mAuth.getCurrentUser();
+        final FirebaseUser user = mAuth.getCurrentUser();
 
         // Check to see if there is a user checked in
         if (user == null) {
 
             // There is no user currently logged
-            Log.d(TAG, "There is no user currently logged");
 
             // Clear out the preferences UID value
             setSharedPreferenceUid(getResources().getString(R.string.default_application_uid_value));
 
             // Notify the observers of the need for the user to login
-            Log.d(TAG, "Notifying listener of a required login");
-            mAuthListener.onLoginInteraction();
+            if (mAuthListener != null) {
+
+                mAuthListener.onLoginInteraction();
+
+            }
 
         }
         else {
 
-            Log.d(TAG, "There is an authenticated user");
+            // There is a authenticated user logged in
 
             // Retrieve the Firebase UID of the currently authenticated user
             final String authUid = user.getUid();
-
-            Log.d(TAG, "Requesting DB entry for the authenticated user");
 
             // Get the Firebase UID translated to the ArtistryMuse UID via a DB lookup
             mDatabase.child("auth").child(authUid).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -116,7 +119,9 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
                         // this one.  If it is then we don't need to do anything, otherwise it
                         // needs to be written to the SharedPreferences.
                         if (!artistryMuseUid.equals(oldUid)) {
+
                             setSharedPreferenceUid(artistryMuseUid);
+
                         }
 
                     }
@@ -140,11 +145,24 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
                         newUser.setLastUpdatedDate(currentDate);
                         newUser.setUid(newUid.toString());
 
+                        // Use the name if available
+                        String displayName = user.getDisplayName();
+                        if ((displayName != null) && (!displayName.isEmpty())) {
+                            newUser.setName(displayName);
+                        }
+
                         // Write it to the DB
                         mDatabase.child("users").child(newUid.toString()).setValue(newUser);
 
+                        // Set the UID in the SharedPreferences
+                        setSharedPreferenceUid(newUid.toString());
+
                         // Signal the need for the profile settings activity to be displayed
-                        mAuthListener.onProfileInteraction();
+                        if (mAuthListener != null) {
+
+                            mAuthListener.onProfileInteraction();
+
+                        }
 
                     }
 
@@ -152,7 +170,9 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
+
                     // Do nothing
+
                 }
 
             });
@@ -172,8 +192,6 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
      */
     private String getSharedPreferenceUid() {
 
-        Log.d(TAG, "Getting the ArtistryMuseUID");
-
         String uid = "";
 
         // Check if an UID entry exists already and create it if not
@@ -182,16 +200,11 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
             // Get the UID from the SharedPreferences
             uid = mSharedPreferences.getString(getResources().getString(R.string.application_uid_key), getResources().getString(R.string.default_application_uid_value));
 
-            Log.d(TAG, "The ArtistryMuseUID: " + uid);
-
         }
         else {
 
-            Log.d(TAG, "The ArtistryMuseUID is being cleared out");
-
             // Set the UID in the SharedPreferences
             setSharedPreferenceUid(getResources().getString(R.string.default_application_uid_value));
-
 
         }
 
@@ -208,10 +221,7 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
      */
     private void setSharedPreferenceUid(String uid) {
 
-        Log.d(TAG, "Setting the ArtistryMuseUID: " + uid);
-
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        //SharedPreferences.Editor editor = getSharedPreferences(getResources().getString(R.string.shared_preferences_filename), MODE_PRIVATE).edit();
         editor.putString(getResources().getString(R.string.application_uid_key), uid);
         editor.commit();
 
@@ -222,10 +232,14 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
      * runs in the same process as its clients, we don't need to deal with IPC.
      */
     public class LocalBinder extends Binder {
+
         public UserAuthenticationService getService() {
+
             // Return this instance of UserAuthenticationService so clients can register observers
             return UserAuthenticationService.this;
+
         }
+
     }
 
     /**

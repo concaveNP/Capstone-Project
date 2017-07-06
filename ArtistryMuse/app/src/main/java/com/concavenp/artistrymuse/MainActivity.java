@@ -4,14 +4,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.StyleRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -19,17 +17,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.concavenp.artistrymuse.fragments.GalleryFragment;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
 import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
 public class MainActivity extends BaseAppCompatActivity implements
         UserAuthenticationService.OnAuthenticationListener {
@@ -41,6 +34,12 @@ public class MainActivity extends BaseAppCompatActivity implements
     private static final String TAG = MainActivity.class.getSimpleName();
 
     /**
+     * URLs for Google specific authentication services explanations to the user
+     */
+    private static final String GOOGLE_TOS_URL = "https://www.google.com/policies/terms/";
+    private static final String GOOGLE_PRIVACY_POLICY_URL = "https://www.google.com/policies/privacy/";
+
+    /**
      * This service is used to translate the Firebase UID of the authenticated user to an app
      * specified ArtistryMuse UID.  The service listens for Firebase authentication events
      * and sets a SharedPreferences value accordingly.  SharedPreferences is where the app
@@ -50,6 +49,11 @@ public class MainActivity extends BaseAppCompatActivity implements
      * lookups.
      */
     private UserAuthenticationService mService;
+
+    /**
+     * Value used when referencing results from starting activities via FirebaseUI library.
+     */
+    private static final int RC_SIGN_IN = 100;
 
     /**
      * Flag used to indicate if our one time starting/binding of the service has been performed.
@@ -66,28 +70,14 @@ public class MainActivity extends BaseAppCompatActivity implements
 
         super.onCreate(savedInstanceState);
 
-        // Bind to the UserAuthenticationService
-        //
-        // NOTE: this service require a little more explanation as it appears to be started and
-        // never stopped.  That is exactly what we want in this case.  Hence, the "startService"
-        // is used to which allows the service to run indefinitely.  The service monitors the
-        // authentication service provided by Firebase for an authenticated user to log in.
-        // Once the user logs in the service will translate the Firebase authentication ID into
-        // an application specific (ArtistryMuse) ID.  This class will also monitor the login and
-        // logout of the user in order to perform the additional duty of starting a login activity
-        // if needed.
-        if (mBound) {
-            Intent intent = new Intent(this, UserAuthenticationService.class);
-            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-            startService(intent);
-        }
-
         setContentView(R.layout.activity_main);
 
         // If the application has not run before then initialize the preference settings with default values
         if (savedInstanceState == null) {
+
             // These are the "general" preferences (its all this app has)
             PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
+
         }
 
         // Force the scroll view to fill the area, dunno why this is not the default.
@@ -105,28 +95,6 @@ public class MainActivity extends BaseAppCompatActivity implements
         // Setup the support for creating a menu (ActionBar functionality)
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-    }
-
-    /**
-     * This method is used to set what providers will be used for account authentication.
-     *
-     * @return The list of authentication providers
-     */
-    @MainThread
-    private List<AuthUI.IdpConfig> getSelectedProviders() {
-
-        List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
-
-        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
-
-        // Current, we only want to allow user to verify themselves against an Email address.
-        // Future work would include other verification methods that would be enabled here.
-        //        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
-        //        selectedProviders.add( new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
-        //        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
-
-        return selectedProviders;
 
     }
 
@@ -162,7 +130,6 @@ public class MainActivity extends BaseAppCompatActivity implements
             case R.id.action_settings: {
 
                 // User chose the "Settings" item, show the app settings UI...
-
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
 
@@ -174,20 +141,8 @@ public class MainActivity extends BaseAppCompatActivity implements
             }
             case R.id.action_logoff: {
 
-                // User wants to logoff of the backend service
-
-                AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            recreate();
-                        } else {
-                            showSnackbar(R.string.sign_out_failed);
-                        }
-                    }
-                });
+                // The user chose to log out
+                AuthUI.getInstance().signOut(this);
 
                 // We handled it
                 result = true;
@@ -211,27 +166,73 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     }
 
-    @MainThread
-    private void showSnackbar(@StringRes int errorMessageRes) {
-        Snackbar.make(findViewById(R.id.coordinatorLayout), errorMessageRes, Snackbar.LENGTH_LONG).show();
-    }
-
     /**
      * Implementation for the interface that provides the ability for this activity to be
-     * notified when the user needs to login into the Firebase service.
+     * notified when the user needs to login into the Firebase service.  The action will be to
+     * start a new login activity provided by the FirebaseUI library.
      */
     @Override
     public void onLoginInteraction() {
 
-        // TODO: what is RC_SING_IN used for
-        // TODO: the SVG is not apparently going to work here, need an png export of the logo
         startActivityForResult(
-                AuthUI.getInstance().createSignInIntentBuilder()
-                        .setLogo(R.drawable.ic_muse_logo_1_vector)
-                        .setProviders(getSelectedProviders())
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setTheme(getSelectedTheme())
+                        .setLogo(getSelectedLogo())
+                        .setAvailableProviders(getSelectedProviders())
+                        .setTosUrl(getSelectedTosUrl())
+                        .setPrivacyPolicyUrl(getSelectedPrivacyPolicyUrl())
                         .setIsSmartLockEnabled(false)
+                        //
+                        // Enable smartLocking after more research and testing
+                        //.setIsSmartLockEnabled(mEnableCredentialSelector.isChecked(), mEnableHintSelector.isChecked())
+                        //
+                        .setAllowNewEmailAccounts(true)
                         .build(),
                 RC_SIGN_IN);
+
+    }
+
+    @MainThread
+    private String getSelectedTosUrl() {
+        return GOOGLE_TOS_URL;
+    }
+
+    @MainThread
+    private String getSelectedPrivacyPolicyUrl() {
+        return GOOGLE_PRIVACY_POLICY_URL;
+    }
+
+    @MainThread
+    @StyleRes
+    private int getSelectedTheme() {
+        return R.style.AppTheme;
+    }
+
+    @MainThread
+    @DrawableRes
+    private int getSelectedLogo() {
+        return R.drawable.ic_muse_logo_2_vector;
+    }
+
+    @MainThread
+    private List<AuthUI.IdpConfig> getSelectedProviders() {
+
+        List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
+
+        //
+        // Enable the following after doing some other research and testing
+        //
+        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
+        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
+        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build());
+        //
+
+        // These will be the available providers
+        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
+        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
+
+        return selectedProviders;
 
     }
 
@@ -271,6 +272,35 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     }
 
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+
+        // Bind to LocalService
+        Intent intent = new Intent(this, UserAuthenticationService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+    }
+
+    @Override
+    protected void onStop() {
+
+        super.onStop();
+
+        // Unbind from the service
+        if (mBound) {
+
+            // There should be nobody around to listen now
+            mService.clearRegisteredAuthenticationListener();
+
+            unbindService(mConnection);
+
+            mBound = false;
+
+        }
+    }
+
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -294,7 +324,10 @@ public class MainActivity extends BaseAppCompatActivity implements
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
 
-            // Do nothing
+            // There should be nobody around to listen now
+            mService.clearRegisteredAuthenticationListener();
+
+            mBound = false;
 
         }
 

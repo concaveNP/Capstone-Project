@@ -1,6 +1,19 @@
 apply plugin: 'com.android.application'
 
+// Load keystore from a properties file in the root of the project directory
+def keystorePropertiesFile = rootProject.file("keystore.properties");
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
@@ -11,12 +24,15 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        signingConfig signingConfigs.release
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 
@@ -25,27 +41,28 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    // TODO: don't think I need this anymore as every other library is specified individually
-    //    compile 'com.google.firebase:firebase-core:9.8.0'
-    // Support for Firebase Authentication for both backend and frontend
-    // Support for Firebase Storage
-    // Permissions support
-    // Firebase Database
     compile project(':model_lib')
+    compile 'com.google.firebase:firebase-auth:11.0.1'
+    compile 'com.google.firebase:firebase-storage:11.0.1'
+    compile 'com.google.firebase:firebase-database:11.0.1'
+    compile 'com.google.android.gms:play-services-auth:11.0.1'
+    compile 'com.google.android.gms:play-services:11.0.1'
+    compile 'com.google.gms:google-services:3.1.0'
+    compile 'com.firebaseui:firebase-ui-database:2.0.1'
+    compile 'com.firebaseui:firebase-ui-auth:2.0.1'
+    compile 'com.firebaseui:firebase-ui-storage:2.0.1'
+    compile 'com.firebaseui:firebase-ui:2.0.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.google.firebase:firebase-auth:10.2.1'
-    compile 'com.google.android.gms:play-services-auth:10.2.1'
-    compile 'com.firebaseui:firebase-ui-auth:1.0.0'
-    compile 'com.google.firebase:firebase-storage:10.2.1'
-    compile 'pub.devrel:easypermissions:0.2.0'
-    compile 'com.google.firebase:firebase-database:10.2.1'
-    compile 'com.firebaseui:firebase-ui-database:1.0.0'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:support-vector-drawable:25.3.1'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.firebaseui:firebase-ui-storage:1.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'pub.devrel:easypermissions:0.2.0'
+    // Required only if Facebook login support is required
+    compile 'com.facebook.android:facebook-android-sdk:4.22.1'
+    // Required only if Twitter login support is required
+    compile('com.twitter.sdk.android:twitter-core:3.0.0@aar') { transitive = true }
     testCompile 'junit:junit:4.12'
 }
 
