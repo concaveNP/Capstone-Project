@@ -83,7 +83,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
         mUriLoad = new FileDescriptorUriLoader(this);
 
         // Get ready to read from local storage for this app
-        //mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         mSharedPreferences = getSharedPreferences(getResources().getString(R.string.shared_preferences_filename), MODE_PRIVATE);
 
     }
@@ -195,41 +194,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(createBitmapImageViewTarget(imageView));
-//                        .into(new BitmapImageViewTarget(imageView) {
-//                            @Override
-//                            protected void setResource(Bitmap bitmap) {
-//
-//                                int bitmapWidth = bitmap.getWidth();
-//                                int bitmapHeight = bitmap.getHeight();
-//                                int borderWidthHalf = 10;
-//                                int bitmapSquareWidth = Math.min(bitmapWidth,bitmapHeight);
-//                                int newBitmapSquareWidth = bitmapSquareWidth+borderWidthHalf;
-//
-//                                Bitmap roundedBitmap = Bitmap.createBitmap(newBitmapSquareWidth,newBitmapSquareWidth,Bitmap.Config.ARGB_8888);
-//
-//                                // Initialize a new Canvas to draw empty bitmap
-//                                Canvas canvas = new Canvas(roundedBitmap);
-//
-//                                // Calculation to draw bitmap at the circular bitmap center position
-//                                int x = borderWidthHalf + bitmapSquareWidth - bitmapWidth;
-//                                int y = borderWidthHalf + bitmapSquareWidth - bitmapHeight;
-//
-//                                canvas.drawBitmap(bitmap, x, y, null);
-//
-//                                // Initializing a new Paint instance to draw circular border
-//                                Paint borderPaint = new Paint();
-//                                borderPaint.setStyle(Paint.Style.STROKE);
-//                                borderPaint.setStrokeWidth(borderWidthHalf*2);
-//                                borderPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.myapp_accent_700, null));
-//
-//                                canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquareWidth/2, borderPaint);
-//
-//                                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(imageView.getContext().getResources(), roundedBitmap);
-//                                circularBitmapDrawable.setCircular(true);
-//                                imageView.setImageDrawable(circularBitmapDrawable);
-//
-//                            }
-//                        });
 
             }
 

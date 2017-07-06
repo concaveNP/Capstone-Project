@@ -1,7 +1,9 @@
 package com.concavenp.artistrymuse;
 
 import android.app.Application;
+import android.content.Intent;
 
+import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.google.firebase.database.FirebaseDatabase;
 
 /**
@@ -16,6 +18,9 @@ public class ArtistryMuseApplication extends Application {
 
         // Enable disk persistence
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        // Start authentication service
+        startService(new Intent(this, UserAuthenticationService.class));
 
     }
 

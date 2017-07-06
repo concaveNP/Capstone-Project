@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -21,8 +20,6 @@ import android.view.MenuItem;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
 import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +50,9 @@ public class MainActivity extends BaseAppCompatActivity implements
      */
     private UserAuthenticationService mService;
 
+    /**
+     * Value used when referencing results from starting activities via FirebaseUI library.
+     */
     private static final int RC_SIGN_IN = 100;
 
     /**
@@ -70,37 +70,14 @@ public class MainActivity extends BaseAppCompatActivity implements
 
         super.onCreate(savedInstanceState);
 
-        // Bind to the UserAuthenticationService
-        //
-        // NOTE: this service require a little more explanation as it appears to be started and
-        // never stopped.  That is exactly what we want in this case.  Hence, the "startService"
-        // is used to which allows the service to run indefinitely.  The service monitors the
-        // authentication service provided by Firebase for an authenticated user to log in.
-        // Once the user logs in the service will translate the Firebase authentication ID into
-        // an application specific (ArtistryMuse) ID.  This class will also monitor the login and
-        // logout of the user in order to perform the additional duty of starting a login activity
-        // if needed.
-        if (!mBound) {
-
-            Intent intent = new Intent(this, UserAuthenticationService.class);
-            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-            startService(intent);
-
-        } else {
-
-            // If there is not a user logged in, there should be
-            if (getUid().isEmpty()) {
-                onLoginInteraction();
-            }
-
-        }
-
         setContentView(R.layout.activity_main);
 
         // If the application has not run before then initialize the preference settings with default values
         if (savedInstanceState == null) {
+
             // These are the "general" preferences (its all this app has)
             PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
+
         }
 
         // Force the scroll view to fill the area, dunno why this is not the default.
@@ -153,7 +130,6 @@ public class MainActivity extends BaseAppCompatActivity implements
             case R.id.action_settings: {
 
                 // User chose the "Settings" item, show the app settings UI...
-
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
 
@@ -165,18 +141,8 @@ public class MainActivity extends BaseAppCompatActivity implements
             }
             case R.id.action_logoff: {
 
-                // User wants to logoff of the backend service
-               // mService.logoff();
-
-                AuthUI.getInstance()
-                        .signOut(this);
-//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                // user is now signed out
-//                                startActivity(new Intent(MyActivity.this, SignInActivity.class));
-//                                finish();
-//                            }
-//                        });
+                // The user chose to log out
+                AuthUI.getInstance().signOut(this);
 
                 // We handled it
                 result = true;
@@ -306,6 +272,35 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     }
 
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+
+        // Bind to LocalService
+        Intent intent = new Intent(this, UserAuthenticationService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+    }
+
+    @Override
+    protected void onStop() {
+
+        super.onStop();
+
+        // Unbind from the service
+        if (mBound) {
+
+            // There should be nobody around to listen now
+            mService.clearRegisteredAuthenticationListener();
+
+            unbindService(mConnection);
+
+            mBound = false;
+
+        }
+    }
+
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -329,7 +324,10 @@ public class MainActivity extends BaseAppCompatActivity implements
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
 
-            // Do nothing
+            // There should be nobody around to listen now
+            mService.clearRegisteredAuthenticationListener();
+
+            mBound = false;
 
         }
 
