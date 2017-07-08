@@ -10,12 +10,14 @@ import android.preference.PreferenceManager;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.MainThread;
 import android.support.annotation.StyleRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
 import com.concavenp.artistrymuse.services.UserAuthenticationService;
@@ -24,6 +26,13 @@ import com.firebase.ui.auth.AuthUI;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * References:
+ *
+ * How to place the Floating Action Button exclusively on one fragment only in Tab layout
+ *      - https://stackoverflow.com/questions/30926528/how-to-place-the-floating-action-button-exclusively-on-one-fragment-only-in-tab
+ *
+ */
 public class MainActivity extends BaseAppCompatActivity implements
         UserAuthenticationService.OnAuthenticationListener {
 
@@ -61,6 +70,11 @@ public class MainActivity extends BaseAppCompatActivity implements
     private boolean mBound = false;
 
     /**
+     * The FAB for creating new projects.  This FAB will only be visible in the Gallery fragment.
+     */
+    private FloatingActionButton fabCreateProject;
+
+    /**
      * Field used in determining how various UI elements are displayed within a Large or Not Large display
      */
     private boolean mIsLargeLayout;
@@ -87,15 +101,87 @@ public class MainActivity extends BaseAppCompatActivity implements
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new ArtistryFragmentPagerAdapter(getSupportFragmentManager()));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // Do nothing
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                animateFab(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // Do nothing
+            }
+        });
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                animateFab(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // Do nothing
+            }
+        });
 
         // Setup the support for creating a menu (ActionBar functionality)
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Setup the FAB for creating a new user project (only visible in the gallery tab)
+        fabCreateProject = (FloatingActionButton) findViewById(R.id.fabCreateProject);
+        fabCreateProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Notify 'this' of the Create New Project selection
+                onInteractionSelection(null, null, StorageDataType.PROJECTS, UserInteractionType.EDIT);
+
+            }
+        });
+
+        // Default will be hidden
+        fabCreateProject.hide();
+
+    }
+
+    /**
+     * Controls the visibility of the FAB button(s) depending on the position of the displayed tab.
+     *
+     * @param position - The current tab position currently being displayed
+     */
+    private void animateFab(int position) {
+        switch (position) {
+            case 0:
+                fabCreateProject.hide();
+                break;
+            case 1:
+                fabCreateProject.hide();
+                break;
+            case 2:
+                fabCreateProject.hide();
+                break;
+            case 3:
+                fabCreateProject.show();
+                break;
+            default:
+                fabCreateProject.hide();
+                break;
+        }
     }
 
     @Override
