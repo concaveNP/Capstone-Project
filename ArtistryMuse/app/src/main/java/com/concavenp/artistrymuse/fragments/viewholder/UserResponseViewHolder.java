@@ -75,8 +75,7 @@ public class UserResponseViewHolder extends BaseViewHolder {
             populateTextView( response.get_source().getSummary(), authorTextView);
             populateTextView( response.get_source().getDescription(), descriptionTextView);
 
-            // Testing seems to have introduced situations where data that is to be converted from
-            // string to integer may be null thus needs to handled.
+            // Protection against bad data
             try {
                 populateTextView(Integer.toString(response.get_source().getFollowedCount()), followedTextView);
             }
@@ -84,10 +83,9 @@ public class UserResponseViewHolder extends BaseViewHolder {
                 populateTextView("?", followedTextView);
             }
 
-            // Testing seems to have introduced situations where data that is to be converted from
-            // string to integer may be null thus needs to handled.
+            // Protection against bad data
             try {
-                populateTextView( Integer.toString(response.get_source().getFollowing().size()), followingTextView);
+                populateTextView(Integer.toString(response.get_source().getFollowing().size()), followingTextView);
             }
             catch (NullPointerException ex) {
                 populateTextView("?", followingTextView);

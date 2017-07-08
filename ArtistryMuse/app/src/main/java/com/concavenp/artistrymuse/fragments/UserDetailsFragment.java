@@ -60,6 +60,10 @@ public class UserDetailsFragment extends BaseFragment {
     // The model data of the User in question that the user wants to see the details of.
     private User mUserInQuestionModel;
 
+    // Listeners for DB value changes
+    private ValueEventListener userValueEventListener;
+    private ValueEventListener userInQuestionValueEventListener;
+
     public UserDetailsFragment() {
 
         // Required empty public constructor
@@ -114,6 +118,7 @@ public class UserDetailsFragment extends BaseFragment {
         mRecycler.setLayoutManager(linearLayoutManager);
 
         return view;
+
     }
 
     @Override
@@ -121,19 +126,46 @@ public class UserDetailsFragment extends BaseFragment {
 
         super.onStart();
 
-        Bundle args = getArguments();
+        // Display whatever data we currently have to work with to get the cycle going
+        updateUserDetails(mUserModel);
 
-        // Determine what kind of state our User data situation is in.  If we have already pulled
-        // data down then display it.  Otherwise, go get it.
-        if (mUserModel != null) {
+        // Subscribe to the user's data
+        mDatabase.child(USERS.getType()).child(getUid()).addValueEventListener(getUserValueEventListener());
 
-            // There is data to work with, so display it
-            updateUserDetails(mUserModel);
+        // Display whatever data we currently have to work with to get the cycle going
+        updateUserInQuestionDetails(mUserInQuestionModel);
 
-        } else if (args != null) {
+        // Pull the User in question info from the Database and keep listening for changes
+        if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
 
-            // Pull the User info from the Database just once
-            mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(USERS.getType()).child(mUidForDetails).addValueEventListener(getUserInQuestionValueEventListener());
+
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        // Un-subscribe to the user's data
+        mDatabase.child(USERS.getType()).child(getUid()).removeEventListener(getUserValueEventListener());
+
+        // Un-subscribe to the user in question's data if there
+        if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
+
+            mDatabase.child(USERS.getType()).child(mUidForDetails).removeEventListener(getUserInQuestionValueEventListener());
+
+        }
+
+    }
+
+    private ValueEventListener getUserValueEventListener() {
+
+        if (userValueEventListener == null) {
+
+            userValueEventListener = new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -156,27 +188,19 @@ public class UserDetailsFragment extends BaseFragment {
                     // Do nothing
                 }
 
-            });
-
-        } else {
-
-            // There is no data to display and nothing to lookup
-            updateUserDetails(null);
+            };
 
         }
 
-        // Determine what kind of state our User In Question data is in.  If we have already pulled
-        // data down then display it.  Otherwise, go get it.
-        if (mUserInQuestionModel != null) {
+        return userValueEventListener;
 
-            // There is data to work with, so display it
-            updateUserInQuestionDetails(mUserInQuestionModel);
+    }
 
-        } else if (args != null) {
+    private ValueEventListener getUserInQuestionValueEventListener() {
 
+        if (userInQuestionValueEventListener == null) {
 
-            // Pull the User in question info from the Database and keep listening for changes
-            mDatabase.child(USERS.getType()).child(mUidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
+            userInQuestionValueEventListener = new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -199,15 +223,11 @@ public class UserDetailsFragment extends BaseFragment {
                     // Do nothing
                 }
 
-            });
-
-
-        } else {
-
-            // There is no data to display and nothing to lookup
-            updateUserInQuestionDetails(null);
+            };
 
         }
+
+        return userInQuestionValueEventListener;
 
     }
 
@@ -236,6 +256,7 @@ public class UserDetailsFragment extends BaseFragment {
             }
 
             followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                     if (isChecked) {
@@ -255,8 +276,6 @@ public class UserDetailsFragment extends BaseFragment {
 
                     } else {
 
-                        // TODO: this needs an addition user confirmation dialog to get express desire to un-follow the user in question
-
                         // Remove the user in question from the map of people the user is following
                         mDatabase.child(USERS.getType()).child(getUid()).child("following").child(mUidForDetails).removeValue();
 
@@ -264,9 +283,11 @@ public class UserDetailsFragment extends BaseFragment {
                         Map<String, Object> childUpdates = new HashMap<>();
                         childUpdates.put("/users/" + mUidForDetails + "/followedCount", mUserInQuestionModel.getFollowedCount() - 1);
                         mDatabase.updateChildren(childUpdates);
+
                     }
 
                 }
+
             });
 
         }

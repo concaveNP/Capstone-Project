@@ -39,7 +39,7 @@ public class ProjectDetailsFragment extends BaseFragment {
     // The key lookup name to the parameter passed into this Fragment
     private static final String UID_PARAM = "uid";
 
-    // The UID for the User in question to display the details about
+    // The UID for the Project in question to display the details about
     private String mUidForDetails;
 
     // Widgets for displaying all of the recycled items
@@ -58,6 +58,11 @@ public class ProjectDetailsFragment extends BaseFragment {
 
     // The Owner of the Project in question
     private User mUserInQuestionModel;
+
+    // Listeners for DB value changes
+    private ValueEventListener userValueEventListener;
+    private ValueEventListener projectInQuestionValueEventListener;
+    private ValueEventListener projectOwnerValueEventListener;
 
     public ProjectDetailsFragment() {
 
@@ -120,19 +125,58 @@ public class ProjectDetailsFragment extends BaseFragment {
 
         super.onStart();
 
-        Bundle args = getArguments();
+        // Display whatever data we currently have to work with to get the cycle going
+        updateUserDetails(mUserModel);
 
-        // Determine what kind of state our User data situation is in.  If we have already pulled
-        // data down then display it.  Otherwise, go get it.
-        if (mUserModel != null) {
+        // Subscribe to the user's data
+        mDatabase.child(USERS.getType()).child(getUid()).addValueEventListener(getUserValueEventListener());
 
-            // There is data to work with, so display it
-            updateUserDetails(mUserModel);
+        // Display whatever data we currently have to work with to get the cycle going
+        updateProjectInQuestionDetails(mProjectInQuestionModel);
 
-        } else if (args != null) {
+        // Pull the User in question info from the Database and keep listening for changes
+        if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
 
-            // Pull the User info from the Database just once
-            mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(PROJECTS.getType()).child(mUidForDetails).addValueEventListener(getProjectInQuestionValueEventListener());
+
+        }
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        // Un-subscribe to the user's data
+        mDatabase.child(USERS.getType()).child(getUid()).removeEventListener(getUserValueEventListener());
+
+        // Un-subscribe to the project in question's data if there
+        if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
+
+            mDatabase.child(PROJECTS.getType()).child(mUidForDetails).removeEventListener(getProjectInQuestionValueEventListener());
+
+        }
+
+        // Un-subscribe to the project in question's owner if data is there
+        if (mProjectInQuestionModel != null) {
+
+            String ownerUid = mProjectInQuestionModel.getOwnerUid();
+
+            if ((ownerUid != null) && (!ownerUid.isEmpty())) {
+
+                mDatabase.child(USERS.getType()).child(mProjectInQuestionModel.getOwnerUid()).removeEventListener(getProjectOwnerValueEventListener());
+
+            }
+
+        }
+
+    }
+
+    private ValueEventListener getUserValueEventListener() {
+
+        if (userValueEventListener == null) {
+
+            userValueEventListener = new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -155,26 +199,19 @@ public class ProjectDetailsFragment extends BaseFragment {
                     // Do nothing
                 }
 
-            });
-
-        } else {
-
-            // There is no data to display and nothing to lookup
-            updateUserDetails(null);
+            };
 
         }
 
-        // Determine what kind of state our User In Question data is in.  If we have already pulled
-        // data down then display it.  Otherwise, go get it.
-        if (mProjectInQuestionModel != null) {
+        return userValueEventListener;
 
-            // There is data to work with, so display it
-            updateProjectInQuestionDetails(mProjectInQuestionModel);
+    }
 
-        } else if (args != null) {
+    private ValueEventListener getProjectInQuestionValueEventListener() {
 
-            // Pull the User in question info from the Database
-            mDatabase.child(PROJECTS.getType()).child(mUidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
+        if (projectInQuestionValueEventListener == null) {
+
+            projectInQuestionValueEventListener  = new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -197,15 +234,53 @@ public class ProjectDetailsFragment extends BaseFragment {
                     // Do nothing
                 }
 
-            });
-
-
-        } else {
-
-            // There is no data to display and nothing to lookup
-            updateProjectInQuestionDetails(null);
+            };
 
         }
+
+        return projectInQuestionValueEventListener  ;
+
+    }
+
+    private ValueEventListener getProjectOwnerValueEventListener() {
+
+        if (projectOwnerValueEventListener == null) {
+
+            projectOwnerValueEventListener = new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    // Perform the JSON to Object conversion
+                    mUserInQuestionModel = dataSnapshot.getValue(User.class);
+
+                    // Verify there is a user to work with
+                    if (mUserInQuestionModel != null) {
+
+                        // Set the profile image
+                        ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.avatar_ImageView);
+                        populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+
+                        // Set the name of the author and the username
+                        TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
+                        populateTextView(mUserInQuestionModel.getName(), authorTextView);
+                        TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
+                        populateTextView("@" + mUserInQuestionModel.getUsername(), usernameTextView);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Do nothing
+                }
+
+            };
+
+        }
+
+        return projectOwnerValueEventListener;
 
     }
 
@@ -290,37 +365,7 @@ public class ProjectDetailsFragment extends BaseFragment {
             mRecycler.setAdapter(mAdapter);
 
             // Retrieve the user associated with the project just once
-            mDatabase.child(USERS.getType()).child(mProjectInQuestionModel.getOwnerUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    // Perform the JSON to Object conversion
-                    mUserInQuestionModel = dataSnapshot.getValue(User.class);
-
-                    // Verify there is a user to work with
-                    if (mUserInQuestionModel != null) {
-
-                        // Set the profile image
-                        ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.avatar_ImageView);
-                        populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
-
-                        // Set the name of the author and the username
-                        TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
-                        populateTextView(mUserInQuestionModel.getName(), authorTextView);
-                        TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
-                        populateTextView("@" + mUserInQuestionModel.getUsername(), usernameTextView);
-
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Do nothing
-                }
-
-            });
+            mDatabase.child(USERS.getType()).child(mProjectInQuestionModel.getOwnerUid()).addValueEventListener(getProjectOwnerValueEventListener());
 
         } else {
 

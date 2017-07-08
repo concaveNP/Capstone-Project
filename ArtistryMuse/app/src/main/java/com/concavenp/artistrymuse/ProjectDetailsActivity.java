@@ -28,6 +28,15 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
      */
     public static final String EXTRA_DATA = "uid_string_data";
 
+    // ImageView for setting the Project in question's backdrop
+    private ImageView backdropImageView;
+
+    // Listeners for DB value changes
+    private ValueEventListener projectInQuestionValueEventListener;
+
+    // The UID for the Project in question to display the details about
+    private String mUidForDetails;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -43,45 +52,82 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
         // Capture the AppBar for manipulating it after data is available to do so
         final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
-        // ImageView for setting the User backdrop
-        final ImageView backdropImageView = (ImageView) appBarLayout.findViewById(R.id.project_details_backdrop);
+        // ImageView for setting the Project backdrop
+        backdropImageView = (ImageView) appBarLayout.findViewById(R.id.project_details_backdrop);
 
         // Extract the UID from the Activity parameters
         Intent intent = getIntent();
-        final String uidForDetails = intent.getStringExtra(EXTRA_DATA);
-
-        mDatabase.child(PROJECTS.getType()).child(uidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                // Perform the JSON to Object conversion
-                final Project project = dataSnapshot.getValue(Project.class);
-
-                // Verify there is a user to work with
-                if (project != null) {
-
-                    populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.PROJECTS), backdropImageView);
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Do nothing
-            }
-
-        });
+        mUidForDetails = intent.getStringExtra(EXTRA_DATA);
 
         // Create the new fragment and give it the user data
-        ProjectDetailsFragment fragment = ProjectDetailsFragment.newInstance(uidForDetails);
+        ProjectDetailsFragment fragment = ProjectDetailsFragment.newInstance(mUidForDetails);
 
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_project_details_container, fragment).commit();
 
     }
 
-    // TODO: support the phone and tablet layout, for now it is just phone
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+
+        // Pull the Project in question info from the Database and keep listening for changes
+        if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
+
+            mDatabase.child(PROJECTS.getType()).child(mUidForDetails).addValueEventListener(getProjectInQuestionValueEventListener());
+
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        // Un-subscribe to the user in question's data if there
+        if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
+
+            mDatabase.child(PROJECTS.getType()).child(mUidForDetails).removeEventListener(getProjectInQuestionValueEventListener());
+
+        }
+
+    }
+
+    private ValueEventListener getProjectInQuestionValueEventListener() {
+
+        if (projectInQuestionValueEventListener == null) {
+
+            projectInQuestionValueEventListener = new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    // Perform the JSON to Object conversion
+                    final Project project = dataSnapshot.getValue(Project.class);
+
+                    // Verify there is a user to work with
+                    if (project != null) {
+
+                        populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.PROJECTS), backdropImageView);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Do nothing
+                }
+
+            };
+
+        }
+
+        return projectInQuestionValueEventListener;
+
+    }
 
 }
+
