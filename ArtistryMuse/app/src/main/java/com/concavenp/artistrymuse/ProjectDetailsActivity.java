@@ -12,6 +12,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
+
 public class ProjectDetailsActivity extends BaseAppCompatActivity {
 
     /**
@@ -48,7 +50,7 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
         Intent intent = getIntent();
         final String uidForDetails = intent.getStringExtra(EXTRA_DATA);
 
-        mDatabase.child("projects").child(uidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(PROJECTS.getType()).child(uidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

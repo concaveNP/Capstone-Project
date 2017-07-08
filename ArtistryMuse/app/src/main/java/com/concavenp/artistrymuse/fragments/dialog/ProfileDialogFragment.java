@@ -51,6 +51,8 @@ import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ProfileDialogFragment#newInstance} factory method to
@@ -231,7 +233,7 @@ public class ProfileDialogFragment extends BaseDialogFragment {
         });
 
         // Query for the currently saved user uid via the Saved Preferences
-        mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -529,7 +531,7 @@ public class ProfileDialogFragment extends BaseDialogFragment {
             }
 
             // Write the user model data it to the database
-            mDatabase.child("users").child(mUser.getUid()).setValue(mUser);
+            mDatabase.child(USERS.getType()).child(mUser.getUid()).setValue(mUser);
 
             // We are handling the button click
             return true;

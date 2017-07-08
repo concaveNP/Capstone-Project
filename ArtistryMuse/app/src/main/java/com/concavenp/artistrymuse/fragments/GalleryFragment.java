@@ -22,6 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
+
 /**
  * A simple {@link BaseFragment} subclass.
  * Use the {@link GalleryFragment#newInstance} factory method to
@@ -134,7 +136,7 @@ public class GalleryFragment extends BaseFragment {
     private void refresh() {
 
         // First check to see if the user is has any projects yet
-        mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -217,7 +219,7 @@ public class GalleryFragment extends BaseFragment {
 
         String userId = getUid();
 
-        Query resultQuery = databaseReference.child("users").child(userId).child("projects");
+        Query resultQuery = databaseReference.child(USERS.getType()).child(userId).child("projects");
 
         return resultQuery;
     }

@@ -17,6 +17,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 
+import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
+
 /**
  * Created by dave on 12/2/2016.
  */
@@ -86,7 +88,7 @@ public class GalleryViewHolder extends BaseViewHolder {
         final TextView viewsTextView = (TextView) itemView.findViewById(R.id.views_textView);
         final TextView ratingTextView = (TextView) itemView.findViewById(R.id.rating_textView);
 
-        mDatabase.child("projects").child(projectUid).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(PROJECTS.getType()).child(projectUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

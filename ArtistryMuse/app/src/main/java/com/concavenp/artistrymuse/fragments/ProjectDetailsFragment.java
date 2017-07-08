@@ -20,6 +20,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
+import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ProjectDetailsFragment#newInstance} factory method to
@@ -96,9 +99,6 @@ public class ProjectDetailsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        // Need to display the share trailer action bar icon
-//        setHasOptionsMenu(true);
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_project_details, container, false);
 
@@ -132,7 +132,7 @@ public class ProjectDetailsFragment extends BaseFragment {
         } else if (args != null) {
 
             // Pull the User info from the Database just once
-            mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -174,7 +174,7 @@ public class ProjectDetailsFragment extends BaseFragment {
         } else if (args != null) {
 
             // Pull the User in question info from the Database
-            mDatabase.child("projects").child(mUidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(PROJECTS.getType()).child(mUidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -244,7 +244,7 @@ public class ProjectDetailsFragment extends BaseFragment {
 //                        following.setUid(mUidForDetails);
 //
 //                        // Add the user in question to the map of people the user is following
-//                        mDatabase.child("users").child(getUid()).child("following").child(mUidForDetails).setValue(following);
+//                        mDatabase.child(USERS.getType()).child(getUid()).child("following").child(mUidForDetails).setValue(following);
 //
 //                        // Update the followed count for the user in question
 //                        Map<String, Object> childUpdates = new HashMap<>();
@@ -256,7 +256,7 @@ public class ProjectDetailsFragment extends BaseFragment {
 //                        // TODO: this needs an addition user confirmation dialog to get express desire to un-follow the user in question
 //
 //                        // Remove the user in question from the map of people the user is following
-//                        mDatabase.child("users").child(getUid()).child("following").child(mUidForDetails).removeValue();
+//                        mDatabase.child(USERS.getType()).child(getUid()).child("following").child(mUidForDetails).removeValue();
 //
 //                        // Update the followed count for the user in question
 //                        Map<String, Object> childUpdates = new HashMap<>();
@@ -280,9 +280,6 @@ public class ProjectDetailsFragment extends BaseFragment {
 
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_project_details)));
 
-            // TODO: decide if there is a need for some other menu buttons
-//            setMenuVisibility(true);
-
             // Display items to be populated
             final TextView descriptionTextView = (TextView) getActivity().findViewById(R.id.description_TextView);
 
@@ -292,12 +289,8 @@ public class ProjectDetailsFragment extends BaseFragment {
             mAdapter = new InspirationAdapter(mProjectInQuestionModel.getInspirations(), mInteractionListener);
             mRecycler.setAdapter(mAdapter);
 
-
-
-
-
             // Retrieve the user associated with the project just once
-            mDatabase.child("users").child(mProjectInQuestionModel.getOwnerUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(USERS.getType()).child(mProjectInQuestionModel.getOwnerUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -333,9 +326,6 @@ public class ProjectDetailsFragment extends BaseFragment {
 
             // There is no data to display so tell the user
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_project_details_TextView)));
-
-            // TODO: decide if there is a need for some other menu buttons
-//            setMenuVisibility(false);
 
         }
 

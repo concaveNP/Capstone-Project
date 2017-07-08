@@ -30,6 +30,8 @@ import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
+import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
 
 /**
  * - Show publish button (ick - implement after Udacity)
@@ -114,7 +116,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
             // Set the title
             setTitle(getString(R.string.edit_project_title));
 
-            mDatabase.child("projects").child(mProjectUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(PROJECTS.getType()).child(mProjectUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -277,10 +279,10 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
             }
 
             // Write the project model data it to the database
-            mDatabase.child("projects").child(mProjectUid).setValue(mProjectModel);
+            mDatabase.child(PROJECTS.getType()).child(mProjectUid).setValue(mProjectModel);
 
             // Update the user's list of projects to add this one if needed (if it was new)
-            mDatabase.child("users").child(getUid()).child("projects").child(mProjectUid).setValue(mProjectUid);
+            mDatabase.child(USERS.getType()).child(getUid()).child("projects").child(mProjectUid).setValue(mProjectUid);
 
             // We are handling the button click
             return true;

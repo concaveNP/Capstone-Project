@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
 
 /**
  * A simple {@link BaseFragment} subclass.
@@ -132,7 +133,7 @@ public class FavoritesFragment extends BaseFragment {
     private void refresh() {
 
         // First check to see if the user favorited any projects anybody yet
-        mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -213,7 +214,7 @@ public class FavoritesFragment extends BaseFragment {
 
         String userId = getUid();
 
-        Query resultQuery = databaseReference.child("users").child(userId).child("favorites");
+        Query resultQuery = databaseReference.child(USERS.getType()).child(userId).child("favorites");
 
         return resultQuery;
     }
