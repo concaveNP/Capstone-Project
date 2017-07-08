@@ -1,9 +1,6 @@
 package com.concavenp.artistrymuse.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.UserInteractionType;
 import com.concavenp.artistrymuse.fragments.viewholder.GalleryViewHolder;
 import com.concavenp.artistrymuse.model.User;
@@ -25,7 +21,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
-
 
 /**
  * A simple {@link BaseFragment} subclass.
@@ -101,17 +96,6 @@ public class GalleryFragment extends BaseFragment {
 
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_gallery, container, false);
-
-        FloatingActionButton fab = (FloatingActionButton) mainView.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // Notify the the listener (aka MainActivity) of the Create New Project selection
-                mInteractionListener.onInteractionSelection(null, null, StorageDataType.PROJECTS, UserInteractionType.EDIT);
-
-            }
-        });
 
         // Save off the flipper for use in decided which view to show
         mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_gallery_ViewFlipper);
