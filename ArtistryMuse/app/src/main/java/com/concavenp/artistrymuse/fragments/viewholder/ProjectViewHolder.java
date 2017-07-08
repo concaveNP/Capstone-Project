@@ -17,6 +17,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
+import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
+
 /**
  * Created by dave on 12/2/2016.
  */
@@ -61,7 +64,7 @@ public class ProjectViewHolder extends BaseViewHolder {
         final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
         final TextView followingTextView = (TextView) itemView.findViewById(R.id.views_textView);
 
-        mDatabase.child("projects").child(favorite.uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(PROJECTS.getType()).child(favorite.uid).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -91,7 +94,7 @@ public class ProjectViewHolder extends BaseViewHolder {
                     });
 
                     // Query for the User specific data (aka the Project Owner)
-                    mDatabase.child("users").child(project.ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child(USERS.getType()).child(project.ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

@@ -16,6 +16,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
+
 /**
  * Created by dave on 12/2/2016.
  */
@@ -63,7 +65,7 @@ public class UserViewHolder extends BaseViewHolder {
         final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
         final TextView followingTextView = (TextView) itemView.findViewById(R.id.views_textView);
 
-        mDatabase.child("users").child(following.uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(USERS.getType()).child(following.uid).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

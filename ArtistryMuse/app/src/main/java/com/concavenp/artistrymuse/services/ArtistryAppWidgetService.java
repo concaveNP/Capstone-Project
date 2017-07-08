@@ -1,6 +1,5 @@
 package com.concavenp.artistrymuse.services;
 
-import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -11,20 +10,16 @@ import android.widget.RemoteViews;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.User;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
+import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
+
 /**
  * Created by dave on 4/7/2017.
  */
-
 public class ArtistryAppWidgetService extends BaseService {
 
     /**
@@ -57,7 +52,7 @@ public class ArtistryAppWidgetService extends BaseService {
 
             final int id = widgetId;
 
-            mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -76,7 +71,7 @@ public class ArtistryAppWidgetService extends BaseService {
                         // Loop over all of the user's projects and tally up the data
                         for (String projectId : user.getProjects().values()) {
 
-                            mDatabase.child("projects").child(projectId).addListenerForSingleValueEvent(new ValueEventListener() {
+                            mDatabase.child(PROJECTS.getType()).child(projectId).addListenerForSingleValueEvent(new ValueEventListener() {
 
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {

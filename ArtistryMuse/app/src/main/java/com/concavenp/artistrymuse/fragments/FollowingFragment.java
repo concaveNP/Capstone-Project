@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
 
 /**
  * A simple {@link BaseFragment} subclass.
@@ -133,7 +134,7 @@ public class FollowingFragment extends BaseFragment {
     private void refresh() {
 
         // First check to see if the user is following anybody yet
-        mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -215,7 +216,7 @@ public class FollowingFragment extends BaseFragment {
 
         String userId = getUid();
 
-        Query resultQuery = databaseReference.child("users").child(userId).child("following");
+        Query resultQuery = databaseReference.child(USERS.getType()).child(userId).child("following");
 
         return resultQuery;
     }

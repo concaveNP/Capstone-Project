@@ -27,6 +27,9 @@ import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
+import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
+
 /**
  * TODO: this is wrong, update the comment block
  *
@@ -113,7 +116,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
         headerButton.setOnClickListener(new ImageButtonListener(ImageType.HEADER.ordinal()));
 
         // Query for the currently saved user uid via the Saved Preferences
-        mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -143,7 +146,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     // Loop over all of the user's projects and tally up the data
                     for (String projectId : user.getProjects().values()) {
 
-                        mDatabase.child("projects").child(projectId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        mDatabase.child(PROJECTS.getType()).child(projectId).addListenerForSingleValueEvent(new ValueEventListener() {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -349,7 +352,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
             }
 
             // Write the user model data it to the database
-            mDatabase.child("users").child(mUser.getUid()).setValue(mUser);
+            mDatabase.child(USERS.getType()).child(mUser.getUid()).setValue(mUser);
 
             // We are handling the button click
             return true;

@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,6 +25,8 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.util.Date;
 import java.util.UUID;
+
+import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
 
 public class InspirationEditActivity extends ImageAppCompatActivity {
 
@@ -112,7 +111,7 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
             // Set the title
             setTitle(getString(R.string.edit_inspiration_title));
 
-            mDatabase.child("projects").child(mProjectUid).child("inspirations").child(mInspirationUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("inspirations").child(mInspirationUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -257,10 +256,10 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
             }
 
             // Write the inspiration model data it to the database
-            mDatabase.child("projects").child(mProjectUid).child("inspirations").child(mInspirationUid).setValue(mInspirationModel);
+            mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("inspirations").child(mInspirationUid).setValue(mInspirationModel);
 
             // Update the project's last update time
-            mDatabase.child("projects").child(mProjectUid).child("lastUpdateDate").setValue(new Date().getTime());
+            mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("lastUpdateDate").setValue(new Date().getTime());
 
             // We are handling the button click
             return true;

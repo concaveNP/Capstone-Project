@@ -17,6 +17,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Date;
 import java.util.UUID;
 
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
+import static com.concavenp.artistrymuse.StorageDataType.AUTH;
+
 /**
  * Created by dave on 4/7/2017.
  */
@@ -104,7 +107,7 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
             final String authUid = user.getUid();
 
             // Get the Firebase UID translated to the ArtistryMuse UID via a DB lookup
-            mDatabase.child("auth").child(authUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(AUTH.getType()).child(authUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -133,7 +136,7 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
                         UUID newUid = UUID.randomUUID();
 
                         // Write it to the DB
-                        mDatabase.child("auth").child(authUid).setValue(newUid.toString());
+                        mDatabase.child(AUTH.getType()).child(authUid).setValue(newUid.toString());
 
                         // Create new default user account info for the given UID
                         User newUser = new User();
@@ -152,7 +155,7 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
                         }
 
                         // Write it to the DB
-                        mDatabase.child("users").child(newUid.toString()).setValue(newUser);
+                        mDatabase.child(USERS.getType()).child(newUid.toString()).setValue(newUser);
 
                         // Set the UID in the SharedPreferences
                         setSharedPreferenceUid(newUid.toString());

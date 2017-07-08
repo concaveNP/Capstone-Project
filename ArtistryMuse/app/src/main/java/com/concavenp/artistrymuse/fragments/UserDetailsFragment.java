@@ -13,7 +13,6 @@ import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
-import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.UserInteractionType;
 import com.concavenp.artistrymuse.fragments.adapter.GalleryAdapter;
 import com.concavenp.artistrymuse.model.Following;
@@ -25,6 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
 
 /**
  * A simple {@link BaseFragment} subclass.
@@ -58,6 +59,10 @@ public class UserDetailsFragment extends BaseFragment {
 
     // The model data of the User in question that the user wants to see the details of.
     private User mUserInQuestionModel;
+
+    // Listeners for DB value changes
+    private ValueEventListener userValueEventListener;
+    private ValueEventListener userInQuestionValueEventListener;
 
     public UserDetailsFragment() {
 
@@ -99,9 +104,6 @@ public class UserDetailsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        // Need to display the share trailer action bar icon
-//        setHasOptionsMenu(true);
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_details, container, false);
 
@@ -116,6 +118,7 @@ public class UserDetailsFragment extends BaseFragment {
         mRecycler.setLayoutManager(linearLayoutManager);
 
         return view;
+
     }
 
     @Override
@@ -123,19 +126,46 @@ public class UserDetailsFragment extends BaseFragment {
 
         super.onStart();
 
-        Bundle args = getArguments();
+        // Display whatever data we currently have to work with to get the cycle going
+        updateUserDetails(mUserModel);
 
-        // Determine what kind of state our User data situation is in.  If we have already pulled
-        // data down then display it.  Otherwise, go get it.
-        if (mUserModel != null) {
+        // Subscribe to the user's data
+        mDatabase.child(USERS.getType()).child(getUid()).addValueEventListener(getUserValueEventListener());
 
-            // There is data to work with, so display it
-            updateUserDetails(mUserModel);
+        // Display whatever data we currently have to work with to get the cycle going
+        updateUserInQuestionDetails(mUserInQuestionModel);
 
-        } else if (args != null) {
+        // Pull the User in question info from the Database and keep listening for changes
+        if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
 
-            // Pull the User info from the Database just once
-            mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(USERS.getType()).child(mUidForDetails).addValueEventListener(getUserInQuestionValueEventListener());
+
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        // Un-subscribe to the user's data
+        mDatabase.child(USERS.getType()).child(getUid()).removeEventListener(getUserValueEventListener());
+
+        // Un-subscribe to the user in question's data if there
+        if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
+
+            mDatabase.child(USERS.getType()).child(mUidForDetails).removeEventListener(getUserInQuestionValueEventListener());
+
+        }
+
+    }
+
+    private ValueEventListener getUserValueEventListener() {
+
+        if (userValueEventListener == null) {
+
+            userValueEventListener = new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -158,27 +188,19 @@ public class UserDetailsFragment extends BaseFragment {
                     // Do nothing
                 }
 
-            });
-
-        } else {
-
-            // There is no data to display and nothing to lookup
-            updateUserDetails(null);
+            };
 
         }
 
-        // Determine what kind of state our User In Question data is in.  If we have already pulled
-        // data down then display it.  Otherwise, go get it.
-        if (mUserInQuestionModel != null) {
+        return userValueEventListener;
 
-            // There is data to work with, so display it
-            updateUserInQuestionDetails(mUserInQuestionModel);
+    }
 
-        } else if (args != null) {
+    private ValueEventListener getUserInQuestionValueEventListener() {
 
+        if (userInQuestionValueEventListener == null) {
 
-            // Pull the User in question info from the Database and keep listening for changes
-            mDatabase.child("users").child(mUidForDetails).addListenerForSingleValueEvent(new ValueEventListener() {
+            userInQuestionValueEventListener = new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -201,15 +223,11 @@ public class UserDetailsFragment extends BaseFragment {
                     // Do nothing
                 }
 
-            });
-
-
-        } else {
-
-            // There is no data to display and nothing to lookup
-            updateUserInQuestionDetails(null);
+            };
 
         }
+
+        return userInQuestionValueEventListener;
 
     }
 
@@ -238,6 +256,7 @@ public class UserDetailsFragment extends BaseFragment {
             }
 
             followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                     if (isChecked) {
@@ -248,7 +267,7 @@ public class UserDetailsFragment extends BaseFragment {
                         following.setUid(mUidForDetails);
 
                         // Add the user in question to the map of people the user is following
-                        mDatabase.child("users").child(getUid()).child("following").child(mUidForDetails).setValue(following);
+                        mDatabase.child(USERS.getType()).child(getUid()).child("following").child(mUidForDetails).setValue(following);
 
                         // Update the followed count for the user in question
                         Map<String, Object> childUpdates = new HashMap<>();
@@ -257,18 +276,18 @@ public class UserDetailsFragment extends BaseFragment {
 
                     } else {
 
-                        // TODO: this needs an addition user confirmation dialog to get express desire to un-follow the user in question
-
                         // Remove the user in question from the map of people the user is following
-                        mDatabase.child("users").child(getUid()).child("following").child(mUidForDetails).removeValue();
+                        mDatabase.child(USERS.getType()).child(getUid()).child("following").child(mUidForDetails).removeValue();
 
                         // Update the followed count for the user in question
                         Map<String, Object> childUpdates = new HashMap<>();
                         childUpdates.put("/users/" + mUidForDetails + "/followedCount", mUserInQuestionModel.getFollowedCount() - 1);
                         mDatabase.updateChildren(childUpdates);
+
                     }
 
                 }
+
             });
 
         }
@@ -284,12 +303,9 @@ public class UserDetailsFragment extends BaseFragment {
 
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_user_details_FrameLayout)));
 
-            // TODO: decide if there is a need for some other menu buttons
-//            setMenuVisibility(true);
-
             // Set the profile image
             ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.avatar_ImageView);
-            populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+            populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), USERS), profileImageView);
 
             // Set the name of the author and the username
             TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
@@ -323,9 +339,6 @@ public class UserDetailsFragment extends BaseFragment {
 
             // There is no data to display so tell the user
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_user_details_TextView)));
-
-            // TODO: decide if there is a need for some other menu buttons
-//            setMenuVisibility(false);
 
         }
 
