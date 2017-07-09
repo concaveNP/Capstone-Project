@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -79,6 +80,29 @@ public class MainActivity extends BaseAppCompatActivity implements
      */
     private boolean mIsLargeLayout;
 
+    /**
+     * The Shared Preferences key lookup value for identifying the last used tab position.
+     */
+    private static final String TAB_POSITION = "TAB_POSITION";
+
+    /**
+     * Default tab position
+     */
+    private static final int DEFAULT_TAB_POSITION = 0;
+
+    /**
+     * The position of the currently selected tab.  Initialized to the first tab.  This value will
+     * be used in saving out the app's Preferences in order to preserve location of where the user
+     * left off from either navigating to a different activity or restarting the app.
+     */
+    private int tabPosition = DEFAULT_TAB_POSITION;
+
+
+    /**
+     * The layout of the tabs.  Used here in a field for the same reason as the tabPosition field.
+     */
+    private TabLayout tabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -109,7 +133,13 @@ public class MainActivity extends BaseAppCompatActivity implements
 
             @Override
             public void onPageSelected(int position) {
+
+                // Save off the tab position
+                tabPosition = position;
+
+                // Perform animations (if needed)
                 animateFab(position);
+
             }
 
             @Override
@@ -119,7 +149,7 @@ public class MainActivity extends BaseAppCompatActivity implements
         });
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -367,6 +397,12 @@ public class MainActivity extends BaseAppCompatActivity implements
         Intent intent = new Intent(this, UserAuthenticationService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
+        // Read in the current tab location from the Shared Preferences and select that tab
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        int position = sharedPref.getInt(TAB_POSITION, DEFAULT_TAB_POSITION);
+        TabLayout.Tab tab = tabLayout.getTabAt(position);
+        tab.select();
+
     }
 
     @Override
@@ -385,6 +421,13 @@ public class MainActivity extends BaseAppCompatActivity implements
             mBound = false;
 
         }
+
+        // Save the current tab location to the Shared Preferences
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(TAB_POSITION, tabPosition);
+        editor.commit();
+
     }
 
     /**
