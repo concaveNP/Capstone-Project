@@ -41,6 +41,9 @@ import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
  * Android Material Design Floating Labels for EditText
  *      - http://www.androidhive.info/2015/09/android-material-design-floating-labels-for-edittext/
  *
+ * Material “close” button in Toolbar instead of Back
+ *      - https://stackoverflow.com/questions/27125340/material-close-button-in-toolbar-instead-of-back
+ *
  */
 @SuppressWarnings("StatementWithEmptyBody")
 public class ProfileActivity extends ImageAppCompatActivity {
@@ -95,6 +98,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_dialog_close_dark);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         mProfileImageView = (ImageView) findViewById(R.id.profile_profile_imageView);
