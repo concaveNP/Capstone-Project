@@ -68,6 +68,9 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
     // intent param or generated if this is a new project.
     private String mProjectUid;
 
+    // Listeners for DB value changes
+    private ValueEventListener projectInQuestionValueEventListener;
+
     // The project model.  This is the POJO that used to pass back and forth between this app and the
     // cloud service (aka Firebase).
     private Project mProjectModel;
@@ -89,6 +92,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_dialog_close_dark);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         mProjectImageView = (ImageView) findViewById(R.id.project_imageView);
@@ -115,32 +119,6 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
             // Set the title
             setTitle(getString(R.string.edit_project_title));
-
-            mDatabase.child(PROJECTS.getType()).child(mProjectUid).addListenerForSingleValueEvent(new ValueEventListener() {
-
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    // Perform the JSON to Object conversion
-                    final Project project = dataSnapshot.getValue(Project.class);
-
-                    // Verify there is a user to work with
-                    if (project != null) {
-
-                        mProjectModel = project;
-
-                        display(mProjectModel);
-
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Do nothing
-                }
-
-            });
 
         } else {
 
@@ -204,88 +182,100 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
+        switch (item.getItemId()) {
 
-        if (id == R.id.action_save) {
+            case android.R.id.home: {
 
-            // Move the last update time
-            mProjectModel.setLastUpdateDate(new Date().getTime());
+                // Navigate back to the Project that this Inspiration spawned from - we are not going save anything
+                finish();
 
-            // Title
-            String title = mTitleEditText.getText().toString();
-            if ((title != null) && (!title.isEmpty())) {
-                mProjectModel.setName(title);
+                return true;
+
             }
+            case R.id.action_save: {
 
-            // Description
-            String description = mDescriptionEditText.getText().toString();
-            if ((description != null) && (!description.isEmpty())) {
-                mProjectModel.setDescription(description);
-            }
+                // Move the last update time
+                mProjectModel.setLastUpdateDate(new Date().getTime());
 
-            // Check to see if the user set a new header image
-            if (mProjectImageUid != null) {
+                // Title
+                String title = mTitleEditText.getText().toString();
+                if ((title != null) && (!title.isEmpty())) {
+                    mProjectModel.setName(title);
+                }
 
-                final String oldMainUid = mProjectModel.getMainImageUid();
+                // Description
+                String description = mDescriptionEditText.getText().toString();
+                if ((description != null) && (!description.isEmpty())) {
+                    mProjectModel.setDescription(description);
+                }
 
-                // Check if the old profile image needs to be deleted
-                if ((oldMainUid != null) && (!oldMainUid.isEmpty())) {
+                // Check to see if the user set a new header image
+                if (mProjectImageUid != null) {
 
-                    StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + "/" + oldMainUid + ".jpg");
+                    final String oldMainUid = mProjectModel.getMainImageUid();
 
-                    // Delete the old image from Firebase storage
-                    deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // TODO: better error handling
-                            // File deleted successfully
-                            Log.d(TAG, "Deleted old image (" + oldMainUid +
-                                    ") from cloud storage for the project (" + mProjectUid + ")");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred!
-                            Log.e(TAG, "Error deleting old image (" + oldMainUid +
-                                    ") from cloud storage for the project (" + mProjectUid + ")");
-                        }
-                    });
+                    // Check if the old profile image needs to be deleted
+                    if ((oldMainUid != null) && (!oldMainUid.isEmpty())) {
+
+                        StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + "/" + oldMainUid + ".jpg");
+
+                        // Delete the old image from Firebase storage
+                        deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // TODO: better error handling
+                                // File deleted successfully
+                                Log.d(TAG, "Deleted old image (" + oldMainUid +
+                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Uh-oh, an error occurred!
+                                Log.e(TAG, "Error deleting old image (" + oldMainUid +
+                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                            }
+                        });
+
+                    }
+                    else {
+                        // The user did not have an old image to replace - do nothing
+                    }
+
+                    // Save the new project image to the cloud storage
+                    Uri file = Uri.fromFile(new File(mProjectImagePath));
+
+                    Log.d(TAG, "New image cloud storage location: " + file.toString());
+
+                    // Start MyUploadService to upload the file, so that the file is uploaded even if
+                    // this Activity is killed or put in the background
+                    startService(new Intent(this, UploadService.class)
+                            .putExtra(UploadService.EXTRA_FILE_URI, file)
+                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProjectImageUid.toString() + ".jpg")
+                            .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.PROJECTS.getType())
+                            .putExtra(UploadService.EXTRA_UPLOAD_UID, mProjectUid)
+                            .setAction(UploadService.ACTION_UPLOAD));
+
+                    // Update the project model reference to the project image uid for database update
+                    mProjectModel.setMainImageUid(mProjectImageUid.toString());
 
                 }
                 else {
-                    // The user did not have an old image to replace - do nothing
+                    // The user did not change the project image - do nothing
                 }
 
-                // Save the new project image to the cloud storage
-                Uri file = Uri.fromFile(new File(mProjectImagePath));
+                // Write the project model data it to the database
+                mDatabase.child(PROJECTS.getType()).child(mProjectUid).setValue(mProjectModel);
 
-                Log.d(TAG, "New image cloud storage location: " + file.toString());
+                // Update the user's list of projects to add this one if needed (if it was new)
+                mDatabase.child(USERS.getType()).child(getUid()).child("projects").child(mProjectUid).setValue(mProjectUid);
 
-                // Start MyUploadService to upload the file, so that the file is uploaded even if
-                // this Activity is killed or put in the background
-                startService(new Intent(this, UploadService.class)
-                        .putExtra(UploadService.EXTRA_FILE_URI, file)
-                        .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProjectImageUid.toString() + ".jpg")
-                        .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.PROJECTS.getType())
-                        .putExtra(UploadService.EXTRA_UPLOAD_UID, mProjectUid)
-                        .setAction(UploadService.ACTION_UPLOAD));
+                // Navigate back to the Project that this Inspiration spawned from
+                finish();
 
-                // Update the project model reference to the project image uid for database update
-                mProjectModel.setMainImageUid(mProjectImageUid.toString());
-
+                // We are handling the button click
+                return true;
             }
-            else {
-                // The user did not change the project image - do nothing
-            }
-
-            // Write the project model data it to the database
-            mDatabase.child(PROJECTS.getType()).child(mProjectUid).setValue(mProjectModel);
-
-            // Update the user's list of projects to add this one if needed (if it was new)
-            mDatabase.child(USERS.getType()).child(getUid()).child("projects").child(mProjectUid).setValue(mProjectUid);
-
-            // We are handling the button click
-            return true;
 
         }
 
@@ -315,5 +305,93 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
         }
 
     }
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+
+        // Pull the Inspiration in question info from the Database and keep listening for changes
+        if ((mProjectUid != null) && (!mProjectUid.isEmpty())) {
+
+            // Verify there is a title set
+            if (getTitle() != null) {
+
+                String title = getTitle().toString();
+
+                // If this is a new Project then we can't subscribe to values for it
+                if (!title.equals(getString(R.string.new_project_title))) {
+
+                    mDatabase.child(PROJECTS.getType()).child(mProjectUid).addValueEventListener(getProjectInQuestionValueEventListener());
+
+                }
+
+            }
+
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        // Un-subscribe to the Inspiration in question's data if there
+        if ((mProjectUid != null) && (!mProjectUid.isEmpty())) {
+
+            // Verify there is a title set
+            if (getTitle() != null) {
+
+                String title = getTitle().toString();
+
+                // If this is a new Project then we can't subscribe to values for it
+                if (title.equals(getString(R.string.new_inspiration_title))) {
+
+                    mDatabase.child(PROJECTS.getType()).child(mProjectUid).removeEventListener(getProjectInQuestionValueEventListener());
+
+                }
+
+            }
+
+        }
+
+    }
+
+    private ValueEventListener getProjectInQuestionValueEventListener() {
+
+        if (projectInQuestionValueEventListener == null) {
+
+            projectInQuestionValueEventListener = new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    // Perform the JSON to Object conversion
+                    final Project project = dataSnapshot.getValue(Project.class);
+
+                    // Verify there is a user to work with
+                    if (project != null) {
+
+                        mProjectModel = project;
+
+                        display(mProjectModel);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Do nothing
+                }
+
+            };
+
+        }
+
+        return projectInQuestionValueEventListener;
+
+    }
 
 }
+
