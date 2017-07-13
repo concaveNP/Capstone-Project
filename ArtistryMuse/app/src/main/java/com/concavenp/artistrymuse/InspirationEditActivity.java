@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.concavenp.artistrymuse.model.Inspiration;
-import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.services.UploadService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -65,9 +64,8 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
     // inspiration and thus a new UID will be generated for it.
     private String mInspirationUid;
 
-    // The project model.  This is the POJO that used to pass back and forth between this app and the
-    // cloud service (aka Firebase).
-    private Project mProjectModel;
+    // Listeners for DB value changes
+    private ValueEventListener inspirationInQuestionValueEventListener;
 
     // The inspiration model.  This is the POJO that used to pass back and forth between this app and the
     // cloud service (aka Firebase).
@@ -90,6 +88,7 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_dialog_close_dark);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         mInspirationImageView = (ImageView) findViewById(R.id.inspiration_imageView);
@@ -110,32 +109,6 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
 
             // Set the title
             setTitle(getString(R.string.edit_inspiration_title));
-
-            mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("inspirations").child(mInspirationUid).addListenerForSingleValueEvent(new ValueEventListener() {
-
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    // Perform the JSON to Object conversion
-                    final Inspiration inspiration = dataSnapshot.getValue(Inspiration.class);
-
-                    // Verify there is a user to work with
-                    if (inspiration != null) {
-
-                        mInspirationModel = inspiration;
-
-                        display(mInspirationModel);
-
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Do nothing
-                }
-
-            });
 
         } else {
 
@@ -181,88 +154,101 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
+        switch (item.getItemId()) {
 
-        if (id == R.id.action_save) {
+            case android.R.id.home: {
 
-            // Move the last update time
-            mInspirationModel.setLastUpdateDate(new Date().getTime());
+                // Navigate back to the Project that this Inspiration spawned from - we are not going save anything
+                finish();
 
-            // Title
-            String title = mTitleEditText.getText().toString();
-            if ((title != null) && (!title.isEmpty())) {
-                mInspirationModel.setName(title);
+                return true;
+
             }
+            case R.id.action_save: {
 
-            // Description
-            String description = mDescriptionEditText.getText().toString();
-            if ((description != null) && (!description.isEmpty())) {
-                mInspirationModel.setDescription(description);
-            }
+                // Move the last update time
+                mInspirationModel.setLastUpdateDate(new Date().getTime());
 
-            // Check to see if the user set a new header image
-            if (mInspirationImageUid != null) {
+                // Title
+                String title = mTitleEditText.getText().toString();
+                if ((title != null) && (!title.isEmpty())) {
+                    mInspirationModel.setName(title);
+                }
 
-                final String oldMainUid = mInspirationModel.getImageUid();
+                // Description
+                String description = mDescriptionEditText.getText().toString();
+                if ((description != null) && (!description.isEmpty())) {
+                    mInspirationModel.setDescription(description);
+                }
 
-                // Check if the old profile image needs to be deleted
-                if ((oldMainUid != null) && (!oldMainUid.isEmpty())) {
+                // Check to see if the user set a new header image
+                if (mInspirationImageUid != null) {
 
-                    StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + "/" + oldMainUid + ".jpg");
+                    final String oldMainUid = mInspirationModel.getImageUid();
 
-                    // Delete the old image from Firebase storage
-                    deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // TODO: better error handling
-                            // File deleted successfully
-                            Log.d(TAG, "Deleted old image (" + oldMainUid +
-                                    ") from cloud storage for the project (" + mProjectUid + ")");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred!
-                            Log.e(TAG, "Error deleting old image (" + oldMainUid +
-                                    ") from cloud storage for the project (" + mProjectUid + ")");
-                        }
-                    });
+                    // Check if the old profile image needs to be deleted
+                    if ((oldMainUid != null) && (!oldMainUid.isEmpty())) {
+
+                        StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + "/" + oldMainUid + ".jpg");
+
+                        // Delete the old image from Firebase storage
+                        deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // TODO: better error handling
+                                // File deleted successfully
+                                Log.d(TAG, "Deleted old image (" + oldMainUid +
+                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Uh-oh, an error occurred!
+                                Log.e(TAG, "Error deleting old image (" + oldMainUid +
+                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                            }
+                        });
+
+                    }
+                    else {
+                        // The user did not have an old image to replace - do nothing
+                    }
+
+                    // Save the new project image to the cloud storage
+                    Uri file = Uri.fromFile(new File(mInspirationImagePath));
+
+                    Log.d(TAG, "New image cloud storage location: " + file.toString());
+
+                    // Start MyUploadService to upload the file, so that the file is uploaded even if
+                    // this Activity is killed or put in the background
+                    startService(new Intent(this, UploadService.class)
+                            .putExtra(UploadService.EXTRA_FILE_URI, file)
+                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mInspirationImageUid.toString() + ".jpg")
+                            .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.PROJECTS.getType())
+                            .putExtra(UploadService.EXTRA_UPLOAD_UID, mProjectUid)
+                            .setAction(UploadService.ACTION_UPLOAD));
+
+                    // Update the project model reference to the project image uid for database update
+                    mInspirationModel.setImageUid(mInspirationImageUid.toString());
 
                 }
                 else {
-                    // The user did not have an old image to replace - do nothing
+                    // The user did not change the project image - do nothing
                 }
 
-                // Save the new project image to the cloud storage
-                Uri file = Uri.fromFile(new File(mInspirationImagePath));
+                // Write the inspiration model data it to the database
+                mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("inspirations").child(mInspirationUid).setValue(mInspirationModel);
 
-                Log.d(TAG, "New image cloud storage location: " + file.toString());
+                // Update the project's last update time
+                mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("lastUpdateDate").setValue(new Date().getTime());
 
-                // Start MyUploadService to upload the file, so that the file is uploaded even if
-                // this Activity is killed or put in the background
-                startService(new Intent(this, UploadService.class)
-                        .putExtra(UploadService.EXTRA_FILE_URI, file)
-                        .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mInspirationImageUid.toString() + ".jpg")
-                        .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.PROJECTS.getType())
-                        .putExtra(UploadService.EXTRA_UPLOAD_UID, mProjectUid)
-                        .setAction(UploadService.ACTION_UPLOAD));
+                // Navigate back to the Project that this Inspiration spawned from
+                finish();
 
-                // Update the project model reference to the project image uid for database update
-                mInspirationModel.setImageUid(mInspirationImageUid.toString());
+                // We are handling the button click
+                return true;
 
             }
-            else {
-                // The user did not change the project image - do nothing
-            }
-
-            // Write the inspiration model data it to the database
-            mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("inspirations").child(mInspirationUid).setValue(mInspirationModel);
-
-            // Update the project's last update time
-            mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("lastUpdateDate").setValue(new Date().getTime());
-
-            // We are handling the button click
-            return true;
 
         }
 
@@ -290,6 +276,102 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
             mInspirationImagePath = mImagePath;
             mInspirationImageUid = mImageUid;
         }
+
+    }
+
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+
+        // Pull the Inspiration in question info from the Database and keep listening for changes
+        if ((mProjectUid != null) && (!mProjectUid.isEmpty())) {
+
+            if ((mInspirationUid != null) && (!mInspirationUid.isEmpty())) {
+
+                // Verify there is a title set
+                if (getTitle() != null) {
+
+                    String title = getTitle().toString();
+
+                    // If this is a new Inspiration then we can't subscribe to values for it
+                    if (!title.equals(getString(R.string.new_inspiration_title))) {
+
+                        mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("inspirations").child(mInspirationUid).addValueEventListener(getInspirationInQuestionValueEventListener());
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        // Un-subscribe to the Inspiration in question's data if there
+        if ((mProjectUid != null) && (!mProjectUid.isEmpty())) {
+
+            if ((mInspirationUid != null) && (!mInspirationUid.isEmpty())) {
+
+                // Verify there is a title set
+                if (getTitle() != null) {
+
+                    String title = getTitle().toString();
+
+                    // If this is a new Inspiration then we can't subscribe to values for it
+                    if (title.equals(getString(R.string.new_inspiration_title))) {
+
+                        mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("inspirations").child(mInspirationUid).removeEventListener(getInspirationInQuestionValueEventListener());
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    private ValueEventListener getInspirationInQuestionValueEventListener() {
+
+        if (inspirationInQuestionValueEventListener == null) {
+
+            inspirationInQuestionValueEventListener = new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    // Perform the JSON to Object conversion
+                    final Inspiration inspiration = dataSnapshot.getValue(Inspiration.class);
+
+                    // Verify there is a user to work with
+                    if (inspiration != null) {
+
+                        mInspirationModel = inspiration;
+
+                        display(mInspirationModel);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Do nothing
+                }
+
+            };
+
+        }
+
+        return inspirationInQuestionValueEventListener;
 
     }
 
