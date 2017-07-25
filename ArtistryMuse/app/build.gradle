@@ -25,6 +25,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         signingConfig signingConfigs.release
+
+        // Enabling multidex support.
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -64,6 +67,7 @@ dependencies {
     // Required only if Twitter login support is required
     compile('com.twitter.sdk.android:twitter-core:3.0.0@aar') { transitive = true }
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:multidex:1.0.1'
 }
 
 // ADD THIS AT THE BOTTOM
