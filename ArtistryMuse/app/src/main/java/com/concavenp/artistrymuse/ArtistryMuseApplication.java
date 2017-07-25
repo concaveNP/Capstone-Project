@@ -1,7 +1,7 @@
 package com.concavenp.artistrymuse;
 
-import android.app.Application;
 import android.content.Intent;
+import android.support.multidex.MultiDexApplication;
 
 import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.google.firebase.database.FirebaseDatabase;
@@ -9,7 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
 /**
  * Created by dave on 3/25/2017.
  */
-public class ArtistryMuseApplication extends Application {
+public class ArtistryMuseApplication extends MultiDexApplication {
 
     @Override
     public void onCreate() {

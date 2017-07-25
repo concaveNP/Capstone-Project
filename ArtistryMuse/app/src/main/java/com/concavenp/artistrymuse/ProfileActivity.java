@@ -214,152 +214,169 @@ public class ProfileActivity extends ImageAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
+        switch (item.getItemId()) {
 
-        if (id == R.id.action_save) {
+            case android.R.id.home: {
 
-            // Move the last update time
-            mUser.setLastUpdatedDate(new Date().getTime());
+                // Navigate back to the Project that this Inspiration spawned from - we are not going save anything
+                finish();
 
-            // Name
-            String name = mNameEditText.getText().toString();
-            if ((name != null) && (!name.isEmpty())) {
-                mUser.setName(name);
+                return true;
+
             }
+            case R.id.action_save: {
 
-            // Username
-            String username = mUsernameEditText.getText().toString();
-            if ((username != null) && (!username.isEmpty())) {
-                mUser.setUsername(username);
-            }
+                // Move the last update time
+                mUser.setLastUpdatedDate(new Date().getTime());
 
-            // Description
-            String description = mDescriptionEditText.getText().toString();
-            if ((description != null) && (!description.isEmpty())) {
-                mUser.setDescription(description);
-            }
+                // Name
+                String name = mNameEditText.getText().toString();
+                if ((name != null) && (!name.isEmpty())) {
+                    mUser.setName(name);
+                }
 
-            // Summary
-            String summary = mSummaryEditText.getText().toString();
-            if ((summary != null) && (!summary.isEmpty())) {
-                mUser.setSummary(summary);
-            }
+                // TODO: put in a check to verify there is something here for the "name"
 
-            // Check to see if the user set a new header image
-            if (mHeaderImageUid != null) {
+                // Username
+                String username = mUsernameEditText.getText().toString();
+                if ((username != null) && (!username.isEmpty())) {
+                    mUser.setUsername(username);
+                }
 
-                final String oldHeaderUid = mUser.getHeaderImageUid();
+                // TODO: put in a check to verify there is something here for the "username"
 
-                // Check if the old profile image needs to be deleted
-                if ((oldHeaderUid != null) && (!oldHeaderUid.isEmpty())) {
+                // Description
+                String description = mDescriptionEditText.getText().toString();
+                if ((description != null) && (!description.isEmpty())) {
+                    mUser.setDescription(description);
+                }
 
-                    StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + "/" + oldHeaderUid + ".jpg");
+                // Summary
+                String summary = mSummaryEditText.getText().toString();
+                if ((summary != null) && (!summary.isEmpty())) {
+                    mUser.setSummary(summary);
+                }
 
-                    // Delete the old header image from Firebase storage
-                    deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // TODO: better error handling
-                            // File deleted successfully
-                            Log.d(TAG, "Deleted old header image (" + oldHeaderUid +
-                                    ") from cloud storage for the user (" + mUser.getUid() + ")");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred!
-                            Log.e(TAG, "Error deleting old header image (" + oldHeaderUid +
-                                    ") from cloud storage for the user (" + mUser.getUid() + ")");
-                        }
-                    });
+                // Check to see if the user set a new header image
+                if (mHeaderImageUid != null) {
+
+                    final String oldHeaderUid = mUser.getHeaderImageUid();
+
+                    // Check if the old profile image needs to be deleted
+                    if ((oldHeaderUid != null) && (!oldHeaderUid.isEmpty())) {
+
+                        StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + "/" + oldHeaderUid + ".jpg");
+
+                        // Delete the old header image from Firebase storage
+                        deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // TODO: better error handling
+                                // File deleted successfully
+                                Log.d(TAG, "Deleted old header image (" + oldHeaderUid +
+                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Uh-oh, an error occurred!
+                                Log.e(TAG, "Error deleting old header image (" + oldHeaderUid +
+                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                            }
+                        });
+
+                    }
+                    else {
+                        // The user did not have an old header image to replace - do nothing
+                    }
+
+                    // Save the new profile image to the cloud storage
+                    Uri file = Uri.fromFile(new File(mHeaderImagePath));
+
+                    Log.d(TAG, "New header image cloud storage location: " + file.toString());
+
+                    // Start MyUploadService to upload the file, so that the file is uploaded even if
+                    // this Activity is killed or put in the background
+                    startService(new Intent(this, UploadService.class)
+                            .putExtra(UploadService.EXTRA_FILE_URI, file)
+                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mHeaderImageUid.toString() + ".jpg")
+                            .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
+                            .putExtra(UploadService.EXTRA_UPLOAD_UID, mUser.getUid())
+                            .setAction(UploadService.ACTION_UPLOAD));
+
+                    // Update the user model reference to the header image uid for database update
+                    mUser.setHeaderImageUid(mHeaderImageUid.toString());
 
                 }
                 else {
-                    // The user did not have an old header image to replace - do nothing
+                    // The user did not change the header image - do nothing
                 }
 
-                // Save the new profile image to the cloud storage
-                Uri file = Uri.fromFile(new File(mHeaderImagePath));
+                // Check to see if the user set a new profile image
+                if (mProfileImageUid != null) {
 
-                Log.d(TAG, "New header image cloud storage location: " + file.toString());
+                    final String oldProfileUid = mUser.getProfileImageUid();
 
-                // Start MyUploadService to upload the file, so that the file is uploaded even if
-                // this Activity is killed or put in the background
-                startService(new Intent(this, UploadService.class)
-                        .putExtra(UploadService.EXTRA_FILE_URI, file)
-                        .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mHeaderImageUid.toString() + ".jpg")
-                        .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
-                        .putExtra(UploadService.EXTRA_UPLOAD_UID, mUser.getUid())
-                        .setAction(UploadService.ACTION_UPLOAD));
+                    // Check if the old profile image needs to be deleted
+                    if ((oldProfileUid != null) && (!oldProfileUid.isEmpty())) {
 
-                // Update the user model reference to the header image uid for database update
-                mUser.setHeaderImageUid(mHeaderImageUid.toString());
+                        StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + "/" + oldProfileUid + ".jpg");
 
-            }
-            else {
-                // The user did not change the header image - do nothing
-            }
+                        // Delete the old profile image from Firebase storage
+                        deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // TODO: better error handling
+                                // File deleted successfully
+                                Log.d(TAG, "Deleted old profile image (" + oldProfileUid +
+                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Uh-oh, an error occurred!
+                                Log.e(TAG, "Error deleting old profile image (" + oldProfileUid +
+                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                            }
+                        });
 
-            // Check to see if the user set a new profile image
-            if (mProfileImageUid != null) {
+                    }
+                    else {
+                        // The user did not have an old profile image to replace - do nothing
+                    }
 
-                final String oldProfileUid = mUser.getProfileImageUid();
+                    // Save the new profile image to the cloud storage
+                    Uri file = Uri.fromFile(new File(mProfileImagePath));
 
-                // Check if the old profile image needs to be deleted
-                if ((oldProfileUid != null) && (!oldProfileUid.isEmpty())) {
+                    Log.d(TAG, "New profile image cloud storage location: " + file.toString());
 
-                    StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + "/" + oldProfileUid + ".jpg");
+                    // Start MyUploadService to upload the file, so that the file is uploaded even if
+                    // this Activity is killed or put in the background
+                    startService(new Intent(this, UploadService.class)
+                            .putExtra(UploadService.EXTRA_FILE_URI, file)
+                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProfileImageUid.toString() + ".jpg")
+                            .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
+                            .putExtra(UploadService.EXTRA_UPLOAD_UID, mUser.getUid())
+                            .setAction(UploadService.ACTION_UPLOAD));
 
-                    // Delete the old profile image from Firebase storage
-                    deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // TODO: better error handling
-                            // File deleted successfully
-                            Log.d(TAG, "Deleted old profile image (" + oldProfileUid +
-                                    ") from cloud storage for the user (" + mUser.getUid() + ")");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred!
-                            Log.e(TAG, "Error deleting old profile image (" + oldProfileUid +
-                                    ") from cloud storage for the user (" + mUser.getUid() + ")");
-                        }
-                    });
+                    // Update the user model reference to the profile image uid for database update
+                    mUser.setProfileImageUid(mProfileImageUid.toString());
 
                 }
                 else {
-                    // The user did not have an old profile image to replace - do nothing
+                    // The user did not change the profile image - do nothing
                 }
 
-                // Save the new profile image to the cloud storage
-                Uri file = Uri.fromFile(new File(mProfileImagePath));
+                // Write the user model data it to the database
+                mDatabase.child(USERS.getType()).child(mUser.getUid()).setValue(mUser);
 
-                Log.d(TAG, "New profile image cloud storage location: " + file.toString());
+                // Navigate back to the Project that this Inspiration spawned from
+                finish();
 
-                // Start MyUploadService to upload the file, so that the file is uploaded even if
-                // this Activity is killed or put in the background
-                startService(new Intent(this, UploadService.class)
-                        .putExtra(UploadService.EXTRA_FILE_URI, file)
-                        .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProfileImageUid.toString() + ".jpg")
-                        .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
-                        .putExtra(UploadService.EXTRA_UPLOAD_UID, mUser.getUid())
-                        .setAction(UploadService.ACTION_UPLOAD));
-
-                // Update the user model reference to the profile image uid for database update
-                mUser.setProfileImageUid(mProfileImageUid.toString());
+                // We are handling the button click
+                return true;
 
             }
-            else {
-                // The user did not change the profile image - do nothing
-            }
-
-            // Write the user model data it to the database
-            mDatabase.child(USERS.getType()).child(mUser.getUid()).setValue(mUser);
-
-            // We are handling the button click
-            return true;
 
         }
 
