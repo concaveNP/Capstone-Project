@@ -35,25 +35,25 @@ public class ArtistryFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        Fragment result = null;
+        Fragment result;
 
         // TODO: params to the fragments?  Needed?
         switch (position) {
             default:
             case 0: {
-                result = FollowingFragment.newInstance("","");
+                result = FollowingFragment.newInstance();
                 break;
             }
             case 1: {
-                result = FavoritesFragment.newInstance("","");
+                result = FavoritesFragment.newInstance();
                 break;
             }
             case 2: {
-                result = SearchFragment.newInstance("","");
+                result = SearchFragment.newInstance();
                 break;
             }
             case 3: {
-                result = GalleryFragment.newInstance("","");
+                result = GalleryFragment.newInstance();
                 break;
             }
         }

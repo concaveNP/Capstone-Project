@@ -14,13 +14,12 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:id="@+id/search_editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Alva"
+            android:layout_weight="1"
             android:ems="10"
-            android:id="@+id/search_editText"
-            android:layout_weight="1" />
+            android:inputType="textPersonName" />
 
         <ImageButton
             android:id="@+id/search_imageButton"
