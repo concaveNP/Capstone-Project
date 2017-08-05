@@ -1,5 +1,6 @@
 package com.concavenp.artistrymuse.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -7,8 +8,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.adapter.SearchFragmentPagerAdapter;
@@ -28,6 +31,11 @@ public class SearchFragment extends BaseFragment {
 
     private EditText mSearchEditText;
     private SearchFragmentPagerAdapter mSearchPagerAdapter;
+
+    // This flipper allows the content of the fragment to show the user either the list search
+    // results or a informative message stating that a search needs to be performed to find
+    // results.
+    private ViewFlipper mFlipper;
 
     /**
      * Use this factory method to create a new instance of
@@ -61,6 +69,9 @@ public class SearchFragment extends BaseFragment {
         // The search text the user will input
         mSearchEditText = (EditText) mainView.findViewById(R.id.search_editText);
 
+        // Save off the flipper for use in deciding which view to show
+        mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_search_ViewFlipper);
+
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) mainView.findViewById(R.id.search_results_viewpager);
         mSearchPagerAdapter = new SearchFragmentPagerAdapter(getChildFragmentManager());
@@ -70,17 +81,50 @@ public class SearchFragment extends BaseFragment {
         TabLayout tabLayout = (TabLayout) mainView.findViewById(R.id.search_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        //mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_results_Flipper)));
+        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_nosearch_Flipper)));
+
         ImageButton button = (ImageButton) mainView.findViewById(R.id.search_imageButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                mSearchPagerAdapter.onSearchButtonInteraction(mSearchEditText.getText().toString());
+                performSearch();
 
             }
         });
 
         return mainView;
+
+    }
+
+    /**
+     * Called when the owning Activity detects a key press that occurred during this Fragment.
+     */
+    public void onKeyUp() {
+
+        performSearch();
+
+    }
+
+    /**
+     * This method will close the soft keyboard, flip the fragment to displaying the SearchResultFragment
+     * and will perform the search given the text within the search box.
+     */
+    private void performSearch() {
+
+        // Check if no view has focus:
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        // We are now performing a search, flip control to the individual fragments of the TabLayout
+        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_results_Flipper)));
+
+        // Perform the search
+        mSearchPagerAdapter.onSearchButtonInteraction(mSearchEditText.getText().toString());
 
     }
 

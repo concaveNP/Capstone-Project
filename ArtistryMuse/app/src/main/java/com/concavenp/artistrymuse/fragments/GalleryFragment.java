@@ -74,7 +74,7 @@ public class GalleryFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_gallery, container, false);
 
-        // Save off the flipper for use in decided which view to show
+        // Save off the flipper for use in deciding which view to show
         mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_gallery_ViewFlipper);
 
         mRecycler = (RecyclerView) mainView.findViewById(R.id.gallery_recycler_view);
@@ -110,7 +110,7 @@ public class GalleryFragment extends BaseFragment {
      */
     private void refresh() {
 
-        // First check to see if the user is has any projects yet
+        // First check to see if the user has any projects yet
         mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override

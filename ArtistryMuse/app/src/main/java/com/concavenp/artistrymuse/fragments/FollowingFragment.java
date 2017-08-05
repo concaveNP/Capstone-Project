@@ -74,7 +74,7 @@ public class FollowingFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_following, container, false);
 
-        // Save off the flipper for use in decided which view to show
+        // Save off the flipper for use in deciding which view to show
         mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_following_ViewFlipper);
 
         mRecycler = (RecyclerView) mainView.findViewById(R.id.following_recycler_view);

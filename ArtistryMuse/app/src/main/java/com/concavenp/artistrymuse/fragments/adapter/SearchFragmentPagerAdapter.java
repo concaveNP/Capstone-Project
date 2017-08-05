@@ -3,6 +3,7 @@ package com.concavenp.artistrymuse.fragments.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.fragments.SearchFragment;
@@ -26,29 +27,36 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter implements 
     private SearchResultFragment mProjects;
 
     public SearchFragmentPagerAdapter(FragmentManager fm) {
+
         super(fm);
+
     }
 
     @Override
     public int getCount() {
+
         return tabTitles.length;
+
     }
 
     @Override
     public Fragment getItem(int position) {
 
-        Fragment result = null;
+        Fragment result;
 
-        // TODO: params to the fragments?  Needed?
         switch (position) {
             default:
             case 0: {
-                mUsers = SearchResultFragment.newInstance("","", StorageDataType.USERS);
+                if (mUsers == null) {
+                    mUsers = SearchResultFragment.newInstance(StorageDataType.USERS);
+                }
                 result = mUsers;
                 break;
             }
             case 1: {
-                mProjects = SearchResultFragment.newInstance("","",StorageDataType.PROJECTS);
+                if (mProjects == null) {
+                    mProjects = SearchResultFragment.newInstance(StorageDataType.PROJECTS);
+                }
                 result = mProjects;
                 break;
             }
@@ -58,21 +66,28 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter implements 
 
     }
 
+    // Generate title based on item position
     @Override
     public CharSequence getPageTitle(int position) {
-        // Generate title based on item position
         return tabTitles[position];
     }
 
     @Override
     public void onSearchButtonInteraction(String search) {
 
-        if (mProjects != null) {
-            mProjects.onSearchInteraction(search);
-        }
-        if (mUsers != null) {
-            mUsers.onSearchInteraction(search);
-        }
+        Log.i(TAG, "onSearchButtonInteraction has been called for search: " + search);
+        Log.i(TAG, "onSearchButtonInteraction: mProjects=" + mProjects + ", mUsers=" + mUsers);
+
+//        if (mProjects != null) {
+//            mProjects.onSearchInteraction(search);
+//        }
+//
+//        if (mUsers != null) {
+//            mUsers.onSearchInteraction(search);
+//        }
+
+        ((SearchResultFragment)getItem(0)).onSearchInteraction(search);
+        ((SearchResultFragment)getItem(1)).onSearchInteraction(search);
     }
 
     /**
@@ -84,3 +99,4 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter implements 
     }
 
 }
+

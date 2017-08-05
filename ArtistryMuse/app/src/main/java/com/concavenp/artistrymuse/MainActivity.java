@@ -13,13 +13,17 @@ import android.support.annotation.MainThread;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
+import com.concavenp.artistrymuse.fragments.SearchFragment;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
 import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.firebase.ui.auth.AuthUI;
@@ -97,11 +101,12 @@ public class MainActivity extends BaseAppCompatActivity implements
      */
     private int tabPosition = DEFAULT_TAB_POSITION;
 
-
     /**
      * The layout of the tabs.  Used here in a field for the same reason as the tabPosition field.
      */
     private TabLayout tabLayout;
+
+    private ArtistryFragmentPagerAdapter mFragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +129,8 @@ public class MainActivity extends BaseAppCompatActivity implements
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new ArtistryFragmentPagerAdapter(getSupportFragmentManager()));
+        mFragmentAdapter = new ArtistryFragmentPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(mFragmentAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -139,6 +145,13 @@ public class MainActivity extends BaseAppCompatActivity implements
 
                 // Perform animations (if needed)
                 animateFab(position);
+
+                // Close the keyboard if it is open
+                View view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
 
             }
 
@@ -427,6 +440,45 @@ public class MainActivity extends BaseAppCompatActivity implements
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(TAB_POSITION, tabPosition);
         editor.commit();
+
+    }
+
+    /**
+     * Intercept the signal of when keyboard presses are released.  We are specifically checking for
+     * when the Enter key is hit.  If this is the case then we want to check if we are in the
+     * Search fragment and signal it of the Enter press if it is.
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+
+        switch (keyCode) {
+
+            case KeyEvent.KEYCODE_ENTER: {
+
+                Class result = mFragmentAdapter.getClassFromPosition(tabPosition);
+
+                if (result == SearchFragment.class) {
+
+                    SearchFragment searchFragment = (SearchFragment)mFragmentAdapter.getItem(tabPosition);
+
+                    searchFragment.onKeyUp();
+
+                }
+
+                return true;
+
+            }
+            default: {
+
+                return super.onKeyUp(keyCode, event);
+
+            }
+
+        }
 
     }
 

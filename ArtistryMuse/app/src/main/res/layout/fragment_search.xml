@@ -1,17 +1,17 @@
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.concavenp.artistrymuse.fragments.SearchFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/search_editText"
@@ -28,73 +28,43 @@
             android:layout_weight="1"
             android:contentDescription="@string/search_button_image_contentDescription"
             app:srcCompat="@drawable/ic_search_black_24dp" />
+
     </LinearLayout>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/search_tabs"
-        app:tabMode="fixed"
+    <ViewFlipper
+        android:id="@+id/fragment_search_ViewFlipper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/search_results_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1"
-        android:background="@android:color/white"/>
+        <TextView
+            android:id="@+id/fragment_search_nosearch_Flipper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="@dimen/fab_margin"
+            android:text="Perform a search to find results" />
 
+        <LinearLayout
+            android:id="@+id/fragment_search_results_Flipper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/search_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="fixed" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/search_results_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+    </ViewFlipper>
 
 </LinearLayout>
-
-    <!--<TabHost-->
-    <!--android:id="@+id/search_tabHost"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:orientation="vertical">-->
-
-    <!--<TabWidget-->
-    <!--android:id="@android:id/tabs"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content" />-->
-
-    <!--<FrameLayout-->
-    <!--android:id="@android:id/tabcontent"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/users"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:orientation="vertical">-->
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/users_search_recycler_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:scrollbarStyle="outsideOverlay" />-->
-
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/projects"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:orientation="vertical">-->
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/projects_search_recycler_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:scrollbarStyle="outsideOverlay" />-->
-
-    <!--</LinearLayout>-->
-
-    <!--</FrameLayout>-->
-    <!--</LinearLayout>-->
-    <!--</TabHost>-->
 
