@@ -10,9 +10,6 @@ import com.concavenp.artistrymuse.fragments.FollowingFragment;
 import com.concavenp.artistrymuse.fragments.GalleryFragment;
 import com.concavenp.artistrymuse.fragments.SearchFragment;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by dave on 11/12/2016.
  */
@@ -24,34 +21,11 @@ public class ArtistryFragmentPagerAdapter extends FragmentPagerAdapter {
     @SuppressWarnings("unused")
     private static final String TAG = ArtistryFragmentPagerAdapter.class.getSimpleName();
 
-//    private Map<Integer, Pair<String, Fragment>> mMap = new HashMap<>();
-
-    // TODO: can I use the string values for this?
- //   private String tabTitles[] = new String[] { "Following", "Favorites", "Search", "Gallery" };
-
-//    private class TabClass {
-//
-//        int mPosition;
-//        String mTitle;
-//        Fragment mFragment;
-//
-//        public TabClass(int position, String title, Fragment fragment) {
-//            mPosition = position;
-//            mTitle = title;
-//            mFragment = fragment;
-//        }
-//
-//    }
-//
-//    private TabClass tabs[] = new TabClass[] {
-//       new TabClass(0,)
-//    };
-
-    private Pair<String, Fragment> tabs[] = new Pair[] {
-            new Pair("Following", FollowingFragment.newInstance()),
-            new Pair("Favorites", FavoritesFragment.newInstance()),
-            new Pair("Search", SearchFragment.newInstance()),
-            new Pair("Gallery", GalleryFragment.newInstance()),
+    private Pair<String, Pair<Class, Fragment>> tabs[] = new Pair[] {
+            new Pair("Following", new Pair(FollowingFragment.class, FollowingFragment.newInstance())),
+            new Pair("Favorites", new Pair(FavoritesFragment.class, FavoritesFragment.newInstance())),
+            new Pair("Search", new Pair(SearchFragment.class, SearchFragment.newInstance())),
+            new Pair("Gallery", new Pair(GalleryFragment.class, GalleryFragment.newInstance()))
     };
 
     public ArtistryFragmentPagerAdapter(FragmentManager fm) {
@@ -60,81 +34,28 @@ public class ArtistryFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public Class getClassFromPosition(int position) {
 
-        Class result;
-
-        switch (position) {
-            case 0: {
-                result = FollowingFragment.class;
-                break;
-            }
-            case 1: {
-                result = FavoritesFragment.class;
-                break;
-            }
-            case 2: {
-                result = SearchFragment.class;
-                break;
-            }
-            case 3: {
-                result = GalleryFragment.class;
-                break;
-            }
-            default: {
-                result = null;
-                break;
-            }
-        }
-
-        return result;
+        return tabs[position].second.first;
 
     }
 
     @Override
     public int getCount() {
-        //return tabTitles.length;
+
         return tabs.length;
+
     }
 
     @Override
     public Fragment getItem(int position) {
 
-        return tabs[position].second;
-//        Fragment result;
-//
-//        switch (position) {
-//            default:
-//            case 0: {
-//                //result = FollowingFragment.newInstance();
-//                result = tabs[0].second;
-//                break;
-//            }
-//            case 1: {
-//                //result = FavoritesFragment.newInstance();
-//                result = tabs[1].second;
-//                break;
-//            }
-//            case 2: {
-//                //result = SearchFragment.newInstance();
-//                result = tabs[2].second;
-//                break;
-//            }
-//            case 3: {
-//                //result = GalleryFragment.newInstance();
-//                result = tabs[3].second;
-//                break;
-//            }
-//        }
-//
-//        return result;
+        return tabs[position].second.second;
 
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
 
-        // Generate title based on item position
         return tabs[position].first;
-        //return tabTitles[position];
 
     }
 

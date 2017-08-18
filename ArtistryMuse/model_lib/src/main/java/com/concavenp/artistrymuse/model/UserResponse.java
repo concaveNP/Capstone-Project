@@ -1,5 +1,7 @@
 package com.concavenp.artistrymuse.model;
 
+import java.util.List;
+
 /**
  * Created by dave on 12/22/2016.
  */
