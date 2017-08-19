@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,7 @@ public class SearchFragment extends BaseFragment {
         ViewPager viewPager = (ViewPager) mainView.findViewById(R.id.search_results_viewpager);
         mSearchPagerAdapter = new SearchFragmentPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(mSearchPagerAdapter);
+        viewPager.setOffscreenPageLimit(mSearchPagerAdapter.getCount());
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) mainView.findViewById(R.id.search_tabs);
@@ -88,6 +90,8 @@ public class SearchFragment extends BaseFragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Log.d(TAG, "The search button has been clicked");
 
                 performSearch();
 

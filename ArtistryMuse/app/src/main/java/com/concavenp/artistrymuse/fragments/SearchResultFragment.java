@@ -406,7 +406,7 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         }
         mScrollListener.initValues();
 
-        // Perform a search and display the data for the first page (aka zero)
+        // Perform a search and display the data for the first page of the pagination (aka zero)
         search(0);
 
     }

@@ -131,6 +131,7 @@ public class MainActivity extends BaseAppCompatActivity implements
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         mFragmentAdapter = new ArtistryFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mFragmentAdapter);
+        viewPager.setOffscreenPageLimit(mFragmentAdapter.getCount());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
