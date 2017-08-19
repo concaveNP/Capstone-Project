@@ -6,12 +6,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
@@ -21,6 +25,13 @@ import com.concavenp.artistrymuse.fragments.adapter.SearchFragmentPagerAdapter;
  * A simple {@link Fragment} subclass.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
+ * References:
+ *
+ * How to set edittext to show search button or enter button on keyboard?
+ *      - https://stackoverflow.com/questions/6529485/how-to-set-edittext-to-show-search-button-or-enter-button-on-keyboard
+ * Setting onClickListner for the Drawable right of an EditText [duplicate]
+ *      - https://stackoverflow.com/questions/13135447/setting-onclicklistner-for-the-drawable-right-of-an-edittext
  */
 public class SearchFragment extends BaseFragment {
 
@@ -69,6 +80,48 @@ public class SearchFragment extends BaseFragment {
 
         // The search text the user will input
         mSearchEditText = (EditText) mainView.findViewById(R.id.search_editText);
+        mSearchEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                if ((actionId == EditorInfo.IME_ACTION_SEARCH) || (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
+
+                    performSearch();
+
+                    return true;
+
+                }
+
+                return false;
+            }
+
+        });
+        mSearchEditText.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+
+                    if(event.getRawX() >= (mSearchEditText.getRight() - mSearchEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+
+                        performSearch();
+
+                        return true;
+                    }
+
+                }
+
+                return false;
+            }
+
+        });
 
         // Save off the flipper for use in deciding which view to show
         mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_search_ViewFlipper);
@@ -85,18 +138,6 @@ public class SearchFragment extends BaseFragment {
 
         //mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_results_Flipper)));
         mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_nosearch_Flipper)));
-
-        ImageButton button = (ImageButton) mainView.findViewById(R.id.search_imageButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Log.d(TAG, "The search button has been clicked");
-
-                performSearch();
-
-            }
-        });
 
         return mainView;
 
