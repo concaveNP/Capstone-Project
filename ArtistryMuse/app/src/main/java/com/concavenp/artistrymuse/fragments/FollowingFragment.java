@@ -37,14 +37,6 @@ public class FollowingFragment extends BaseFragment {
     @SuppressWarnings("unused")
     private static final String TAG = FollowingFragment.class.getSimpleName();
 
-    // TODO: Rename parameter arguments, choose names that match the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private FirebaseRecyclerAdapter<Following, UserViewHolder> mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
@@ -53,39 +45,26 @@ public class FollowingFragment extends BaseFragment {
     // they are following or message stating they need to follow somebody (list is empty).
     private ViewFlipper mFlipper;
 
-    public FollowingFragment() {
-        // Required empty public constructor
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment.
+     *
+     * @return A new instance of fragment FollowingFragment.
+     */
+    public static FollowingFragment newInstance() {
+
+        FollowingFragment fragment = new FollowingFragment();
+
+        return fragment;
+
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FollowingFragment.
+     * Required empty public constructor
      */
-    // TODO: Rename and change types and number of parameters
-    public static FollowingFragment newInstance(String param1, String param2) {
-        FollowingFragment fragment = new FollowingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public FollowingFragment() {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-
-        }
+        // Do nothing
 
     }
 
@@ -95,7 +74,7 @@ public class FollowingFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_following, container, false);
 
-        // Save off the flipper for use in decided which view to show
+        // Save off the flipper for use in deciding which view to show
         mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_following_ViewFlipper);
 
         mRecycler = (RecyclerView) mainView.findViewById(R.id.following_recycler_view);

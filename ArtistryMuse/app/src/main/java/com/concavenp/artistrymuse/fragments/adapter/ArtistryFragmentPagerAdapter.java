@@ -3,6 +3,7 @@ package com.concavenp.artistrymuse.fragments.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.util.Pair;
 
 import com.concavenp.artistrymuse.fragments.FavoritesFragment;
 import com.concavenp.artistrymuse.fragments.FollowingFragment;
@@ -20,53 +21,41 @@ public class ArtistryFragmentPagerAdapter extends FragmentPagerAdapter {
     @SuppressWarnings("unused")
     private static final String TAG = ArtistryFragmentPagerAdapter.class.getSimpleName();
 
-    // TODO: can I use the string values for this?
-    private String tabTitles[] = new String[] { "Following", "Favorites", "Search", "Gallery" };
+    private Pair<String, Pair<Class, Fragment>> tabs[] = new Pair[] {
+            new Pair("Following", new Pair(FollowingFragment.class, FollowingFragment.newInstance())),
+            new Pair("Favorites", new Pair(FavoritesFragment.class, FavoritesFragment.newInstance())),
+            new Pair("Search", new Pair(SearchFragment.class, SearchFragment.newInstance())),
+            new Pair("Gallery", new Pair(GalleryFragment.class, GalleryFragment.newInstance()))
+    };
 
     public ArtistryFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
+    public Class getClassFromPosition(int position) {
+
+        return tabs[position].second.first;
+
+    }
+
     @Override
     public int getCount() {
-        return tabTitles.length;
+
+        return tabs.length;
+
     }
 
     @Override
     public Fragment getItem(int position) {
 
-        Fragment result = null;
-
-        // TODO: params to the fragments?  Needed?
-        switch (position) {
-            default:
-            case 0: {
-                result = FollowingFragment.newInstance("","");
-                break;
-            }
-            case 1: {
-                result = FavoritesFragment.newInstance("","");
-                break;
-            }
-            case 2: {
-                result = SearchFragment.newInstance("","");
-                break;
-            }
-            case 3: {
-                result = GalleryFragment.newInstance("","");
-                break;
-            }
-        }
-
-        return result;
+        return tabs[position].second.second;
 
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
 
-        // Generate title based on item position
-        return tabTitles[position];
+        return tabs[position].first;
 
     }
 

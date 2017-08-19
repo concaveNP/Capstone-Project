@@ -16,9 +16,8 @@ import java.util.List;
 /**
  * Created by dave on 12/26/2016.
  *
- * E = UserResponseHit
- * T = UserResponseViewHolder
- *
+ * E = The model data (i.e. UserResponseHit)
+ * VH = The ViewHolder (i.e. UserResponseViewHolder, ProjectResponseViewHolder)
  */
 public class SearchResultAdapter<E, VH extends BaseViewHolder> extends RecyclerView.Adapter<VH> {
 
@@ -37,11 +36,6 @@ public class SearchResultAdapter<E, VH extends BaseViewHolder> extends RecyclerV
      */
     private OnInteractionListener mListener;
 
-    /**
-     *
-     * @param listener
-     * @param resource
-     */
     public SearchResultAdapter(Class<VH> viewHolder, OnInteractionListener listener, int resource) {
 
         super();
@@ -65,6 +59,7 @@ public class SearchResultAdapter<E, VH extends BaseViewHolder> extends RecyclerV
         View result = inflater.inflate(mResource, parent, false);
 
         BaseViewHolder viewHolder = null;
+
         try {
             viewHolder = mViewHolder.getDeclaredConstructor(View.class).newInstance(result);
         } catch (InstantiationException e) {
@@ -87,6 +82,7 @@ public class SearchResultAdapter<E, VH extends BaseViewHolder> extends RecyclerV
         // Get the model data that will be used to populate all of the views
         E response = mResultItems.get(position);
 
+        // Adapt the given data into the view holder given (aka "bind the data")
         viewHolder.bindToPost(response, mListener);
 
     }
@@ -115,3 +111,4 @@ public class SearchResultAdapter<E, VH extends BaseViewHolder> extends RecyclerV
     }
 
 }
+

@@ -107,7 +107,7 @@ public class ProjectDetailsFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_project_details, container, false);
 
-        // Save off the flipper for use in decided which view to show
+        // Save off the flipper for use in deciding which view to show
         mFlipper = (ViewFlipper) view.findViewById(R.id.fragment_project_details_ViewFlipper);
 
         mRecycler = (RecyclerView) view.findViewById(R.id.project_details_RecyclerView);

@@ -3,6 +3,7 @@ package com.concavenp.artistrymuse.fragments.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.util.Pair;
 
 import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.fragments.SearchFragment;
@@ -19,60 +20,46 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter implements 
     @SuppressWarnings("unused")
     private static final String TAG = SearchFragmentPagerAdapter.class.getSimpleName();
 
-    // TODO: can I use the string values for this?
-    private String tabTitles[] = new String[] { "Users", "Projects" };
-
-    private SearchResultFragment mUsers;
-    private SearchResultFragment mProjects;
+    private Pair<String, SearchResultFragment> tabs[] = new Pair[] {
+            new Pair("Users", SearchResultFragment.newInstance(StorageDataType.USERS)),
+            new Pair("Projects", SearchResultFragment.newInstance(StorageDataType.PROJECTS))
+    };
 
     public SearchFragmentPagerAdapter(FragmentManager fm) {
+
         super(fm);
+
     }
 
     @Override
     public int getCount() {
-        return tabTitles.length;
+
+        return tabs.length;
+
     }
 
     @Override
     public Fragment getItem(int position) {
 
-        Fragment result = null;
-
-        // TODO: params to the fragments?  Needed?
-        switch (position) {
-            default:
-            case 0: {
-                mUsers = SearchResultFragment.newInstance("","", StorageDataType.USERS);
-                result = mUsers;
-                break;
-            }
-            case 1: {
-                mProjects = SearchResultFragment.newInstance("","",StorageDataType.PROJECTS);
-                result = mProjects;
-                break;
-            }
-        }
-
-        return result;
+        return tabs[position].second;
 
     }
 
+    // Generate title based on item position
     @Override
     public CharSequence getPageTitle(int position) {
-        // Generate title based on item position
-        return tabTitles[position];
+
+        return tabs[position].first;
+
     }
 
     @Override
     public void onSearchButtonInteraction(String search) {
 
-        if (mProjects != null) {
-            mProjects.onSearchInteraction(search);
+        for (Pair<String, SearchResultFragment> tab : tabs) {
+            tab.second.onSearchInteraction(search);
         }
-        if (mUsers != null) {
-            mUsers.onSearchInteraction(search);
-        }
+
     }
 
     /**
@@ -80,7 +67,11 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter implements 
      * signal to the fragments that the user is searching for data.
      */
     public interface OnSearchInteractionListener {
+
+        @SuppressWarnings("unused")
         void onSearchInteraction(String searchString);
+
     }
 
 }
+

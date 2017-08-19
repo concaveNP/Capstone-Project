@@ -37,15 +37,6 @@ public class GalleryFragment extends BaseFragment {
     @SuppressWarnings("unused")
     private static final String TAG = GalleryFragment.class.getSimpleName();
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
@@ -54,42 +45,26 @@ public class GalleryFragment extends BaseFragment {
     // user's projects or message stating they need to create some projects (list is empty).
     private ViewFlipper mFlipper;
 
-    public GalleryFragment() {
-        // Required empty public constructor
-    }
-
     /**
      * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * this fragment.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment GalleryFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static GalleryFragment newInstance(String param1, String param2) {
+    public static GalleryFragment newInstance() {
 
         GalleryFragment fragment = new GalleryFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
 
         return fragment;
 
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    /**
+     * Required empty public constructor
+     */
+    public GalleryFragment() {
 
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-
-        }
+        // Do nothing
 
     }
 
@@ -99,7 +74,7 @@ public class GalleryFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_gallery, container, false);
 
-        // Save off the flipper for use in decided which view to show
+        // Save off the flipper for use in deciding which view to show
         mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_gallery_ViewFlipper);
 
         mRecycler = (RecyclerView) mainView.findViewById(R.id.gallery_recycler_view);
@@ -135,7 +110,7 @@ public class GalleryFragment extends BaseFragment {
      */
     private void refresh() {
 
-        // First check to see if the user is has any projects yet
+        // First check to see if the user has any projects yet
         mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override

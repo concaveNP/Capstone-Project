@@ -49,4 +49,5 @@ public class ProjectResponse {
     public void setTook(int took) {
         this.took = took;
     }
+
 }

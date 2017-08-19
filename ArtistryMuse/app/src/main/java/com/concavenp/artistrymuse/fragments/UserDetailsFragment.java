@@ -107,7 +107,7 @@ public class UserDetailsFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_details, container, false);
 
-        // Save off the flipper for use in decided which view to show
+        // Save off the flipper for use in deciding which view to show
         mFlipper = (ViewFlipper) view.findViewById(R.id.fragment_user_details_ViewFlipper);
 
         mRecycler = (RecyclerView) view.findViewById(R.id.user_details_RecyclerView);

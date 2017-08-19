@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
@@ -20,6 +21,7 @@ import com.concavenp.artistrymuse.model.ProjectResponseHit;
 import com.concavenp.artistrymuse.model.Request;
 import com.concavenp.artistrymuse.model.UserResponse;
 import com.concavenp.artistrymuse.model.UserResponseHit;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,53 +43,57 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
     @SuppressWarnings("unused")
     private static final String TAG = SearchResultFragment.class.getSimpleName();
 
-    // TODO: Rename parameter arguments, choose names that match the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    // Parameter arguments, these are names that match the fragment initialization parameters
     private static final String TYPE_PARAM = "type";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // Types of parameters
     private StorageDataType mType;
 
     private SearchResultAdapter<UserResponseHit, UserResponseViewHolder> mUsersAdapter;
-    private SearchResultAdapter<ProjectResponseHit, ProjectResponseViewHolder> mProjectsAdapter;
-    private RecyclerView mUsersRecycler;
-    private RecyclerView mProjectsRecycler;
-    private EndlessRecyclerOnScrollListener mUsersScrollListener;
-    private EndlessRecyclerOnScrollListener mProjectsScrollListener;
+    private SearchResultAdapter<ProjectResponseHit,ProjectResponseViewHolder> mProjectsAdapter;
 
-    //private LinearLayoutManager mUsersManager;
-    private GridLayoutManager mUsersManager;
-    private GridLayoutManager mProjectsManager;
-    private ValueEventListener mUsersValueEventListener;
-    private ValueEventListener mProjectsValueEventListener;
-//    private StaggeredGridLayoutManager mUsersManager;
+    private RecyclerView mRecycler;
+
+    private EndlessRecyclerOnScrollListener mScrollListener;
+
+    private GridLayoutManager mManager;
+
+    private ChildEventListener mChildEventListener;
+    private DataSnapshot mDataSnapshot;
 
     private String mSearchText;
 
-    public SearchResultFragment() {
-        // Required empty public constructor
-    }
+    // This flipper allows the content of the fragment to show the user either the list search
+    // results or a informative message stating that a search needs to be performed to find
+    // results.
+    private ViewFlipper mFlipper;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param type - The type of search result
      * @return A new instance of fragment SearchResultFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static SearchResultFragment newInstance(String param1, String param2, StorageDataType type) {
+    public static SearchResultFragment newInstance(StorageDataType type) {
+
         SearchResultFragment fragment = new SearchResultFragment();
+
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         args.putInt(TYPE_PARAM, type.ordinal());
         fragment.setArguments(args);
+
         return fragment;
+
+    }
+
+    /**
+     * Required empty public constructor
+     */
+    public SearchResultFragment() {
+
+        // Do nothing
+
     }
 
     @Override
@@ -97,8 +103,6 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
 
         if (getArguments() != null) {
 
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
             mType = StorageDataType.values()[getArguments().getInt(TYPE_PARAM)];
 
         }
@@ -111,163 +115,79 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_search_result, container, false);
 
+        // Save off the flipper for use in deciding which view to show
+        mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_search_ViewFlipper);
+
         // The widgets that will "view" the search result data contained within their corresponding adapters
+        mRecycler = (RecyclerView) mainView.findViewById(R.id.search_recycler_view);
+
+        // Use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
+        mRecycler.setHasFixedSize(true);
+
+        int columnCount = getResources().getInteger(R.integer.list_column_count);
+
+        mManager = new GridLayoutManager(getContext(), columnCount);
+        mRecycler.setLayoutManager(mManager);
+
+        // Create the adapter that will be used to hold and paginate through the resulting search data
         switch (mType) {
-            case PROJECTS: {
-                mProjectsRecycler = (RecyclerView) mainView.findViewById(R.id.search_recycler_view);
-
-                // Use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
-                mProjectsRecycler.setHasFixedSize(true);
-
-                int columnCount = getResources().getInteger(R.integer.list_column_count);
-
-                mProjectsManager = new GridLayoutManager(getContext(), columnCount);
-                mProjectsRecycler.setLayoutManager(mProjectsManager);
-
-                // Create the adapter that will be used to hold and paginate through the resulting search data
-                mProjectsAdapter = new SearchResultAdapter<>(ProjectResponseViewHolder.class, mInteractionListener, R.layout.item_project);
-                mProjectsAdapter.clearData();
-                mProjectsRecycler.setAdapter(mProjectsAdapter);
-
-                // Setup the endless scrolling
-                mProjectsScrollListener = new EndlessRecyclerOnScrollListener(mProjectsManager) {
-                    @Override
-                    public void onLoadMore(int currentPage) {
-
-                        // Log that we are doing another search of data on a different "page"
-                        Log.i(TAG, "Searching for more paginated data from position: " + (currentPage*10));
-
-                        // Check that listener for the previous search results is removed
-                        if (mProjectsValueEventListener != null) {
-                            Log.i(TAG, "Search listener removed");
-                            mDatabase.removeEventListener(mProjectsValueEventListener);
-                        }
-
-                        // Get the data
-                        projectsSearch(currentPage);
-
-                    }
-                };
-                mProjectsScrollListener.initValues();
-                mProjectsRecycler.addOnScrollListener(mProjectsScrollListener);
-
+            case USERS: {
+                mUsersAdapter = new SearchResultAdapter<>(UserResponseViewHolder.class, mInteractionListener, R.layout.item_project);
+                mUsersAdapter.clearData();
+                mRecycler.setAdapter(mUsersAdapter);
                 break;
             }
-            case USERS: {
-                mUsersRecycler = (RecyclerView) mainView.findViewById(R.id.search_recycler_view);
-
-                // Use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
-                mUsersRecycler.setHasFixedSize(true);
-
-                int columnCount = getResources().getInteger(R.integer.list_column_count);
-
-                mUsersManager = new GridLayoutManager(getContext(), columnCount);
-                mUsersRecycler.setLayoutManager(mUsersManager);
-
-                // Create the adapter that will be used to hold and paginate through the resulting search data
-                mUsersAdapter = new SearchResultAdapter<>(UserResponseViewHolder.class, mInteractionListener, R.layout.item_user);
-                mUsersAdapter.clearData();
-                mUsersRecycler.setAdapter(mUsersAdapter);
-
-                // Setup the endless scrolling
-                mUsersScrollListener = new EndlessRecyclerOnScrollListener(mUsersManager) {
-                    @Override
-                    public void onLoadMore(int currentPage) {
-
-                        // Log that we are doing another search of data on a different "page"
-                        Log.i(TAG, "Searching for more paginated data from position: " + (currentPage*10));
-
-                        // Check that listener for the previous search results is removed
-                        if (mUsersValueEventListener != null) {
-                            Log.i(TAG, "Search listener removed");
-                            mDatabase.removeEventListener(mUsersValueEventListener);
-                        }
-
-                        // Get the data
-                        usersSearch(currentPage);
-
-                    }
-                };
-                mUsersScrollListener.initValues();
-                mUsersRecycler.addOnScrollListener(mUsersScrollListener);
-
+            case PROJECTS: {
+                mProjectsAdapter = new SearchResultAdapter<>(ProjectResponseViewHolder.class, mInteractionListener, R.layout.item_project);
+                mProjectsAdapter.clearData();
+                mRecycler.setAdapter(mProjectsAdapter);
                 break;
             }
         }
+
+        // Setup the endless scrolling
+        mScrollListener = new EndlessRecyclerOnScrollListener(mManager) {
+            @Override
+            public void onLoadMore(int currentPage) {
+
+                // Log that we are doing another search of data on a different "page"
+                Log.i(TAG, "Searching for more paginated data from position: " + (currentPage*10));
+
+                // Clear the child listener from the previous search
+                if (mChildEventListener != null) {
+                    Log.i(TAG, "child Search listener removed");
+                    mDatabase.removeEventListener(mChildEventListener );
+                }
+
+                // Clear any data that saved from the last search
+                mDataSnapshot = null;
+
+                // Get the data
+                search(currentPage);
+
+            }
+        };
+        mScrollListener.initValues();
+        mRecycler.addOnScrollListener(mScrollListener);
 
         return mainView;
 
     }
 
-    /**
-     * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
-     * is used to translate the data retrieved into the populated displayed view.
-     */
-    private void usersSearch(int dataPosition) {
+    private String getDatabaseNameFromType() {
 
-        UUID requestId = UUID.randomUUID();
-
-        // Build the query to be used
-        final Query responseQuery = getResponseQuery(mDatabase, requestId);
-
-        // Create the JSON request object that will be placed into the database
-        Request request = new Request("firebase", mSearchText, "user", dataPosition*10);
-
-        // Add the search request to the database.  The Flashlight service will see this and
-        // consume the request and generate a response containing the results of the elasticsearch.
-        mDatabase.child("search").child("request").child(requestId.toString()).setValue(request);
-
-        // Listen for the result.
-        //
-        // NOTE: this cannot be done as a one off due to the unpredictable time nature of
-        // the processed response becoming available.
-        mUsersValueEventListener = responseQuery.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                // Check to see if the data is there yet
-                if (dataSnapshot.exists()) {
-
-                    // Convert the JSON to Object
-                    UserResponse response = dataSnapshot.getValue(UserResponse.class);
-
-                    if ( (response != null) && (response.getHits() != null) ) {
-
-                        if  ((response.getHits().getTotal() > 0) && (response.getHits().getHits() != null)) {
-
-                            // Add the new data
-                            mUsersAdapter.add(response.getHits().getHits());
-
-                        }
-                        else {
-
-                            Log.e(TAG, "There does not appear to be any results from the search query");
-
-                        }
-
-                    }
-                    else {
-
-                        Log.e(TAG, "Expected response from search query was null");
-
-                    }
-
-                }
-                else {
-
-                    Log.e(TAG, "There is no data in the snapshot");
-
-                }
-
+        switch (mType) {
+            case USERS: {
+                return "user";
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Do nothing
+            case PROJECTS: {
+                return "project";
             }
-
-        });
+            default: {
+                // error
+                return null;
+            }
+        }
 
     }
 
@@ -275,7 +195,7 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    private void projectsSearch(int dataPosition) {
+    private void search(final int dataPosition) {
 
         UUID requestId = UUID.randomUUID();
 
@@ -283,69 +203,182 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         final Query responseQuery = getResponseQuery(mDatabase, requestId);
 
         // Create the JSON request object that will be placed into the database
-        Request request = new Request("firebase", mSearchText, "project", dataPosition*10);
+        Request request = new Request("firebase", mSearchText, getDatabaseNameFromType(), dataPosition*10);
 
-        // Add the search request to the database.  The Flashlight service will see this and
-        // consume the request and generate a response containing the results of the elasticsearch.
-        mDatabase.child("search").child("request").child(requestId.toString()).setValue(request);
+        Log.d(TAG, "Here is the query that will be used: " + responseQuery);
 
-        // Listen for the result.
-        //
-        // NOTE: this cannot be done as a one off due to the unpredictable time nature of
-        // the processed response becoming available.
-        mProjectsValueEventListener = responseQuery.addValueEventListener(new ValueEventListener() {
+        // It took a while to get this right.  So, I'll put in some words for what's going on here.
+        // When performing a search this App will create a new DB entry within the "search" table.
+        // A Heroku hosted Node application is monitoring this "search" table for the entries
+        // created here.  The entries and processed with the results placed in the same table using
+        // the the request UID as the lookup key.  This application is simply waiting for the
+        // result entry node within the DB to be created.  This can take some time given several
+        // different variables to the situation.  So, when the DB node is detected it will then
+        // query for the Value of the node.  Turns out just listening for the Value of the node
+        // has bugs within the Firebase codebase.  I know this because Google has contacted me
+        // regarding the bugs I've exposed.  (YEH ME!)  The bug in question appears to be the result
+        // of not waiting until the writing of data within the DB in complete before issued a message
+        // out the listeners of the data (this App) that it is complete.  The result is that this
+        // App would get errors back the DB query because it was only ever partially finished.
+        mChildEventListener = responseQuery.addChildEventListener(new ChildEventListener() {
 
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String childNode) {
 
-                // Check to see if the data is there yet
-                if (dataSnapshot.exists()) {
+                Log.d(TAG, mType + " - Here is the added child added: " + childNode);
 
-                    // Convert the JSON to Object
-                    ProjectResponse response = dataSnapshot.getValue(ProjectResponse.class);
+                // This should be null - meaning that that the child has been created and it is time to query for the data
+                if (childNode == null) {
 
-                    if ( (response != null) && (response.getHits() != null) ) {
+                    // We no longer need this child listener
+                    mDatabase.removeEventListener(mChildEventListener);
 
-                        if  ((response.getHits().getTotal() > 0) && (response.getHits().getHits() != null)) {
+                    // Listen for the result.
+                    //
+                    // NOTE: this cannot be done as a one off due to the unpredictable time nature of
+                    // the processed response becoming available.
+                    //mProjectsValueEventListener = responseQuery.addValueEventListener(new ValueEventListener() {
+                    responseQuery.addListenerForSingleValueEvent(new ValueEventListener() {
 
-                            // Add the new data
-                            mProjectsAdapter.add(response.getHits().getHits());
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            Log.d(TAG, mType + "-Here is the data for the added child added");
+
+                            // Check to see if the data is there yet
+                            if (dataSnapshot.exists()) {
+
+                                Log.d(TAG, mType + "-the data does exist");
+
+                                // Save the data
+                                mDataSnapshot = dataSnapshot;
+
+                                // Verify there is an object to work with
+                                Object objectResponse = dataSnapshot.getValue();
+                                if (objectResponse  != null) {
+
+                                    // Add the new data given the type
+                                    switch (mType) {
+                                        case USERS: {
+
+                                            // Convert the JSON to Object
+                                            UserResponse response = mDataSnapshot.getValue(UserResponse.class);
+
+                                            // Add the search results to the adapter
+                                            if  ((response.getHits().getTotal() > 0) && (response.getHits().getHits() != null)) {
+                                                mUsersAdapter.add(response.getHits().getHits());
+
+                                                // We are now performing a search, flip control to the individual fragments of the TabLayout
+                                                mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.search_recycler_view)));
+                                            } else {
+                                                Log.d(TAG, "There does not appear to be any results from the search query");
+
+                                                // We are now performing a search, flip control to the individual fragments of the TabLayout
+                                                mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_no_results_Flipper)));
+                                            }
+
+                                            break;
+                                        }
+                                        case PROJECTS: {
+                                            // Convert the JSON to Object
+                                            ProjectResponse response = mDataSnapshot.getValue(ProjectResponse.class);
+
+                                            // Add the search results to the adapter
+                                            if  ((response.getHits().getTotal() > 0) && (response.getHits().getHits() != null)) {
+                                                mProjectsAdapter.add(response.getHits().getHits());
+
+                                                // We are now performing a search, flip control to the individual fragments of the TabLayout
+                                                mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.search_recycler_view)));
+                                            } else {
+                                                Log.d(TAG, "There does not appear to be any results from the search query");
+
+                                                // We are now performing a search, flip control to the individual fragments of the TabLayout
+                                                mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_no_results_Flipper)));
+                                            }
+                                            break;
+                                        }
+
+                                    }
+
+                                }
+                                else {
+
+                                    Log.e(TAG, "Expected response from search query was null");
+
+                                    // We are now performing a search, flip control to the individual fragments of the TabLayout
+                                    mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_error_Flipper)));
+
+                                }
+
+                            }
+                            else {
+
+                                Log.e(TAG, "There is no data in the snapshot");
+
+                                // We are now performing a search, flip control to the individual fragments of the TabLayout
+                                mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_no_data_Flipper)));
+
+                            }
 
                         }
-                        else {
 
-                            Log.e(TAG, "There does not appear to be any results from the search query");
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                            // I have not yet seen this occur yet
+                            Log.e(TAG, "The Value query for the search results has encountered an errorth: " + databaseError);
 
                         }
 
-                    }
-                    else {
+                    });
 
-                        Log.e(TAG, "Expected response from search query was null");
+                } else {
 
-                    }
-
-                }
-                else {
-
-                    Log.e(TAG, "There is no data in the snapshot");
+                    // Skip, we only care about the creation of the node which will result in
+                    // a null value, so do nothing.
 
                 }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                // Do nothing
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                // Do nothing
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                // Do nothing
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
                 // Do nothing
+
             }
 
         });
+
+        // Add the search request to the database.  The Flashlight (this is a Heroku hosted
+        // Node.js Application along with an instance of Elasticsearch) service will see this and
+        // consume the request and generate a response containing the results of the Elasticsearch.
+        mDatabase.child("search").child("request").child(requestId.toString()).setValue(request);
 
     }
 
     private Query getResponseQuery(DatabaseReference databaseReference, UUID uuid) {
-
-        String myUserId = getUid();
 
         Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString());
 
@@ -356,55 +389,25 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
     @Override
     public void onSearchInteraction(String searchString) {
 
-       mSearchText = searchString;
+        mSearchText = searchString;
 
-        // The widgets that will "view" the search result data contained within their corresponding adapters
-        switch (mType) {
+        // We are now performing a search, flip control to the individual fragments of the TabLayout
+        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_searching_Flipper)));
 
-            case PROJECTS: {
+        // Log that we are doing another search of data on a different "page"
+        Log.i(TAG, "Searching for more paginated data on page: " + 0);
 
-                // Log that we are doing another search of data on a different "page"
-                Log.i(TAG, "Searching for more paginated data on page: " + 0);
-
-                // Clear any results that are being stored within the adapter scroll listener
-                mProjectsAdapter.clearData();
-                mProjectsScrollListener.initValues();
-
-                // Check that listener for the previous search results is removed
-                if (mProjectsValueEventListener != null) {
-                    Log.i(TAG, "Search listener removed");
-                    mDatabase.removeEventListener(mProjectsValueEventListener);
-                }
-
-                // Perform a search and display the data
-                projectsSearch(0);
-
-                break;
-
-            }
-            case USERS: {
-
-                // Log that we are doing another search of data on a different "page"
-                Log.i(TAG, "Searching for more paginated data on page: " + 0);
-
-                // Clear any results that are being stored within the adapter scroll listener
-                mUsersAdapter.clearData();
-                mUsersScrollListener.initValues();
-
-                // Check that listener for the previous search results is removed
-                if (mUsersValueEventListener != null) {
-                    Log.i(TAG, "Search listener removed");
-                    mDatabase.removeEventListener(mUsersValueEventListener);
-                }
-
-                // Perform a search and display the data
-                usersSearch(0);
-
-                break;
-
-            }
-
+        // Clear any results that are being stored within the adapter scroll listener
+        if (mUsersAdapter != null) {
+            mUsersAdapter.clearData();
         }
+        if (mProjectsAdapter != null) {
+            mProjectsAdapter.clearData();
+        }
+        mScrollListener.initValues();
+
+        // Perform a search and display the data for the first page of the pagination (aka zero)
+        search(0);
 
     }
 
