@@ -32,6 +32,8 @@ import com.concavenp.artistrymuse.fragments.adapter.SearchFragmentPagerAdapter;
  *      - https://stackoverflow.com/questions/6529485/how-to-set-edittext-to-show-search-button-or-enter-button-on-keyboard
  * Setting onClickListner for the Drawable right of an EditText [duplicate]
  *      - https://stackoverflow.com/questions/13135447/setting-onclicklistner-for-the-drawable-right-of-an-edittext
+ * How to add icon inside EditText view in Android ?
+ *      - https://stackoverflow.com/questions/4281749/how-to-add-icon-inside-edittext-view-in-android
  */
 public class SearchFragment extends BaseFragment {
 

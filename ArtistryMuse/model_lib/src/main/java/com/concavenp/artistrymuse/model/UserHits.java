@@ -10,11 +10,11 @@ import java.util.List;
 public class UserHits {
 
     public List<UserResponseHit> hits = new ArrayList<>();
-    public float max_score;
-    public int total;
+    public float max_score = 0.0f;
+    public int total = 0;
 
     public UserHits() {
-        // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public int getTotal() {

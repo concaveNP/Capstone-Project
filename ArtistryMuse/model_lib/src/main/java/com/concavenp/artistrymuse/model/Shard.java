@@ -6,12 +6,12 @@ package com.concavenp.artistrymuse.model;
 
 public class Shard {
 
-    public int failed;
-    public int successful;
-    public int total;
+    public int failed = 0;
+    public int successful = 0;
+    public int total = 0;
 
     public Shard() {
-        // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public int getFailed() {

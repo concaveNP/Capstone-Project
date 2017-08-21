@@ -9,13 +9,13 @@ import java.util.List;
 
 public class ProjectResponse {
 
-    public Shard _shards;
-    public ProjectHits hits;
-    public boolean timed_out;
-    public int took;
+    public Shard _shards = null;
+    public ProjectHits hits = null;
+    public boolean timed_out = false;
+    public int took = 0;
 
     public ProjectResponse() {
-        // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public Shard get_shards() {

@@ -9,23 +9,23 @@ import java.util.Map;
  */
 public class User {
 
-    public String authUid;
-    public Long creationDate;
-    public String description;
+    public String authUid = "";
+    public Long creationDate = 0L;
+    public String description = "";
     public Map<String, Favorite> favorites = new HashMap<>();
-    public Integer followedCount;
+    public Integer followedCount = 0;
     public Map<String, Following> following = new HashMap<>();
-    public String headerImageUid;
-    public Long lastUpdatedDate;
-    public String name;
-    public String profileImageUid;
+    public String headerImageUid = "";
+    public Long lastUpdatedDate = 0L;
+    public String name = "";
+    public String profileImageUid = "";
     public Map<String, String> projects = new HashMap<>();
-    public String summary;
-    public String uid;
-    public String username;
+    public String summary = "";
+    public String uid = "";
+    public String username = "";
 
     public User() {
-        // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public Map<String, String> getProjects() {

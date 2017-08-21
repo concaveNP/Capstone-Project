@@ -6,14 +6,14 @@ package com.concavenp.artistrymuse.model;
 
 public class UserResponseHit {
 
-    public String _id;
-    public String _index;
-    public float _score;
-    public User _source;
-    public String _type;
+    public String _id = "";
+    public String _index = "";
+    public float _score = 0.0f;
+    public User _source = null;
+    public String _type = "";
 
     public UserResponseHit() {
-        // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public String get_id() {

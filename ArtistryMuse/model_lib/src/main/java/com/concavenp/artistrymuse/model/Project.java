@@ -11,23 +11,23 @@ import java.util.Map;
 
 public class Project {
 
-    public Long creationDate;
-    public String description;
-    public Integer favorited;
+    public Long creationDate = 0L;
+    public String description = "";
+    public Integer favorited = 0;
     public Map<String, Inspiration> inspirations = new HashMap<>();
-    public Long lastUpdateDate;
-    public String mainImageUid;
-    public String name;
-    public String ownerUid;
-    public Boolean published;
-    public Long publishedDate;
-    public Double rating;
-    public Integer ratingsCount;
-    public String uid;
-    public Integer views;
+    public Long lastUpdateDate = 0L;
+    public String mainImageUid = "";
+    public String name = "";
+    public String ownerUid = "";
+    public Boolean published = true;
+    public Long publishedDate = 0L;
+    public Double rating = 0.0;
+    public Integer ratingsCount = 0;
+    public String uid = "";
+    public Integer views = 0;
 
     public Project() {
-        // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     /**
