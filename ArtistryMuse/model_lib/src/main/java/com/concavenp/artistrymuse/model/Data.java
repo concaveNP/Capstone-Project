@@ -14,7 +14,7 @@ public class Data {
     public Map<String,String> auth = new HashMap<>();
 
     public Data() {
-        // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public Map<String, User> getUsers() {

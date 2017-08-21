@@ -22,12 +22,6 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
     @SuppressWarnings("unused")
     private static final String TAG = ProjectDetailsActivity.class.getSimpleName();
 
-    /**
-     * String used when creating the activity via intent.  This key will be used to retrieve the
-     * UID associated with the USER in question.
-     */
-    public static final String EXTRA_DATA = "uid_string_data";
-
     // ImageView for setting the Project in question's backdrop
     private ImageView backdropImageView;
 
@@ -47,7 +41,6 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_dialog_close_dark);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Capture the AppBar for manipulating it after data is available to do so

@@ -6,16 +6,16 @@ package com.concavenp.artistrymuse.model;
 
 public class Inspiration {
 
-    public Long creationDate;
-    public String description;
-    public String imageUid;
-    public Long lastUpdateDate;
-    public String name;
-    public String uid;
-    public String projectUid;
+    public Long creationDate = 0L;
+    public String description = "";
+    public String imageUid = "";
+    public Long lastUpdateDate = 0L;
+    public String name = "";
+    public String uid = "";
+    public String projectUid = "";
 
     public Inspiration() {
-        // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     /**
@@ -32,6 +32,7 @@ public class Inspiration {
         setProjectUid("");
 
     }
+
     public String getUid() {
         return uid;
     }

@@ -6,11 +6,11 @@ package com.concavenp.artistrymuse.model;
 
 public class Request {
 
-    public String index;
-    public String query;
-    public String type;
-    public Integer from;
-    public Integer size;
+    public String index = "";
+    public String query = "";
+    public String type = "";
+    public Integer from = 0;
+    public Integer size = 0;
 
     public Request() {
         // do nothing

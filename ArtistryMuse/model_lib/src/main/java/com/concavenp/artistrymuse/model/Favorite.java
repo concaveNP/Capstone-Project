@@ -6,12 +6,12 @@ package com.concavenp.artistrymuse.model;
 
 public class Favorite {
 
-    public String uid;
-    public Double rating;
-    public Long favoritedDate;
+    public String uid = "";
+    public Double rating = 0.0;
+    public Long favoritedDate = 0L;
 
     public Favorite() {
-        // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public String getUid() {

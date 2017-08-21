@@ -7,18 +7,26 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.fragments.adapter.InspirationAdapter;
+import com.concavenp.artistrymuse.model.Favorite;
 import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import static com.concavenp.artistrymuse.StorageDataType.USERS;
 import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
@@ -27,6 +35,13 @@ import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
  * A simple {@link Fragment} subclass.
  * Use the {@link ProjectDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
+ * References:
+ *
+ * Adding to an average without unknown total sum
+ *      - https://math.stackexchange.com/questions/1153794/adding-to-an-average-without-unknown-total-sum
+ * How to add and subtract values from an average?
+ *      - https://math.stackexchange.com/questions/22348/how-to-add-and-subtract-values-from-an-average
  */
 public class ProjectDetailsFragment extends BaseFragment {
 
@@ -64,6 +79,13 @@ public class ProjectDetailsFragment extends BaseFragment {
     private ValueEventListener projectInQuestionValueEventListener;
     private ValueEventListener projectOwnerValueEventListener;
 
+    // This will contain the user's favorite object for the Project in question that it is favoring
+    private Favorite favoriteInQuestion;
+
+    // This member will be used in determining if the View count associated with a project should
+    // be incremented.
+    private boolean performViewing = false;
+
     public ProjectDetailsFragment() {
 
         // Required empty public constructor
@@ -98,6 +120,9 @@ public class ProjectDetailsFragment extends BaseFragment {
             mUidForDetails = getArguments().getString(UID_PARAM);
 
         }
+
+        // The creation of the fragment is the only place where a "viewing" of the Project will be allowed
+        performViewing = true;
 
     }
 
@@ -134,9 +159,11 @@ public class ProjectDetailsFragment extends BaseFragment {
         // Display whatever data we currently have to work with to get the cycle going
         updateProjectInQuestionDetails(mProjectInQuestionModel);
 
-        // Pull the User in question info from the Database and keep listening for changes
+        // Pull the Project in question info from the Database and keep listening for changes
         if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
 
+
+            // Listen for changes regarding the Project in question
             mDatabase.child(PROJECTS.getType()).child(mUidForDetails).addValueEventListener(getProjectInQuestionValueEventListener());
 
         }
@@ -238,7 +265,7 @@ public class ProjectDetailsFragment extends BaseFragment {
 
         }
 
-        return projectInQuestionValueEventListener  ;
+        return projectInQuestionValueEventListener;
 
     }
 
@@ -257,14 +284,16 @@ public class ProjectDetailsFragment extends BaseFragment {
                     // Verify there is a user to work with
                     if (mUserInQuestionModel != null) {
 
+                        View mainView = ProjectDetailsFragment.this.getView();
+
                         // Set the profile image
-                        ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.avatar_ImageView);
+                        ImageView profileImageView = (ImageView) mainView.findViewById(R.id.avatar_ImageView);
                         populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
 
                         // Set the name of the author and the username
-                        TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
+                        TextView authorTextView = (TextView) mainView.findViewById(R.id.author_TextView);
                         populateTextView(mUserInQuestionModel.getName(), authorTextView);
-                        TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
+                        TextView usernameTextView = (TextView) mainView.findViewById(R.id.username_TextView);
                         populateTextView("@" + mUserInQuestionModel.getUsername(), usernameTextView);
 
                     }
@@ -291,59 +320,101 @@ public class ProjectDetailsFragment extends BaseFragment {
         // If there is model data then show the details otherwise tell the user to choose something
         if (mUserModel != null) {
 
-//            // The follow/unfollow toggle button
-//            final ToggleButton followButton = (ToggleButton) getActivity().findViewById(R.id.follow_unfollow_toggleButton);
-//
-//            // Determine the initial state of the button given the user's list of "following"
-//            final Map<String, Following> following = mUserModel.getFollowing();
-//
-//            // Set the initial state of the button
-//            if (following.containsKey(mUidForDetails)) {
-//
-//                followButton.setChecked(true);
-//
-//            } else {
-//
-//                followButton.setChecked(false);
-//
-//            }
-//
-//            followButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//
-//                    if (isChecked) {
-//
-//                        // The new object that will be added to the DB
-//                        Following following = new Following();
-//                        following.setLastUpdatedDate(new Date().getTime());
-//                        following.setUid(mUidForDetails);
-//
-//                        // Add the user in question to the map of people the user is following
-//                        mDatabase.child(USERS.getType()).child(getUid()).child("following").child(mUidForDetails).setValue(following);
-//
-//                        // Update the followed count for the user in question
-//                        Map<String, Object> childUpdates = new HashMap<>();
-//                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", Integer.valueOf(mUserInQuestionModel.getFollowedCount() + 1));
-//                        mDatabase.updateChildren(childUpdates);
-//
-//                    } else {
-//
-//                        // TODO: this needs an addition user confirmation dialog to get express desire to un-follow the user in question
-//
-//                        // Remove the user in question from the map of people the user is following
-//                        mDatabase.child(USERS.getType()).child(getUid()).child("following").child(mUidForDetails).removeValue();
-//
-//                        // Update the followed count for the user in question
-//                        Map<String, Object> childUpdates = new HashMap<>();
-//                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", Integer.valueOf(mUserInQuestionModel.getFollowedCount() - 1));
-//                        mDatabase.updateChildren(childUpdates);
-//                    }
-//
-//                }
-//            });
-//
-//        }
+            // The favorite/unfavorite toggle button
+            final ToggleButton favoriteButton = (ToggleButton) getView().findViewById(R.id.favorite_unfavorite_toggleButton);
+
+            // Determine the initial state of the button given the user's list of "favorites"
+            final Map<String, Favorite> favorites = mUserModel.getFavorites();
+
+            // Set the initial state of the button
+            if (favorites.containsKey(mUidForDetails)) {
+
+                favoriteInQuestion = favorites.get(mUidForDetails);
+
+                favoriteButton.setChecked(true);
+
+            } else {
+
+                favoriteInQuestion = null;
+
+                favoriteButton.setChecked(false);
+
+            }
+
+            favoriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked) {
+
+                        // The new object that will be added to the DB
+                        favoriteInQuestion = new Favorite();
+                        favoriteInQuestion.setFavoritedDate(new Date().getTime());
+                        favoriteInQuestion.setRating(new Random().nextDouble()*10.0); // TODO: should be user chosen value
+                        favoriteInQuestion.setUid(mUidForDetails);
+
+                        // Add the Project in question to the map of projects the user has favorited
+                        mDatabase.child(USERS.getType()).child(getUid()).child("favorites").child(mUidForDetails).setValue(favoriteInQuestion);
+
+                        // Create a has map of the values updates to the Project in question
+                        Map<String, Object> childUpdates = new HashMap<>();
+
+                        // Update the ratings count for the project in question
+                        int ratingCount = mProjectInQuestionModel.getRatingsCount() + 1;
+                        childUpdates.put("/projects/" + mUidForDetails + "/ratingsCount", ratingCount);
+
+                        // Update the rating for the project in question
+                        double newRating = ((mProjectInQuestionModel.getRating() * mProjectInQuestionModel.getRatingsCount()) + favoriteInQuestion.getRating()) / ratingCount;
+                        childUpdates.put("/projects/" + mUidForDetails + "/rating", newRating);
+
+                        // Update the Favorited count
+                        int favoritedCount = mProjectInQuestionModel.getFavorited() + 1;
+                        childUpdates.put("/projects/" + mUidForDetails + "/favorited", favoritedCount);
+
+                        // Update the Project in question
+                        mDatabase.updateChildren(childUpdates);
+
+                    } else {
+
+                        // Only perform the operation if it appears that we have favorited this project before
+                        if (favoriteInQuestion != null) {
+
+                            // Create a has map of the values updates to the Project in question
+                            Map<String, Object> childUpdates = new HashMap<>();
+
+                            // Update the ratings count for the project in question
+                            int ratingCount = mProjectInQuestionModel.getRatingsCount() - 1;
+                            childUpdates.put("/projects/" + mUidForDetails + "/ratingsCount", ratingCount);
+
+                            // Update the rating for the project in question
+                            double newRating = ((mProjectInQuestionModel.getRating() * mProjectInQuestionModel.getRatingsCount()) - favoriteInQuestion.getRating()) / ratingCount;
+                            if (Double.isNaN(newRating)) {
+                                newRating = 0.0;
+                            }
+                            childUpdates.put("/projects/" + mUidForDetails + "/rating", newRating);
+
+                            // Update the Favorited count
+                            int favoritedCount = mProjectInQuestionModel.getFavorited() - 1;
+                            childUpdates.put("/projects/" + mUidForDetails + "/favorited", favoritedCount);
+
+                            // Update the Project in question
+                            mDatabase.updateChildren(childUpdates);
+
+                            // Remove the favorite object in question from the map of people the user is following
+                            mDatabase.child(USERS.getType()).child(getUid()).child("favorites").child(mUidForDetails).removeValue();
+
+                            // Clear out the local storage of the favorite object
+                            favoriteInQuestion = null;
+
+                        }
+
+                    }
+
+                }
+
+            });
+
         }
+
     }
 
     private void updateProjectInQuestionDetails(Project model) {
@@ -356,7 +427,7 @@ public class ProjectDetailsFragment extends BaseFragment {
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_project_details)));
 
             // Display items to be populated
-            final TextView descriptionTextView = (TextView) getActivity().findViewById(R.id.description_TextView);
+            final TextView descriptionTextView = (TextView) getView().findViewById(R.id.description_TextView);
 
             populateTextView(mProjectInQuestionModel.getDescription(), descriptionTextView);
 
@@ -366,6 +437,24 @@ public class ProjectDetailsFragment extends BaseFragment {
 
             // Retrieve the user associated with the project just once
             mDatabase.child(USERS.getType()).child(mProjectInQuestionModel.getOwnerUid()).addValueEventListener(getProjectOwnerValueEventListener());
+
+            // Check the "Viewed" member to see if we should update the view count of the Project in question
+            if (performViewing) {
+
+                // Create a has map of the values updates to the Project in question
+                Map<String, Object> childUpdates = new HashMap<>();
+
+                // Update the ratings count for the project in question
+                int viewCount = mProjectInQuestionModel.getViews() + 1;
+                childUpdates.put("/projects/" + mUidForDetails + "/views", viewCount);
+
+                // Update the Project in question
+                mDatabase.updateChildren(childUpdates);
+
+                // The Project has been viewed by this Fragment
+                performViewing = false;
+
+            }
 
         } else {
 

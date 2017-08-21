@@ -115,12 +115,12 @@
                 android:gravity="center">
 
                 <ToggleButton
-                    android:id="@+id/follow_unfollow_toggleButton"
+                    android:id="@+id/favorite_unfavorite_toggleButton"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:text="Button"
-                    android:textOff="@string/following_off_text"
-                    android:textOn="@string/follow_on_text" />
+                    android:textOff="@string/favorite_off_text"
+                    android:textOn="@string/favorite_on_text" />
             </RelativeLayout>
 
             <LinearLayout

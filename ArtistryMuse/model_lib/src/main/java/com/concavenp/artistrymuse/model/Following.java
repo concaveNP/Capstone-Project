@@ -6,11 +6,11 @@ package com.concavenp.artistrymuse.model;
 
 public class Following {
 
-    public String uid;
-    public Long lastUpdatedDate;
+    public String uid = "";
+    public Long lastUpdatedDate = 0L;
 
     public Following() {
-        // TODO: comment fix - Default constructor required for calls to DataSnapshot.getValue(User.class)
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public String getUid() {
