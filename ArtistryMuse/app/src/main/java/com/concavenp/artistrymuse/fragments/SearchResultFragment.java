@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,11 +63,15 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
     private DataSnapshot mDataSnapshot;
 
     private String mSearchText;
+    private StaggeredGridLayoutManager mLayoutManager;
 
     // This flipper allows the content of the fragment to show the user either the list search
     // results or a informative message stating that a search needs to be performed to find
     // results.
     private ViewFlipper mFlipper;
+
+    private boolean loading = true;
+    private int pastVisibleItems, visibleItemCount, totalItemCount;
 
     /**
      * Use this factory method to create a new instance of
@@ -124,10 +129,10 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         // Use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
         mRecycler.setHasFixedSize(true);
 
+        // Set up Layout
         int columnCount = getResources().getInteger(R.integer.list_column_count);
-
-        mManager = new GridLayoutManager(getContext(), columnCount);
-        mRecycler.setLayoutManager(mManager);
+        mLayoutManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        mRecycler.setLayoutManager(mLayoutManager);
 
         // Create the adapter that will be used to hold and paginate through the resulting search data
         switch (mType) {
@@ -146,16 +151,12 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         }
 
         // Setup the endless scrolling
-        mScrollListener = new EndlessRecyclerOnScrollListener(mManager) {
+        mScrollListener = new EndlessRecyclerOnScrollListener(mLayoutManager) {
             @Override
             public void onLoadMore(int currentPage) {
 
-                // Log that we are doing another search of data on a different "page"
-                Log.i(TAG, "Searching for more paginated data from position: " + (currentPage*10));
-
-                // Clear the child listener from the previous search
+                // Clear the child listener from the previous search if not already done
                 if (mChildEventListener != null) {
-                    Log.i(TAG, "child Search listener removed");
                     mDatabase.removeEventListener(mChildEventListener );
                 }
 
@@ -225,8 +226,6 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String childNode) {
 
-                Log.d(TAG, mType + " - Here is the added child added: " + childNode);
-
                 // This should be null - meaning that that the child has been created and it is time to query for the data
                 if (childNode == null) {
 
@@ -243,12 +242,8 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            Log.d(TAG, mType + "-Here is the data for the added child added");
-
                             // Check to see if the data is there yet
                             if (dataSnapshot.exists()) {
-
-                                Log.d(TAG, mType + "-the data does exist");
 
                                 // Save the data
                                 mDataSnapshot = dataSnapshot;
@@ -258,6 +253,10 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
                                 if (objectResponse  != null) {
 
                                     // Add the new data given the type
+                                    //
+                                    // NOTE: this should be done via generics used within this class,
+                                    // however my fist attempt landing in a too complicated solution.
+                                    //
                                     switch (mType) {
                                         case USERS: {
 
@@ -393,9 +392,6 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
 
         // We are now performing a search, flip control to the individual fragments of the TabLayout
         mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_searching_Flipper)));
-
-        // Log that we are doing another search of data on a different "page"
-        Log.i(TAG, "Searching for more paginated data on page: " + 0);
 
         // Clear any results that are being stored within the adapter scroll listener
         if (mUsersAdapter != null) {
