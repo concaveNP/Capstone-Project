@@ -145,28 +145,45 @@ public class ProjectDetailsFragment extends BaseFragment {
         return view;
     }
 
+    /**
+     * Public setter for the UID of the user in question to show the details of.
+     *
+     * This method will be used when a LARGE device is being used (aka tablet)
+     *
+     * @param uid - The UID of the User in question to show details of
+     */
+    public void setUidForDetails(String uid) {
+        mUidForDetails = uid;
+    }
+
     @Override
     public void onStart() {
 
         super.onStart();
 
-        // Display whatever data we currently have to work with to get the cycle going
-        updateUserDetails(mUserModel);
+        performStart();
 
-        // Subscribe to the user's data
-        mDatabase.child(USERS.getType()).child(getUid()).addValueEventListener(getUserValueEventListener());
+    }
 
-        // Display whatever data we currently have to work with to get the cycle going
-        updateProjectInQuestionDetails(mProjectInQuestionModel);
+    public void performStart() {
 
-        // Pull the Project in question info from the Database and keep listening for changes
+        // Only perform if there is a UID to show details for
         if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
 
+            // Display whatever data we currently have to work with to get the cycle going
+            updateUserDetails(mUserModel);
 
-            // Listen for changes regarding the Project in question
+            // Subscribe to the user's data
+            mDatabase.child(USERS.getType()).child(getUid()).addValueEventListener(getUserValueEventListener());
+
+            // Display whatever data we currently have to work with to get the cycle going
+            updateProjectInQuestionDetails(mProjectInQuestionModel);
+
+            // Pull the Project in question info from the Database and keep listening for changes
             mDatabase.child(PROJECTS.getType()).child(mUidForDetails).addValueEventListener(getProjectInQuestionValueEventListener());
 
         }
+
     }
 
     @Override
@@ -175,23 +192,23 @@ public class ProjectDetailsFragment extends BaseFragment {
         super.onStop();
 
         // Un-subscribe to the user's data
-        mDatabase.child(USERS.getType()).child(getUid()).removeEventListener(getUserValueEventListener());
-
-        // Un-subscribe to the project in question's data if there
         if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
 
+            mDatabase.child(USERS.getType()).child(getUid()).removeEventListener(getUserValueEventListener());
+
+            // Un-subscribe to the project in question's data if there
             mDatabase.child(PROJECTS.getType()).child(mUidForDetails).removeEventListener(getProjectInQuestionValueEventListener());
 
-        }
+            // Un-subscribe to the project in question's owner if data is there
+            if (mProjectInQuestionModel != null) {
 
-        // Un-subscribe to the project in question's owner if data is there
-        if (mProjectInQuestionModel != null) {
+                String ownerUid = mProjectInQuestionModel.getOwnerUid();
 
-            String ownerUid = mProjectInQuestionModel.getOwnerUid();
+                if ((ownerUid != null) && (!ownerUid.isEmpty())) {
 
-            if ((ownerUid != null) && (!ownerUid.isEmpty())) {
+                    mDatabase.child(USERS.getType()).child(mProjectInQuestionModel.getOwnerUid()).removeEventListener(getProjectOwnerValueEventListener());
 
-                mDatabase.child(USERS.getType()).child(mProjectInQuestionModel.getOwnerUid()).removeEventListener(getProjectOwnerValueEventListener());
+                }
 
             }
 

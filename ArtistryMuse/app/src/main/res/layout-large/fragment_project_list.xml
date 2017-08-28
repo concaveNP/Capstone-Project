@@ -6,19 +6,23 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.concavenp.artistrymuse.fragments.UserListFragment">
+    tools:context="com.concavenp.artistrymuse.fragments.ProjectListFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/following_swipe_refresh_layout"
+        android:id="@+id/favorites_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/following_recycler_view"
+            android:id="@+id/favorites_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarStyle="outsideOverlay"/>
+            android:scrollbarStyle="outsideOverlay" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>
+
+
+
+
