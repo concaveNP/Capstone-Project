@@ -28,8 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import static com.concavenp.artistrymuse.StorageDataType.USERS;
 import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
 
 /**
  * A simple {@link Fragment} subclass.

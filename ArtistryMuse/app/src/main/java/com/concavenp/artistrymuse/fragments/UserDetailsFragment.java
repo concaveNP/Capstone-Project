@@ -121,23 +121,41 @@ public class UserDetailsFragment extends BaseFragment {
 
     }
 
+    /**
+     * Public setter for the UID of the user in question to show the details of.
+     *
+     * This method will be used when a LARGE device is being used (aka tablet)
+     *
+     * @param uid - The UID of the User in question to show details of
+     */
+    public void setUidForDetails(String uid) {
+        mUidForDetails = uid;
+    }
+
     @Override
     public void onStart() {
 
         super.onStart();
 
-        // Display whatever data we currently have to work with to get the cycle going
-        updateUserDetails(mUserModel);
+        performStart();
 
-        // Subscribe to the user's data
-        mDatabase.child(USERS.getType()).child(getUid()).addValueEventListener(getUserValueEventListener());
+    }
 
-        // Display whatever data we currently have to work with to get the cycle going
-        updateUserInQuestionDetails(mUserInQuestionModel);
+    public void performStart() {
 
-        // Pull the User in question info from the Database and keep listening for changes
+        // Only perform if there is a UID to show details for
         if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
 
+            // Display whatever data we currently have to work with to get the cycle going
+            updateUserDetails(mUserModel);
+
+            // Subscribe to the user's data
+            mDatabase.child(USERS.getType()).child(getUid()).addValueEventListener(getUserValueEventListener());
+
+            // Display whatever data we currently have to work with to get the cycle going
+            updateUserInQuestionDetails(mUserInQuestionModel);
+
+            // Pull the User in question info from the Database and keep listening for changes
             mDatabase.child(USERS.getType()).child(mUidForDetails).addValueEventListener(getUserInQuestionValueEventListener());
 
         }
@@ -149,12 +167,13 @@ public class UserDetailsFragment extends BaseFragment {
 
         super.onStop();
 
-        // Un-subscribe to the user's data
-        mDatabase.child(USERS.getType()).child(getUid()).removeEventListener(getUserValueEventListener());
-
         // Un-subscribe to the user in question's data if there
         if ((mUidForDetails != null) && (!mUidForDetails.isEmpty())) {
 
+            // Un-subscribe to the user's data
+            mDatabase.child(USERS.getType()).child(getUid()).removeEventListener(getUserValueEventListener());
+
+            // Un-subscribe to the user in question's data
             mDatabase.child(USERS.getType()).child(mUidForDetails).removeEventListener(getUserInQuestionValueEventListener());
 
         }

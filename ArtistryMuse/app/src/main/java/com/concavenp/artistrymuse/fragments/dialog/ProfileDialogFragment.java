@@ -50,7 +50,6 @@ import java.util.Date;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
-
 import static com.concavenp.artistrymuse.StorageDataType.USERS;
 
 /**

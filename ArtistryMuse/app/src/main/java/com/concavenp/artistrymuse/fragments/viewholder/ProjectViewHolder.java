@@ -17,8 +17,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import static com.concavenp.artistrymuse.StorageDataType.USERS;
 import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
 
 /**
  * Created by dave on 12/2/2016.

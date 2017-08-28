@@ -17,8 +17,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Date;
 import java.util.UUID;
 
-import static com.concavenp.artistrymuse.StorageDataType.USERS;
 import static com.concavenp.artistrymuse.StorageDataType.AUTH;
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
 
 /**
  * Created by dave on 4/7/2017.

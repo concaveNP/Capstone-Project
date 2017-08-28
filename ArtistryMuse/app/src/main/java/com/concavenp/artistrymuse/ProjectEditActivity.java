@@ -30,8 +30,8 @@ import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
-import static com.concavenp.artistrymuse.StorageDataType.USERS;
 import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
 
 /**
  * - Show publish button (ick - implement after Udacity)

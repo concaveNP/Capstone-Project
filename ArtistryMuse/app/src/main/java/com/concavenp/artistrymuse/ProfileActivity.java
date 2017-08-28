@@ -27,8 +27,8 @@ import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
-import static com.concavenp.artistrymuse.StorageDataType.USERS;
 import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
+import static com.concavenp.artistrymuse.StorageDataType.USERS;
 
 /**
  * TODO: this is wrong, update the comment block
