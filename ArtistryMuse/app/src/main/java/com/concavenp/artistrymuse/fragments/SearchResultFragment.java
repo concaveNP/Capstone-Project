@@ -391,7 +391,9 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         mSearchText = searchString;
 
         // We are now performing a search, flip control to the individual fragments of the TabLayout
-        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_searching_Flipper)));
+        if (mFlipper != null) {
+            mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_searching_Flipper)));
+        }
 
         // Clear any results that are being stored within the adapter scroll listener
         if (mUsersAdapter != null) {
