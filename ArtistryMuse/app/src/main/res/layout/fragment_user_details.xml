@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
             android:padding="@dimen/fab_margin"
-            android:text="There is no details info to display"/>
+            android:text="@string/no_details"/>
 
         <include layout="@layout/content_user_details"/>
 
