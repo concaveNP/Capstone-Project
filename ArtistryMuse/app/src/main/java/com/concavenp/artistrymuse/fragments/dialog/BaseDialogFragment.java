@@ -85,7 +85,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
             StorageReference storageReference = mStorageRef.child(fileReference);
 
             // Download directly from StorageReference using Glide
-            Glide.with(imageView.getContext())
+            Glide.with(getContext())
                     .using(mImageLoader)
                     .load(storageReference)
                     .fitCenter()
@@ -105,7 +105,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
             if (uri != null) {
 
                 // Download directly from StorageReference using Glide
-                Glide.with(imageView.getContext())
+                Glide.with(getContext())
                         .using(mUriLoad)
                         .load(uri)
                         .thumbnail(0.1f)
@@ -126,7 +126,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
             if ((fileReference != null) && (!fileReference.isEmpty())) {
 
                 // Download directly from StorageReference using Glide
-                Glide.with(imageView.getContext())
+                Glide.with(getContext())
                         .load(fileReference)
                         .thumbnail(0.1f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)

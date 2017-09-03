@@ -1,19 +1,12 @@
 package com.concavenp.artistrymuse.services;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.concavenp.artistrymuse.MainActivity;
-import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,8 +21,6 @@ public class UploadService extends BaseTaskService {
      */
     @SuppressWarnings("unused")
     private static final String TAG = UploadService.class.getSimpleName();
-
-    private static final int NOTIF_ID_DOWNLOAD = 0;
 
     /** Intent Actions **/
     public static final String ACTION_UPLOAD = "action_upload";
@@ -125,7 +116,6 @@ public class UploadService extends BaseTaskService {
                         Uri downloadUri = taskSnapshot.getMetadata().getDownloadUrl();
 
                         broadcastUploadFinished(downloadUri, fileUri);
-                        showUploadFinishedNotification(downloadUri, fileUri);
                         taskCompleted();
 
                     }
@@ -140,7 +130,6 @@ public class UploadService extends BaseTaskService {
                         Log.w(TAG, "uploadFromUri:onFailure", exception);
 
                         broadcastUploadFinished(null, fileUri);
-                        showUploadFinishedNotification(null, fileUri);
                         taskCompleted();
 
                     }
@@ -164,68 +153,6 @@ public class UploadService extends BaseTaskService {
                 .putExtra(EXTRA_FILE_URI, fileUri);
 
         return LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcast);
-
-    }
-
-    /**
-     * Show a notification for a finished upload.
-     */
-    private void showUploadFinishedNotification(@Nullable Uri downloadUrl, @Nullable Uri fileUri) {
-
-        // Make Intent to MainActivity
-        Intent intent = new Intent(this, MainActivity.class)
-                .putExtra(EXTRA_UPLOAD_URL, downloadUrl)
-                .putExtra(EXTRA_FILE_URI, fileUri)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        // Make PendingIntent for notification
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* requestCode */, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Set message and icon based on success or failure
-        boolean success = downloadUrl != null;
-        String message = success ? "Upload finished" : "Upload failed";
-        int icon = success ? R.drawable.ic_check_black_24dp: R.drawable.ic_error_black_24dp;
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(icon)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
-
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        manager.notify(NOTIF_ID_DOWNLOAD, builder.build());
-
-    }
-
-    /**
-     * Show notification with an indeterminate upload progress bar.
-     */
-    private void showUploadProgressNotification() {
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_file_upload_black_24dp)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText("Uploading...")
-                .setProgress(0, 0, true)
-                .setOngoing(true)
-                .setAutoCancel(false);
-
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        manager.notify(NOTIF_ID_DOWNLOAD, builder.build());
-
-    }
-
-    public static IntentFilter getIntentFilter() {
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(UPLOAD_COMPLETED);
-        filter.addAction(UPLOAD_ERROR);
-
-        return filter;
 
     }
 
