@@ -145,7 +145,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
                 StorageReference storageReference = mStorageRef.child(fileReference);
 
                 // Download directly from StorageReference using Glide
-                Glide.with(imageView.getContext())
+                Glide.with(this)
                         .using(mImageLoader)
                         .load(storageReference)
                         .fitCenter()
@@ -166,7 +166,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
             // It is possible for the file reference string to be null, so check for it
             if (storageReference!= null) {
 
-                Glide.with(imageView.getContext())
+                Glide.with(this)
                         .using(mImageLoader)
                         .load(storageReference)
                         .asBitmap()
@@ -188,7 +188,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
             // It is possible for the file reference string to be null, so check for it
             if ((fileReference != null) && (!fileReference.isEmpty())) {
 
-                Glide.with(imageView.getContext())
+                Glide.with(this)
                         .load(fileReference)
                         .asBitmap()
                         .centerCrop()
@@ -210,7 +210,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
             if ((fileReference != null) && (!fileReference.isEmpty())) {
 
                 // Download directly from StorageReference using Glide
-                Glide.with(imageView.getContext())
+                Glide.with(this)
                         .load(fileReference)
                         .thumbnail(0.1f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -382,7 +382,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
                 canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquareWidth/2, borderPaint);
 
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(imageView.getContext().getResources(), roundedBitmap);
+                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), roundedBitmap);
                 circularBitmapDrawable.setCircular(true);
                 imageView.setImageDrawable(circularBitmapDrawable);
 

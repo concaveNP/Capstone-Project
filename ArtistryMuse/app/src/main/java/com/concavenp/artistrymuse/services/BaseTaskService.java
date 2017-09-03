@@ -47,16 +47,10 @@ public abstract class BaseTaskService extends BaseService {
 
     }
 
-    // TODO: what is this method used for?  The example uses nullable...???
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
-//    @Override
-//    public IBinder onBind(Intent intent) {
-//        // TODO: Return the communication channel to the service.
-//        throw new UnsupportedOperationException("Not yet implemented");
-//    }
 
 }

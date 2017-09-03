@@ -17,7 +17,6 @@
 package com.concavenp.artistrymuse.services;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -113,13 +112,4 @@ public class DownloadService extends BaseTaskService {
                 });
     }
 
-    public static IntentFilter getIntentFilter() {
-
-        IntentFilter filter = new IntentFilter();
-
-        filter.addAction(DOWNLOAD_COMPLETED);
-        filter.addAction(DOWNLOAD_ERROR);
-
-        return filter;
-    }
 }
