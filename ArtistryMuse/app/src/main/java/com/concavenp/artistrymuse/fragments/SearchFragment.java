@@ -80,12 +80,15 @@ public class SearchFragment extends BaseFragment {
 
         // The search text the user will input
         mSearchEditText = (EditText) mainView.findViewById(R.id.search_editText);
+
+
+        // Capture the Search button
         mSearchEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-                if ((actionId == EditorInfo.IME_ACTION_SEARCH) || (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 
                     performSearch();
 
@@ -97,6 +100,28 @@ public class SearchFragment extends BaseFragment {
             }
 
         });
+
+        // Capture the Enter button
+        mSearchEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+                    performSearch();
+
+                    return true;
+
+                }
+
+                return false;
+
+            }
+
+        });
+
+        // Capture the User hitting the Search icon within the EditText view
         mSearchEditText.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
