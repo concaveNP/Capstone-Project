@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.model.User;
@@ -45,11 +46,15 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
 
     public void registerAuthenticationListener(OnAuthenticationListener listener) {
 
+        Log.d(TAG, "registerAuthenticationListener");
+
         mAuthListener = listener;
 
     }
 
     public void clearRegisteredAuthenticationListener() {
+
+        Log.d(TAG, "clearRegisteredAuthenticationListener");
 
         mAuthListener = null;
 
@@ -59,12 +64,16 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
     @Override
     public IBinder onBind(Intent intent) {
 
+        Log.d(TAG, "onBind");
+
         return mBinder ;
 
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        Log.d(TAG, "onStartCommand");
 
         // Listen for changes in our Firebase authentication state now there is a listener
         mAuth.addAuthStateListener(this);
@@ -75,6 +84,8 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
 
     @Override
     public synchronized void onAuthStateChanged(FirebaseAuth auth) {
+
+        Log.d(TAG, "onAuthStateChanged");
 
         final String oldUid = getSharedPreferenceUid();
 
@@ -111,6 +122,8 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    Log.d(TAG, "onAuthStateChanged__onDataChange");
 
                     // Perform the JSON to Object conversion
                     String artistryMuseUid = dataSnapshot.getValue(String.class);
@@ -202,6 +215,8 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
      */
     private String getSharedPreferenceUid() {
 
+        Log.d(TAG, "getSharedPreferenceUid");
+
         String uid = "";
 
         // Check if an UID entry exists already and create it if not
@@ -230,6 +245,8 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
      * @param uid - the Application's UID of the current Firebase authenticated user logged in
      */
     private void setSharedPreferenceUid(String uid) {
+
+        Log.d(TAG, "setSharedPreferenceUid");
 
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(getResources().getString(R.string.application_uid_key), uid);

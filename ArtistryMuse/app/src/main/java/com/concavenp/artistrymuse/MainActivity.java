@@ -200,6 +200,13 @@ public class MainActivity extends BaseAppCompatActivity implements
         // Default will be hidden
         fabCreateProject.hide();
 
+        // Start the sign-in activity if nobody is logged in yet
+        if (getUid().isEmpty()) {
+
+            onLoginInteraction();
+
+        }
+
     }
 
     /**
@@ -352,13 +359,16 @@ public class MainActivity extends BaseAppCompatActivity implements
         //
         // Enable the following after doing some other research and testing
         //
+        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
         // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
         // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
+        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
         // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build());
         //
 
         // These will be the available providers
-        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
+
+        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
         selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
 
         return selectedProviders;
