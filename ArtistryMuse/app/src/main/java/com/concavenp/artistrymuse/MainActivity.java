@@ -329,7 +329,12 @@ public class MainActivity extends BaseAppCompatActivity implements
     @Override
     public void onLoginInteraction() {
 
-        Log.d(TAG, "Starting Login activity");
+        // TODO: There is a bug within the FirebaseUI library for hitting the enter key when logging in via email:
+        //
+        // https://stackoverflow.com/questions/44741308/firebase-ui-auth-2-0-1-showing-multiple-welcome-back-password-prompt-screens
+        //
+        // Not very much I can do from my end, but this is only an issue in the emulator.
+        //
 
         startActivityForResult(
                 AuthUI.getInstance()
