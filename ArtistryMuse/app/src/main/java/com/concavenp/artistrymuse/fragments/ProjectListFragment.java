@@ -1,13 +1,11 @@
 package com.concavenp.artistrymuse.fragments;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
@@ -41,7 +39,6 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
     private static final String TAG = ProjectListFragment.class.getSimpleName();
 
     private FirebaseRecyclerAdapter<Favorite, ProjectViewHolder> mAdapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
 
     private boolean largeDevice = false;
@@ -89,20 +86,6 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
         StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecycler.setLayoutManager(sglm);
 
-        // When the user performs the action of swiping down then refresh the data displayed
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.favorites_swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
-            @Override
-            public void onRefresh() {
-
-                // Refresh the data displayed
-                refresh();
-
-            }
-
-        });
-
         // Refresh the data displayed
         refresh();
 
@@ -113,9 +96,10 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    private void refresh() {
+    @Override
+    public void refresh() {
 
-        // First check to see if the user favorited any projects anybody yet
+        // First check to see if the user favorited any projects yet
         mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -132,25 +116,12 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
                     // Check to see if the user has any favorites
                     if ((favorites != null) && (!favorites.isEmpty())) {
 
-                        // Let the Swiper know we are swiping
-                        if (!mSwipeRefreshLayout.isRefreshing()) {
-
-                            mSwipeRefreshLayout.setRefreshing(true);
-
-                        }
-
                         // Set up FirebaseRecyclerAdapter with the Query
                         Query postsQuery = getQuery(mDatabase);
                         mAdapter = new FirebaseRecyclerAdapter<Favorite, ProjectViewHolder>(Favorite.class, R.layout.item_project, ProjectViewHolder.class, postsQuery) {
 
                             @Override
                             protected void populateViewHolder(final ProjectViewHolder viewHolder, final Favorite model, final int position) {
-
-                                // TODO: need a better system for this as I believe this will be called multiple times
-                                // See the adapter internal class in the "MakeYourAppMaterial" project's ArticleListActivity class.
-                                // Should be able to determine the count of items found in the resulting query that would be good to
-                                // perform this on after the count is reached.
-                                mSwipeRefreshLayout.setRefreshing(false);
 
                                 // Perform the binding based upon being a tablet or phone
                                 if (largeDevice) {

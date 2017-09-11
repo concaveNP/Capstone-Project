@@ -13,7 +13,6 @@
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_project_list"/>
 
-
 </FrameLayout>
 
 

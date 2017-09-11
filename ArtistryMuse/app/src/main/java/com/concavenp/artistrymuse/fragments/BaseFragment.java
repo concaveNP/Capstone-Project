@@ -24,7 +24,7 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * Created by dave on 3/25/2017.
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -55,8 +55,19 @@ public abstract class BaseFragment extends Fragment {
         mImageLoader = new FirebaseImageLoader();
 
         // Get ready to read from local storage for this app
-        //mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        mSharedPreferences = getContext().getSharedPreferences(getResources().getString(R.string.shared_preferences_filename), MODE_PRIVATE);
+        loadSharedPreferences(getContext());
+
+    }
+
+    public void refresh() {
+       // Do nothing
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        // All of the overriding subclasses will be informed to refresh their data
+        refresh();
 
     }
 
@@ -75,6 +86,11 @@ public abstract class BaseFragment extends Fragment {
             throw new RuntimeException(context.toString() + " must implement OnInteractionListener");
 
         }
+
+        // Register as a listener to SharedPreference ArtistryMuseUID changes
+        loadSharedPreferences(context);
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
     }
 
     @Override
@@ -84,6 +100,9 @@ public abstract class BaseFragment extends Fragment {
 
         // Detach from the parent Activity interface(s)
         mInteractionListener = null;
+
+        // Register as a listener to SharedPreference ArtistryMuseUID changes
+        mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 
     }
 
@@ -163,6 +182,23 @@ public abstract class BaseFragment extends Fragment {
                 textView.setText("");
 
             }
+
+        }
+
+    }
+
+    /**
+     * A lazy loader of the SharedPreferences.
+     *
+     * @param context - The context for which to aquire the SharedPreferences
+     * @return - The SharedPreferences
+     */
+    private void loadSharedPreferences(Context context) {
+
+        // Check to see if this has been done before
+        if (mSharedPreferences == null) {
+
+            mSharedPreferences = context.getSharedPreferences(getResources().getString(R.string.shared_preferences_filename), MODE_PRIVATE);
 
         }
 

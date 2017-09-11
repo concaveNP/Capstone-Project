@@ -1,7 +1,6 @@
 package com.concavenp.artistrymuse.fragments;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,7 +37,6 @@ public class GalleryFragment extends BaseFragment {
     private static final String TAG = GalleryFragment.class.getSimpleName();
 
     private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
 
     // This flipper allows the content of the fragment to show the user either the list of the
@@ -84,20 +82,6 @@ public class GalleryFragment extends BaseFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mRecycler.setLayoutManager(linearLayoutManager);
 
-        // When the user performs the action of swiping down then refresh the data displayed
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.gallery_swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
-            @Override
-            public void onRefresh() {
-
-                // Refresh the data displayed
-                refresh();
-
-            }
-
-        });
-
         // Refresh the data displayed
         refresh();
 
@@ -108,7 +92,8 @@ public class GalleryFragment extends BaseFragment {
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    private void refresh() {
+    @Override
+    public void refresh() {
 
         // First check to see if the user has any projects yet
         mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -128,14 +113,7 @@ public class GalleryFragment extends BaseFragment {
                     if ((projects != null) && (!projects.isEmpty())) {
 
                         // Yes, the user has projects, so flip to that view
-                        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.gallery_swipe_refresh_layout)));
-
-                        // Let the Swiper know we are swiping
-                        if (!mSwipeRefreshLayout.isRefreshing()) {
-
-                            mSwipeRefreshLayout.setRefreshing(true);
-
-                        }
+                        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.gallery_recycler_view)));
 
                         // Set up FirebaseRecyclerAdapter with the Query
                         Query postsQuery = getQuery(mDatabase);
@@ -143,12 +121,6 @@ public class GalleryFragment extends BaseFragment {
 
                             @Override
                             protected void populateViewHolder(final GalleryViewHolder viewHolder, final String uid, final int position) {
-
-                                // TODO: need a better system for this as I believe this will be called multiple times
-                                // See the adapter internal class in the "MakeYourAppMaterial" project's ArticleListActivity class.
-                                // Should be able to determine the count of items found in the resulting query that would be good to
-                                // perform this on after the count is reached.
-                                mSwipeRefreshLayout.setRefreshing(false);
 
                                 viewHolder.setUserInteractionType(UserInteractionType.EDIT);
                                 viewHolder.bindToPost(uid, mInteractionListener);

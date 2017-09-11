@@ -1,7 +1,6 @@
 package com.concavenp.artistrymuse.fragments;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -45,7 +44,6 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
     private static final String TAG = UserListFragment.class.getSimpleName();
 
     private FirebaseRecyclerAdapter<Following, UserViewHolder> mAdapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycler;
 
     private boolean largeDevice = false;
@@ -93,20 +91,6 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
         StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecycler.setLayoutManager(sglm);
 
-        // When the user performs the action of swiping down then refresh the data displayed
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mainView.findViewById(R.id.following_swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
-            @Override
-            public void onRefresh() {
-
-                // Refresh the data displayed
-                refresh();
-
-            }
-
-        });
-
         // Refresh the data displayed
         refresh();
 
@@ -118,7 +102,8 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    private void refresh() {
+    @Override
+    public void refresh() {
 
         // First check to see if the user is following anybody yet
         mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -137,24 +122,12 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
                     // Check to see if the user is following anybody
                     if ((following != null) && (!following.isEmpty())) {
 
-                        // Let the Swiper know we are swiping
-                        if (!mSwipeRefreshLayout.isRefreshing()) {
-
-                            mSwipeRefreshLayout.setRefreshing(true);
-
-                        }
-
                         // Set up FirebaseRecyclerAdapter with the Query
                         Query postsQuery = getQuery(mDatabase);
                         mAdapter = new FirebaseRecyclerAdapter<Following, UserViewHolder>(Following.class, R.layout.item_user, UserViewHolder.class, postsQuery) {
 
                             @Override
                             protected void populateViewHolder(final UserViewHolder viewHolder, final Following model, final int position) {
-
-                                // See the adapter internal class in the "MakeYourAppMaterial" project's ArticleListActivity class.
-                                // Should be able to determine the count of items found in the resulting query that would be good to
-                                // perform this on after the count is reached.
-                                mSwipeRefreshLayout.setRefreshing(false);
 
                                 // Perform the binding based upon being a tablet or phone
                                 if (largeDevice) {

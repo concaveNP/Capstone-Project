@@ -16,6 +16,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -200,6 +201,13 @@ public class MainActivity extends BaseAppCompatActivity implements
         // Default will be hidden
         fabCreateProject.hide();
 
+        // Start the sign-in activity if nobody is logged in yet
+        if (getUid().isEmpty()) {
+
+            onLoginInteraction();
+
+        }
+
     }
 
     /**
@@ -234,6 +242,24 @@ public class MainActivity extends BaseAppCompatActivity implements
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
         return true;
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+
+            // Successfully signed in
+            if (resultCode == RESULT_OK) {
+                Log.d(TAG, "was able to log in");
+            } else {
+                Log.d(TAG, "was NOT able to log in");
+            }
+
+        }
 
     }
 
@@ -303,6 +329,8 @@ public class MainActivity extends BaseAppCompatActivity implements
     @Override
     public void onLoginInteraction() {
 
+        Log.d(TAG, "Starting Login activity");
+
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -352,13 +380,16 @@ public class MainActivity extends BaseAppCompatActivity implements
         //
         // Enable the following after doing some other research and testing
         //
+        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
         // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
         // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
+        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
         // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build());
         //
 
         // These will be the available providers
-        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
+
+        selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
         selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
 
         return selectedProviders;
