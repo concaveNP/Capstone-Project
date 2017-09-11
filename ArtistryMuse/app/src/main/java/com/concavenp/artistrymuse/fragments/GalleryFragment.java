@@ -108,7 +108,8 @@ public class GalleryFragment extends BaseFragment {
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    private void refresh() {
+    @Override
+    public void refresh() {
 
         // First check to see if the user has any projects yet
         mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {

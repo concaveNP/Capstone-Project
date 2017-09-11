@@ -16,6 +16,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import com.concavenp.artistrymuse.fragments.SearchFragment;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
 import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -245,6 +247,24 @@ public class MainActivity extends BaseAppCompatActivity implements
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+
+            // Successfully signed in
+            if (resultCode == RESULT_OK) {
+                Log.d(TAG, "was able to log in");
+            } else {
+                Log.d(TAG, "was NOT able to log in");
+            }
+
+        }
+
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         // The default result is that, no, we did not handle the given item
@@ -309,6 +329,8 @@ public class MainActivity extends BaseAppCompatActivity implements
      */
     @Override
     public void onLoginInteraction() {
+
+        Log.d(TAG, "Starting Login activity");
 
         startActivityForResult(
                 AuthUI.getInstance()

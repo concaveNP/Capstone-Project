@@ -215,8 +215,6 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
      */
     private String getSharedPreferenceUid() {
 
-        Log.d(TAG, "getSharedPreferenceUid");
-
         String uid = "";
 
         // Check if an UID entry exists already and create it if not
@@ -233,6 +231,8 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
 
         }
 
+        Log.d(TAG, "getSharedPreferenceUid: " + uid);
+
         return uid;
 
     }
@@ -246,7 +246,7 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
      */
     private void setSharedPreferenceUid(String uid) {
 
-        Log.d(TAG, "setSharedPreferenceUid");
+        Log.d(TAG, "setSharedPreferenceUid: " + uid);
 
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(getResources().getString(R.string.application_uid_key), uid);

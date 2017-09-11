@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,12 +97,16 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
             @Override
             public void onRefresh() {
 
+                Log.d(TAG, "onRefresh: Swipping?: " + mSwipeRefreshLayout.isRefreshing() );
+
                 // Refresh the data displayed
                 refresh();
 
             }
 
         });
+
+        Log.d(TAG, "Instantiation: Swipping?: " + mSwipeRefreshLayout.isRefreshing() );
 
         // Refresh the data displayed
         refresh();
@@ -113,9 +118,12 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    private void refresh() {
+    @Override
+    public void refresh() {
 
-        // First check to see if the user favorited any projects anybody yet
+        Log.d(TAG, "Refresh: Swipping?: " + mSwipeRefreshLayout.isRefreshing() );
+
+        // First check to see if the user favorited any projects yet
         mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -131,6 +139,8 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
 
                     // Check to see if the user has any favorites
                     if ((favorites != null) && (!favorites.isEmpty())) {
+
+                        Log.d(TAG, "Check to see if the user has any favorites: Swipping?: " + mSwipeRefreshLayout.isRefreshing() );
 
                         // Let the Swiper know we are swiping
                         if (!mSwipeRefreshLayout.isRefreshing()) {
@@ -150,6 +160,9 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
                                 // See the adapter internal class in the "MakeYourAppMaterial" project's ArticleListActivity class.
                                 // Should be able to determine the count of items found in the resulting query that would be good to
                                 // perform this on after the count is reached.
+
+                                Log.d(TAG, "FirebaseRecyclerAdapter_populateViewHolder: Swipping?: " + mSwipeRefreshLayout.isRefreshing() );
+
                                 mSwipeRefreshLayout.setRefreshing(false);
 
                                 // Perform the binding based upon being a tablet or phone
@@ -165,6 +178,10 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
                             public void onViewRecycled(ProjectViewHolder holder) {
 
                                 super.onViewRecycled(holder);
+
+                                Log.d(TAG, "FirebaseRecyclerAdapter_onViewRecycled: Swipping?: " + mSwipeRefreshLayout.isRefreshing() );
+
+                                mSwipeRefreshLayout.setRefreshing(false);
 
                                 // Clear out the Glide memory used for the images associated with this ViewHolder
                                 holder.clearImages();
