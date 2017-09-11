@@ -27,7 +27,6 @@ import com.concavenp.artistrymuse.fragments.SearchFragment;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
 import com.concavenp.artistrymuse.services.UserAuthenticationService;
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.IdpResponse;
 
 import java.util.ArrayList;
 import java.util.List;
