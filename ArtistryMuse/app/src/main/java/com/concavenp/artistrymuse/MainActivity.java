@@ -22,6 +22,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.fragments.SearchFragment;
 import com.concavenp.artistrymuse.fragments.adapter.ArtistryFragmentPagerAdapter;
@@ -39,7 +41,8 @@ import java.util.List;
  *
  */
 public class MainActivity extends BaseAppCompatActivity implements
-        UserAuthenticationService.OnAuthenticationListener {
+        UserAuthenticationService.OnAuthenticationListener,
+        SharedPreferences.OnSharedPreferenceChangeListener{
 
     /**
      * The logging tag string to be associated with log data for this class
@@ -108,6 +111,8 @@ public class MainActivity extends BaseAppCompatActivity implements
 
     private ArtistryFragmentPagerAdapter mFragmentAdapter;
 
+    private ViewFlipper mFlipper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -124,11 +129,11 @@ public class MainActivity extends BaseAppCompatActivity implements
         }
 
         // Force the scroll view to fill the area, dunno why this is not the default.
-        NestedScrollView scrollView = (NestedScrollView) findViewById (R.id.nest_scrollview);
+        NestedScrollView scrollView = findViewById (R.id.nest_scrollview);
         scrollView.setFillViewport (true);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        ViewPager viewPager = findViewById(R.id.viewpager);
         mFragmentAdapter = new ArtistryFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mFragmentAdapter);
         viewPager.setOffscreenPageLimit(mFragmentAdapter.getCount());
@@ -163,7 +168,7 @@ public class MainActivity extends BaseAppCompatActivity implements
         });
 
         // Give the TabLayout the ViewPager
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -183,11 +188,11 @@ public class MainActivity extends BaseAppCompatActivity implements
         });
 
         // Setup the support for creating a menu (ActionBar functionality)
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Setup the FAB for creating a new user project (only visible in the gallery tab)
-        fabCreateProject = (FloatingActionButton) findViewById(R.id.fabCreateProject);
+        fabCreateProject = findViewById(R.id.fabCreateProject);
         fabCreateProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,8 +203,25 @@ public class MainActivity extends BaseAppCompatActivity implements
             }
         });
 
+        // Logon button
+        Button loginButton = findViewById(R.id.login_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                onLoginInteraction();
+
+            }
+        });
+
         // Default will be hidden
         fabCreateProject.hide();
+
+        // Save off the flipper for use in deciding which view to show
+        mFlipper = findViewById(R.id.activity_main_ViewFlipper);
+
+        // Set the flip view accordingly
+        checkLoginFlipState();
 
         // Start the sign-in activity if nobody is logged in yet
         if (getUid().isEmpty()) {
@@ -452,6 +474,7 @@ public class MainActivity extends BaseAppCompatActivity implements
         TabLayout.Tab tab = tabLayout.getTabAt(position);
         tab.select();
 
+
     }
 
     @Override
@@ -476,6 +499,61 @@ public class MainActivity extends BaseAppCompatActivity implements
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(TAB_POSITION, tabPosition);
         editor.commit();
+
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+
+        // Register as a listener to SharedPreference ArtistryMuseUID changes
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        // Set the flip view accordingly
+        checkLoginFlipState();
+
+    }
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+
+        // Unregister as a listener to SharedPreference ArtistryMuseUID changes
+        mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        // Just for the UID changes
+        if (key.equals(getResources().getString(R.string.application_uid_key))) {
+
+            // Set the flip view accordingly
+            checkLoginFlipState();
+
+        }
+
+    }
+
+    /**
+     * Helper method to set the shown view according to the User login state reflected by the
+     * SharedPreferences value of the User's UID.  If there is a UID set then show that user's
+     * data, otherwise flip to a view that tells the user to login.
+     */
+    private void checkLoginFlipState() {
+
+        if (getUid().isEmpty()) {
+
+            mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.login_frame)));
+
+        } else {
+
+            mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.coordinatorLayout)));
+
+        }
 
     }
 

@@ -66,8 +66,13 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        // All of the overriding subclasses will be informed to refresh their data
-        refresh();
+        // Just for the UID changes
+        if (key.equals(getResources().getString(R.string.application_uid_key))) {
+
+            // All of the overriding subclasses will be informed to refresh their data
+            refresh();
+
+        }
 
     }
 
@@ -101,7 +106,7 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
         // Detach from the parent Activity interface(s)
         mInteractionListener = null;
 
-        // Register as a listener to SharedPreference ArtistryMuseUID changes
+        // Unregister as a listener to SharedPreference ArtistryMuseUID changes
         mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 
     }
