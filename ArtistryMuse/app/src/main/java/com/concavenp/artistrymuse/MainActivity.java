@@ -367,10 +367,6 @@ public class MainActivity extends BaseAppCompatActivity implements
                         .setTosUrl(getSelectedTosUrl())
                         .setPrivacyPolicyUrl(getSelectedPrivacyPolicyUrl())
                         .setIsSmartLockEnabled(false)
-                        //
-                        // Enable smartLocking after more research and testing
-                        //.setIsSmartLockEnabled(mEnableCredentialSelector.isChecked(), mEnableHintSelector.isChecked())
-                        //
                         .setAllowNewEmailAccounts(true)
                         .build(),
                 RC_SIGN_IN);
@@ -404,18 +400,7 @@ public class MainActivity extends BaseAppCompatActivity implements
 
         List<AuthUI.IdpConfig> selectedProviders = new ArrayList<>();
 
-        //
-        // Enable the following after doing some other research and testing
-        //
-        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
-        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
-        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
-        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
-        // selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build());
-        //
-
         // These will be the available providers
-
         selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
         selectedProviders.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
 
