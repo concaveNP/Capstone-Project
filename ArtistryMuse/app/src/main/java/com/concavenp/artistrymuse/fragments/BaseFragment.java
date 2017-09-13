@@ -88,6 +88,7 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
 
         } else {
 
+            // TODO: strings
             throw new RuntimeException(context.toString() + " must implement OnInteractionListener");
 
         }
@@ -128,11 +129,13 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
             // Verify there is user data to work with
             if ((uid != null) && (!uid.isEmpty())) {
 
+                // TODO: strings
                 fileReference = type.getType() + "/" + uid + "/" + imageUid + ".jpg";
 
             }
             else {
 
+                // TODO: strings
                 Log.e(TAG, "Unexpected null project UID");
 
             }
@@ -140,6 +143,7 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
         }
         else {
 
+            // TODO: strings
             Log.e(TAG, "Unexpected null image UID");
 
         }

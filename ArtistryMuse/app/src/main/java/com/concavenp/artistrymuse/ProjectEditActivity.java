@@ -217,6 +217,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                     // Check if the old profile image needs to be deleted
                     if ((oldMainUid != null) && (!oldMainUid.isEmpty())) {
 
+                        // TODO: strings
                         StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + "/" + oldMainUid + ".jpg");
 
                         // Delete the old image from Firebase storage
@@ -225,6 +226,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                             public void onSuccess(Void aVoid) {
                                 // TODO: better error handling
                                 // File deleted successfully
+                                // TODO: strings
                                 Log.d(TAG, "Deleted old image (" + oldMainUid +
                                         ") from cloud storage for the project (" + mProjectUid + ")");
                             }
@@ -232,6 +234,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 // Uh-oh, an error occurred!
+                                // TODO: strings
                                 Log.e(TAG, "Error deleting old image (" + oldMainUid +
                                         ") from cloud storage for the project (" + mProjectUid + ")");
                             }
@@ -245,10 +248,12 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                     // Save the new project image to the cloud storage
                     Uri file = Uri.fromFile(new File(mProjectImagePath));
 
+                    // TODO: strings
                     Log.d(TAG, "New image cloud storage location: " + file.toString());
 
                     // Start MyUploadService to upload the file, so that the file is uploaded even if
                     // this Activity is killed or put in the background
+                    // TODO: strings
                     startService(new Intent(this, UploadService.class)
                             .putExtra(UploadService.EXTRA_FILE_URI, file)
                             .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProjectImageUid.toString() + ".jpg")
@@ -268,6 +273,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                 mDatabase.child(PROJECTS.getType()).child(mProjectUid).setValue(mProjectModel);
 
                 // Update the user's list of projects to add this one if needed (if it was new)
+                // TODO: strings
                 mDatabase.child(USERS.getType()).child(getUid()).child("projects").child(mProjectUid).setValue(mProjectUid);
 
                 // Navigate back to the Project that this Inspiration spawned from

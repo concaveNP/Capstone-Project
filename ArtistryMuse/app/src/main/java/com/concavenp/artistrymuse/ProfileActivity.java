@@ -168,6 +168,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
 
                                     // Convert to strings
                                     String favoritesResult = Integer.toString(favoritesTotal);
+                                    // TODO: strings
                                     String ratingsResult = String.format("%.1f", averageRatingTotal);
                                     String viewsResult = Integer.toString(viewsTotal);
 
@@ -265,6 +266,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     // Check if the old profile image needs to be deleted
                     if ((oldHeaderUid != null) && (!oldHeaderUid.isEmpty())) {
 
+                        // TODO: strings
                         StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + "/" + oldHeaderUid + ".jpg");
 
                         // Delete the old header image from Firebase storage
@@ -273,6 +275,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                             public void onSuccess(Void aVoid) {
                                 // TODO: better error handling
                                 // File deleted successfully
+                                // TODO: strings
                                 Log.d(TAG, "Deleted old header image (" + oldHeaderUid +
                                         ") from cloud storage for the user (" + mUser.getUid() + ")");
                             }
@@ -280,6 +283,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 // Uh-oh, an error occurred!
+                                // TODO: strings
                                 Log.e(TAG, "Error deleting old header image (" + oldHeaderUid +
                                         ") from cloud storage for the user (" + mUser.getUid() + ")");
                             }
@@ -293,11 +297,13 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     // Save the new profile image to the cloud storage
                     Uri file = Uri.fromFile(new File(mHeaderImagePath));
 
+                    // TODO: strings
                     Log.d(TAG, "New header image cloud storage location: " + file.toString());
 
                     // Start MyUploadService to upload the file, so that the file is uploaded even if
                     // this Activity is killed or put in the background
                     startService(new Intent(this, UploadService.class)
+                            // TODO: strings
                             .putExtra(UploadService.EXTRA_FILE_URI, file)
                             .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mHeaderImageUid.toString() + ".jpg")
                             .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
@@ -320,6 +326,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     // Check if the old profile image needs to be deleted
                     if ((oldProfileUid != null) && (!oldProfileUid.isEmpty())) {
 
+                        // TODO: strings
                         StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + "/" + oldProfileUid + ".jpg");
 
                         // Delete the old profile image from Firebase storage
@@ -328,6 +335,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                             public void onSuccess(Void aVoid) {
                                 // TODO: better error handling
                                 // File deleted successfully
+                                // TODO: strings
                                 Log.d(TAG, "Deleted old profile image (" + oldProfileUid +
                                         ") from cloud storage for the user (" + mUser.getUid() + ")");
                             }
@@ -348,12 +356,14 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     // Save the new profile image to the cloud storage
                     Uri file = Uri.fromFile(new File(mProfileImagePath));
 
+                    // TODO: strings
                     Log.d(TAG, "New profile image cloud storage location: " + file.toString());
 
                     // Start MyUploadService to upload the file, so that the file is uploaded even if
                     // this Activity is killed or put in the background
                     startService(new Intent(this, UploadService.class)
                             .putExtra(UploadService.EXTRA_FILE_URI, file)
+                            // TODO: strings
                             .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProfileImageUid.toString() + ".jpg")
                             .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
                             .putExtra(UploadService.EXTRA_UPLOAD_UID, mUser.getUid())

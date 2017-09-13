@@ -104,13 +104,16 @@ public class GalleryViewHolder extends BaseViewHolder {
                     populateTextView(project.getDescription(), descriptionTextView);
                     populateTextView(Integer.toString(project.getFavorited()), favoritedTextView);
                     populateTextView(Integer.toString(project.getViews()), viewsTextView);
+                    // TODO: strings
                     populateTextView(String.format("%.1f", project.getRating()), ratingTextView);
 
                     Boolean published = project.getPublished();
                     if (published) {
+                        // TODO: strings
                         populateTextView("Published: " + new Date(project.getPublishedDate()).toString(), publicationTextView);
                     }
                     else {
+                        // TODO: strings
                         populateTextView("Unpublished", publicationTextView);
                     }
 

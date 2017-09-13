@@ -79,6 +79,7 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
 
         // Store off the layout size using tag values within the view
         String tag = (String)mainView.getTag();
+        // TODO: strings
         if (tag.equals("layout_large")) {
             largeDevice = true;
         }
@@ -171,6 +172,7 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
 
         String userId = getUid();
 
+        // TODO: strings
         Query resultQuery = databaseReference.child(USERS.getType()).child(userId).child("following");
 
         return resultQuery;

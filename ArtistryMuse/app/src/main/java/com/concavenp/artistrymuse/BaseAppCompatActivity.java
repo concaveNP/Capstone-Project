@@ -97,11 +97,13 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
             // Verify there is user data to work with
             if ((uid != null) && (!uid.isEmpty())) {
 
+                // TODO: strings
                 fileReference = type.getType() + "/" + uid + "/" + imageUid + ".jpg";
 
             }
             else {
 
+                // TODO: strings
                 Log.e(TAG, "Unexpected null project UID");
 
             }
@@ -109,6 +111,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
         }
         else {
 
+            // TODO: strings
             Log.e(TAG, "Unexpected null image UID");
 
         }

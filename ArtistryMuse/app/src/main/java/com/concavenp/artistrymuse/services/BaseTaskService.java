@@ -34,12 +34,14 @@ public abstract class BaseTaskService extends BaseService {
 
     private synchronized void changeNumberOfTasks(int delta) {
 
+        // TODO: strings
         Log.d(TAG, "changeNumberOfTasks:" + mNumTasks + ":" + delta);
         mNumTasks += delta;
 
         // If there are no tasks left, stop the service
         if (mNumTasks <= 0) {
 
+            // TODO: strings
             Log.d(TAG, "stopping");
             stopSelf();
 

@@ -20,6 +20,7 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter implements 
     @SuppressWarnings("unused")
     private static final String TAG = SearchFragmentPagerAdapter.class.getSimpleName();
 
+    // TODO: strings
     private Pair<String, SearchResultFragment> tabs[] = new Pair[] {
             new Pair("Users", SearchResultFragment.newInstance(StorageDataType.USERS)),
             new Pair("Projects", SearchResultFragment.newInstance(StorageDataType.PROJECTS))

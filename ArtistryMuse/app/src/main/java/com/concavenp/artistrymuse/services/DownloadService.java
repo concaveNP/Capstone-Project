@@ -41,11 +41,13 @@ public class DownloadService extends BaseTaskService {
     private static final String TAG = DownloadService.class.getSimpleName();
 
     /** Actions **/
+    // TODO: strings
     public static final String ACTION_DOWNLOAD = "action_download";
     public static final String DOWNLOAD_COMPLETED = "download_completed";
     public static final String DOWNLOAD_ERROR = "download_error";
 
     /** Extras **/
+    // TODO: strings
     public static final String EXTRA_DOWNLOAD_FILENAME = "extra_download_filename";
     public static final String EXTRA_BYTES_DOWNLOADED = "extra_bytes_downloaded";
 
@@ -57,6 +59,7 @@ public class DownloadService extends BaseTaskService {
             // Get the path to download from the intent
             String filename = intent.getStringExtra(EXTRA_DOWNLOAD_FILENAME);
 
+            // TODO: strings
             final String fileReference = getString(R.string.users_directory_name) + "/" + getUid() + "/" + filename;
 
             downloadFromPath(fileReference);
@@ -67,6 +70,7 @@ public class DownloadService extends BaseTaskService {
     }
 
     private void downloadFromPath(final String downloadPath) {
+        // TODO: strings
         Log.d(TAG, "downloadFromPath:" + downloadPath);
 
         // Mark task started
@@ -84,6 +88,7 @@ public class DownloadService extends BaseTaskService {
                 .addOnSuccessListener(new OnSuccessListener<StreamDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(StreamDownloadTask.TaskSnapshot taskSnapshot) {
+                        // TODO: strings
                         Log.d(TAG, "download:SUCCESS");
 
                         // Send success broadcast with number of bytes downloaded
@@ -99,6 +104,7 @@ public class DownloadService extends BaseTaskService {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
+                        // TODO: strings
                         Log.w(TAG, "download:FAILURE", exception);
 
                         // Send failure broadcast

@@ -64,6 +64,7 @@ public class ArtistryAppWidgetService extends BaseService {
                     if (user != null) {
 
                         // Set the title and username for the header of the widget and update it
+                        // TODO: strings
                         final String widgetTitle = context.getResources().getString(R.string.widget_title) + "  @" + user.getUsername();
                         remoteViews.setTextViewText(R.id.widget_title_textView, widgetTitle);
                         appWidgetManager.updateAppWidget(id, remoteViews);
@@ -89,6 +90,7 @@ public class ArtistryAppWidgetService extends BaseService {
 
                                         // Convert to strings
                                         String favoritesResult = Integer.toString(favoritesTotal);
+                                        // TODO: strings
                                         String ratingsResult = String.format("%.1f", averageRatingTotal);
                                         String viewsResult = Integer.toString(viewsTotal);
 

@@ -286,20 +286,24 @@ public class UserDetailsFragment extends BaseFragment {
                         following.setUid(mUidForDetails);
 
                         // Add the user in question to the map of people the user is following
+                        // TODO: strings
                         mDatabase.child(USERS.getType()).child(getUid()).child("following").child(mUidForDetails).setValue(following);
 
                         // Update the followed count for the user in question
                         Map<String, Object> childUpdates = new HashMap<>();
+                        // TODO: strings
                         childUpdates.put("/users/" + mUidForDetails + "/followedCount", mUserInQuestionModel.getFollowedCount() + 1);
                         mDatabase.updateChildren(childUpdates);
 
                     } else {
 
                         // Remove the user in question from the map of people the user is following
+                        // TODO: strings
                         mDatabase.child(USERS.getType()).child(getUid()).child("following").child(mUidForDetails).removeValue();
 
                         // Update the followed count for the user in question
                         Map<String, Object> childUpdates = new HashMap<>();
+                        // TODO: strings
                         childUpdates.put("/users/" + mUidForDetails + "/followedCount", mUserInQuestionModel.getFollowedCount() - 1);
                         mDatabase.updateChildren(childUpdates);
 
@@ -330,6 +334,7 @@ public class UserDetailsFragment extends BaseFragment {
             TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
             populateTextView(mUserInQuestionModel.getName(), authorTextView);
             TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
+            // TODO: strings
             populateTextView("@" + mUserInQuestionModel.getUsername(), usernameTextView);
 
             // Set the summary description
@@ -348,6 +353,7 @@ public class UserDetailsFragment extends BaseFragment {
             TextView favoritedTextView = (TextView) getActivity().findViewById(R.id.favorited_TextView);
             populateTextView(Integer.toString(mUserInQuestionModel.getFavorites().size()), favoritedTextView);
             TextView ratingsTextView = (TextView) getActivity().findViewById(R.id.ratings_TextView);
+            // TODO: strings
             populateTextView("hmmm, this needs thought", ratingsTextView);
 
             // Provide the recycler view the list of project strings to display

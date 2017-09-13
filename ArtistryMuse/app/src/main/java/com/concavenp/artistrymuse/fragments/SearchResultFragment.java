@@ -179,9 +179,11 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
 
         switch (mType) {
             case USERS: {
+                // TODO: strings
                 return "user";
             }
             case PROJECTS: {
+                // TODO: strings
                 return "project";
             }
             default: {
@@ -204,8 +206,10 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         final Query responseQuery = getResponseQuery(mDatabase, requestId);
 
         // Create the JSON request object that will be placed into the database
+        // TODO: strings
         Request request = new Request("firebase", mSearchText, getDatabaseNameFromType(), dataPosition*10);
 
+        // TODO: strings
         Log.d(TAG, "Here is the query that will be used: " + responseQuery);
 
         // It took a while to get this right.  So, I'll put in some words for what's going on here.
@@ -270,6 +274,7 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
                                                 // We are now performing a search, flip control to the individual fragments of the TabLayout
                                                 mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.search_recycler_view)));
                                             } else {
+                                                // TODO: strings
                                                 Log.d(TAG, "There does not appear to be any results from the search query");
 
                                                 // We are now performing a search, flip control to the individual fragments of the TabLayout
@@ -289,6 +294,7 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
                                                 // We are now performing a search, flip control to the individual fragments of the TabLayout
                                                 mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.search_recycler_view)));
                                             } else {
+                                                // TODO: strings
                                                 Log.d(TAG, "There does not appear to be any results from the search query");
 
                                                 // We are now performing a search, flip control to the individual fragments of the TabLayout
@@ -302,6 +308,7 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
                                 }
                                 else {
 
+                                    // TODO: strings
                                     Log.e(TAG, "Expected response from search query was null");
 
                                     // We are now performing a search, flip control to the individual fragments of the TabLayout
@@ -312,6 +319,7 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
                             }
                             else {
 
+                                // TODO: strings
                                 Log.e(TAG, "There is no data in the snapshot");
 
                                 // We are now performing a search, flip control to the individual fragments of the TabLayout
@@ -325,6 +333,7 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
                         public void onCancelled(DatabaseError databaseError) {
 
                             // I have not yet seen this occur yet
+                            // TODO: strings
                             Log.e(TAG, "The Value query for the search results has encountered an errorth: " + databaseError);
 
                         }
@@ -373,12 +382,14 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         // Add the search request to the database.  The Flashlight (this is a Heroku hosted
         // Node.js Application along with an instance of Elasticsearch) service will see this and
         // consume the request and generate a response containing the results of the Elasticsearch.
+        // TODO: strings
         mDatabase.child("search").child("request").child(requestId.toString()).setValue(request);
 
     }
 
     private Query getResponseQuery(DatabaseReference databaseReference, UUID uuid) {
 
+        // TODO: strings
         Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString());
 
         return myTopPostsQuery;

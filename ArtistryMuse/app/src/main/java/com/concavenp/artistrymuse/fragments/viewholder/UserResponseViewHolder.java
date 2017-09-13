@@ -80,6 +80,7 @@ public class UserResponseViewHolder extends BaseViewHolder {
                 populateTextView(Integer.toString(response.get_source().getFollowedCount()), followedTextView);
             }
             catch (NullPointerException ex) {
+                // TODO: strings
                 populateTextView("?", followedTextView);
             }
 
@@ -88,6 +89,7 @@ public class UserResponseViewHolder extends BaseViewHolder {
                 populateTextView(Integer.toString(response.get_source().getFollowing().size()), followingTextView);
             }
             catch (NullPointerException ex) {
+                // TODO: strings
                 populateTextView("?", followingTextView);
             }
 

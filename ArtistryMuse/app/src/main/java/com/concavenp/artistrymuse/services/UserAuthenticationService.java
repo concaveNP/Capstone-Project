@@ -143,6 +143,7 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
 
                         long currentDate = new Date().getTime();
 
+                        // TODO: strings
                         newUser.setAuthUid(authUid);
                         newUser.setCreationDate(currentDate);
                         newUser.setDescription("");
@@ -202,6 +203,7 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
      */
     private String getSharedPreferenceUid() {
 
+        // TODO: strings
         String uid = "";
 
         // Check if an UID entry exists already and create it if not

@@ -21,6 +21,7 @@ public class ArtistryFragmentPagerAdapter extends FragmentPagerAdapter {
     @SuppressWarnings("unused")
     private static final String TAG = ArtistryFragmentPagerAdapter.class.getSimpleName();
 
+    // TODO: strings
     private Pair<String, Pair<Class, Fragment>> tabs[] = new Pair[] {
             new Pair("Following", new Pair(FollowingFragment.class, FollowingFragment.newInstance())),
             new Pair("Favorites", new Pair(FavoritesFragment.class, FavoritesFragment.newInstance())),
