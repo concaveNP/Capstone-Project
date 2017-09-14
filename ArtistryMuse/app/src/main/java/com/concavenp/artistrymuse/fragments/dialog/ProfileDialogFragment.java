@@ -293,7 +293,6 @@ public class ProfileDialogFragment extends BaseDialogFragment {
 
                 Uri photoURI = FileProvider.getUriForFile(getContext(), "com.concavenp.artistrymuse", photoFile);
 
-                // TODO: strings
                 Log.d(TAG, "New camera image URI location: " + photoURI.toString() );
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);

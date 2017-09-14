@@ -266,4 +266,8 @@
     <string name="favorited_image_contentDescription">The favorited image associated with the user.</string>
     <string name="no_details">Select an item to see details</string>
 
+    <!--These values are used with Firebase services-->
+    <string name="firebase_separator">/</string>
+    <string name="firebase_image_type">.jpg</string>
+
 </resources>

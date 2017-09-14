@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
@@ -69,13 +70,11 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             // Verify there is user data to work with
             if ((uid != null) && (!uid.isEmpty())) {
 
-                // TODO: strings
-                fileReference = type.getType() + "/" + uid + "/" + imageUid + ".jpg";
+                fileReference = type.getType() + itemView.getResources().getString(R.string.firebase_separator) + uid + itemView.getResources().getString(R.string.firebase_separator) + imageUid + itemView.getResources().getString(R.string.firebase_image_type);
 
             }
             else {
 
-                // TODO: strings
                 Log.e(TAG, "Unexpected null project UID");
 
             }
@@ -83,7 +82,6 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         }
         else {
 
-            // TODO: strings
             Log.e(TAG, "Unexpected null image UID");
 
         }

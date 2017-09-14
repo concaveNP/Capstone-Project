@@ -59,8 +59,7 @@ public class DownloadService extends BaseTaskService {
             // Get the path to download from the intent
             String filename = intent.getStringExtra(EXTRA_DOWNLOAD_FILENAME);
 
-            // TODO: strings
-            final String fileReference = getString(R.string.users_directory_name) + "/" + getUid() + "/" + filename;
+            final String fileReference = getString(R.string.users_directory_name) + getString(R.string.firebase_separator) + getUid() + getString(R.string.firebase_separator) + filename;
 
             downloadFromPath(fileReference);
         }
@@ -70,7 +69,6 @@ public class DownloadService extends BaseTaskService {
     }
 
     private void downloadFromPath(final String downloadPath) {
-        // TODO: strings
         Log.d(TAG, "downloadFromPath:" + downloadPath);
 
         // Mark task started
@@ -88,7 +86,6 @@ public class DownloadService extends BaseTaskService {
                 .addOnSuccessListener(new OnSuccessListener<StreamDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(StreamDownloadTask.TaskSnapshot taskSnapshot) {
-                        // TODO: strings
                         Log.d(TAG, "download:SUCCESS");
 
                         // Send success broadcast with number of bytes downloaded
@@ -104,7 +101,6 @@ public class DownloadService extends BaseTaskService {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        // TODO: strings
                         Log.w(TAG, "download:FAILURE", exception);
 
                         // Send failure broadcast

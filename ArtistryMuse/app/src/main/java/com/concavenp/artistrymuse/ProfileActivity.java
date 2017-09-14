@@ -267,7 +267,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     if ((oldHeaderUid != null) && (!oldHeaderUid.isEmpty())) {
 
                         // TODO: strings
-                        StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + "/" + oldHeaderUid + ".jpg");
+                        StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + getResources().getString(R.string.firebase_separator) + oldHeaderUid + ".jpg");
 
                         // Delete the old header image from Firebase storage
                         deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -276,16 +276,14 @@ public class ProfileActivity extends ImageAppCompatActivity {
                                 // TODO: better error handling
                                 // File deleted successfully
                                 // TODO: strings
-                                Log.d(TAG, "Deleted old header image (" + oldHeaderUid +
-                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                                Log.d(TAG, "Deleted old header image (" + oldHeaderUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 // Uh-oh, an error occurred!
                                 // TODO: strings
-                                Log.e(TAG, "Error deleting old header image (" + oldHeaderUid +
-                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                                Log.e(TAG, "Error deleting old header image (" + oldHeaderUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
                             }
                         });
 
@@ -327,7 +325,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     if ((oldProfileUid != null) && (!oldProfileUid.isEmpty())) {
 
                         // TODO: strings
-                        StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + "/" + oldProfileUid + ".jpg");
+                        StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + getResources().getString(R.string.firebase_separator) + oldProfileUid + ".jpg");
 
                         // Delete the old profile image from Firebase storage
                         deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -336,15 +334,13 @@ public class ProfileActivity extends ImageAppCompatActivity {
                                 // TODO: better error handling
                                 // File deleted successfully
                                 // TODO: strings
-                                Log.d(TAG, "Deleted old profile image (" + oldProfileUid +
-                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                                Log.d(TAG, "Deleted old profile image (" + oldProfileUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 // Uh-oh, an error occurred!
-                                Log.e(TAG, "Error deleting old profile image (" + oldProfileUid +
-                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                                Log.e(TAG, "Error deleting old profile image (" + oldProfileUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
                             }
                         });
 

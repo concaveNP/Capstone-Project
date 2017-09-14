@@ -104,7 +104,6 @@ public class UploadService extends BaseTaskService {
         final StorageReference photoRef = mStorageRef.child(type.getType()).child(uid).child(filename);
 
         // Upload file to Firebase Storage
-        // TODO: strings
         Log.d(TAG, "uploadFromUri:dst:" + photoRef.getPath());
         photoRef.putFile(fileUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -113,7 +112,6 @@ public class UploadService extends BaseTaskService {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                         // Upload succeeded
-                        // TODO: strings
                         Log.d(TAG, "uploadFromUri:onSuccess");
 
                         // Get the public download URL
@@ -131,7 +129,6 @@ public class UploadService extends BaseTaskService {
                     public void onFailure(@NonNull Exception exception) {
 
                         // Upload failed
-                        // TODO: strings
                         Log.w(TAG, "uploadFromUri:onFailure", exception);
 
                         broadcastUploadFinished(null, fileUri);

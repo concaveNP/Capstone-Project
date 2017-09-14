@@ -190,25 +190,20 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
                     if ((oldMainUid != null) && (!oldMainUid.isEmpty())) {
 
                         // TODO: strings
-                        StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + "/" + oldMainUid + ".jpg");
+                        StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + getResources().getString(R.string.firebase_separator) + oldMainUid + getResources().getString(R.string.firebase_image_type));
 
                         // Delete the old image from Firebase storage
                         deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                // TODO: better error handling
                                 // File deleted successfully
-                                // TODO: strings
-                                Log.d(TAG, "Deleted old image (" + oldMainUid +
-                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                                Log.d(TAG, "Deleted old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 // Uh-oh, an error occurred!
-                                // TODO: strings
-                                Log.e(TAG, "Error deleting old image (" + oldMainUid +
-                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                                Log.e(TAG, "Error deleting old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
                             }
                         });
 
@@ -220,15 +215,13 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
                     // Save the new project image to the cloud storage
                     Uri file = Uri.fromFile(new File(mInspirationImagePath));
 
-                    // TODO: strings
                     Log.d(TAG, "New image cloud storage location: " + file.toString());
 
                     // Start MyUploadService to upload the file, so that the file is uploaded even if
                     // this Activity is killed or put in the background
-                    // TODO: strings
                     startService(new Intent(this, UploadService.class)
                             .putExtra(UploadService.EXTRA_FILE_URI, file)
-                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mInspirationImageUid.toString() + ".jpg")
+                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mInspirationImageUid.toString() + getResources().getString(R.string.firebase_image_type))
                             .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.PROJECTS.getType())
                             .putExtra(UploadService.EXTRA_UPLOAD_UID, mProjectUid)
                             .setAction(UploadService.ACTION_UPLOAD));

@@ -129,13 +129,11 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
             // Verify there is user data to work with
             if ((uid != null) && (!uid.isEmpty())) {
 
-                // TODO: strings
-                fileReference = type.getType() + "/" + uid + "/" + imageUid + ".jpg";
+                fileReference = type.getType() + getResources().getString(R.string.firebase_separator) + uid + getResources().getString(R.string.firebase_separator) + imageUid + getResources().getString(R.string.firebase_image_type);
 
             }
             else {
 
-                // TODO: strings
                 Log.e(TAG, "Unexpected null project UID");
 
             }
@@ -143,7 +141,6 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
         }
         else {
 
-            // TODO: strings
             Log.e(TAG, "Unexpected null image UID");
 
         }

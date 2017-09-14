@@ -6,7 +6,6 @@ package com.concavenp.artistrymuse;
 
 public enum StorageDataType {
 
-    // TODO: strings
     USERS("users"),
     PROJECTS("projects"),
     INSPIRATIONS("inspirations"),

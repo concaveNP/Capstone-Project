@@ -6,7 +6,6 @@ package com.concavenp.artistrymuse;
 
 public enum UserInteractionType {
 
-    // TODO: strings
     DETAILS("details"),
     EDIT("edit"),
     NONE("none");

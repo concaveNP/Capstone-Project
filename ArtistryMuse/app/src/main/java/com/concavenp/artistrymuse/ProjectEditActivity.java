@@ -218,7 +218,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                     if ((oldMainUid != null) && (!oldMainUid.isEmpty())) {
 
                         // TODO: strings
-                        StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + "/" + oldMainUid + ".jpg");
+                        StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + getResources().getString(R.string.firebase_separator) + oldMainUid + ".jpg");
 
                         // Delete the old image from Firebase storage
                         deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -227,16 +227,14 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                                 // TODO: better error handling
                                 // File deleted successfully
                                 // TODO: strings
-                                Log.d(TAG, "Deleted old image (" + oldMainUid +
-                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                                Log.d(TAG, "Deleted old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 // Uh-oh, an error occurred!
                                 // TODO: strings
-                                Log.e(TAG, "Error deleting old image (" + oldMainUid +
-                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                                Log.e(TAG, "Error deleting old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
                             }
                         });
 

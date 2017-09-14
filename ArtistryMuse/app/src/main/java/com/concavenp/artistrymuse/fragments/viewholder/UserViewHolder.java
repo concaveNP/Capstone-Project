@@ -48,7 +48,6 @@ public class UserViewHolder extends BaseViewHolder {
         }
         else {
 
-            // TODO: strings
             Log.e(TAG, "Unexpected object type found when expecting an Following object");
 
             return;

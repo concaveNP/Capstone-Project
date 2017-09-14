@@ -148,13 +148,11 @@ public abstract class BaseDialogFragment extends DialogFragment {
             // Verify there is user data to work with
             if ((uid != null) && (!uid.isEmpty())) {
 
-                // TODO: strings
-                fileReference = type.getType() + "/" + uid + "/" + imageUid + ".jpg";
+                fileReference = type.getType() + getString(R.string.firebase_separator) + uid + getString(R.string.firebase_separator) + imageUid + getString(R.string.firebase_image_type);
 
             }
             else {
 
-                // TODO: strings
                 Log.e(TAG, "Unexpected null project UID");
 
             }
@@ -162,7 +160,6 @@ public abstract class BaseDialogFragment extends DialogFragment {
         }
         else {
 
-            // TODO: strings
             Log.e(TAG, "Unexpected null image UID");
 
         }
