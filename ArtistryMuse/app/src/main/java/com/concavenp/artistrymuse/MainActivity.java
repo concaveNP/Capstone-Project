@@ -276,10 +276,8 @@ public class MainActivity extends BaseAppCompatActivity implements
 
             // Successfully signed in
             if (resultCode == RESULT_OK) {
-                // TODO: strings
                 Log.d(TAG, "was able to log in");
             } else {
-                // TODO: strings
                 Log.d(TAG, "was NOT able to log in");
             }
 

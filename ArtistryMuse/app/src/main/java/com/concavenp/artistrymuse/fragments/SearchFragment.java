@@ -79,7 +79,7 @@ public class SearchFragment extends BaseFragment {
         View mainView = inflater.inflate(R.layout.fragment_search, container, false);
 
         // The search text the user will input
-        mSearchEditText = (EditText) mainView.findViewById(R.id.search_editText);
+        mSearchEditText = mainView.findViewById(R.id.search_editText);
         mSearchEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
 
             @Override
@@ -124,19 +124,18 @@ public class SearchFragment extends BaseFragment {
         });
 
         // Save off the flipper for use in deciding which view to show
-        mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_search_ViewFlipper);
+        mFlipper = mainView.findViewById(R.id.fragment_search_ViewFlipper);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) mainView.findViewById(R.id.search_results_viewpager);
-        mSearchPagerAdapter = new SearchFragmentPagerAdapter(getChildFragmentManager());
+        ViewPager viewPager = mainView.findViewById(R.id.search_results_viewpager);
+        mSearchPagerAdapter = new SearchFragmentPagerAdapter(this, getChildFragmentManager());
         viewPager.setAdapter(mSearchPagerAdapter);
         viewPager.setOffscreenPageLimit(mSearchPagerAdapter.getCount());
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) mainView.findViewById(R.id.search_tabs);
+        TabLayout tabLayout = mainView.findViewById(R.id.search_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        //mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_results_Flipper)));
         mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_nosearch_Flipper)));
 
         return mainView;

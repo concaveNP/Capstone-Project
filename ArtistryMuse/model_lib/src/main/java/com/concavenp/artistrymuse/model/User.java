@@ -9,6 +9,21 @@ import java.util.Map;
  */
 public class User {
 
+    public static String AUTHUID = "authUid";
+    public static String CREATIONDATE = "creationDate";
+    public static String DESCRIPTION = "description";
+    public static String FAVORITES = "favorites";
+    public static String FOLLOWEDCOUNT = "followedCount";
+    public static String FOLLOWING = "following";
+    public static String HEADERIMAGEUID = "headerImageUid";
+    public static String LASTUPDATEDDATE = "lastUpdatedDate";
+    public static String NAME = "name";
+    public static String PROFILEIMAGEUID = "profileImageUid";
+    public static String PROJECTS = "projects";
+    public static String SUMMARY = "summary";
+    public static String UID = "uid";
+    public static String USERNAME = "username";
+
     public String authUid = "";
     public Long creationDate = 0L;
     public String description = "";

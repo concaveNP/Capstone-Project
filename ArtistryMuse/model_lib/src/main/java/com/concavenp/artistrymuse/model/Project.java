@@ -11,6 +11,9 @@ import java.util.Map;
 
 public class Project {
 
+    public static String INSPIRATIONS = "inspirations";
+    public static String LASTUPDATEDATE = "lastUpdateDate";
+
     public Long creationDate = 0L;
     public String description = "";
     public Integer favorited = 0;

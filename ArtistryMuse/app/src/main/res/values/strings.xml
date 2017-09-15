@@ -269,5 +269,8 @@
     <!--These values are used with Firebase services-->
     <string name="firebase_separator">/</string>
     <string name="firebase_image_type">.jpg</string>
+    <string name="users_title">Users</string>
+    <string name="projects_title">Projects</string>
+    <string name="ratings_number_format">%.1f</string>
 
 </resources>

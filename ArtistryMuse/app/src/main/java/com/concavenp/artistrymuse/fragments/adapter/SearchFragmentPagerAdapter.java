@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.Pair;
 
+import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.fragments.SearchFragment;
 import com.concavenp.artistrymuse.fragments.SearchResultFragment;
@@ -20,15 +21,20 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter implements 
     @SuppressWarnings("unused")
     private static final String TAG = SearchFragmentPagerAdapter.class.getSimpleName();
 
-    // TODO: strings
-    private Pair<String, SearchResultFragment> tabs[] = new Pair[] {
-            new Pair("Users", SearchResultFragment.newInstance(StorageDataType.USERS)),
-            new Pair("Projects", SearchResultFragment.newInstance(StorageDataType.PROJECTS))
-    };
+    /**
+     * These are the different search results tabs displayed to the user
+     */
+    private Pair<String, SearchResultFragment> tabs[];
 
-    public SearchFragmentPagerAdapter(FragmentManager fm) {
+    public SearchFragmentPagerAdapter(Fragment fragment, FragmentManager fm) {
 
         super(fm);
+
+        // Initialize the tabs
+        tabs = new Pair[] {
+                new Pair(fragment.getString(R.string.users_title), SearchResultFragment.newInstance(StorageDataType.USERS)),
+                new Pair(fragment.getString(R.string.projects_title), SearchResultFragment.newInstance(StorageDataType.PROJECTS))
+        };
 
     }
 

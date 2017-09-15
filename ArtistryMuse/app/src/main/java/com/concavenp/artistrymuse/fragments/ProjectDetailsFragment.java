@@ -373,7 +373,7 @@ public class ProjectDetailsFragment extends BaseFragment {
 
                         // TODO: strings
                         // Add the Project in question to the map of projects the user has favorited
-                        mDatabase.child(USERS.getType()).child(getUid()).child("favorites").child(mUidForDetails).setValue(favoriteInQuestion);
+                        mDatabase.child(USERS.getType()).child(getUid()).child(User.FAVORITES).child(mUidForDetails).setValue(favoriteInQuestion);
 
                         // Create a has map of the values updates to the Project in question
                         Map<String, Object> childUpdates = new HashMap<>();

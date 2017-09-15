@@ -88,7 +88,6 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
 
         } else {
 
-            // TODO: strings
             throw new RuntimeException(context.toString() + " must implement OnInteractionListener");
 
         }
