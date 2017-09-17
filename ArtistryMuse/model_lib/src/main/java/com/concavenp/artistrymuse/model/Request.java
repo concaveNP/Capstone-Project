@@ -3,8 +3,13 @@ package com.concavenp.artistrymuse.model;
 /**
  * Created by dave on 12/22/2016.
  */
-
+@SuppressWarnings("unused")
 public class Request {
+
+    public static final String SEARCH = "search";
+    public static final String RESPONSE = "response";
+    public static final String REQUEST = "request";
+    public static final String FIREBASE = "firebase";
 
     public String index = "";
     public String query = "";
@@ -13,7 +18,7 @@ public class Request {
     public Integer size = 0;
 
     public Request() {
-        // do nothing
+        // Do nothing
     }
 
     public Request(String index, String query, String type, int currentPage) {
@@ -63,4 +68,5 @@ public class Request {
     public void setSize(Integer size) {
         this.size = size;
     }
+
 }

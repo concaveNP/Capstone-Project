@@ -50,13 +50,6 @@
                 android:paddingTop="@dimen/myapp_text_edge_padding_material"
                 android:minLines="1" />
 
-            <TextView
-                android:id="@+id/publication_textView"
-                style="@style/AppTheme.Card.Byline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
             <include layout="@layout/subcontent_ratings_views_favorited"/>
 
         </LinearLayout>

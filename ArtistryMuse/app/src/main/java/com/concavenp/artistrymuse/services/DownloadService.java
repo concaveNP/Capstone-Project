@@ -41,13 +41,11 @@ public class DownloadService extends BaseTaskService {
     private static final String TAG = DownloadService.class.getSimpleName();
 
     /** Actions **/
-    // TODO: strings
     public static final String ACTION_DOWNLOAD = "action_download";
     public static final String DOWNLOAD_COMPLETED = "download_completed";
     public static final String DOWNLOAD_ERROR = "download_error";
 
     /** Extras **/
-    // TODO: strings
     public static final String EXTRA_DOWNLOAD_FILENAME = "extra_download_filename";
     public static final String EXTRA_BYTES_DOWNLOADED = "extra_bytes_downloaded";
 
@@ -62,6 +60,7 @@ public class DownloadService extends BaseTaskService {
             final String fileReference = getString(R.string.users_directory_name) + getString(R.string.firebase_separator) + getUid() + getString(R.string.firebase_separator) + filename;
 
             downloadFromPath(fileReference);
+
         }
 
         return START_REDELIVER_INTENT;

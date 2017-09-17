@@ -80,13 +80,12 @@ public class GalleryViewHolder extends BaseViewHolder {
         }
 
         // Display items to be populated
-        final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
-        final TextView titleTextView = (TextView) itemView.findViewById(R.id.title_textView);
-        final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
-        final TextView publicationTextView = (TextView) itemView.findViewById(R.id.publication_textView);
-        final TextView favoritedTextView = (TextView) itemView.findViewById(R.id.favorited_textView);
-        final TextView viewsTextView = (TextView) itemView.findViewById(R.id.views_textView);
-        final TextView ratingTextView = (TextView) itemView.findViewById(R.id.rating_textView);
+        final ImageView mainImageView = itemView.findViewById(R.id.main_imageView);
+        final TextView titleTextView = itemView.findViewById(R.id.title_textView);
+        final TextView descriptionTextView = itemView.findViewById(R.id.description_textView);
+        final TextView favoritedTextView = itemView.findViewById(R.id.favorited_textView);
+        final TextView viewsTextView = itemView.findViewById(R.id.views_textView);
+        final TextView ratingTextView = itemView.findViewById(R.id.rating_textView);
 
         mDatabase.child(PROJECTS.getType()).child(projectUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -104,18 +103,7 @@ public class GalleryViewHolder extends BaseViewHolder {
                     populateTextView(project.getDescription(), descriptionTextView);
                     populateTextView(Integer.toString(project.getFavorited()), favoritedTextView);
                     populateTextView(Integer.toString(project.getViews()), viewsTextView);
-                    // TODO: strings
-                    populateTextView(String.format("%.1f", project.getRating()), ratingTextView);
-
-                    Boolean published = project.getPublished();
-                    if (published) {
-                        // TODO: strings
-                        populateTextView("Published: " + new Date(project.getPublishedDate()).toString(), publicationTextView);
-                    }
-                    else {
-                        // TODO: strings
-                        populateTextView("Unpublished", publicationTextView);
-                    }
+                    populateTextView(String.format( ratingTextView.getResources().getString(R.string.ratings_number_format), project.getRating()), ratingTextView);
 
                     // Add a click listener to the view in order for the user to get more details about a selected project
                     switch (mUserInteractionType) {
@@ -154,7 +142,7 @@ public class GalleryViewHolder extends BaseViewHolder {
 
     public void clearImages() {
 
-        final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
+        final ImageView mainImageView = itemView.findViewById(R.id.main_imageView);
 
         Glide.clear(mainImageView);
 

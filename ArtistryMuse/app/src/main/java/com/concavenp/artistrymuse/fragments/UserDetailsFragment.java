@@ -108,9 +108,9 @@ public class UserDetailsFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_user_details, container, false);
 
         // Save off the flipper for use in deciding which view to show
-        mFlipper = (ViewFlipper) view.findViewById(R.id.fragment_user_details_ViewFlipper);
+        mFlipper = view.findViewById(R.id.fragment_user_details_ViewFlipper);
 
-        mRecycler = (RecyclerView) view.findViewById(R.id.user_details_RecyclerView);
+        mRecycler = view.findViewById(R.id.user_details_RecyclerView);
         mRecycler.setHasFixedSize(true);
 
         // Set up Layout
@@ -258,7 +258,7 @@ public class UserDetailsFragment extends BaseFragment {
         if (mUserModel != null) {
 
             // The follow/unfollow toggle button
-            final ToggleButton followButton = (ToggleButton) getActivity().findViewById(R.id.follow_unfollow_toggleButton);
+            final ToggleButton followButton = getActivity().findViewById(R.id.follow_unfollow_toggleButton);
 
             // Determine the initial state of the button given the user's list of "following"
             final Map<String, Following> following = mUserModel.getFollowing();
@@ -286,25 +286,21 @@ public class UserDetailsFragment extends BaseFragment {
                         following.setUid(mUidForDetails);
 
                         // Add the user in question to the map of people the user is following
-                        // TODO: strings
-                        mDatabase.child(USERS.getType()).child(getUid()).child("following").child(mUidForDetails).setValue(following);
+                        mDatabase.child(USERS.getType()).child(getUid()).child(User.FOLLOWING).child(mUidForDetails).setValue(following);
 
                         // Update the followed count for the user in question
                         Map<String, Object> childUpdates = new HashMap<>();
-                        // TODO: strings
-                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", mUserInQuestionModel.getFollowedCount() + 1);
+                        childUpdates.put(getString(R.string.firebase_separator) + USERS.getType() + getString(R.string.firebase_separator) + mUidForDetails + getString(R.string.firebase_separator) + User.FOLLOWED_COUNT, mUserInQuestionModel.getFollowedCount() + 1);
                         mDatabase.updateChildren(childUpdates);
 
                     } else {
 
                         // Remove the user in question from the map of people the user is following
-                        // TODO: strings
-                        mDatabase.child(USERS.getType()).child(getUid()).child("following").child(mUidForDetails).removeValue();
+                        mDatabase.child(USERS.getType()).child(getUid()).child(User.FOLLOWING).child(mUidForDetails).removeValue();
 
                         // Update the followed count for the user in question
                         Map<String, Object> childUpdates = new HashMap<>();
-                        // TODO: strings
-                        childUpdates.put("/users/" + mUidForDetails + "/followedCount", mUserInQuestionModel.getFollowedCount() - 1);
+                        childUpdates.put(getString(R.string.firebase_separator) + USERS.getType() + getString(R.string.firebase_separator) + mUidForDetails + getString(R.string.firebase_separator) + User.FOLLOWED_COUNT, mUserInQuestionModel.getFollowedCount() - 1);
                         mDatabase.updateChildren(childUpdates);
 
                     }
@@ -327,33 +323,31 @@ public class UserDetailsFragment extends BaseFragment {
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_user_details_FrameLayout)));
 
             // Set the profile image
-            ImageView profileImageView = (ImageView) getActivity().findViewById(R.id.avatar_ImageView);
+            ImageView profileImageView = getActivity().findViewById(R.id.avatar_ImageView);
             populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), USERS), profileImageView);
 
             // Set the name of the author and the username
-            TextView authorTextView = (TextView) getActivity().findViewById(R.id.author_TextView);
+            TextView authorTextView = getActivity().findViewById(R.id.author_TextView);
             populateTextView(mUserInQuestionModel.getName(), authorTextView);
-            TextView usernameTextView = (TextView) getActivity().findViewById(R.id.username_TextView);
-            // TODO: strings
-            populateTextView("@" + mUserInQuestionModel.getUsername(), usernameTextView);
+            TextView usernameTextView = getActivity().findViewById(R.id.username_TextView);
+            populateTextView(getString(R.string.user_indication_symbol) + mUserInQuestionModel.getUsername(), usernameTextView);
 
             // Set the summary description
-            TextView summaryTextView = (TextView) getActivity().findViewById(R.id.summary_TextView);
+            TextView summaryTextView = getActivity().findViewById(R.id.summary_TextView);
             populateTextView(mUserInQuestionModel.getSummary(), summaryTextView);
 
             // Set the counts for the projects, followed and following
-            TextView projectsTextView = (TextView) getActivity().findViewById(R.id.project_count_textView);
+            TextView projectsTextView = getActivity().findViewById(R.id.project_count_textView);
             populateTextView(Integer.toString(mUserInQuestionModel.getProjects().size()), projectsTextView);
-            TextView followingTextView = (TextView) getActivity().findViewById(R.id.following_TextView);
+            TextView followingTextView = getActivity().findViewById(R.id.following_TextView);
             populateTextView(Integer.toString(mUserInQuestionModel.getFollowing().size()), followingTextView);
-            TextView followedTextView = (TextView) getActivity().findViewById(R.id.followed_TextView);
+            TextView followedTextView = getActivity().findViewById(R.id.followed_TextView);
             populateTextView(Integer.toString(mUserInQuestionModel.getFollowedCount()), followedTextView);
 
             // Set the favorited number
-            TextView favoritedTextView = (TextView) getActivity().findViewById(R.id.favorited_TextView);
+            TextView favoritedTextView = getActivity().findViewById(R.id.favorited_TextView);
             populateTextView(Integer.toString(mUserInQuestionModel.getFavorites().size()), favoritedTextView);
-            TextView ratingsTextView = (TextView) getActivity().findViewById(R.id.ratings_TextView);
-            // TODO: strings
+            TextView ratingsTextView = getActivity().findViewById(R.id.ratings_TextView);
             populateTextView("hmmm, this needs thought", ratingsTextView);
 
             // Provide the recycler view the list of project strings to display

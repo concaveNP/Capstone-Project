@@ -51,7 +51,6 @@ public class ProjectDetailsFragment extends BaseFragment {
     @SuppressWarnings("unused")
     private static final String TAG = ProjectDetailsFragment.class.getSimpleName();
 
-    // TODO: strings
     // The key lookup name to the parameter passed into this Fragment
     private static final String UID_PARAM = "uid";
 
@@ -134,9 +133,9 @@ public class ProjectDetailsFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_project_details, container, false);
 
         // Save off the flipper for use in deciding which view to show
-        mFlipper = (ViewFlipper) view.findViewById(R.id.fragment_project_details_ViewFlipper);
+        mFlipper = view.findViewById(R.id.fragment_project_details_ViewFlipper);
 
-        mRecycler = (RecyclerView) view.findViewById(R.id.project_details_RecyclerView);
+        mRecycler = view.findViewById(R.id.project_details_RecyclerView);
         mRecycler.setHasFixedSize(true);
 
         // Set up Layout
@@ -305,15 +304,14 @@ public class ProjectDetailsFragment extends BaseFragment {
                         View mainView = ProjectDetailsFragment.this.getView();
 
                         // Set the profile image
-                        ImageView profileImageView = (ImageView) mainView.findViewById(R.id.avatar_ImageView);
+                        ImageView profileImageView = mainView.findViewById(R.id.avatar_ImageView);
                         populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
 
                         // Set the name of the author and the username
-                        TextView authorTextView = (TextView) mainView.findViewById(R.id.author_TextView);
+                        TextView authorTextView = mainView.findViewById(R.id.author_TextView);
                         populateTextView(mUserInQuestionModel.getName(), authorTextView);
-                        TextView usernameTextView = (TextView) mainView.findViewById(R.id.username_TextView);
-                        // TODO: strings
-                        populateTextView("@" + mUserInQuestionModel.getUsername(), usernameTextView);
+                        TextView usernameTextView = mainView.findViewById(R.id.username_TextView);
+                        populateTextView(getString(R.string.user_indication_symbol) + mUserInQuestionModel.getUsername(), usernameTextView);
 
                     }
 
@@ -340,7 +338,7 @@ public class ProjectDetailsFragment extends BaseFragment {
         if (mUserModel != null) {
 
             // The favorite/unfavorite toggle button
-            final ToggleButton favoriteButton = (ToggleButton) getView().findViewById(R.id.favorite_unfavorite_toggleButton);
+            final ToggleButton favoriteButton = getView().findViewById(R.id.favorite_unfavorite_toggleButton);
 
             // Determine the initial state of the button given the user's list of "favorites"
             final Map<String, Favorite> favorites = mUserModel.getFavorites();
@@ -368,10 +366,9 @@ public class ProjectDetailsFragment extends BaseFragment {
                         // The new object that will be added to the DB
                         favoriteInQuestion = new Favorite();
                         favoriteInQuestion.setFavoritedDate(new Date().getTime());
-                        favoriteInQuestion.setRating(new Random().nextDouble()*10.0); // TODO: should be user chosen value
+                        favoriteInQuestion.setRating(new Random().nextDouble()*10.0);
                         favoriteInQuestion.setUid(mUidForDetails);
 
-                        // TODO: strings
                         // Add the Project in question to the map of projects the user has favorited
                         mDatabase.child(USERS.getType()).child(getUid()).child(User.FAVORITES).child(mUidForDetails).setValue(favoriteInQuestion);
 
@@ -380,18 +377,15 @@ public class ProjectDetailsFragment extends BaseFragment {
 
                         // Update the ratings count for the project in question
                         int ratingCount = mProjectInQuestionModel.getRatingsCount() + 1;
-                        // TODO: strings
-                        childUpdates.put("/projects/" + mUidForDetails + "/ratingsCount", ratingCount);
+                        childUpdates.put( getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + getString(R.string.firebase_separator) + Project.RATINGS_COUNT, ratingCount);
 
                         // Update the rating for the project in question
                         double newRating = ((mProjectInQuestionModel.getRating() * mProjectInQuestionModel.getRatingsCount()) + favoriteInQuestion.getRating()) / ratingCount;
-                        // TODO: strings
-                        childUpdates.put("/projects/" + mUidForDetails + "/rating", newRating);
+                        childUpdates.put(getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + getString(R.string.firebase_separator) + Project.RATING, newRating);
 
                         // Update the Favorited count
                         int favoritedCount = mProjectInQuestionModel.getFavorited() + 1;
-                        // TODO: strings
-                        childUpdates.put("/projects/" + mUidForDetails + "/favorited", favoritedCount);
+                        childUpdates.put(getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + getString(R.string.firebase_separator) + Project.FAVORITED, favoritedCount);
 
                         // Update the Project in question
                         mDatabase.updateChildren(childUpdates);
@@ -406,28 +400,24 @@ public class ProjectDetailsFragment extends BaseFragment {
 
                             // Update the ratings count for the project in question
                             int ratingCount = mProjectInQuestionModel.getRatingsCount() - 1;
-                            // TODO: strings
-                            childUpdates.put("/projects/" + mUidForDetails + "/ratingsCount", ratingCount);
+                            childUpdates.put(getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + Project.RATINGS_COUNT, ratingCount);
 
                             // Update the rating for the project in question
                             double newRating = ((mProjectInQuestionModel.getRating() * mProjectInQuestionModel.getRatingsCount()) - favoriteInQuestion.getRating()) / ratingCount;
                             if (Double.isNaN(newRating)) {
                                 newRating = 0.0;
                             }
-                            // TODO: strings
-                            childUpdates.put("/projects/" + mUidForDetails + "/rating", newRating);
+                            childUpdates.put(getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + Project.RATING, newRating);
 
                             // Update the Favorited count
                             int favoritedCount = mProjectInQuestionModel.getFavorited() - 1;
-                            // TODO: strings
-                            childUpdates.put("/projects/" + mUidForDetails + "/favorited", favoritedCount);
+                            childUpdates.put(getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + Project.FAVORITED, favoritedCount);
 
                             // Update the Project in question
                             mDatabase.updateChildren(childUpdates);
 
                             // Remove the favorite object in question from the map of people the user is following
-                            // TODO: strings
-                            mDatabase.child(USERS.getType()).child(getUid()).child("favorites").child(mUidForDetails).removeValue();
+                            mDatabase.child(USERS.getType()).child(getUid()).child(User.FAVORITES).child(mUidForDetails).removeValue();
 
                             // Clear out the local storage of the favorite object
                             favoriteInQuestion = null;
@@ -454,7 +444,7 @@ public class ProjectDetailsFragment extends BaseFragment {
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_project_details)));
 
             // Display items to be populated
-            final TextView descriptionTextView = (TextView) getView().findViewById(R.id.description_TextView);
+            final TextView descriptionTextView = getView().findViewById(R.id.description_TextView);
 
             populateTextView(mProjectInQuestionModel.getDescription(), descriptionTextView);
 
@@ -473,8 +463,7 @@ public class ProjectDetailsFragment extends BaseFragment {
 
                 // Update the ratings count for the project in question
                 int viewCount = mProjectInQuestionModel.getViews() + 1;
-                // TODO: strings
-                childUpdates.put("/projects/" + mUidForDetails + "/views", viewCount);
+                childUpdates.put( getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + Project.VIEWS, viewCount);
 
                 // Update the Project in question
                 mDatabase.updateChildren(childUpdates);

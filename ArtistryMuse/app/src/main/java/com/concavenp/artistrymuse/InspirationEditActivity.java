@@ -238,7 +238,7 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
                 mDatabase.child(PROJECTS.getType()).child(mProjectUid).child(Project.INSPIRATIONS).child(mInspirationUid).setValue(mInspirationModel);
 
                 // Update the project's last update time
-                mDatabase.child(PROJECTS.getType()).child(mProjectUid).child(Project.LASTUPDATEDATE).setValue(new Date().getTime());
+                mDatabase.child(PROJECTS.getType()).child(mProjectUid).child(Project.LAST_UPDATE_DATE).setValue(new Date().getTime());
 
                 // Navigate back to the Project that this Inspiration spawned from
                 finish();

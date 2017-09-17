@@ -2,7 +2,6 @@ package com.concavenp.artistrymuse.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -17,9 +16,11 @@ import com.concavenp.artistrymuse.fragments.adapter.SearchFragmentPagerAdapter;
 import com.concavenp.artistrymuse.fragments.adapter.SearchResultAdapter;
 import com.concavenp.artistrymuse.fragments.viewholder.ProjectResponseViewHolder;
 import com.concavenp.artistrymuse.fragments.viewholder.UserResponseViewHolder;
+import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.ProjectResponse;
 import com.concavenp.artistrymuse.model.ProjectResponseHit;
 import com.concavenp.artistrymuse.model.Request;
+import com.concavenp.artistrymuse.model.User;
 import com.concavenp.artistrymuse.model.UserResponse;
 import com.concavenp.artistrymuse.model.UserResponseHit;
 import com.google.firebase.database.ChildEventListener;
@@ -57,8 +58,6 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
 
     private EndlessRecyclerOnScrollListener mScrollListener;
 
-    private GridLayoutManager mManager;
-
     private ChildEventListener mChildEventListener;
     private DataSnapshot mDataSnapshot;
 
@@ -69,9 +68,6 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
     // results or a informative message stating that a search needs to be performed to find
     // results.
     private ViewFlipper mFlipper;
-
-    private boolean loading = true;
-    private int pastVisibleItems, visibleItemCount, totalItemCount;
 
     /**
      * Use this factory method to create a new instance of
@@ -121,10 +117,10 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         View mainView = inflater.inflate(R.layout.fragment_search_result, container, false);
 
         // Save off the flipper for use in deciding which view to show
-        mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_search_ViewFlipper);
+        mFlipper = mainView.findViewById(R.id.fragment_search_ViewFlipper);
 
         // The widgets that will "view" the search result data contained within their corresponding adapters
-        mRecycler = (RecyclerView) mainView.findViewById(R.id.search_recycler_view);
+        mRecycler = mainView.findViewById(R.id.search_recycler_view);
 
         // Use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
         mRecycler.setHasFixedSize(true);
@@ -179,15 +175,12 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
 
         switch (mType) {
             case USERS: {
-                // TODO: strings
-                return "user";
+                return User.USER;
             }
             case PROJECTS: {
-                // TODO: strings
-                return "project";
+                return Project.PROJECT;
             }
             default: {
-                // error
                 return null;
             }
         }
@@ -206,8 +199,7 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         final Query responseQuery = getResponseQuery(mDatabase, requestId);
 
         // Create the JSON request object that will be placed into the database
-        // TODO: strings
-        Request request = new Request("firebase", mSearchText, getDatabaseNameFromType(), dataPosition*10);
+        Request request = new Request(Request.FIREBASE, mSearchText, getDatabaseNameFromType(), dataPosition*10);
 
         Log.d(TAG, "Here is the query that will be used: " + responseQuery);
 
@@ -328,7 +320,7 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
                         public void onCancelled(DatabaseError databaseError) {
 
                             // I have not yet seen this occur yet
-                            Log.e(TAG, "The Value query for the search results has encountered an errorth: " + databaseError);
+                            Log.e(TAG, "The Value query for the search results has encountered an error: " + databaseError);
 
                         }
 
@@ -376,15 +368,13 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         // Add the search request to the database.  The Flashlight (this is a Heroku hosted
         // Node.js Application along with an instance of Elasticsearch) service will see this and
         // consume the request and generate a response containing the results of the Elasticsearch.
-        // TODO: strings
-        mDatabase.child("search").child("request").child(requestId.toString()).setValue(request);
+        mDatabase.child(Request.SEARCH).child(Request.REQUEST).child(requestId.toString()).setValue(request);
 
     }
 
     private Query getResponseQuery(DatabaseReference databaseReference, UUID uuid) {
 
-        // TODO: strings
-        Query myTopPostsQuery = databaseReference.child("search").child("response").child(uuid.toString());
+        Query myTopPostsQuery = databaseReference.child(Request.SEARCH).child(Request.RESPONSE).child(uuid.toString());
 
         return myTopPostsQuery;
 

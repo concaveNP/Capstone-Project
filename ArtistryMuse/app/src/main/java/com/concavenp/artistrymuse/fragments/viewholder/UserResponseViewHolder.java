@@ -48,13 +48,13 @@ public class UserResponseViewHolder extends BaseViewHolder {
         }
 
         // Display items to be populated
-        final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_ImageView);
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.avatar_ImageView);
-        final TextView authorTextView = (TextView) itemView.findViewById(R.id.author_TextView);
-        final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_TextView);
-        final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
-        final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
-        final TextView followingTextView = (TextView) itemView.findViewById(R.id.views_textView);
+        final ImageView headerImageView = itemView.findViewById(R.id.header_ImageView);
+        final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
+        final TextView authorTextView = itemView.findViewById(R.id.author_TextView);
+        final TextView usernameTextView = itemView.findViewById(R.id.username_TextView);
+        final TextView descriptionTextView = itemView.findViewById(R.id.description_textView);
+        final TextView followedTextView = itemView.findViewById(R.id.followed_textview);
+        final TextView followingTextView = itemView.findViewById(R.id.views_textView);
 
         // Verify there is data to work with
         if (response._source != null) {
@@ -71,7 +71,7 @@ public class UserResponseViewHolder extends BaseViewHolder {
                             response.get_source().getProfileImageUid(),
                             StorageDataType.USERS),
                     profileImageView);
-            populateTextView( "@" + response.get_source().getUsername(), usernameTextView);
+            populateTextView( usernameTextView.getResources().getString(R.string.user_indication_symbol) + response.get_source().getUsername(), usernameTextView);
             populateTextView( response.get_source().getSummary(), authorTextView);
             populateTextView( response.get_source().getDescription(), descriptionTextView);
 
@@ -80,7 +80,6 @@ public class UserResponseViewHolder extends BaseViewHolder {
                 populateTextView(Integer.toString(response.get_source().getFollowedCount()), followedTextView);
             }
             catch (NullPointerException ex) {
-                // TODO: strings
                 populateTextView("?", followedTextView);
             }
 
@@ -89,7 +88,6 @@ public class UserResponseViewHolder extends BaseViewHolder {
                 populateTextView(Integer.toString(response.get_source().getFollowing().size()), followingTextView);
             }
             catch (NullPointerException ex) {
-                // TODO: strings
                 populateTextView("?", followingTextView);
             }
 

@@ -265,7 +265,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     // Check if the old profile image needs to be deleted
                     if ((oldHeaderUid != null) && (!oldHeaderUid.isEmpty())) {
 
-                        StorageReference deleteFile = mStorageRef.child(StorageDataType.USERS.getType() + getString(R.string.firebase_separator) + mUser.getUid() + getString(R.string.firebase_separator) + oldHeaderUid + getString(R.string.firebase_image_type);
+                        StorageReference deleteFile = mStorageRef.child(StorageDataType.USERS.getType() + getString(R.string.firebase_separator) + mUser.getUid() + getString(R.string.firebase_separator) + oldHeaderUid + getString(R.string.firebase_image_type));
 
                         // Delete the old header image from Firebase storage
                         deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {

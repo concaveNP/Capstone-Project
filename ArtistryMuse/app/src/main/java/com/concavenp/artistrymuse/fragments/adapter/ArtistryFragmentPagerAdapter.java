@@ -1,10 +1,12 @@
 package com.concavenp.artistrymuse.fragments.adapter;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.Pair;
 
+import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.fragments.FavoritesFragment;
 import com.concavenp.artistrymuse.fragments.FollowingFragment;
 import com.concavenp.artistrymuse.fragments.GalleryFragment;
@@ -21,16 +23,20 @@ public class ArtistryFragmentPagerAdapter extends FragmentPagerAdapter {
     @SuppressWarnings("unused")
     private static final String TAG = ArtistryFragmentPagerAdapter.class.getSimpleName();
 
-    // TODO: strings
-    private Pair<String, Pair<Class, Fragment>> tabs[] = new Pair[] {
-            new Pair("Following", new Pair(FollowingFragment.class, FollowingFragment.newInstance())),
-            new Pair("Favorites", new Pair(FavoritesFragment.class, FavoritesFragment.newInstance())),
-            new Pair("Search", new Pair(SearchFragment.class, SearchFragment.newInstance())),
-            new Pair("Gallery", new Pair(GalleryFragment.class, GalleryFragment.newInstance()))
-    };
+    private Pair<String, Pair<Class, Fragment>> tabs[];
 
-    public ArtistryFragmentPagerAdapter(FragmentManager fm) {
+    public ArtistryFragmentPagerAdapter(Activity activity, FragmentManager fm) {
+
         super(fm);
+
+        // Initialize the tabs
+        tabs = new Pair[] {
+                new Pair(activity.getString(R.string.main_tab_following), new Pair(FollowingFragment.class, FollowingFragment.newInstance())),
+                new Pair(activity.getString(R.string.main_tab_favorites), new Pair(FavoritesFragment.class, FavoritesFragment.newInstance())),
+                new Pair(activity.getString(R.string.main_tab_search), new Pair(SearchFragment.class, SearchFragment.newInstance())),
+                new Pair(activity.getString(R.string.main_tab_gallery), new Pair(GalleryFragment.class, GalleryFragment.newInstance()))
+        };
+
     }
 
     public Class getClassFromPosition(int position) {

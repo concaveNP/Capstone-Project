@@ -74,8 +74,7 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
 
         // Store off the layout size using tag values within the view
         String tag = (String)mainView.getTag();
-        // TODO: strings
-        if (tag.equals("layout_large")) {
+        if (tag.equals(getString(R.string.layout_large))) {
             largeDevice = true;
         }
 
@@ -166,8 +165,7 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
 
         String userId = getUid();
 
-        // TODO: strings
-        Query resultQuery = databaseReference.child(USERS.getType()).child(userId).child("favorites");
+        Query resultQuery = databaseReference.child(USERS.getType()).child(userId).child(User.FAVORITES);
 
         return resultQuery;
     }

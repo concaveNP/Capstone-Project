@@ -23,13 +23,11 @@ public class UploadService extends BaseTaskService {
     private static final String TAG = UploadService.class.getSimpleName();
 
     /** Intent Actions **/
-    // TODO: strings
     public static final String ACTION_UPLOAD = "action_upload";
     public static final String UPLOAD_COMPLETED = "upload_completed";
     public static final String UPLOAD_ERROR = "upload_error";
 
     /** Intent Extras **/
-    // TODO: strings
     public static final String EXTRA_FILE_URI = "extra_file_uri";
     public static final String EXTRA_FILE_RENAMED_FILENAME = "extra_file_renamed_filename";
     public static final String EXTRA_UPLOAD_URL = "extra_upload_url";
