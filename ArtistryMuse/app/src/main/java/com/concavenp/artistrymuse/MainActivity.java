@@ -134,7 +134,7 @@ public class MainActivity extends BaseAppCompatActivity implements
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = findViewById(R.id.viewpager);
-        mFragmentAdapter = new ArtistryFragmentPagerAdapter(getSupportFragmentManager());
+        mFragmentAdapter = new ArtistryFragmentPagerAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(mFragmentAdapter);
         viewPager.setOffscreenPageLimit(mFragmentAdapter.getCount());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

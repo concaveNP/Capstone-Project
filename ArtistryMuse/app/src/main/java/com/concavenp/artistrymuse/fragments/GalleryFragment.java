@@ -166,7 +166,7 @@ public class GalleryFragment extends BaseFragment {
 
         String userId = getUid();
 
-        Query resultQuery = databaseReference.child(USERS.getType()).child(userId).child("projects");
+        Query resultQuery = databaseReference.child(USERS.getType()).child(userId).child(User.PROJECTS);
 
         return resultQuery;
     }

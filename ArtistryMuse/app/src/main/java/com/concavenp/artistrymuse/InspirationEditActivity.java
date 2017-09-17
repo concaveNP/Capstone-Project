@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.concavenp.artistrymuse.model.Inspiration;
+import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.services.UploadService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -189,23 +190,20 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
                     // Check if the old profile image needs to be deleted
                     if ((oldMainUid != null) && (!oldMainUid.isEmpty())) {
 
-                        StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + "/" + oldMainUid + ".jpg");
+                        StorageReference deleteFile = mStorageRef.child(StorageDataType.PROJECTS.getType() + getString(R.string.firebase_separator) + mProjectUid + getString(R.string.firebase_separator) + oldMainUid + getString(R.string.firebase_image_type));
 
                         // Delete the old image from Firebase storage
                         deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                // TODO: better error handling
                                 // File deleted successfully
-                                Log.d(TAG, "Deleted old image (" + oldMainUid +
-                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                                Log.d(TAG, "Deleted old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 // Uh-oh, an error occurred!
-                                Log.e(TAG, "Error deleting old image (" + oldMainUid +
-                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                                Log.e(TAG, "Error deleting old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
                             }
                         });
 
@@ -223,7 +221,7 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
                     // this Activity is killed or put in the background
                     startService(new Intent(this, UploadService.class)
                             .putExtra(UploadService.EXTRA_FILE_URI, file)
-                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mInspirationImageUid.toString() + ".jpg")
+                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mInspirationImageUid.toString() + getString(R.string.firebase_image_type))
                             .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.PROJECTS.getType())
                             .putExtra(UploadService.EXTRA_UPLOAD_UID, mProjectUid)
                             .setAction(UploadService.ACTION_UPLOAD));
@@ -237,10 +235,10 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
                 }
 
                 // Write the inspiration model data it to the database
-                mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("inspirations").child(mInspirationUid).setValue(mInspirationModel);
+                mDatabase.child(PROJECTS.getType()).child(mProjectUid).child(Project.INSPIRATIONS).child(mInspirationUid).setValue(mInspirationModel);
 
                 // Update the project's last update time
-                mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("lastUpdateDate").setValue(new Date().getTime());
+                mDatabase.child(PROJECTS.getType()).child(mProjectUid).child(Project.LAST_UPDATE_DATE).setValue(new Date().getTime());
 
                 // Navigate back to the Project that this Inspiration spawned from
                 finish();
@@ -297,7 +295,7 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
                     // If this is a new Inspiration then we can't subscribe to values for it
                     if (!title.equals(getString(R.string.new_inspiration_title))) {
 
-                        mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("inspirations").child(mInspirationUid).addValueEventListener(getInspirationInQuestionValueEventListener());
+                        mDatabase.child(PROJECTS.getType()).child(mProjectUid).child(Project.INSPIRATIONS).child(mInspirationUid).addValueEventListener(getInspirationInQuestionValueEventListener());
 
                     }
 
@@ -327,7 +325,7 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
                     // If this is a new Inspiration then we can't subscribe to values for it
                     if (title.equals(getString(R.string.new_inspiration_title))) {
 
-                        mDatabase.child(PROJECTS.getType()).child(mProjectUid).child("inspirations").child(mInspirationUid).removeEventListener(getInspirationInQuestionValueEventListener());
+                        mDatabase.child(PROJECTS.getType()).child(mProjectUid).child(Project.INSPIRATIONS).child(mInspirationUid).removeEventListener(getInspirationInQuestionValueEventListener());
 
                     }
 

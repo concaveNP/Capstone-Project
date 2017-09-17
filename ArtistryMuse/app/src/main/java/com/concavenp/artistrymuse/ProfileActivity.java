@@ -168,7 +168,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
 
                                     // Convert to strings
                                     String favoritesResult = Integer.toString(favoritesTotal);
-                                    String ratingsResult = String.format("%.1f", averageRatingTotal);
+                                    String ratingsResult = String.format(getString(R.string.ratings_number_format), averageRatingTotal);
                                     String viewsResult = Integer.toString(viewsTotal);
 
                                     // Update the views
@@ -265,23 +265,20 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     // Check if the old profile image needs to be deleted
                     if ((oldHeaderUid != null) && (!oldHeaderUid.isEmpty())) {
 
-                        StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + "/" + oldHeaderUid + ".jpg");
+                        StorageReference deleteFile = mStorageRef.child(StorageDataType.USERS.getType() + getString(R.string.firebase_separator) + mUser.getUid() + getString(R.string.firebase_separator) + oldHeaderUid + getString(R.string.firebase_image_type));
 
                         // Delete the old header image from Firebase storage
                         deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                // TODO: better error handling
                                 // File deleted successfully
-                                Log.d(TAG, "Deleted old header image (" + oldHeaderUid +
-                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                                Log.d(TAG, "Deleted old header image (" + oldHeaderUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 // Uh-oh, an error occurred!
-                                Log.e(TAG, "Error deleting old header image (" + oldHeaderUid +
-                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                                Log.e(TAG, "Error deleting old header image (" + oldHeaderUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
                             }
                         });
 
@@ -299,7 +296,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     // this Activity is killed or put in the background
                     startService(new Intent(this, UploadService.class)
                             .putExtra(UploadService.EXTRA_FILE_URI, file)
-                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mHeaderImageUid.toString() + ".jpg")
+                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mHeaderImageUid.toString() + getString(R.string.firebase_image_type))
                             .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
                             .putExtra(UploadService.EXTRA_UPLOAD_UID, mUser.getUid())
                             .setAction(UploadService.ACTION_UPLOAD));
@@ -320,23 +317,20 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     // Check if the old profile image needs to be deleted
                     if ((oldProfileUid != null) && (!oldProfileUid.isEmpty())) {
 
-                        StorageReference deleteFile = mStorageRef.child("users/" + mUser.getUid() + "/" + oldProfileUid + ".jpg");
+                        StorageReference deleteFile = mStorageRef.child(StorageDataType.USERS.getType() + getString(R.string.firebase_separator) + mUser.getUid() + getString(R.string.firebase_separator) + oldProfileUid + getString(R.string.firebase_image_type));
 
                         // Delete the old profile image from Firebase storage
                         deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                // TODO: better error handling
                                 // File deleted successfully
-                                Log.d(TAG, "Deleted old profile image (" + oldProfileUid +
-                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                                Log.d(TAG, "Deleted old profile image (" + oldProfileUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 // Uh-oh, an error occurred!
-                                Log.e(TAG, "Error deleting old profile image (" + oldProfileUid +
-                                        ") from cloud storage for the user (" + mUser.getUid() + ")");
+                                Log.e(TAG, "Error deleting old profile image (" + oldProfileUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
                             }
                         });
 
@@ -354,7 +348,7 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     // this Activity is killed or put in the background
                     startService(new Intent(this, UploadService.class)
                             .putExtra(UploadService.EXTRA_FILE_URI, file)
-                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProfileImageUid.toString() + ".jpg")
+                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProfileImageUid.toString() + getString(R.string.firebase_image_type))
                             .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
                             .putExtra(UploadService.EXTRA_UPLOAD_UID, mUser.getUid())
                             .setAction(UploadService.ACTION_UPLOAD));

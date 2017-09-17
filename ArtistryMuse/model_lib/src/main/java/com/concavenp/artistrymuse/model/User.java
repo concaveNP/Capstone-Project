@@ -3,11 +3,31 @@ package com.concavenp.artistrymuse.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
+
 /**
  * This class represents the the data model of a "User" object.  This data will be stored within
  * the DB
  */
+@SuppressWarnings("unused")
 public class User {
+
+    public static final String USER = "user";
+
+    public static final String AUTH_UID = "authUid";
+    public static final String CREATION_DATE = "creationDate";
+    public static final String DESCRIPTION = "description";
+    public static final String FAVORITES = "favorites";
+    public static final String FOLLOWED_COUNT = "followedCount";
+    public static final String FOLLOWING = "following";
+    public static final String HEADER_IMAGE_UID = "headerImageUid";
+    public static final String LAST_UPDATED_DATE = "lastUpdatedDate";
+    public static final String NAME = "name";
+    public static final String PROFILE_IMAGE_UID = "profileImageUid";
+    public static final String PROJECTS = "projects";
+    public static final String SUMMARY = "summary";
+    public static final String UID = "uid";
+    public static final String USERNAME = "username";
 
     public String authUid = "";
     public Long creationDate = 0L;

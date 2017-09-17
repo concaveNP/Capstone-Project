@@ -145,21 +145,15 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
 
                         newUser.setAuthUid(authUid);
                         newUser.setCreationDate(currentDate);
-                        newUser.setDescription("");
-                        newUser.setFollowedCount(0);
                         newUser.setLastUpdatedDate(currentDate);
 
                         // Use the name if available
                         String displayName = user.getDisplayName();
                         if (displayName != null) {
                             newUser.setName(displayName);
-                        } else {
-                            newUser.setName("");
                         }
 
-                        newUser.setSummary("");
                         newUser.setUid(newUid.toString());
-                        newUser.setUsername("");
 
                         // Write it to the DB
                         mDatabase.child(USERS.getType()).child(newUid.toString()).setValue(newUser);
@@ -202,7 +196,7 @@ public class UserAuthenticationService extends BaseService implements FirebaseAu
      */
     private String getSharedPreferenceUid() {
 
-        String uid = "";
+        String uid = getResources().getString(R.string.default_application_uid_value);
 
         // Check if an UID entry exists already and create it if not
         if (mSharedPreferences.contains(getResources().getString(R.string.application_uid_key))) {

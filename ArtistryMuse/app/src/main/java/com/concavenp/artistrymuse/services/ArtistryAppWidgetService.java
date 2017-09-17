@@ -89,7 +89,7 @@ public class ArtistryAppWidgetService extends BaseService {
 
                                         // Convert to strings
                                         String favoritesResult = Integer.toString(favoritesTotal);
-                                        String ratingsResult = String.format("%.1f", averageRatingTotal);
+                                        String ratingsResult = String.format(getString(R.string.ratings_number_format), averageRatingTotal);
                                         String viewsResult = Integer.toString(viewsTotal);
 
                                         // Update the views

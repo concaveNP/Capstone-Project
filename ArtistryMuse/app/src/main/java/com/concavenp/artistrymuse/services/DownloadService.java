@@ -57,9 +57,10 @@ public class DownloadService extends BaseTaskService {
             // Get the path to download from the intent
             String filename = intent.getStringExtra(EXTRA_DOWNLOAD_FILENAME);
 
-            final String fileReference = getString(R.string.users_directory_name) + "/" + getUid() + "/" + filename;
+            final String fileReference = getString(R.string.users_directory_name) + getString(R.string.firebase_separator) + getUid() + getString(R.string.firebase_separator) + filename;
 
             downloadFromPath(fileReference);
+
         }
 
         return START_REDELIVER_INTENT;

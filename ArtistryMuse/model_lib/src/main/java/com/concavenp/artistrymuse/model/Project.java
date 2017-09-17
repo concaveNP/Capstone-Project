@@ -8,8 +8,25 @@ import java.util.Map;
 /**
  * Created by dave on 10/14/2016.
  */
-
+@SuppressWarnings("unused")
 public class Project {
+
+    public static final String PROJECT = "project";
+
+    public static final String CREATION_DATE = "creationDate";
+    public static final String DESCRIPTION = "description";
+    public static final String FAVORITED = "favorited";
+    public static final String INSPIRATIONS = "inspirations";
+    public static final String LAST_UPDATE_DATE = "lastUpdateDate";
+    public static final String MAIN_IMAGE_UID = "mainImageUid";
+    public static final String NAME = "name";
+    public static final String OWNER_UID = "ownerUid";
+    public static final String PUBLISHED = "published";
+    public static final String PUBLISHED_DATE = "publishedDate";
+    public static final String RATING = "rating";
+    public static final String RATINGS_COUNT = "ratingsCount";
+    public static final String UID = "uid";
+    public static final String VIEWS = "views";
 
     public Long creationDate = 0L;
     public String description = "";

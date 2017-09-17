@@ -128,7 +128,7 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
             // Verify there is user data to work with
             if ((uid != null) && (!uid.isEmpty())) {
 
-                fileReference = type.getType() + "/" + uid + "/" + imageUid + ".jpg";
+                fileReference = type.getType() + getResources().getString(R.string.firebase_separator) + uid + getResources().getString(R.string.firebase_separator) + imageUid + getResources().getString(R.string.firebase_image_type);
 
             }
             else {

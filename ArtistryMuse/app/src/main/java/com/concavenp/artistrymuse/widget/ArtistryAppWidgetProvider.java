@@ -16,8 +16,15 @@ import com.concavenp.artistrymuse.services.ArtistryAppWidgetService;
  */
 public class ArtistryAppWidgetProvider extends AppWidgetProvider {
 
+    /**
+     * The logging tag string to be associated with log data for this class
+     */
+    @SuppressWarnings("unused")
+    private static final String TAG = ArtistryAppWidgetProvider.class.getSimpleName();
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+
         // Get all ids
         ComponentName thisWidget = new ComponentName(context, ArtistryAppWidgetProvider.class);
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
@@ -29,33 +36,11 @@ public class ArtistryAppWidgetProvider extends AppWidgetProvider {
         // Update the widgets via the service
         context.startService(intent);
 
-
-
-
-
-
-
-
-
-
-//        for (int widgetId : allWidgetIds) {
-//
-//            final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.artistry_app_widget);
-//
-//            remoteViews.setTextViewText(R.id.favorited_textView, Integer.toString(42));
-//            remoteViews.setTextViewText(R.id.views_textView, Integer.toString(43));
-//            remoteViews.setTextViewText(R.id.rating_textView, String.format("%.1f", 7.777));
-//
-//            appWidgetManager.updateAppWidget(widgetId, remoteViews);
-//        }
     }
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         // When the user deletes the widget, delete the preference associated with it.
-//        for (int appWidgetId : appWidgetIds) {
-//            ArtistryAppWidgetConfigureActivity.deleteTitlePref(context, appWidgetId);
-//        }
     }
 
     @Override

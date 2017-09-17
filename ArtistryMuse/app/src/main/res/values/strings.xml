@@ -7,6 +7,7 @@
     <string name="favorites">Favorites</string>
     <string name="search">Search</string>
     <string name="gallery">Gallery</string>
+
     <string name="title_activity_project">ProjectActivity</string>
     <string name="title_activity_inspiration">InspirationActivity</string>
     <string name="title_activity_details">DetailsActivity</string>
@@ -90,10 +91,8 @@
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
-
     <string name="pref_title_vibrate">Vibrate</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="configure">Configure</string>
@@ -210,6 +209,7 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+
     <string name="rating_label_string">Rating:</string>
     <string name="favorited_label_string">Favorited:</string>
     <string name="following_label_string">Following</string>
@@ -225,8 +225,6 @@
     <string name="favorite_on_text">unfavorite</string>
     <string name="widget_title">ArtistryMuse: </string>
     <string name="widget_zero_project_TextView">You have no projects to display</string>
-
-    <!--These are values used for the SharedPreferences of the application-->
     <string name="shared_preferences_filename">ArtistryMusePreferences</string>
     <string name="application_uid_key">ArtistryMuseUID</string>
     <string name="default_application_uid_value"></string>
@@ -254,16 +252,30 @@
     <string name="profile_header_image_contentDescription">The header image associated with the profile.</string>
     <string name="profile_avatar_image_contentDescription">The avatar image associated with the profile.</string>
     <string name="project_image_contentDescription">The main image associated with the project.</string>
-
+    <string name="project_description_contentDescription">Summary Description</string>
+    <string name="user_description_contentDescription">Summary Description</string>
     <string name="project_following_image_contentDescription">The following image associated with the project.</string>
     <string name="project_followed_image_contentDescription">The followed image associated with the project.</string>
-
     <string name="user_following_image_contentDescription">The following image associated with the user.</string>
     <string name="user_followed_image_contentDescription">The followed image associated with the user.</string>
-
     <string name="rating_image_contentDescription">The rating image associated with the user.</string>
     <string name="views_image_contentDescription">The views image associated with the user.</string>
     <string name="favorited_image_contentDescription">The favorited image associated with the user.</string>
     <string name="no_details">Select an item to see details</string>
+
+    <!--These values are used with Firebase services-->
+    <string name="firebase_separator">/</string>
+    <string name="firebase_image_type">.jpg</string>
+    <string name="users_title">Users</string>
+    <string name="projects_title">Projects</string>
+    <string name="ratings_number_format">%.1f</string>
+    <string name="layout_large">layout_large</string>
+    <string name="user_indication_symbol">\@</string>
+
+    <!--The main activity tab titles-->
+    <string name="main_tab_following">Following</string>
+    <string name="main_tab_favorites">Favorites</string>
+    <string name="main_tab_search">Search</string>
+    <string name="main_tab_gallery">Gallery</string>
 
 </resources>

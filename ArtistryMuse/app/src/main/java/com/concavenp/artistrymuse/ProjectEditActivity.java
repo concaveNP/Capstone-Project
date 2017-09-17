@@ -18,6 +18,7 @@ import android.widget.ImageView;
 
 import com.concavenp.artistrymuse.fragments.adapter.InspirationAdapter;
 import com.concavenp.artistrymuse.model.Project;
+import com.concavenp.artistrymuse.model.User;
 import com.concavenp.artistrymuse.services.UploadService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -217,23 +218,20 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                     // Check if the old profile image needs to be deleted
                     if ((oldMainUid != null) && (!oldMainUid.isEmpty())) {
 
-                        StorageReference deleteFile = mStorageRef.child("projects/" + mProjectUid + "/" + oldMainUid + ".jpg");
+                        StorageReference deleteFile = mStorageRef.child(StorageDataType.PROJECTS.getType() + getString(R.string.firebase_separator) + mProjectUid + getString(R.string.firebase_separator) + oldMainUid + getString(R.string.firebase_image_type));
 
                         // Delete the old image from Firebase storage
                         deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                // TODO: better error handling
                                 // File deleted successfully
-                                Log.d(TAG, "Deleted old image (" + oldMainUid +
-                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                                Log.d(TAG, "Deleted old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
                                 // Uh-oh, an error occurred!
-                                Log.e(TAG, "Error deleting old image (" + oldMainUid +
-                                        ") from cloud storage for the project (" + mProjectUid + ")");
+                                Log.e(TAG, "Error deleting old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
                             }
                         });
 
@@ -251,7 +249,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                     // this Activity is killed or put in the background
                     startService(new Intent(this, UploadService.class)
                             .putExtra(UploadService.EXTRA_FILE_URI, file)
-                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProjectImageUid.toString() + ".jpg")
+                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProjectImageUid.toString() + getString(R.string.firebase_image_type))
                             .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.PROJECTS.getType())
                             .putExtra(UploadService.EXTRA_UPLOAD_UID, mProjectUid)
                             .setAction(UploadService.ACTION_UPLOAD));
@@ -268,7 +266,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                 mDatabase.child(PROJECTS.getType()).child(mProjectUid).setValue(mProjectModel);
 
                 // Update the user's list of projects to add this one if needed (if it was new)
-                mDatabase.child(USERS.getType()).child(getUid()).child("projects").child(mProjectUid).setValue(mProjectUid);
+                mDatabase.child(USERS.getType()).child(getUid()).child(User.PROJECTS).child(mProjectUid).setValue(mProjectUid);
 
                 // Navigate back to the Project that this Inspiration spawned from
                 finish();

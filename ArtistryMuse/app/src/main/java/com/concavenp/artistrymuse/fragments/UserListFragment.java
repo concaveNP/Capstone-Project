@@ -46,6 +46,10 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
     private FirebaseRecyclerAdapter<Following, UserViewHolder> mAdapter;
     private RecyclerView mRecycler;
 
+    /**
+     * Flag that indicates if the user's device should be treated as "large" or not.  The flag will
+     * be used to determine how clicks within a list entry of users should handled.
+     */
     private boolean largeDevice = false;
 
     /**
@@ -79,17 +83,17 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
 
         // Store off the layout size using tag values within the view
         String tag = (String)mainView.getTag();
-        if (tag.equals("layout_large")) {
+        if (tag.equals(getString(R.string.layout_large))) {
             largeDevice = true;
         }
 
-        mRecycler = (RecyclerView) mainView.findViewById(R.id.following_recycler_view);
+        mRecycler = mainView.findViewById(R.id.following_recycler_view);
         mRecycler.setHasFixedSize(true);
 
         // Set up Layout
         int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecycler.setLayoutManager(sglm);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        mRecycler.setLayoutManager(staggeredGridLayoutManager);
 
         // Refresh the data displayed
         refresh();
@@ -171,7 +175,7 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
 
         String userId = getUid();
 
-        Query resultQuery = databaseReference.child(USERS.getType()).child(userId).child("following");
+        Query resultQuery = databaseReference.child(USERS.getType()).child(userId).child(User.FOLLOWING);
 
         return resultQuery;
     }
