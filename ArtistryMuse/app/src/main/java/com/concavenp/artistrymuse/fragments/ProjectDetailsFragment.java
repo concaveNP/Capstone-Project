@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,6 @@ public class ProjectDetailsFragment extends BaseFragment {
 
     // Widgets for displaying all of the recycled items
     private RecyclerView mRecycler;
-    private InspirationAdapter mAdapter;
 
     // This flipper allows the content of the fragment to show the User details or a message to
     // the user telling them there is no details to show.
@@ -303,15 +303,25 @@ public class ProjectDetailsFragment extends BaseFragment {
 
                         View mainView = ProjectDetailsFragment.this.getView();
 
-                        // Set the profile image
-                        ImageView profileImageView = mainView.findViewById(R.id.avatar_ImageView);
-                        populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+                        try {
 
-                        // Set the name of the author and the username
-                        TextView authorTextView = mainView.findViewById(R.id.author_TextView);
-                        populateTextView(mUserInQuestionModel.getName(), authorTextView);
-                        TextView usernameTextView = mainView.findViewById(R.id.username_TextView);
-                        populateTextView(getString(R.string.user_indication_symbol) + mUserInQuestionModel.getUsername(), usernameTextView);
+                            // Set the profile image
+                            ImageView profileImageView = mainView.findViewById(R.id.avatar_ImageView);
+                            populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+
+                            // Set the name of the author
+                            TextView authorTextView = mainView.findViewById(R.id.author_TextView);
+                            populateTextView(mUserInQuestionModel.getName(), authorTextView);
+
+                            // Set the username of the author
+                            TextView usernameTextView = mainView.findViewById(R.id.username_TextView);
+                            populateTextView(getString(R.string.user_indication_symbol) + mUserInQuestionModel.getUsername(), usernameTextView);
+
+                        } catch (NullPointerException ex) {
+
+                            Log.e(TAG, "Unable to populate the Author's details of the given User: " + mUserInQuestionModel.getUid());
+
+                        }
 
                     }
 
@@ -449,7 +459,7 @@ public class ProjectDetailsFragment extends BaseFragment {
             populateTextView(mProjectInQuestionModel.getDescription(), descriptionTextView);
 
             // Provide the recycler view the list of project strings to display
-            mAdapter = new InspirationAdapter(mProjectInQuestionModel.getInspirations(), mInteractionListener);
+            InspirationAdapter mAdapter = new InspirationAdapter(mProjectInQuestionModel.getInspirations(), mInteractionListener);
             mRecycler.setAdapter(mAdapter);
 
             // Retrieve the user associated with the project just once

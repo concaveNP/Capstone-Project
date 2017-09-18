@@ -64,7 +64,7 @@ public class FollowingFragment extends BaseFragment {
         View mainView = inflater.inflate(R.layout.fragment_following, container, false);
 
         // Save off the flipper for use in deciding which view to show
-        mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_following_ViewFlipper);
+        mFlipper = mainView.findViewById(R.id.fragment_following_ViewFlipper);
 
         // Refresh the data displayed
         refresh();

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -86,17 +87,22 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
 
         setContentView(R.layout.activity_inspiration_edit);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_dialog_close_dark);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
 
-        mInspirationImageView = (ImageView) findViewById(R.id.inspiration_imageView);
-        mTitleEditText = (EditText) findViewById(R.id.title_editText);
-        mDescriptionEditText = (EditText) findViewById(R.id.description_editText);
+        // Protection
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_dialog_close_dark);
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
 
-        Button inspirationButton = (Button) findViewById(R.id.inspiration_image_button);
+        mInspirationImageView = findViewById(R.id.inspiration_imageView);
+        mTitleEditText = findViewById(R.id.title_editText);
+        mDescriptionEditText = findViewById(R.id.description_editText);
+
+        Button inspirationButton = findViewById(R.id.inspiration_image_button);
         inspirationButton.setOnClickListener(new ImageButtonListener(ImageType.INSPIRATION.ordinal()));
 
         // Extract the UID(s) from the Activity parameters
@@ -136,8 +142,8 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
 
     private void display(Inspiration inspiration) {
 
-        mTitleEditText.setText(inspiration.getName());
-        mDescriptionEditText.setText(inspiration.getDescription());
+        populateTextView(inspiration.getName(), mTitleEditText);
+        populateTextView(inspiration.getDescription(), mDescriptionEditText);
         populateImageView(buildFileReference(mProjectUid, inspiration.getImageUid(), StorageDataType.PROJECTS), mInspirationImageView);
 
     }
@@ -172,13 +178,13 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
 
                 // Title
                 String title = mTitleEditText.getText().toString();
-                if ((title != null) && (!title.isEmpty())) {
+                if (!title.isEmpty()) {
                     mInspirationModel.setName(title);
                 }
 
                 // Description
                 String description = mDescriptionEditText.getText().toString();
-                if ((description != null) && (!description.isEmpty())) {
+                if (!description.isEmpty()) {
                     mInspirationModel.setDescription(description);
                 }
 

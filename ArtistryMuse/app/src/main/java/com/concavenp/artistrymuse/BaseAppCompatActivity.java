@@ -12,6 +12,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -223,6 +224,119 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
     }
 
     /**
+     * Helper method that protects against bad data when populating TextView(s).  This overloaded
+     * method provides safe conversion protection by wrapping the Double object.
+     *
+     * @param doubleObject - The Double object to be converted to text and set in the view
+     * @param textView - The view to set with the text parameter
+     */
+    protected void populateTextView(Double doubleObject, TextView textView) {
+
+        // For safety, check as well (I've seen it) ...
+        if (textView != null) {
+
+            if (doubleObject != null) {
+
+                String result = "";
+
+                try {
+
+                    result = String.format(textView.getResources().getString(R.string.number_format), doubleObject);
+
+                } catch (Exception ex) {
+
+                    Log.e(TAG, "The double object threw an exception during string translation, defaulting to an empty string");
+
+                }
+
+                // With a string in hand, populate the TextView
+                populateTextView(result, textView);
+
+            } else {
+
+                Log.e(TAG, "The double object was null, defaulting to an empty string");
+
+                // The object was null, default to an empty string
+                populateTextView("", textView);
+
+            }
+
+        } else {
+
+            Log.e(TAG, "The TextView object was null, unable to populate");
+
+        }
+
+    }
+
+    /**
+     * Helper method that protects against bad data when populating TextView(s).  This overloaded
+     * method provides safe conversion protection by wrapping the Integer object.
+     *
+     * @param intObject - The Integer object to be converted to text and set in the view
+     * @param textView - The view to set with the text parameter
+     */
+    protected void populateTextView(Integer intObject, TextView textView) {
+
+        if (intObject != null) {
+
+            String result = "";
+
+            try {
+
+                result = intObject.toString();
+
+            } catch (Exception ex) {
+
+                Log.e(TAG, "The integer object threw an exception during string translation, defaulting to an empty string");
+
+            }
+
+            // With a string in hand, populate the TextView
+            populateTextView(result, textView);
+
+        } else {
+
+            Log.e(TAG, "The integer object was null, defaulting to an empty string");
+
+            // The object was null, default to an empty string
+            populateTextView("", textView);
+
+        }
+
+    }
+
+    /**
+     * Helper method that protects against bad data when populating TextView(s).
+     *
+     * @param text - The text to set in the view
+     * @param textView - The view to set with the text parameter
+     */
+    protected void populateTextView(String text, TextView textView) {
+
+        // For safety, check as well (I've seen it) ...
+        if (textView != null) {
+
+            // Verify there is text to work with and empty out if nothing is there.
+            if ((text != null) && (!text.isEmpty())) {
+
+                textView.setText(text);
+
+            } else {
+
+                textView.setText("");
+
+            }
+
+        } else {
+
+            Log.e(TAG, "The TextView object was null, unable to populate");
+
+        }
+
+    }
+
+    /**
      * The purpose of this interface implementation is to start the Details Activity of either a
      * user or a project.  The point to making the Main Activity implement is to support both the
      * phone and tablet layout of the app.  Phone layouts will just start a new activity and
@@ -311,7 +425,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
             }
             default: {
-                // TODO: log an error and whatnot
+                // Do nothing
             }
 
         }
@@ -361,9 +475,9 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
                 int bitmapHeight = bitmap.getHeight();
                 int borderWidthHalf = 10;
                 int bitmapSquareWidth = Math.min(bitmapWidth,bitmapHeight);
-                int newBitmapSquareWidth = bitmapSquareWidth+borderWidthHalf;
+                int newBitmapSquare = bitmapSquareWidth+borderWidthHalf;
 
-                Bitmap roundedBitmap = Bitmap.createBitmap(newBitmapSquareWidth,newBitmapSquareWidth,Bitmap.Config.ARGB_8888);
+                Bitmap roundedBitmap = Bitmap.createBitmap(newBitmapSquare,newBitmapSquare,Bitmap.Config.ARGB_8888);
 
                 // Initialize a new Canvas to draw empty bitmap
                 Canvas canvas = new Canvas(roundedBitmap);
@@ -380,7 +494,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
                 borderPaint.setStrokeWidth(borderWidthHalf*2);
                 borderPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.myapp_accent_700, null));
 
-                canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquareWidth/2, borderPaint);
+                canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquare/2, borderPaint);
 
                 RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), roundedBitmap);
                 circularBitmapDrawable.setCircular(true);

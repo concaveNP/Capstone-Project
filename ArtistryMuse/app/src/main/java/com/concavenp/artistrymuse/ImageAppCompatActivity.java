@@ -19,16 +19,11 @@ import android.widget.ImageView;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.concavenp.artistrymuse.ImageAppCompatActivity.ImageShape.IMAGE_SHAPE_RECTANGLE;
-
 /**
- * TODO: this is wrong, update the comment block
- *
  *
  * References:
  *
@@ -57,7 +52,6 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
     // camera or an existing image.
     private static final int REQUEST_IMAGE_STORE = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-
 
     // When required, this app can ask for the user's permission to read from external storage if
     // choosing a image from a gallery is decided.  In this event the result from an activity
@@ -125,16 +119,16 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
                                     case 0: {
 
                                         // Take a picture
-                                        dispatchTakePictureIntent(mImageType);
+                                        dispatchTakePictureIntent();
 
                                         break;
 
                                     }
                                     case 1: {
 
-                                        // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+                                        // ACTION_GET_CONTENT is the intent to choose a file via the system's file
                                         // browser.
-                                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 
                                         // Filter to only show results that can be "opened", such as a
                                         // file (as opposed to a list of contacts or timezones)
@@ -292,6 +286,7 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
 
             // The input location of the external file
             ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(mSelectedImageUri, "r");
+
             FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
             FileInputStream fileInputStream = new FileInputStream(fileDescriptor);
 
@@ -316,14 +311,7 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
             // Add the new (at least to this App) image to the system's Media Provider
             galleryAddPic(mImagePath);
 
-        } catch (FileNotFoundException e) {
-
-            // TODO: better error handling
-
-            Log.d(TAG,e.getMessage());
-            e.printStackTrace();
-
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
 
             Log.d(TAG,e.getMessage());
             e.printStackTrace();
@@ -332,11 +320,7 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
 
     }
 
-    /**
-     *
-     * @param type - The type is a number that is one of the following: REQUEST_PROFILE_IMAGE_STORE or REQUEST_HEADER_IMAGE_STORE
-     */
-    protected void dispatchTakePictureIntent(int type) {
+    protected void dispatchTakePictureIntent() {
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -384,8 +368,6 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
      */
     protected void galleryAddPic(String path) {
 
-        // TODO: dunno if this works, Save off this TODO external to code and remove TODO
-
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File file = new File(path);
         Uri contentUri = Uri.fromFile(file);
@@ -405,7 +387,7 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
     protected ImageShape getRectangleOrCircle(int type) {
 
         // The default will always be to provide a rectangle image shape
-        return IMAGE_SHAPE_RECTANGLE;
+        return ImageShape.IMAGE_SHAPE_RECTANGLE;
 
     }
 

@@ -59,51 +59,39 @@ public class UserResponseViewHolder extends BaseViewHolder {
         // Verify there is data to work with
         if (response._source != null) {
 
-            populateImageView(
-                    buildFileReference(
-                            response.get_source().getUid(),
-                            response.get_source().getHeaderImageUid(),
-                            StorageDataType.USERS),
-                    headerImageView);
-            populateImageView(
-                    buildFileReference(
-                            response.get_source().getUid(),
-                            response.get_source().getProfileImageUid(),
-                            StorageDataType.USERS),
-                    profileImageView);
-            populateTextView( usernameTextView.getResources().getString(R.string.user_indication_symbol) + response.get_source().getUsername(), usernameTextView);
+            populateImageView( buildFileReference( response.get_source().getUid(), response.get_source().getHeaderImageUid(), StorageDataType.USERS), headerImageView);
+            populateImageView( buildFileReference( response.get_source().getUid(), response.get_source().getProfileImageUid(), StorageDataType.USERS), profileImageView);
+            populateTextView( itemView.getResources().getString(R.string.user_indication_symbol) + response.get_source().getUsername(), usernameTextView);
             populateTextView( response.get_source().getSummary(), authorTextView);
             populateTextView( response.get_source().getDescription(), descriptionTextView);
-
-            // Protection against bad data
-            try {
-                populateTextView(Integer.toString(response.get_source().getFollowedCount()), followedTextView);
-            }
-            catch (NullPointerException ex) {
-                populateTextView("?", followedTextView);
-            }
+            populateTextView( response.get_source().getFollowedCount(), followedTextView);
 
             // Protection against bad data
             try {
                 populateTextView(Integer.toString(response.get_source().getFollowing().size()), followingTextView);
             }
             catch (NullPointerException ex) {
-                populateTextView("?", followingTextView);
+                populateTextView("", followingTextView);
             }
 
             // Create stable UID for override
             final String uid = response.get_source().getUid();
 
-            // Add a click listener to the view in order for the user to get more details about a selected movie
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            // Protection
+            if ((uid != null) && (!uid.isEmpty())) {
 
-                    // Notify the the listener (aka MainActivity) of the details selection
-                    listener.onInteractionSelection(uid, null, StorageDataType.USERS, UserInteractionType.DETAILS);
+                // Add a click listener to the view in order for the user to get more details about a selected movie
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-                }
-            });
+                        // Notify the the listener (aka MainActivity) of the details selection
+                        listener.onInteractionSelection(uid, null, StorageDataType.USERS, UserInteractionType.DETAILS);
+
+                    }
+                });
+
+            }
 
         }
 

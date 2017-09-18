@@ -54,12 +54,17 @@ public class DownloadService extends BaseTaskService {
 
         if (ACTION_DOWNLOAD.equals(intent.getAction())) {
 
-            // Get the path to download from the intent
-            String filename = intent.getStringExtra(EXTRA_DOWNLOAD_FILENAME);
+            // Verify there is a user logged in before continuing
+            if (!getUid().isEmpty()) {
 
-            final String fileReference = getString(R.string.users_directory_name) + getString(R.string.firebase_separator) + getUid() + getString(R.string.firebase_separator) + filename;
+                // Get the path to download from the intent
+                String filename = intent.getStringExtra(EXTRA_DOWNLOAD_FILENAME);
 
-            downloadFromPath(fileReference);
+                final String fileReference = getString(R.string.users_directory_name) + getString(R.string.firebase_separator) + getUid() + getString(R.string.firebase_separator) + filename;
+
+                downloadFromPath(fileReference);
+
+            }
 
         }
 

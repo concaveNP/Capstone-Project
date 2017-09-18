@@ -56,26 +56,18 @@ public class ProjectResponseViewHolder extends BaseViewHolder {
         }
 
         // Display items to be populated
-        final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.avatar_ImageView);
-        final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_textview);
-        final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
-        final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
-        final TextView followingTextView = (TextView) itemView.findViewById(R.id.views_textView);
+        final ImageView mainImageView = itemView.findViewById(R.id.main_imageView);
+        final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
+        final TextView usernameTextView = itemView.findViewById(R.id.username_textview);
+        final TextView descriptionTextView = itemView.findViewById(R.id.description_textView);
+        final TextView followedTextView = itemView.findViewById(R.id.followed_textview);
+        final TextView followingTextView = itemView.findViewById(R.id.views_textView);
 
         // Verify there is data to work with
         if (response._source != null) {
 
-            populateImageView(
-                    buildFileReference(
-                            response.get_source().getUid(),
-                            response.get_source().getMainImageUid(),
-                            StorageDataType.PROJECTS),
-                    mainImageView);
-            populateTextView(
-                    response.get_source().getDescription(),
-                    descriptionTextView);
-
+            populateImageView( buildFileReference( response.get_source().getUid(), response.get_source().getMainImageUid(), StorageDataType.PROJECTS), mainImageView);
+            populateTextView( response.get_source().getDescription(), descriptionTextView);
 //                    populateTextView(Integer.toString(user.getfollowedCount), followedTextView);
 //                    populateTextView(Integer.toString(user.getfollowing.size()), followingTextView);
 
@@ -97,18 +89,23 @@ public class ProjectResponseViewHolder extends BaseViewHolder {
                         // Create stable UID for override
                         final String uid = user.getUid();
 
-                        // Add a click listener to the view in order for the user to get more details about a selected movie
-                        itemView.setOnClickListener(new View.OnClickListener() {
+                        // Protection
+                        if ((uid != null) && (!uid.isEmpty())) {
 
-                            @Override
-                            public void onClick(View view) {
+                            // Add a click listener to the view in order for the user to get more details about a selected movie
+                            itemView.setOnClickListener(new View.OnClickListener() {
 
-                                // Notify the the listener (aka MainActivity) of the details selection
-                                listener.onInteractionSelection(uid, null, StorageDataType.USERS, UserInteractionType.DETAILS);
+                                @Override
+                                public void onClick(View view) {
 
-                            }
+                                    // Notify the the listener (aka MainActivity) of the details selection
+                                    listener.onInteractionSelection(uid, null, StorageDataType.USERS, UserInteractionType.DETAILS);
 
-                        });
+                                }
+
+                            });
+
+                        }
 
                     }
 
@@ -121,34 +118,29 @@ public class ProjectResponseViewHolder extends BaseViewHolder {
 
             });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
             // Create stable UID for override
             final String uid = response.get_source().getUid();
 
-            // Add a click listener to the view in order for the user to get more details about a selected movie
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            // Protection
+            if ((uid != null) && (!uid.isEmpty())) {
 
-                    // Notify the the listener (aka MainActivity) of the details selection
-                    listener.onInteractionSelection(uid, null, StorageDataType.USERS, UserInteractionType.DETAILS);
+                // Add a click listener to the view in order for the user to get more details about a selected movie
+                itemView.setOnClickListener(new View.OnClickListener() {
 
-                }
-            });
+                    @Override
+                    public void onClick(View view) {
+
+                        // Notify the the listener (aka MainActivity) of the details selection
+                        listener.onInteractionSelection(uid, null, StorageDataType.USERS, UserInteractionType.DETAILS);
+
+                    }
+
+                });
+
+            }
 
         }
+
     }
 
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
@@ -95,28 +97,33 @@ public class ProfileActivity extends ImageAppCompatActivity {
         // Inflate the layout for this fragment
         setContentView(R.layout.activity_profile);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_dialog_close_dark);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
 
-        mProfileImageView = (ImageView) findViewById(R.id.profile_profile_imageView);
-        mHeaderImageView = (ImageView) findViewById(R.id.profile_header_imageView);
-        mNameEditText = (EditText) findViewById(R.id.name_editText);
-        mUsernameEditText = (EditText) findViewById(R.id.username_editText);
-        mDescriptionEditText = (EditText) findViewById(R.id.description_editText);
-        mSummaryEditText = (EditText) findViewById(R.id.summary_editText);
+        // Protection
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_dialog_close_dark);
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
+
+        mProfileImageView = findViewById(R.id.profile_profile_imageView);
+        mHeaderImageView = findViewById(R.id.profile_header_imageView);
+        mNameEditText = findViewById(R.id.name_editText);
+        mUsernameEditText = findViewById(R.id.username_editText);
+        mDescriptionEditText = findViewById(R.id.description_editText);
+        mSummaryEditText = findViewById(R.id.summary_editText);
 
         // The "statistical" fields are generated data that is not "saved" by the user
-        final TextView favoritedTextView = (TextView) findViewById(R.id.favorited_textView);
-        final TextView viewsTextView = (TextView) findViewById(R.id.views_textView);
-        final TextView ratingTextView = (TextView) findViewById(R.id.rating_textView);
+        final TextView favoritedTextView = findViewById(R.id.favorited_textView);
+        final TextView viewsTextView = findViewById(R.id.views_textView);
+        final TextView ratingTextView = findViewById(R.id.rating_textView);
 
-        Button profileButton = (Button) findViewById(R.id.profile_profile_button);
+        Button profileButton = findViewById(R.id.profile_profile_button);
         profileButton.setOnClickListener(new ImageButtonListener(ImageType.PROFILE.ordinal()));
 
-        Button headerButton = (Button) findViewById(R.id.profile_header_button);
+        Button headerButton = findViewById(R.id.profile_header_button);
         headerButton.setOnClickListener(new ImageButtonListener(ImageType.HEADER.ordinal()));
 
         // Query for the currently saved user uid via the Saved Preferences
@@ -137,59 +144,74 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     // Update the profile details
                     populateCircularImageView(buildStorageReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), mProfileImageView);
                     populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), mHeaderImageView);
-                    mNameEditText.setText(user.getName());
-                    mUsernameEditText.setText(user.getUsername());
-                    mDescriptionEditText.setText(user.getDescription());
-                    mSummaryEditText.setText(user.getSummary());
+                    populateTextView(user.getName(), mNameEditText);
+                    populateTextView(user.getUsername(), mUsernameEditText);
+                    populateTextView(user.getDescription(), mDescriptionEditText);
+                    populateTextView(user.getSummary(), mSummaryEditText);
 
                     // Initialize the data points before running the numbers
                     favoritesTotal = 0;
                     averageRatingTotal = 0.0;
                     viewsTotal = 0;
 
-                    // Loop over all of the user's projects and tally up the data
-                    for (String projectId : user.getProjects().values()) {
+                    Map<String, String> projects = user.getProjects();
 
-                        mDatabase.child(PROJECTS.getType()).child(projectId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    if (projects != null) {
 
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Loop over all of the user's projects and tally up the data
+                        for (String projectId : projects.values()) {
 
-                                // Perform the JSON to Object conversion
-                                Project project = dataSnapshot.getValue(Project.class);
+                            mDatabase.child(PROJECTS.getType()).child(projectId).addListenerForSingleValueEvent(new ValueEventListener() {
 
-                                // Verify there is a user to work with
-                                if (project != null) {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                    // Get the needed data out from the JSON
-                                    favoritesTotal += project.getFavorited();
-                                    averageRatingTotal = (averageRatingTotal + project.getRating()) / 2;
-                                    viewsTotal += project.getViews();
+                                    // Perform the JSON to Object conversion
+                                    Project project = dataSnapshot.getValue(Project.class);
 
-                                    // Convert to strings
-                                    String favoritesResult = Integer.toString(favoritesTotal);
-                                    String ratingsResult = String.format(getString(R.string.ratings_number_format), averageRatingTotal);
-                                    String viewsResult = Integer.toString(viewsTotal);
+                                    // Verify there is a user to work with
+                                    if (project != null) {
 
-                                    // Update the views
-                                    favoritedTextView.setText(favoritesResult);
-                                    viewsTextView.setText(ratingsResult);
-                                    ratingTextView.setText(viewsResult);
+                                        try {
+
+                                            // Get the needed data out from the JSON
+                                            favoritesTotal += project.getFavorited();
+                                            averageRatingTotal = (averageRatingTotal + project.getRating()) / 2;
+                                            viewsTotal += project.getViews();
+
+                                            // Convert to strings
+                                            String favoritesResult = Integer.toString(favoritesTotal);
+                                            String ratingsResult = String.format(getString(R.string.number_format), averageRatingTotal);
+                                            String viewsResult = Integer.toString(viewsTotal);
+
+                                            // Update the views
+                                            favoritedTextView.setText(favoritesResult);
+                                            viewsTextView.setText(ratingsResult);
+                                            ratingTextView.setText(viewsResult);
+
+                                        } catch(Exception ex) {
+
+                                            Log.e(TAG, "Unable to update view totals due to problems with the data");
+
+                                        }
+
+                                    }
 
                                 }
 
-                            }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    // Do nothing
+                                }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                // Do nothing
-                            }
+                            });
 
-                        });
+                        }
 
                     }
 
                 }
+
             }
 
             @Override
@@ -231,29 +253,25 @@ public class ProfileActivity extends ImageAppCompatActivity {
 
                 // Name
                 String name = mNameEditText.getText().toString();
-                if ((name != null) && (!name.isEmpty())) {
+                if (!name.isEmpty()) {
                     mUser.setName(name);
                 }
 
-                // TODO: put in a check to verify there is something here for the "name"
-
                 // Username
                 String username = mUsernameEditText.getText().toString();
-                if ((username != null) && (!username.isEmpty())) {
+                if (!username.isEmpty()) {
                     mUser.setUsername(username);
                 }
 
-                // TODO: put in a check to verify there is something here for the "username"
-
                 // Description
                 String description = mDescriptionEditText.getText().toString();
-                if ((description != null) && (!description.isEmpty())) {
+                if (!description.isEmpty()) {
                     mUser.setDescription(description);
                 }
 
                 // Summary
                 String summary = mSummaryEditText.getText().toString();
-                if ((summary != null) && (!summary.isEmpty())) {
+                if (!summary.isEmpty()) {
                     mUser.setSummary(summary);
                 }
 

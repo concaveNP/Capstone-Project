@@ -457,8 +457,11 @@ public class MainActivity extends BaseAppCompatActivity implements
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         int position = sharedPref.getInt(TAB_POSITION, DEFAULT_TAB_POSITION);
         TabLayout.Tab tab = tabLayout.getTabAt(position);
-        tab.select();
 
+        // Verify there is a tab to work with
+        if (tab != null) {
+            tab.select();
+        }
 
     }
 
@@ -483,7 +486,7 @@ public class MainActivity extends BaseAppCompatActivity implements
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(TAB_POSITION, tabPosition);
-        editor.commit();
+        editor.apply();
 
     }
 
@@ -546,10 +549,6 @@ public class MainActivity extends BaseAppCompatActivity implements
      * Intercept the signal of when keyboard presses are released.  We are specifically checking for
      * when the Enter key is hit.  If this is the case then we want to check if we are in the
      * Search fragment and signal it of the Enter press if it is.
-     *
-     * @param keyCode
-     * @param event
-     * @return
      */
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {

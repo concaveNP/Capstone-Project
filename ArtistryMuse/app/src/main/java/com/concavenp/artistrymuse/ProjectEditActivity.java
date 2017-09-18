@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.concavenp.artistrymuse.fragments.adapter.InspirationAdapter;
+import com.concavenp.artistrymuse.model.Inspiration;
 import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.User;
 import com.concavenp.artistrymuse.services.UploadService;
@@ -29,6 +31,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
@@ -57,7 +60,6 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
     private EditText mTitleEditText;
     private EditText mDescriptionEditText;
-    private InspirationAdapter mAdapter;
     private RecyclerView mRecycler;
 
     // Members used in the project's image (aka the "main" image for the project)
@@ -90,24 +92,29 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
         setContentView(R.layout.activity_project_edit);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_dialog_close_dark);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
 
-        mProjectImageView = (ImageView) findViewById(R.id.project_imageView);
-        mTitleEditText = (EditText) findViewById(R.id.title_editText);
-        mDescriptionEditText = (EditText) findViewById(R.id.description_editText);
+        // Protection
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_dialog_close_dark);
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
 
-        mRecycler = (RecyclerView) findViewById(R.id.inspirations_recycler_view);
+        mProjectImageView = findViewById(R.id.project_imageView);
+        mTitleEditText = findViewById(R.id.title_editText);
+        mDescriptionEditText = findViewById(R.id.description_editText);
+
+        mRecycler = findViewById(R.id.inspirations_recycler_view);
         mRecycler.setHasFixedSize(true);
 
         // Set up Layout
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecycler.setLayoutManager(linearLayoutManager);
 
-        Button projectButton = (Button) findViewById(R.id.project_image_button);
+        Button projectButton = findViewById(R.id.project_image_button);
         projectButton.setOnClickListener(new ImageButtonListener(ImageType.PROJECT.ordinal()));
 
         // Extract the UID from the Activity parameters
@@ -143,7 +150,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
         }
 
         // Setup the FAB
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -160,13 +167,20 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
     private void display(Project project) {
 
-        mTitleEditText.setText(project.getName());
-        mDescriptionEditText.setText(project.getDescription());
+        populateTextView(project.getName(), mTitleEditText);
+        populateTextView(project.getDescription(), mDescriptionEditText);
         populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.PROJECTS), mProjectImageView);
 
-        // Provide the recycler view the list of project strings to display
-        mAdapter = new InspirationAdapter(project.getInspirations(), this, UserInteractionType.EDIT);
-        mRecycler.setAdapter(mAdapter);
+        Map<String, Inspiration> inspirations = project.getInspirations();
+
+        // Protection
+        if (inspirations != null) {
+
+            // Provide the recycler view the list of project strings to display
+            InspirationAdapter mAdapter = new InspirationAdapter(inspirations, this, UserInteractionType.EDIT);
+            mRecycler.setAdapter(mAdapter);
+
+        }
 
     }
 
@@ -200,13 +214,13 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
                 // Title
                 String title = mTitleEditText.getText().toString();
-                if ((title != null) && (!title.isEmpty())) {
+                if (!title.isEmpty()) {
                     mProjectModel.setName(title);
                 }
 
                 // Description
                 String description = mDescriptionEditText.getText().toString();
-                if ((description != null) && (!description.isEmpty())) {
+                if (!description.isEmpty()) {
                     mProjectModel.setDescription(description);
                 }
 

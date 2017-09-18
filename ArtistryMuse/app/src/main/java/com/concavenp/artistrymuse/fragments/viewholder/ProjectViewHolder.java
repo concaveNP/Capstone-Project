@@ -57,12 +57,12 @@ public class ProjectViewHolder extends BaseViewHolder {
         }
 
         // Display items to be populated
-        final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.avatar_ImageView);
-        final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_textview);
-        final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
-        final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
-        final TextView followingTextView = (TextView) itemView.findViewById(R.id.views_textView);
+        final ImageView mainImageView = itemView.findViewById(R.id.main_imageView);
+        final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
+        final TextView usernameTextView = itemView.findViewById(R.id.username_textview);
+        final TextView descriptionTextView = itemView.findViewById(R.id.description_textView);
+        final TextView followedTextView = itemView.findViewById(R.id.followed_textview);
+        final TextView followingTextView = itemView.findViewById(R.id.views_textView);
 
         mDatabase.child(PROJECTS.getType()).child(favorite.uid).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -77,47 +77,61 @@ public class ProjectViewHolder extends BaseViewHolder {
 
                     populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.PROJECTS), mainImageView);
                     populateTextView(project.getDescription(), descriptionTextView);
-//                    populateTextView(Integer.toString(user.getfollowedCount), followedTextView);
-//                    populateTextView(Integer.toString(user.getfollowing.size()), followingTextView);
+//                    populateTextView(user.getfollowedCount, followedTextView);
+//                    populateTextView(user.getfollowing.size(), followingTextView);
 
-                    // Add a click listener to the view in order for the user to get more details about a selected movie
-                    itemView.setOnClickListener(new View.OnClickListener() {
+                    final String uid = project.getUid();
 
-                        @Override
-                        public void onClick(View view) {
+                    // Protection
+                    if ((uid != null) && (!uid.isEmpty())){
 
-                            // Notify the the listener (aka MainActivity) of the details selection
-                            listener.onInteractionSelection(project.getUid(), null, StorageDataType.PROJECTS, UserInteractionType.DETAILS);
+                        // Add a click listener to the view in order for the user to get more details about a selected movie
+                        itemView.setOnClickListener(new View.OnClickListener() {
 
-                        }
+                            @Override
+                            public void onClick(View view) {
 
-                    });
-
-                    // Query for the User specific data (aka the Project Owner)
-                    mDatabase.child(USERS.getType()).child(project.ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
-
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                            // Perform the JSON to Object conversion
-                            User user = dataSnapshot.getValue(User.class);
-
-                            // Verify there is a user to work with
-                            if (user != null) {
-
-                                populateImageView(buildFileReference(user.uid, user.profileImageUid, StorageDataType.USERS), profileImageView);
-                                populateTextView(user.username, usernameTextView);
+                                // Notify the the listener (aka MainActivity) of the details selection
+                                listener.onInteractionSelection(project.getUid(), null, StorageDataType.PROJECTS, UserInteractionType.DETAILS);
 
                             }
 
-                        }
+                        });
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            // Do nothing
-                        }
+                    }
 
-                    });
+                    final String ownerUid = project.ownerUid;
+
+                    // Protection
+                    if ((ownerUid != null) && (!ownerUid.isEmpty())) {
+
+                        // Query for the User specific data (aka the Project Owner)
+                        mDatabase.child(USERS.getType()).child(project.ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                // Perform the JSON to Object conversion
+                                User user = dataSnapshot.getValue(User.class);
+
+                                // Verify there is a user to work with
+                                if (user != null) {
+
+                                    populateImageView(buildFileReference(user.uid, user.profileImageUid, StorageDataType.USERS), profileImageView);
+                                    populateTextView(user.username, usernameTextView);
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                // Do nothing
+                            }
+
+                        });
+
+                    }
 
                 }
 
@@ -134,11 +148,16 @@ public class ProjectViewHolder extends BaseViewHolder {
 
     public void clearImages() {
 
-        final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.avatar_ImageView);
+        final ImageView mainImageView = itemView.findViewById(R.id.main_imageView);
+        final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
 
-        Glide.clear(mainImageView);
-        Glide.clear(profileImageView);
+        if (mainImageView != null) {
+            Glide.clear(mainImageView);
+        }
+
+        if (profileImageView != null) {
+            Glide.clear(profileImageView);
+        }
 
     }
 }

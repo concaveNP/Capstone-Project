@@ -15,8 +15,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Date;
-
 import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
 
 /**
@@ -70,6 +68,15 @@ public class GalleryViewHolder extends BaseViewHolder {
 
             projectUid = (String) pojoJson;
 
+            // Protection
+            if (projectUid.isEmpty()) {
+
+                Log.e(TAG, "The Project UID was not valid");
+
+                return;
+
+            }
+
         }
         else {
 
@@ -101,15 +108,17 @@ public class GalleryViewHolder extends BaseViewHolder {
                     populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.PROJECTS), mainImageView);
                     populateTextView(project.getName(), titleTextView);
                     populateTextView(project.getDescription(), descriptionTextView);
-                    populateTextView(Integer.toString(project.getFavorited()), favoritedTextView);
-                    populateTextView(Integer.toString(project.getViews()), viewsTextView);
-                    populateTextView(String.format( ratingTextView.getResources().getString(R.string.ratings_number_format), project.getRating()), ratingTextView);
+                    populateTextView(project.getFavorited(), favoritedTextView);
+                    populateTextView(project.getViews(), viewsTextView);
+                    populateTextView(project.getRating(), ratingTextView);
 
                     // Add a click listener to the view in order for the user to get more details about a selected project
                     switch (mUserInteractionType) {
                         case DETAILS:
                         case EDIT: {
+
                             itemView.setOnClickListener(new View.OnClickListener() {
+
                                 @Override
                                 public void onClick(View v) {
 
@@ -117,7 +126,9 @@ public class GalleryViewHolder extends BaseViewHolder {
                                     listener.onInteractionSelection(projectUid, null, StorageDataType.PROJECTS, mUserInteractionType);
 
                                 }
+
                             });
+
                             break;
                         }
                         case NONE:

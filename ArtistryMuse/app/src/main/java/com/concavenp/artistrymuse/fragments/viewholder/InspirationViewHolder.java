@@ -73,26 +73,45 @@ public class InspirationViewHolder extends BaseViewHolder {
         }
 
         // Display items to be populated
-        final ImageView mainImageView = (ImageView) itemView.findViewById(R.id.main_imageView);
-        final TextView titleEditText = (TextView) itemView.findViewById(R.id.title_textView);
-        final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
+        final ImageView mainImageView = itemView.findViewById(R.id.main_imageView);
+        final TextView titleEditText = itemView.findViewById(R.id.title_textView);
+        final TextView descriptionTextView = itemView.findViewById(R.id.description_textView);
 
         populateImageView(buildFileReference(inspiration.getProjectUid(), inspiration.getImageUid(), StorageDataType.PROJECTS), mainImageView);
-        titleEditText.setText(inspiration.getName());
-        descriptionTextView.setText(inspiration.getDescription());
+        populateTextView(inspiration.getName(), titleEditText);
+        populateTextView(inspiration.getDescription(), descriptionTextView);
 
         switch (mUserInteractionType) {
-            case DETAILS:
+            case DETAILS: {
+                // Currently, inspiration detailing does not exist, just drop to editing functionality
+            }
             case EDIT: {
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                        // Notify the the listener of the Inspiration selection
-                        listener.onInteractionSelection(inspiration.getProjectUid(), inspiration.getUid(), StorageDataType.INSPIRATIONS, mUserInteractionType);
+                final String projectUid = inspiration.getProjectUid();
+                final String uid = inspiration.getUid();
+
+                // Protection
+                if ((projectUid != null) && (!projectUid.isEmpty())) {
+
+                    // Protection
+                    if ((uid != null) && (!uid.isEmpty())) {
+
+                        itemView.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+
+                                // Notify the the listener of the Inspiration selection
+                                listener.onInteractionSelection(projectUid, uid, StorageDataType.INSPIRATIONS, mUserInteractionType);
+
+                            }
+
+                        });
 
                     }
-                });
+
+                }
+
                 break;
             }
             case NONE:
@@ -100,6 +119,7 @@ public class InspirationViewHolder extends BaseViewHolder {
                 // There is no action to be associated with this list item view
                 break;
             }
+
         }
 
     }
