@@ -38,16 +38,16 @@ public class UserDetailsActivity extends BaseAppCompatActivity  {
 
         setContentView(R.layout.activity_user_details);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Capture the AppBar for manipulating it after data is available to do so
-        final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        final CollapsingToolbarLayout appBarLayout = findViewById(R.id.toolbar_layout);
 
         // ImageView for setting the User backdrop
-        backdropImageView = (ImageView) appBarLayout.findViewById(R.id.user_details_backdrop);
+        backdropImageView = appBarLayout.findViewById(R.id.user_details_backdrop);
 
         // Extract the UID from the Activity parameters
         Intent intent = getIntent();

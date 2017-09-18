@@ -38,7 +38,7 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
 
         setContentView(R.layout.activity_project_details);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -47,7 +47,7 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
         final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
         // ImageView for setting the Project backdrop
-        backdropImageView = (ImageView) appBarLayout.findViewById(R.id.project_details_backdrop);
+        backdropImageView = appBarLayout.findViewById(R.id.project_details_backdrop);
 
         // Extract the UID from the Activity parameters
         Intent intent = getIntent();

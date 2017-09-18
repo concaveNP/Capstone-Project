@@ -55,67 +55,77 @@ public class UserViewHolder extends BaseViewHolder {
         }
 
         // Display items to be populated
-        final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_ImageView);
+        final ImageView headerImageView = itemView.findViewById(R.id.header_ImageView);
+        final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
+        final TextView authorTextView = itemView.findViewById(R.id.author_TextView);
+        final TextView usernameTextView = itemView.findViewById(R.id.username_TextView);
+        final TextView descriptionTextView = itemView.findViewById(R.id.description_textView);
+        final TextView followedTextView = itemView.findViewById(R.id.followed_textview);
+        final TextView followingTextView = itemView.findViewById(R.id.views_textView);
 
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.avatar_ImageView);
-        final TextView authorTextView = (TextView) itemView.findViewById(R.id.author_TextView);
-        final TextView usernameTextView = (TextView) itemView.findViewById(R.id.username_TextView);
+        final String uid = following.uid;
 
-        final TextView descriptionTextView = (TextView) itemView.findViewById(R.id.description_textView);
-        final TextView followedTextView = (TextView) itemView.findViewById(R.id.followed_textview);
-        final TextView followingTextView = (TextView) itemView.findViewById(R.id.views_textView);
+        // Protection
+        if ((uid != null) && (!uid.isEmpty())) {
 
-        mDatabase.child(USERS.getType()).child(following.uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(USERS.getType()).child(following.uid).addListenerForSingleValueEvent(new ValueEventListener() {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                // Perform the JSON to Object conversion
-                final User user = dataSnapshot.getValue(User.class);
+                    // Perform the JSON to Object conversion
+                    final User user = dataSnapshot.getValue(User.class);
 
-                // Verify there is a user to work with
-                if (user != null) {
+                    // Verify there is a user to work with
+                    if (user != null) {
 
-                    populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), headerImageView);
+                        populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), headerImageView);
+                        populateImageView(buildFileReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+                        populateTextView(user.getName(), authorTextView);
+                        populateTextView(usernameTextView.getResources().getString(R.string.user_indication_symbol) + user.getUsername(), usernameTextView);
+                        populateTextView(user.getDescription(), descriptionTextView);
+                        populateTextView(user.getFollowedCount(), followedTextView);
+                        populateTextView(user.getFollowing().size(), followingTextView);
 
-                    populateImageView(buildFileReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), profileImageView);
-                    populateTextView(user.getName(), authorTextView);
-                    populateTextView("@" + user.getUsername(), usernameTextView);
+                        final String userUid = user.getUid();
 
-                    populateTextView(user.getDescription(), descriptionTextView);
-                    populateTextView(Integer.toString(user.getFollowedCount()), followedTextView);
-                    populateTextView(Integer.toString(user.getFollowing().size()), followingTextView);
+                        // Protection
+                        if ((userUid != null) && (!userUid.isEmpty())) {
 
-                    // Add a click listener to the view in order to get more details about the user
-                    itemView.setOnClickListener(new View.OnClickListener() {
+                            // Add a click listener to the view in order to get more details about the user
+                            itemView.setOnClickListener(new View.OnClickListener() {
 
-                        @Override
-                        public void onClick(View view) {
+                                @Override
+                                public void onClick(View view) {
 
-                            // Notify the the listener (aka MainActivity) of the details selection
-                            listener.onInteractionSelection(user.getUid(), null, StorageDataType.USERS, UserInteractionType.DETAILS);
+                                    // Notify the the listener (aka MainActivity) of the details selection
+                                    listener.onInteractionSelection(userUid, null, StorageDataType.USERS, UserInteractionType.DETAILS);
+
+                                }
+
+                            });
 
                         }
 
-                    });
+                    }
 
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Do nothing
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Do nothing
-            }
+            });
 
-        });
+        }
 
     }
 
     public void clearImages() {
 
-        final ImageView headerImageView = (ImageView) itemView.findViewById(R.id.header_ImageView);
-        final ImageView profileImageView = (ImageView) itemView.findViewById(R.id.avatar_ImageView);
+        final ImageView headerImageView = itemView.findViewById(R.id.header_ImageView);
+        final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
 
         if (headerImageView != null) {
             Glide.clear(headerImageView);

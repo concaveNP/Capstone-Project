@@ -12,6 +12,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -217,6 +218,119 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
                         .into(imageView);
 
             }
+
+        }
+
+    }
+
+    /**
+     * Helper method that protects against bad data when populating TextView(s).  This overloaded
+     * method provides safe conversion protection by wrapping the Double object.
+     *
+     * @param doubleObject - The Double object to be converted to text and set in the view
+     * @param textView - The view to set with the text parameter
+     */
+    protected void populateTextView(Double doubleObject, TextView textView) {
+
+        // For safety, check as well (I've seen it) ...
+        if (textView != null) {
+
+            if (doubleObject != null) {
+
+                String result = "";
+
+                try {
+
+                    result = String.format(textView.getResources().getString(R.string.number_format), doubleObject);
+
+                } catch (Exception ex) {
+
+                    Log.e(TAG, "The double object threw an exception during string translation, defaulting to an empty string");
+
+                }
+
+                // With a string in hand, populate the TextView
+                populateTextView(result, textView);
+
+            } else {
+
+                Log.e(TAG, "The double object was null, defaulting to an empty string");
+
+                // The object was null, default to an empty string
+                populateTextView("", textView);
+
+            }
+
+        } else {
+
+            Log.e(TAG, "The TextView object was null, unable to populate");
+
+        }
+
+    }
+
+    /**
+     * Helper method that protects against bad data when populating TextView(s).  This overloaded
+     * method provides safe conversion protection by wrapping the Integer object.
+     *
+     * @param intObject - The Integer object to be converted to text and set in the view
+     * @param textView - The view to set with the text parameter
+     */
+    protected void populateTextView(Integer intObject, TextView textView) {
+
+        if (intObject != null) {
+
+            String result = "";
+
+            try {
+
+                result = intObject.toString();
+
+            } catch (Exception ex) {
+
+                Log.e(TAG, "The integer object threw an exception during string translation, defaulting to an empty string");
+
+            }
+
+            // With a string in hand, populate the TextView
+            populateTextView(result, textView);
+
+        } else {
+
+            Log.e(TAG, "The integer object was null, defaulting to an empty string");
+
+            // The object was null, default to an empty string
+            populateTextView("", textView);
+
+        }
+
+    }
+
+    /**
+     * Helper method that protects against bad data when populating TextView(s).
+     *
+     * @param text - The text to set in the view
+     * @param textView - The view to set with the text parameter
+     */
+    protected void populateTextView(String text, TextView textView) {
+
+        // For safety, check as well (I've seen it) ...
+        if (textView != null) {
+
+            // Verify there is text to work with and empty out if nothing is there.
+            if ((text != null) && (!text.isEmpty())) {
+
+                textView.setText(text);
+
+            } else {
+
+                textView.setText("");
+
+            }
+
+        } else {
+
+            Log.e(TAG, "The TextView object was null, unable to populate");
 
         }
 

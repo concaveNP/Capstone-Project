@@ -268,7 +268,7 @@
     <string name="firebase_image_type">.jpg</string>
     <string name="users_title">Users</string>
     <string name="projects_title">Projects</string>
-    <string name="ratings_number_format">%.1f</string>
+    <string name="number_format">%.1f</string>
     <string name="layout_large">layout_large</string>
     <string name="user_indication_symbol">\@</string>
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.concavenp.artistrymuse.R;
@@ -13,6 +14,8 @@ import com.concavenp.artistrymuse.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Map;
 
 import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
 import static com.concavenp.artistrymuse.StorageDataType.USERS;
@@ -64,57 +67,77 @@ public class ArtistryAppWidgetService extends BaseService {
                     if (user != null) {
 
                         // Set the title and username for the header of the widget and update it
-                        final String widgetTitle = context.getResources().getString(R.string.widget_title) + "  @" + user.getUsername();
+                        final String widgetTitle = getString(R.string.widget_title) + "  " + getString(R.string.user_indication_symbol) + user.getUsername();
                         remoteViews.setTextViewText(R.id.widget_title_textView, widgetTitle);
                         appWidgetManager.updateAppWidget(id, remoteViews);
 
-                        // Loop over all of the user's projects and tally up the data
-                        for (String projectId : user.getProjects().values()) {
+                        Map<String, String> projects = user.getProjects();
 
-                            mDatabase.child(PROJECTS.getType()).child(projectId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        // Protection
+                        if (projects != null) {
 
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Loop over all of the user's projects and tally up the data
+                            for (String projectId : projects.values()) {
 
-                                    // Perform the JSON to Object conversion
-                                    Project project = dataSnapshot.getValue(Project.class);
+                                // Protection
+                                if ((projectId != null) && (!projectId.isEmpty())) {
 
-                                    // Verify there is a user to work with
-                                    if (project != null) {
+                                    mDatabase.child(PROJECTS.getType()).child(projectId).addListenerForSingleValueEvent(new ValueEventListener() {
 
-                                        // Get the needed data out from the JSON
-                                        favoritesTotal += project.getFavorited();
-                                        averageRatingTotal = (averageRatingTotal + project.getRating()) / 2;
-                                        viewsTotal += project.getViews();
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                        // Convert to strings
-                                        String favoritesResult = Integer.toString(favoritesTotal);
-                                        String ratingsResult = String.format(getString(R.string.ratings_number_format), averageRatingTotal);
-                                        String viewsResult = Integer.toString(viewsTotal);
+                                            // Perform the JSON to Object conversion
+                                            Project project = dataSnapshot.getValue(Project.class);
 
-                                        // Update the views
-                                        remoteViews.setTextViewText(R.id.favorited_textView, favoritesResult);
-                                        remoteViews.setTextViewText(R.id.rating_textView, ratingsResult);
-                                        remoteViews.setTextViewText(R.id.views_textView, viewsResult);
+                                            // Verify there is a user to work with
+                                            if (project != null) {
 
-                                    }
+                                                try {
 
-                                    // Populate the images
-                                    remoteViews.setImageViewResource(R.id.favorited_imageView, R.drawable.ic_star_black_24dp);
-                                    remoteViews.setImageViewResource(R.id.rating_imageView, R.drawable.ic_remove_red_eye_black_24dp);
-                                    remoteViews.setImageViewResource(R.id.views_imageView, R.drawable.ic_thumb_up_black_24dp);
+                                                    // Get the needed data out from the JSON
+                                                    favoritesTotal += project.getFavorited();
+                                                    averageRatingTotal = (averageRatingTotal + project.getRating()) / 2;
+                                                    viewsTotal += project.getViews();
 
-                                    // Update all of the views making up the AppWidget
-                                    appWidgetManager.updateAppWidget(id, remoteViews);
+                                                    // Convert to strings
+                                                    String favoritesResult = Integer.toString(favoritesTotal);
+                                                    String ratingsResult = String.format(getString(R.string.number_format), averageRatingTotal);
+                                                    String viewsResult = Integer.toString(viewsTotal);
+
+                                                    // Update the views
+                                                    remoteViews.setTextViewText(R.id.favorited_textView, favoritesResult);
+                                                    remoteViews.setTextViewText(R.id.rating_textView, ratingsResult);
+                                                    remoteViews.setTextViewText(R.id.views_textView, viewsResult);
+
+                                                } catch(Exception ex) {
+
+                                                    Log.e(TAG, "Unable to update widget due to problems with the data");
+
+                                                }
+
+                                            }
+
+                                            // Populate the images
+                                            remoteViews.setImageViewResource(R.id.favorited_imageView, R.drawable.ic_star_black_24dp);
+                                            remoteViews.setImageViewResource(R.id.rating_imageView, R.drawable.ic_remove_red_eye_black_24dp);
+                                            remoteViews.setImageViewResource(R.id.views_imageView, R.drawable.ic_thumb_up_black_24dp);
+
+                                            // Update all of the views making up the AppWidget
+                                            appWidgetManager.updateAppWidget(id, remoteViews);
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            // Do nothing
+                                        }
+
+                                    });
 
                                 }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    // Do nothing
-                                }
-
-                            });
+                            }
 
                         }
 

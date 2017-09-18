@@ -73,9 +73,9 @@ public class GalleryFragment extends BaseFragment {
         View mainView = inflater.inflate(R.layout.fragment_gallery, container, false);
 
         // Save off the flipper for use in deciding which view to show
-        mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_gallery_ViewFlipper);
+        mFlipper = mainView.findViewById(R.id.fragment_gallery_ViewFlipper);
 
-        mRecycler = (RecyclerView) mainView.findViewById(R.id.gallery_recycler_view);
+        mRecycler = mainView.findViewById(R.id.gallery_recycler_view);
         mRecycler.setHasFixedSize(true);
 
         // Set up Layout

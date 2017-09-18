@@ -64,7 +64,7 @@ public class FavoritesFragment extends BaseFragment {
         View mainView = inflater.inflate(R.layout.fragment_favorites, container, false);
 
         // Save off the flipper for use in deciding which view to show
-        mFlipper = (ViewFlipper) mainView.findViewById(R.id.fragment_favorites_ViewFlipper);
+        mFlipper = mainView.findViewById(R.id.fragment_favorites_ViewFlipper);
 
         // Refresh the data displayed
         refresh();

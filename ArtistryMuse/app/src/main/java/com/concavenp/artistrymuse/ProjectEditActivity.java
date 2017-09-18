@@ -90,24 +90,24 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
         setContentView(R.layout.activity_project_edit);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_dialog_close_dark);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        mProjectImageView = (ImageView) findViewById(R.id.project_imageView);
-        mTitleEditText = (EditText) findViewById(R.id.title_editText);
-        mDescriptionEditText = (EditText) findViewById(R.id.description_editText);
+        mProjectImageView = findViewById(R.id.project_imageView);
+        mTitleEditText = findViewById(R.id.title_editText);
+        mDescriptionEditText = findViewById(R.id.description_editText);
 
-        mRecycler = (RecyclerView) findViewById(R.id.inspirations_recycler_view);
+        mRecycler = findViewById(R.id.inspirations_recycler_view);
         mRecycler.setHasFixedSize(true);
 
         // Set up Layout
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecycler.setLayoutManager(linearLayoutManager);
 
-        Button projectButton = (Button) findViewById(R.id.project_image_button);
+        Button projectButton = findViewById(R.id.project_image_button);
         projectButton.setOnClickListener(new ImageButtonListener(ImageType.PROJECT.ordinal()));
 
         // Extract the UID from the Activity parameters
@@ -143,7 +143,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
         }
 
         // Setup the FAB
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -200,13 +200,13 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
                 // Title
                 String title = mTitleEditText.getText().toString();
-                if ((title != null) && (!title.isEmpty())) {
+                if (!title.isEmpty()) {
                     mProjectModel.setName(title);
                 }
 
                 // Description
                 String description = mDescriptionEditText.getText().toString();
-                if ((description != null) && (!description.isEmpty())) {
+                if (!description.isEmpty()) {
                     mProjectModel.setDescription(description);
                 }
 
