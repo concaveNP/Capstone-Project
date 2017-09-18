@@ -425,7 +425,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
 
             }
             default: {
-                // TODO: log an error and whatnot
+                // Do nothing
             }
 
         }
@@ -475,9 +475,9 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
                 int bitmapHeight = bitmap.getHeight();
                 int borderWidthHalf = 10;
                 int bitmapSquareWidth = Math.min(bitmapWidth,bitmapHeight);
-                int newBitmapSquareWidth = bitmapSquareWidth+borderWidthHalf;
+                int newBitmapSquare = bitmapSquareWidth+borderWidthHalf;
 
-                Bitmap roundedBitmap = Bitmap.createBitmap(newBitmapSquareWidth,newBitmapSquareWidth,Bitmap.Config.ARGB_8888);
+                Bitmap roundedBitmap = Bitmap.createBitmap(newBitmapSquare,newBitmapSquare,Bitmap.Config.ARGB_8888);
 
                 // Initialize a new Canvas to draw empty bitmap
                 Canvas canvas = new Canvas(roundedBitmap);
@@ -494,7 +494,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
                 borderPaint.setStrokeWidth(borderWidthHalf*2);
                 borderPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.myapp_accent_700, null));
 
-                canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquareWidth/2, borderPaint);
+                canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquare/2, borderPaint);
 
                 RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), roundedBitmap);
                 circularBitmapDrawable.setCircular(true);

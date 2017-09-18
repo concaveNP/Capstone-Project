@@ -61,7 +61,7 @@ public class UserResponseViewHolder extends BaseViewHolder {
 
             populateImageView( buildFileReference( response.get_source().getUid(), response.get_source().getHeaderImageUid(), StorageDataType.USERS), headerImageView);
             populateImageView( buildFileReference( response.get_source().getUid(), response.get_source().getProfileImageUid(), StorageDataType.USERS), profileImageView);
-            populateTextView( usernameTextView.getResources().getString(R.string.user_indication_symbol) + response.get_source().getUsername(), usernameTextView);
+            populateTextView( itemView.getResources().getString(R.string.user_indication_symbol) + response.get_source().getUsername(), usernameTextView);
             populateTextView( response.get_source().getSummary(), authorTextView);
             populateTextView( response.get_source().getDescription(), descriptionTextView);
             populateTextView( response.get_source().getFollowedCount(), followedTextView);

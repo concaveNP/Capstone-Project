@@ -115,7 +115,7 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
                         // Protection
                         if ((uid != null) && (!uid.isEmpty())) {
 
-                            final String mainImageUid = project.getUid();
+                            final String mainImageUid = project.getMainImageUid();
 
                             // Protection
                             if ((mainImageUid != null) && (!mainImageUid.isEmpty())) {

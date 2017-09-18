@@ -142,8 +142,8 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
 
     private void display(Inspiration inspiration) {
 
-        mTitleEditText.setText(inspiration.getName());
-        mDescriptionEditText.setText(inspiration.getDescription());
+        populateTextView(inspiration.getName(), mTitleEditText);
+        populateTextView(inspiration.getDescription(), mDescriptionEditText);
         populateImageView(buildFileReference(mProjectUid, inspiration.getImageUid(), StorageDataType.PROJECTS), mInspirationImageView);
 
     }
