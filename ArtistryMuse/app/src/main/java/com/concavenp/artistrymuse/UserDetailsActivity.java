@@ -3,6 +3,7 @@ package com.concavenp.artistrymuse;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
@@ -40,8 +41,13 @@ public class UserDetailsActivity extends BaseAppCompatActivity  {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar actionBar = getSupportActionBar();
+
+        // Protection
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
 
         // Capture the AppBar for manipulating it after data is available to do so
         final CollapsingToolbarLayout appBarLayout = findViewById(R.id.toolbar_layout);
@@ -104,7 +110,21 @@ public class UserDetailsActivity extends BaseAppCompatActivity  {
                     // Verify there is a user to work with
                     if (user != null) {
 
-                        populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), backdropImageView);
+                        final String uid = user.getUid();
+
+                        // Protection
+                        if ((uid != null) && (!uid.isEmpty())) {
+
+                            final String headerImageUid = user.getHeaderImageUid();
+
+                            // Protection
+                            if ((headerImageUid != null) && (!headerImageUid.isEmpty())) {
+
+                                populateImageView(buildFileReference(uid, headerImageUid, StorageDataType.USERS), backdropImageView);
+
+                            }
+
+                        }
 
                     }
 

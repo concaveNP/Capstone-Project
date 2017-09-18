@@ -3,7 +3,6 @@ package com.concavenp.artistrymuse;
 /**
  * Created by dave on 1/30/2017.
  */
-
 public enum StorageDataType {
 
     USERS("users"),

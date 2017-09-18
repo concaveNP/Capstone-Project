@@ -3,6 +3,7 @@ package com.concavenp.artistrymuse;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
@@ -40,11 +41,16 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar actionBar = getSupportActionBar();
+
+        // Protection
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
 
         // Capture the AppBar for manipulating it after data is available to do so
-        final CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        final CollapsingToolbarLayout appBarLayout = findViewById(R.id.toolbar_layout);
 
         // ImageView for setting the Project backdrop
         backdropImageView = appBarLayout.findViewById(R.id.project_details_backdrop);
@@ -104,7 +110,21 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
                     // Verify there is a user to work with
                     if (project != null) {
 
-                        populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.PROJECTS), backdropImageView);
+                        final String uid = project.getUid();
+
+                        // Protection
+                        if ((uid != null) && (!uid.isEmpty())) {
+
+                            final String mainImageUid = project.getUid();
+
+                            // Protection
+                            if ((mainImageUid != null) && (!mainImageUid.isEmpty())) {
+
+                                populateImageView(buildFileReference(uid, mainImageUid, StorageDataType.PROJECTS), backdropImageView);
+
+                            }
+
+                        }
 
                     }
 
