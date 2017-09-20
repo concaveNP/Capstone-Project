@@ -143,15 +143,25 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
             // It is possible for the file reference string to be null, so check for it
             if ((fileReference != null) && (!fileReference.isEmpty())) {
 
-                StorageReference storageReference = mStorageRef.child(fileReference);
+                // Protection when the user moves too quickly around the activities
+                if (!this.isDestroyed()) {
 
-                // Download directly from StorageReference using Glide
-                Glide.with(this)
-                        .using(mImageLoader)
-                        .load(storageReference)
-                        .fitCenter()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(imageView);
+                    StorageReference storageReference = mStorageRef.child(fileReference);
+
+                    // Protection when the user moves too quickly around the activities
+                    if (!this.isDestroyed()) {
+
+                        // Download directly from StorageReference using Glide
+                        Glide.with(this)
+                                .using(mImageLoader)
+                                .load(storageReference)
+                                .fitCenter()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(imageView);
+
+                    }
+
+                }
 
             }
 
@@ -189,12 +199,17 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
             // It is possible for the file reference string to be null, so check for it
             if ((fileReference != null) && (!fileReference.isEmpty())) {
 
-                Glide.with(this)
-                        .load(fileReference)
-                        .asBitmap()
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(createBitmapImageViewTarget(imageView));
+                // Protection when the user moves too quickly around the activities
+                if (!this.isDestroyed()) {
+
+                    Glide.with(this)
+                            .load(fileReference)
+                            .asBitmap()
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(createBitmapImageViewTarget(imageView));
+
+                }
 
             }
 
@@ -210,12 +225,17 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
             // It is possible for the file reference string to be null, so check for it
             if ((fileReference != null) && (!fileReference.isEmpty())) {
 
-                // Download directly from StorageReference using Glide
-                Glide.with(this)
-                        .load(fileReference)
-                        .thumbnail(0.1f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(imageView);
+                // Protection when the user moves too quickly around the activities
+                if (!this.isDestroyed()) {
+
+                    // Download directly from StorageReference using Glide
+                    Glide.with(this)
+                            .load(fileReference)
+                            .thumbnail(0.1f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(imageView);
+
+                }
 
             }
 
