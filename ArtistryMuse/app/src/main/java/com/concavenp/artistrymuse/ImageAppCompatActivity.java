@@ -197,9 +197,6 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
 
                     }
 
-                    // Add the new (at least to this App) image to the system's Media Provider
-                    galleryAddPic(mImagePath);
-
                     break;
 
                 }
@@ -316,19 +313,6 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
     }
 
     /**
-     * Helper method that will add the photo in question to the system's Media Provider
-     */
-    protected void galleryAddPic(String path) {
-
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File file = new File(path);
-        Uri contentUri = Uri.fromFile(file);
-        mediaScanIntent.setData(contentUri);
-        sendBroadcast(mediaScanIntent);
-
-    }
-
-    /**
      * Method that given the image type (value important to sub-classes) the determined shape
      * will be returned.  Sub-classes that wish to provide a circular image presentation should
      * overload this method.
@@ -373,9 +357,11 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
 
             } catch (FileNotFoundException ex) {
 
-            } catch (IOException ex) {
+                Log.e(TAG, "Unable to retrieve file: " + ex.toString());
 
-            } catch (NullPointerException ex) {
+            } catch (IOException | NullPointerException ex) {
+
+                Log.e(TAG, "Unable to retrieve file: " + ex.toString());
 
             }
 
@@ -400,9 +386,6 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
                 }
 
             }
-
-            // Add the new (at least to this App) image to the system's Media Provider
-            galleryAddPic(mImagePath);
 
             // Save off the values generated from the image creation
             setSpecificImageData(getType());

@@ -12,19 +12,23 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.model.Inspiration;
 import com.concavenp.artistrymuse.model.Project;
-import com.concavenp.artistrymuse.services.UploadService;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
@@ -73,6 +77,11 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
     // cloud service (aka Firebase).
     private Inspiration mInspirationModel;
 
+    // This flipper allows the content of the activity to show the user either the list of projects
+    // or a spinner indicating the app is working on something (in this case it's uploading files
+    // and DB changes)
+    private ViewFlipper mFlipper;
+
     // The different types of the images that can be processed by the parent class
     private enum ImageType {
 
@@ -104,6 +113,9 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
 
         Button inspirationButton = findViewById(R.id.inspiration_image_button);
         inspirationButton.setOnClickListener(new ImageButtonListener(ImageType.INSPIRATION.ordinal()));
+
+        // Save off the flipper for use in deciding which view to show
+        mFlipper = findViewById(R.id.activity_inpsiration_ViewFlipper);
 
         // Extract the UID(s) from the Activity parameters
         Intent intent = getIntent();
@@ -173,6 +185,8 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
             }
             case R.id.action_save: {
 
+                List<Task<?>> tasks = new ArrayList<>();
+
                 // Move the last update time
                 mInspirationModel.setLastUpdateDate(new Date().getTime());
 
@@ -199,19 +213,8 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
                         StorageReference deleteFile = mStorageRef.child(StorageDataType.PROJECTS.getType() + getString(R.string.firebase_separator) + mProjectUid + getString(R.string.firebase_separator) + oldMainUid + getString(R.string.firebase_image_type));
 
                         // Delete the old image from Firebase storage
-                        deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // File deleted successfully
-                                Log.d(TAG, "Deleted old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Uh-oh, an error occurred!
-                                Log.e(TAG, "Error deleting old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
-                            }
-                        });
+                        Task deleteTask = deleteFile.delete();
+                        tasks.add(deleteTask);
 
                     }
                     else {
@@ -220,17 +223,12 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
 
                     // Save the new project image to the cloud storage
                     Uri file = Uri.fromFile(new File(mInspirationImagePath));
-
                     Log.d(TAG, "New image cloud storage location: " + file.toString());
 
-                    // Start MyUploadService to upload the file, so that the file is uploaded even if
-                    // this Activity is killed or put in the background
-                    startService(new Intent(this, UploadService.class)
-                            .putExtra(UploadService.EXTRA_FILE_URI, file)
-                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mInspirationImageUid.toString() + getString(R.string.firebase_image_type))
-                            .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.PROJECTS.getType())
-                            .putExtra(UploadService.EXTRA_UPLOAD_UID, mProjectUid)
-                            .setAction(UploadService.ACTION_UPLOAD));
+                    // Upload file to Firebase Storage
+                    StorageReference photoRef = mStorageRef.child(StorageDataType.PROJECTS.getType()).child(mProjectUid).child(mInspirationImageUid.toString() + getString(R.string.firebase_image_type));
+                    Task uploadTask = photoRef.putFile(file);
+                    tasks.add(uploadTask);
 
                     // Update the project model reference to the project image uid for database update
                     mInspirationModel.setImageUid(mInspirationImageUid.toString());
@@ -241,13 +239,27 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
                 }
 
                 // Write the inspiration model data it to the database
-                mDatabase.child(PROJECTS.getType()).child(mProjectUid).child(Project.INSPIRATIONS).child(mInspirationUid).setValue(mInspirationModel);
+                Task inspirationTask = mDatabase.child(PROJECTS.getType()).child(mProjectUid).child(Project.INSPIRATIONS).child(mInspirationUid).setValue(mInspirationModel);
+                tasks.add(inspirationTask);
 
                 // Update the project's last update time
-                mDatabase.child(PROJECTS.getType()).child(mProjectUid).child(Project.LAST_UPDATE_DATE).setValue(new Date().getTime());
+                Task dateTask = mDatabase.child(PROJECTS.getType()).child(mProjectUid).child(Project.LAST_UPDATE_DATE).setValue(new Date().getTime());
+                tasks.add(dateTask);
 
-                // Navigate back to the Project that this Inspiration spawned from
-                finish();
+                // Switch to the progress spinner view flipper
+                mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.activity_inspiration_saving_Flipper)));
+
+                // Close the activity when all of the tasks complete
+                Tasks.whenAll(tasks)
+                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                                // Navigate back to the Project that this Inspiration spawned from
+                                finish();
+
+                            }
+                        });
 
                 // We are handling the button click
                 return true;

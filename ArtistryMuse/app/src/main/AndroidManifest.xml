@@ -75,17 +75,10 @@
         </receiver>
 
         <service
-            android:name=".services.UploadService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".services.DownloadService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
             android:name=".services.ArtistryAppWidgetService"
             android:enabled="true"
             android:exported="false" />
+
         <service
             android:name=".services.UserAuthenticationService"
             android:enabled="true"

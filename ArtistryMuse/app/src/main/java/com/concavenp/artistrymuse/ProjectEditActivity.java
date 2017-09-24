@@ -16,21 +16,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.fragments.adapter.InspirationAdapter;
 import com.concavenp.artistrymuse.model.Inspiration;
 import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.User;
-import com.concavenp.artistrymuse.services.UploadService;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -78,6 +82,11 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
     // cloud service (aka Firebase).
     private Project mProjectModel;
 
+    // This flipper allows the content of the activity to show the user's project information
+    // or a spinner indicating the app is working on something (in this case it's uploading files
+    // and DB changes)
+    private ViewFlipper mFlipper;
+
     // The different types of the images that can be processed by the parent class
     private enum ImageType {
 
@@ -116,6 +125,9 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
         Button projectButton = findViewById(R.id.project_image_button);
         projectButton.setOnClickListener(new ImageButtonListener(ImageType.PROJECT.ordinal()));
+
+        // Save off the flipper for use in deciding which view to show
+        mFlipper = findViewById(R.id.activity_project_ViewFlipper);
 
         // Extract the UID from the Activity parameters
         Intent intent = getIntent();
@@ -209,6 +221,8 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
             }
             case R.id.action_save: {
 
+                List<Task<?>> tasks = new ArrayList<>();
+
                 // Move the last update time
                 mProjectModel.setLastUpdateDate(new Date().getTime());
 
@@ -235,19 +249,8 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                         StorageReference deleteFile = mStorageRef.child(StorageDataType.PROJECTS.getType() + getString(R.string.firebase_separator) + mProjectUid + getString(R.string.firebase_separator) + oldMainUid + getString(R.string.firebase_image_type));
 
                         // Delete the old image from Firebase storage
-                        deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // File deleted successfully
-                                Log.d(TAG, "Deleted old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Uh-oh, an error occurred!
-                                Log.e(TAG, "Error deleting old image (" + oldMainUid + ") from cloud storage for the project (" + mProjectUid + ")");
-                            }
-                        });
+                        Task deleteTask = deleteFile.delete();
+                        tasks.add(deleteTask);
 
                     }
                     else {
@@ -256,17 +259,12 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
                     // Save the new project image to the cloud storage
                     Uri file = Uri.fromFile(new File(mProjectImagePath));
-
                     Log.d(TAG, "New image cloud storage location: " + file.toString());
 
-                    // Start MyUploadService to upload the file, so that the file is uploaded even if
-                    // this Activity is killed or put in the background
-                    startService(new Intent(this, UploadService.class)
-                            .putExtra(UploadService.EXTRA_FILE_URI, file)
-                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProjectImageUid.toString() + getString(R.string.firebase_image_type))
-                            .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.PROJECTS.getType())
-                            .putExtra(UploadService.EXTRA_UPLOAD_UID, mProjectUid)
-                            .setAction(UploadService.ACTION_UPLOAD));
+                    // Upload file to Firebase Storage
+                    StorageReference photoRef = mStorageRef.child(StorageDataType.PROJECTS.getType()).child(mProjectUid).child(mProjectImageUid.toString() + getString(R.string.firebase_image_type));
+                    Task uploadTask = photoRef.putFile(file);
+                    tasks.add(uploadTask);
 
                     // Update the project model reference to the project image uid for database update
                     mProjectModel.setMainImageUid(mProjectImageUid.toString());
@@ -277,13 +275,27 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                 }
 
                 // Write the project model data it to the database
-                mDatabase.child(PROJECTS.getType()).child(mProjectUid).setValue(mProjectModel);
+                Task projectTask = mDatabase.child(PROJECTS.getType()).child(mProjectUid).setValue(mProjectModel);
+                tasks.add(projectTask);
 
                 // Update the user's list of projects to add this one if needed (if it was new)
-                mDatabase.child(USERS.getType()).child(getUid()).child(User.PROJECTS).child(mProjectUid).setValue(mProjectUid);
+                Task projectListingTask = mDatabase.child(USERS.getType()).child(getUid()).child(User.PROJECTS).child(mProjectUid).setValue(mProjectUid);
+                tasks.add(projectListingTask);
 
-                // Navigate back to the Project that this Inspiration spawned from
-                finish();
+                // Switch to the progress spinner view flipper
+                mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.activity_project_saving_Flipper)));
+
+                // Close the activity when all of the tasks complete
+                Tasks.whenAll(tasks)
+                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                                // Navigate back to the Project that this Inspiration spawned from
+                                finish();
+
+                            }
+                        });
 
                 // We are handling the button click
                 return true;

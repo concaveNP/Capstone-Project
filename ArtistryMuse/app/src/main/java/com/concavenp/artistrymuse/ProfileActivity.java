@@ -1,6 +1,5 @@
 package com.concavenp.artistrymuse;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,19 +12,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.User;
-import com.concavenp.artistrymuse.services.UploadService;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -81,6 +84,11 @@ public class ProfileActivity extends ImageAppCompatActivity {
     // cloud service (aka Firebase).
     private User mUser;
 
+    // This flipper allows the content of the activity to show the user's profile information
+    // or a spinner indicating the app is working on something (in this case it's uploading files
+    // and DB changes)
+    private ViewFlipper mFlipper;
+
     // The different types of the images that can be processed by the parent class
     private enum ImageType {
 
@@ -125,6 +133,9 @@ public class ProfileActivity extends ImageAppCompatActivity {
 
         Button headerButton = findViewById(R.id.profile_header_button);
         headerButton.setOnClickListener(new ImageButtonListener(ImageType.HEADER.ordinal()));
+
+        // Save off the flipper for use in deciding which view to show
+        mFlipper = findViewById(R.id.activity_profile_ViewFlipper);
 
         // Query for the currently saved user uid via the Saved Preferences
         mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -248,6 +259,8 @@ public class ProfileActivity extends ImageAppCompatActivity {
             }
             case R.id.action_save: {
 
+                List<Task<?>> tasks = new ArrayList<>();
+
                 // Move the last update time
                 mUser.setLastUpdatedDate(new Date().getTime());
 
@@ -286,19 +299,8 @@ public class ProfileActivity extends ImageAppCompatActivity {
                         StorageReference deleteFile = mStorageRef.child(StorageDataType.USERS.getType() + getString(R.string.firebase_separator) + mUser.getUid() + getString(R.string.firebase_separator) + oldHeaderUid + getString(R.string.firebase_image_type));
 
                         // Delete the old header image from Firebase storage
-                        deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // File deleted successfully
-                                Log.d(TAG, "Deleted old header image (" + oldHeaderUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Uh-oh, an error occurred!
-                                Log.e(TAG, "Error deleting old header image (" + oldHeaderUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
-                            }
-                        });
+                        Task deleteTask = deleteFile.delete();
+                        tasks.add(deleteTask);
 
                     }
                     else {
@@ -307,17 +309,12 @@ public class ProfileActivity extends ImageAppCompatActivity {
 
                     // Save the new profile image to the cloud storage
                     Uri file = Uri.fromFile(new File(mHeaderImagePath));
-
                     Log.d(TAG, "New header image cloud storage location: " + file.toString());
 
-                    // Start MyUploadService to upload the file, so that the file is uploaded even if
-                    // this Activity is killed or put in the background
-                    startService(new Intent(this, UploadService.class)
-                            .putExtra(UploadService.EXTRA_FILE_URI, file)
-                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mHeaderImageUid.toString() + getString(R.string.firebase_image_type))
-                            .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
-                            .putExtra(UploadService.EXTRA_UPLOAD_UID, mUser.getUid())
-                            .setAction(UploadService.ACTION_UPLOAD));
+                    // Upload file to Firebase Storage
+                    StorageReference photoRef = mStorageRef.child(StorageDataType.USERS.getType()).child(mUser.getUid()).child(mHeaderImageUid.toString() + getString(R.string.firebase_image_type));
+                    Task uploadTask = photoRef.putFile(file);
+                    tasks.add(uploadTask);
 
                     // Update the user model reference to the header image uid for database update
                     mUser.setHeaderImageUid(mHeaderImageUid.toString());
@@ -338,19 +335,8 @@ public class ProfileActivity extends ImageAppCompatActivity {
                         StorageReference deleteFile = mStorageRef.child(StorageDataType.USERS.getType() + getString(R.string.firebase_separator) + mUser.getUid() + getString(R.string.firebase_separator) + oldProfileUid + getString(R.string.firebase_image_type));
 
                         // Delete the old profile image from Firebase storage
-                        deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // File deleted successfully
-                                Log.d(TAG, "Deleted old profile image (" + oldProfileUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Uh-oh, an error occurred!
-                                Log.e(TAG, "Error deleting old profile image (" + oldProfileUid + ") from cloud storage for the user (" + mUser.getUid() + ")");
-                            }
-                        });
+                        Task deleteTask = deleteFile.delete();
+                        tasks.add(deleteTask);
 
                     }
                     else {
@@ -359,17 +345,12 @@ public class ProfileActivity extends ImageAppCompatActivity {
 
                     // Save the new profile image to the cloud storage
                     Uri file = Uri.fromFile(new File(mProfileImagePath));
-
                     Log.d(TAG, "New profile image cloud storage location: " + file.toString());
 
-                    // Start MyUploadService to upload the file, so that the file is uploaded even if
-                    // this Activity is killed or put in the background
-                    startService(new Intent(this, UploadService.class)
-                            .putExtra(UploadService.EXTRA_FILE_URI, file)
-                            .putExtra(UploadService.EXTRA_FILE_RENAMED_FILENAME, mProfileImageUid.toString() + getString(R.string.firebase_image_type))
-                            .putExtra(UploadService.EXTRA_UPLOAD_DATABASE, StorageDataType.USERS.getType())
-                            .putExtra(UploadService.EXTRA_UPLOAD_UID, mUser.getUid())
-                            .setAction(UploadService.ACTION_UPLOAD));
+                    // Upload file to Firebase Storage
+                    StorageReference photoRef = mStorageRef.child(StorageDataType.USERS.getType()).child(mUser.getUid()).child(mProfileImageUid.toString() + getString(R.string.firebase_image_type));
+                    Task uploadTask = photoRef.putFile(file);
+                    tasks.add(uploadTask);
 
                     // Update the user model reference to the profile image uid for database update
                     mUser.setProfileImageUid(mProfileImageUid.toString());
@@ -380,10 +361,23 @@ public class ProfileActivity extends ImageAppCompatActivity {
                 }
 
                 // Write the user model data it to the database
-                mDatabase.child(USERS.getType()).child(mUser.getUid()).setValue(mUser);
+                Task profileTask = mDatabase.child(USERS.getType()).child(mUser.getUid()).setValue(mUser);
+                tasks.add(profileTask);
 
-                // Navigate back to the Project that this Inspiration spawned from
-                finish();
+                // Switch to the progress spinner view flipper
+                mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.activity_profile_saving_Flipper)));
+
+                // Close the activity when all of the tasks complete
+                Tasks.whenAll(tasks)
+                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                                // Navigate back to the Project that this Inspiration spawned from
+                                finish();
+
+                            }
+                        });
 
                 // We are handling the button click
                 return true;
