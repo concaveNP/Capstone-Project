@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,6 +33,8 @@ import com.concavenp.artistrymuse.fragments.adapter.SearchFragmentPagerAdapter;
  *      - https://stackoverflow.com/questions/13135447/setting-onclicklistner-for-the-drawable-right-of-an-edittext
  * How to add icon inside EditText view in Android ?
  *      - https://stackoverflow.com/questions/4281749/how-to-add-icon-inside-edittext-view-in-android
+ * android determine if device is in right to left language/layout
+ *      - https://stackoverflow.com/questions/26549354/android-determine-if-device-is-in-right-to-left-language-layout
  */
 public class SearchFragment extends BaseFragment {
 
@@ -57,9 +60,7 @@ public class SearchFragment extends BaseFragment {
      */
     public static SearchFragment newInstance() {
 
-        SearchFragment fragment = new SearchFragment();
-
-        return fragment;
+        return new SearchFragment();
 
     }
 
@@ -99,6 +100,7 @@ public class SearchFragment extends BaseFragment {
         });
         mSearchEditText.setOnTouchListener(new View.OnTouchListener() {
 
+            @SuppressWarnings("unused")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -109,12 +111,25 @@ public class SearchFragment extends BaseFragment {
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
 
-                    if(event.getRawX() >= (mSearchEditText.getRight() - mSearchEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    // Check the layout direction to support LTR or RTL
+                    if (ViewCompat.getLayoutDirection(mSearchEditText) == ViewCompat.LAYOUT_DIRECTION_LTR) {
+                        if(event.getRawX() >= (mSearchEditText.getRight() - mSearchEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
 
-                        performSearch();
+                            performSearch();
 
-                        return true;
+                            return true;
+                        }
                     }
+                    else {
+                        if(event.getRawX() <= (mSearchEditText.getLeft() + mSearchEditText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
+
+                            performSearch();
+
+                            return true;
+                        }
+                    }
+
+
 
                 }
 
@@ -174,7 +189,7 @@ public class SearchFragment extends BaseFragment {
 
     public interface OnSearchButtonListener {
 
-        // TODO: Update argument type and name
+        @SuppressWarnings("unused")
         void onSearchButtonInteraction(String search);
 
     }
