@@ -377,11 +377,16 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
             // Load the captured image into the ImageView widget
             switch(getRectangleOrCircle(getType())) {
                 case IMAGE_SHAPE_CIRCLE: {
+
                     populateCircularImageView(mImagePath, mImageView);
+
+                    break;
                 }
                 case IMAGE_SHAPE_RECTANGLE:
                 default: {
+
                     populateThumbnailImageView(mImagePath, mImageView);
+
                     break;
                 }
 
