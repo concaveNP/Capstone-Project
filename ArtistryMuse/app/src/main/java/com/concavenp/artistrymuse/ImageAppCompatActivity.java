@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
@@ -195,9 +197,6 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
 
                     }
 
-                    // Add the new (at least to this App) image to the system's Media Provider
-                    galleryAddPic(mImagePath);
-
                     break;
 
                 }
@@ -228,11 +227,8 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
 
                     } else {
 
-                        // Copy the file locally and set the thumbnail
-                        processExternalUri(getSpecificImageView(getType()));
-
-                        // Save off the values generated from the image creation
-                        setSpecificImageData(getType());
+                        // Copy the file locally and set the thumbnail and Save off the values generated from the image creation
+                        new ProcessExternalUriTask().execute(getSpecificImageView(getType()));
 
                     }
 
@@ -256,11 +252,8 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // Copy the file locally and set the thumbnail
-                    processExternalUri(getSpecificImageView(getType()));
-
-                    // Save off the values generated from the image creation
-                    setSpecificImageData(getType());
+                    // Copy the file locally and set the thumbnail and Save off the values generated from the image creation
+                    new ProcessExternalUriTask().execute(getSpecificImageView(getType()));
 
                 } else {
 
@@ -271,50 +264,6 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
 
                 break;
             }
-
-        }
-
-    }
-
-    protected void processExternalUri(ImageView view) {
-
-        try {
-
-            // The output location of the copied file
-            File galleryFile = createImageFile();
-            FileOutputStream fileOutputStream = new FileOutputStream(galleryFile);
-
-            // The input location of the external file
-            ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(mSelectedImageUri, "r");
-
-            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-            FileInputStream fileInputStream = new FileInputStream(fileDescriptor);
-
-            copyFile(fileInputStream, fileOutputStream);
-
-            // Load the captured image into the ImageView widget
-            switch(getRectangleOrCircle(getType())) {
-                case IMAGE_SHAPE_CIRCLE: {
-                    populateCircularImageView(mImagePath, view);
-                    break;
-                }
-                case IMAGE_SHAPE_RECTANGLE:
-                default: {
-                    populateThumbnailImageView(mImagePath, view);
-                    break;
-                }
-
-            }
-
-            parcelFileDescriptor.close();
-
-            // Add the new (at least to this App) image to the system's Media Provider
-            galleryAddPic(mImagePath);
-
-        } catch (IOException | NullPointerException e) {
-
-            Log.d(TAG,e.getMessage());
-            e.printStackTrace();
 
         }
 
@@ -364,19 +313,6 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
     }
 
     /**
-     * Helper method that will add the photo in question to the system's Media Provider
-     */
-    protected void galleryAddPic(String path) {
-
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File file = new File(path);
-        Uri contentUri = Uri.fromFile(file);
-        mediaScanIntent.setData(contentUri);
-        sendBroadcast(mediaScanIntent);
-
-    }
-
-    /**
      * Method that given the image type (value important to sub-classes) the determined shape
      * will be returned.  Sub-classes that wish to provide a circular image presentation should
      * overload this method.
@@ -388,6 +324,73 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
 
         // The default will always be to provide a rectangle image shape
         return ImageShape.IMAGE_SHAPE_RECTANGLE;
+
+    }
+
+    private class ProcessExternalUriTask extends AsyncTask<ImageView, Void, Void> {
+
+        // This will be the view that will be updated in the Post work method
+        private ImageView mImageView;
+
+        @Override
+        protected Void doInBackground(ImageView... imageViews) {
+
+            // Store the particular view that will be updated
+            mImageView = imageViews[0];
+
+            try {
+
+                // The output location of the copied file
+                File galleryFile = createImageFile();
+                FileOutputStream fileOutputStream = new FileOutputStream(galleryFile);
+
+                // The input location of the external file
+                ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(mSelectedImageUri, "r");
+
+                FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+                FileInputStream fileInputStream = new FileInputStream(fileDescriptor);
+
+                // Perform the actual work of moving bits
+                copyFile(fileInputStream, fileOutputStream);
+
+                parcelFileDescriptor.close();
+
+            } catch (FileNotFoundException ex) {
+
+                Log.e(TAG, "Unable to retrieve file: " + ex.toString());
+
+            } catch (IOException | NullPointerException ex) {
+
+                Log.e(TAG, "Unable to retrieve file: " + ex.toString());
+
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            super.onPostExecute(aVoid);
+
+            // Load the captured image into the ImageView widget
+            switch(getRectangleOrCircle(getType())) {
+                case IMAGE_SHAPE_CIRCLE: {
+                    populateCircularImageView(mImagePath, mImageView);
+                }
+                case IMAGE_SHAPE_RECTANGLE:
+                default: {
+                    populateThumbnailImageView(mImagePath, mImageView);
+                    break;
+                }
+
+            }
+
+            // Save off the values generated from the image creation
+            setSpecificImageData(getType());
+
+        }
 
     }
 

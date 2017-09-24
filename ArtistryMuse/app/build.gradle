@@ -18,7 +18,7 @@ android {
     buildToolsVersion '26.0.1'
     defaultConfig {
         applicationId "com.concavenp.artistrymuse"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -59,9 +59,9 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'pub.devrel:easypermissions:0.2.0'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:mediarouter-v7:26.0.1'
     compile 'com.android.support:design:26.0.0-alpha1'
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
-    compile 'com.android.support:design:26.0.0-alpha1'
     compile 'com.android.support:support-v4:26.0.0-alpha1'
     compile 'com.android.support:support-vector-drawable:26.0.0-alpha1'
     testCompile 'junit:junit:4.12'
