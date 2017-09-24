@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginStart="4dp"
     android:layout_marginTop="4dp"
     android:clickable="true"
     android:focusable="true"
@@ -26,48 +26,6 @@
             android:scaleType="fitCenter" />
 
         <include layout="@layout/subcontent_profile_fullname_username" />
-
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-
-            <!--<ImageView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:srcCompat="@drawable/ic_account_circle_black_24dp"-->
-                <!--android:id="@+id/profile_imageview"-->
-                <!--android:layout_weight="1"-->
-                <!--android:layout_alignParentBottom="false"-->
-                <!--tools:layout_alignBottom="@id/summary_textview"-->
-                <!--android:layout_alignTop="@+id/username_textview"-->
-                <!--android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"-->
-                <!--android:paddingStart="@dimen/myapp_text_uncommon_padding_material"-->
-                <!--android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"-->
-                <!--android:paddingTop="@dimen/myapp_text_uncommon_padding_material"/>-->
-
-            <!--<TextView-->
-                <!--android:text="Username"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/username_textview"-->
-                <!--android:layout_weight="1"-->
-                <!--android:layout_alignParentTop="true"-->
-                <!--android:layout_toRightOf="@+id/profile_imageview"-->
-                <!--android:layout_toEndOf="@+id/profile_imageview"-->
-                <!--android:paddingTop="@dimen/myapp_text_uncommon_padding_material"-->
-                <!--android:paddingBottom="@dimen/myapp_text_common_padding_material" />-->
-
-            <!--<TextView-->
-                <!--android:text="Summary"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/summary_textview"-->
-                <!--android:layout_below="@+id/username_textview"-->
-                <!--android:layout_toRightOf="@+id/profile_imageview"-->
-                <!--android:layout_toEndOf="@+id/profile_imageview"-->
-                <!--android:paddingBottom="@dimen/myapp_text_uncommon_padding_material" />-->
-
-        <!--</RelativeLayout>-->
 
         <TextView
             android:id="@+id/description_textView"

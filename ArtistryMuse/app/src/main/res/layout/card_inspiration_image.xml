@@ -16,8 +16,6 @@
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/details_margin"
             android:paddingEnd="@dimen/details_margin"
-            android:paddingLeft="@dimen/details_margin"
-            android:paddingRight="@dimen/details_margin"
             android:paddingStart="@dimen/details_margin"
             android:paddingTop="@dimen/card_top_padding"
             android:text="Image" />
@@ -28,8 +26,6 @@
             android:columnCount="1"
             android:paddingBottom="@dimen/card_top_padding"
             android:paddingEnd="@dimen/details_margin"
-            android:paddingLeft="@dimen/details_margin"
-            android:paddingRight="@dimen/details_margin"
             android:paddingStart="@dimen/details_margin">
 
             <Button

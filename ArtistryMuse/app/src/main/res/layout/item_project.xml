@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
     android:layout_marginTop="4dp"
     android:clickable="true"
     android:focusable="true"
@@ -53,7 +53,6 @@
                 android:id="@+id/username_textview"
                 android:layout_weight="1"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/avatar_ImageView"
                 android:layout_toEndOf="@+id/avatar_ImageView"
                 android:paddingTop="@dimen/myapp_text_uncommon_padding_material"
                 android:paddingBottom="@dimen/myapp_text_common_padding_material" />
