@@ -52,8 +52,8 @@
                 android:id="@+id/name_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/profile_edit_name_contentDescription"
                 android:hint="@string/title_name_profile"
-
                 android:inputType="textPersonName"
                 android:maxLength="50"
                 android:maxLines="1" />
@@ -71,8 +71,8 @@
                 android:id="@+id/username_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/profile_edit_username_contentDescription"
                 android:hint="@string/title_username_profile"
-
                 android:inputType="text"
                 android:maxLength="50"
                 android:maxLines="1" />

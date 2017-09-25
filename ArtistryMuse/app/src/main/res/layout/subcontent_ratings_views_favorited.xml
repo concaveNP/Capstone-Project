@@ -31,8 +31,8 @@
                 android:id="@+id/rating_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="TextView" />
+                android:contentDescription="@string/rating_image_contentDescription"
+                android:layout_gravity="center_vertical"/>
 
         </LinearLayout>
 
@@ -40,6 +40,7 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/rating_image_contentDescription"
             android:gravity="center"
             android:text="@string/rating_label_imageView" />
 
@@ -69,8 +70,8 @@
                 android:id="@+id/views_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="TextView" />
+                android:contentDescription="@string/views_image_contentDescription"
+                android:layout_gravity="center_vertical"/>
 
         </LinearLayout>
 
@@ -78,6 +79,7 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/views_image_contentDescription"
             android:gravity="center"
             android:text="@string/views_label_imageView" />
 
@@ -107,8 +109,8 @@
                 android:id="@+id/favorited_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="TextView" />
+                android:contentDescription="@string/favorited_image_contentDescription"
+                android:layout_gravity="center_vertical"/>
 
         </LinearLayout>
 
@@ -116,6 +118,7 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/favorited_image_contentDescription"
             android:gravity="center"
             android:text="@string/favorited_label_textView" />
 

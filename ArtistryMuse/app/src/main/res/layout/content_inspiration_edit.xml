@@ -34,6 +34,7 @@
                 android:id="@+id/title_textInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/inspiration_edit_title_contentDescription"
                 android:paddingTop="@dimen/details_margin"
                 android:paddingEnd="@dimen/details_margin"
                 android:paddingStart="@dimen/details_margin">
@@ -42,10 +43,11 @@
                     android:id="@+id/title_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/inspiration_edit_title_contentDescription"
                     android:hint="@string/title_project"
                     android:inputType="text|textMultiLine"
                     android:maxLength="@integer/maximum_characters_for_title"
-                    android:maxLines="@integer/maximum_lines_for_title"/>
+                    android:maxLines="@integer/maximum_lines_for_title" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -53,6 +55,7 @@
                 android:id="@+id/description_textInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/inspiration_edit_description_contentDescription"
                 android:paddingTop="@dimen/details_margin"
                 android:paddingEnd="@dimen/details_margin"
                 android:paddingStart="@dimen/details_margin">
@@ -61,6 +64,7 @@
                     android:id="@+id/description_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/inspiration_edit_description_contentDescription"
                     android:hint="@string/description_project"
                     android:inputType="text|textMultiLine"
                     android:maxLength="@integer/maximum_characters_for_summary"

@@ -16,7 +16,6 @@
             android:padding="@dimen/fab_margin"
             android:text="@string/no_details"/>
 
-
         <RelativeLayout
             android:id="@+id/fragment_project_saving_Flipper"
             android:layout_width="match_parent"

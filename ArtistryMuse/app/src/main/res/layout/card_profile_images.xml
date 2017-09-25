@@ -14,6 +14,7 @@
             android:id="@+id/stats_card_title_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/profile_text_buttons_contentDescription"
             android:paddingBottom="@dimen/details_margin"
             android:paddingEnd="@dimen/details_margin"
             android:paddingStart="@dimen/details_margin"
@@ -32,6 +33,7 @@
                 android:id="@+id/profile_header_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/profile_button_header_image_contentDescription"
                 android:layout_column="0"
                 android:layout_columnWeight="1"
                 android:text="HEADER" />
@@ -40,6 +42,7 @@
                 android:id="@+id/profile_profile_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/profile_button_profile_image_contentDescription"
                 android:layout_column="1"
                 android:layout_columnWeight="1"
                 android:text="AVATAR" />

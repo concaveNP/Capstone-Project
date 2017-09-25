@@ -246,11 +246,48 @@
     <string name="new_inspiration_title">New Inspiration</string>
     <string name="edit_project_title">Edit Project</string>
     <string name="edit_inspiration_title">Edit Inspiration</string>
-    <string name="project_details_image_contentDescription">The main image associated with the project.</string>
     <string name="user_details_image_contentDescription">The main image associated with the user.</string>
-    <string name="inspiration_image_contentDescription">The main image associated with the inspiration.</string>
-    <string name="profile_header_image_contentDescription">The header image associated with the profile.</string>
-    <string name="profile_avatar_image_contentDescription">The avatar image associated with the profile.</string>
+
+
+
+    <!--MainActivity-->
+    <string name="main_button_login_contentDescription">Login button</string>
+    <string name="main_fab_project_create_contentDescription">Allows for the creation of a new Project</string>
+
+    <!--ProfileActivity-->
+    <string name="profile_progressbar_contentDescription">Progress of the updating of information associated with your Profile</string>
+    <string name="profile_header_image_contentDescription">The header image associated with your Profile</string>
+    <string name="profile_avatar_image_contentDescription">The avatar image associated with your Profile</string>
+    <string name="profile_edit_name_contentDescription">Edit the Name associated with your Profile</string>
+    <string name="profile_edit_username_contentDescription">Edit the Username associated with your Profile</string>
+    <string name="profile_text_buttons_contentDescription">Contains the buttons that allows for the selection of the images associated with your avatar and header</string>
+    <string name="profile_button_header_image_contentDescription">Allows for the selection of the header image associated with your Profile</string>
+    <string name="profile_button_profile_image_contentDescription">Allows for the selection of the avatar image associated with your Profile</string>
+    <string name="profile_text_information_contentDescription">Contains the information about your Profile</string>
+    <string name="profile_text_description_contentDescription">Edit the description associated with your Profile</string>
+    <string name="profile_text_summary_contentDescription">Edit the summary associated with your Profile</string>
+
+    <!--SubcontentRatingsViewsFavorited-->
+    <string name="rating_image_contentDescription">The average rating that users have given your work</string>
+    <string name="views_image_contentDescription">The count of users who have viewed your work</string>
+    <string name="favorited_image_contentDescription">The count of users who have favorited you</string>
+
+    <!--ProjectDetailsActivity-->
+    <string name="project_details_image_contentDescription">The main image associated with the Project</string>
+
+    <!--InspirationEditActivity-->
+    <string name="inspiration_image_contentDescription">The image associated with this Inspiration</string>
+    <string name="inspiration_edit_title_contentDescription">Edit the title of this Inspiration</string>
+    <string name="inspiration_edit_description_contentDescription">Edit the description of this Inspiration</string>
+    <string name="inspiration_button_image_contentDescription">Allows for the selection of the image associated with this Inspiration</string>
+    <string name="inspiration_text_button_contentDescription">Contains the button that allows for the selection of the image associated with this Inspiration</string>
+    <string name="inspiration_progressbar_contentDescription">Progress of the updating of information associated with this Inspiration</string>
+
+
+
+
+
+
     <string name="project_image_contentDescription">The main image associated with the project.</string>
     <string name="project_description_contentDescription">Summary Description</string>
     <string name="user_description_contentDescription">Summary Description</string>
@@ -258,9 +295,6 @@
     <string name="project_followed_image_contentDescription">The followed image associated with the project.</string>
     <string name="user_following_image_contentDescription">The following image associated with the user.</string>
     <string name="user_followed_image_contentDescription">The followed image associated with the user.</string>
-    <string name="rating_image_contentDescription">The rating image associated with the user.</string>
-    <string name="views_image_contentDescription">The views image associated with the user.</string>
-    <string name="favorited_image_contentDescription">The favorited image associated with the user.</string>
     <string name="no_details">Select an item to see details</string>
 
     <!--These values are used with Firebase services-->
