@@ -17,6 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/widget_text_title_contentDescription"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/widget_title"
             android:id="@+id/widget_title_textView"/>

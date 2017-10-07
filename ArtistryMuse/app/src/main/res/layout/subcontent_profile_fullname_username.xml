@@ -26,6 +26,7 @@
             android:id="@+id/author_TextView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/subcontent_text_author_contentDescription"
             android:text="@string/default_author_text"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -33,6 +34,7 @@
             android:id="@+id/username_TextView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/subcontent_text_username_contentDescription"
             android:text="@string/default_username_text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 

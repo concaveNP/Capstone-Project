@@ -24,9 +24,9 @@
                 android:id="@+id/summary_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/content_user_details_text_summary_contentDescription"
                 android:layout_columnSpan="2"
                 android:layout_marginBottom="@dimen/details_margin"
-                android:contentDescription="@string/user_description_contentDescription"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 tools:text="Summary Description" />
 
@@ -47,6 +47,7 @@
                         android:id="@+id/project_count_textView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/content_user_details_text_count_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="0"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -55,6 +56,7 @@
                         android:id="@+id/project_count_label_textView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/content_user_details_text_count_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/projects_label_string"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -70,6 +72,7 @@
                         android:id="@+id/followed_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/content_user_details_followers_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="0"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -78,6 +81,7 @@
                         android:id="@+id/followed_label_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/content_user_details_followers_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/followed_label_string"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -94,6 +98,7 @@
                         android:id="@+id/following_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/content_user_details_following_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="0"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -102,6 +107,7 @@
                         android:id="@+id/following_Label_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/content_user_details_following_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/following_label_string"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -118,6 +124,7 @@
                     android:id="@+id/follow_unfollow_toggleButton"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/content_user_details_button_following_contentDescription"
                     android:text="Button"
                     android:textOff="@string/following_off_text"
                     android:textOn="@string/follow_on_text" />
@@ -132,6 +139,7 @@
                     android:id="@+id/ratings_TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/content_user_details_ratings_contentDescription"
                     android:text="Average Rating Value"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -146,6 +154,7 @@
                     android:id="@+id/favorited_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/content_user_details_favorited_contentDescription"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -153,6 +162,7 @@
                     android:id="@+id/ratings_Label_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/content_user_details_ratings_contentDescription"
                     android:text="@string/rating_label_string"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 

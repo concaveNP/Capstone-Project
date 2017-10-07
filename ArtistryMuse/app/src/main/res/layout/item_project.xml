@@ -2,7 +2,6 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
@@ -24,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:contentDescription="@string/project_image_contentDescription"
+            android:contentDescription="@string/item_project_image_header_contentDescription"
             android:scaleType="fitCenter" />
 
         <RelativeLayout
@@ -38,18 +37,18 @@
                 android:layout_alignParentBottom="false"
                 android:layout_alignTop="@+id/username_textview"
                 android:layout_weight="1"
-                android:contentDescription="@string/profile_avatar_image_contentDescription"
+                android:contentDescription="@string/item_project_image_avatar_contentDescription"
                 android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
                 android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
                 android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
                 android:paddingTop="@dimen/myapp_text_uncommon_padding_material"
-                app:srcCompat="@drawable/ic_account_circle_black_24dp"
-                tools:layout_alignBottom="@id/summary_textview" />
+                app:srcCompat="@drawable/ic_account_circle_black_24dp"/>
 
             <TextView
                 android:text="Username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/item_project_text_avatar_contentDescription"
                 android:id="@+id/username_textview"
                 android:layout_weight="1"
                 android:layout_alignParentTop="true"
@@ -63,6 +62,7 @@
             android:id="@+id/description_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/item_project_text_description_contentDescription"
             style="@style/AppTheme.Card.Description"
             android:ellipsize="end"
             android:maxLines="3"
@@ -75,6 +75,7 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="@dimen/myapp_divider_material"
+            android:contentDescription="@string/item_project_divider_contentDescription"
             android:background="@color/myapp_light_on_dark_dividers"
             android:visibility="gone" />
 
@@ -91,7 +92,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/project_following_image_contentDescription"
+                    android:contentDescription="@string/item_project_image_followed_contentDescription"
                     android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
                     android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
                     android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
@@ -102,6 +103,7 @@
                     android:text="TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/item_project_text_followed_contentDescription"
                     android:id="@+id/followed_textview"
                     android:layout_gravity="center_vertical" />
 
@@ -115,7 +117,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/project_followed_image_contentDescription"
+                    android:contentDescription="@string/item_project_image_views_contentDescription"
                     android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
                     android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
                     android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
@@ -126,6 +128,7 @@
                     android:text="TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/item_project_text_views_contentDescription"
                     android:id="@+id/views_textView"
                     android:layout_gravity="center_vertical" />
 

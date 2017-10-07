@@ -249,6 +249,9 @@
     <string name="user_details_image_contentDescription">The main image associated with the user.</string>
 
 
+    <!--######################-->
+    <!--# contentDescriptions-->
+    <!--##\/\/\/\/\/\/\/\/\/##-->
 
     <!--MainActivity-->
     <string name="main_button_login_contentDescription">Login button</string>
@@ -272,8 +275,19 @@
     <string name="views_image_contentDescription">The count of users who have viewed your work</string>
     <string name="favorited_image_contentDescription">The count of users who have favorited you</string>
 
+    <!--SubcontentProfileFullnameUsername-->
+    <string name="subcontent_text_author_contentDescription">The name of the author</string>
+    <string name="subcontent_text_username_contentDescription">The username of the author</string>
+
     <!--ProjectDetailsActivity-->
     <string name="project_details_image_contentDescription">The main image associated with the Project</string>
+    <string name="project_details_no_items_selected_contentDescription">There are currently no Project items selected to show the details of</string>
+    <string name="project_description_contentDescription">The Project summary description</string>
+    <string name="project_projects_count_contentDescription">The number of projects this project\'s owner has</string>
+    <string name="project_followed_count_contentDescription">The number of followers this project has</string>
+    <string name="project_following_count_contentDescription">The number of users being followed by this project\'s owner</string>
+    <string name="project_favorite_button_contentDescription">This button allows you to favorite and un-favorite this project</string>
+    <string name="project_average_rating_contentDescription">This is the average rating that users have given this project</string>
 
     <!--InspirationEditActivity-->
     <string name="inspiration_image_contentDescription">The image associated with this Inspiration</string>
@@ -283,18 +297,86 @@
     <string name="inspiration_text_button_contentDescription">Contains the button that allows for the selection of the image associated with this Inspiration</string>
     <string name="inspiration_progressbar_contentDescription">Progress of the updating of information associated with this Inspiration</string>
 
+    <!--ProjectEditActivity-->
+    <string name="project_edit_title_contentDescription">Edit the title of this Project</string>
+    <string name="project_edit_description_contentDescription">Edit the description of this Project</string>
+    <string name="project_edit_progressbar_contentDescription">Progress of the updating of information associated with your Project</string>
+    <string name="project_edit_fab_contentDescription">Create a new Inspiration for this Project</string>
+    <string name="project_image_contentDescription">The image associated with the project</string>
+    <string name="project_text_image_contentDescription">The image associated with the project</string>
+    <string name="project_button_image_contentDescription">Allows for the selection of the image associated with this Project</string>
 
+    <!--AppWidget-->
+    <string name="widget_configuration_text_configure_contentDescription">Configure this Widget</string>
+    <string name="widget_configuration_edit_title_contentDescription">Edit the title of this Widget</string>
+    <string name="widget_configuration_button_contentDescription">Set the configuration of this Widget</string>
+    <string name="widget_text_title_contentDescription">The title of this Widget</string>
 
+    <!--ItemUser-->
+    <string name="item_user_image_header_contentDescription">The header image associated with this User</string>
+    <string name="item_user_text_description_contentDescription">The description associated with this User</string>
+    <string name="item_user_image_following_contentDescription">The image associated with the number of other Users this User is Following</string>
+    <string name="item_user_text_following_contentDescription">The number of other Users this User is Following</string>
+    <string name="item_user_image_followed_contentDescription">The image associated with the number of Users who are Following this User</string>
+    <string name="item_user_text_followed_contentDescription">The number of Users who are Following this User</string>
+    <string name="item_user_divider_contentDescription">The divider used in displaying information about the associated User</string>
 
+    <!--ItemProject-->
+    <string name="item_project_image_header_contentDescription">The header image associated with this Project</string>
+    <string name="item_project_image_avatar_contentDescription">The avatar image associated with the owner of this Project</string>
+    <string name="item_project_text_avatar_contentDescription">The username associated with the owner of this Project</string>
+    <string name="item_project_text_description_contentDescription">The description associated with this Project</string>
+    <string name="item_project_divider_contentDescription">The divider used in displaying information about the associated Project</string>
+    <string name="item_project_image_followed_contentDescription">The image associated with the number of Users who are Following this Project</string>
+    <string name="item_project_text_followed_contentDescription">The number of Users who are Following this Project</string>
+    <string name="item_project_image_views_contentDescription">The image associated with the number of views of this Project</string>
+    <string name="item_project_text_views_contentDescription">The number of views of this Project</string>
 
+    <!--ItemInspiration-->
+    <string name="item_inspiration_image_main_contentDescription">The main image associated with this Inspiration</string>
+    <string name="item_inspiration_edit_title_contentDescription">Edit the title of this Inspiration</string>
+    <string name="item_inspiration_edit_summary_contentDescription">Edit the summary of this Inspiration</string>
 
-    <string name="project_image_contentDescription">The main image associated with the project.</string>
-    <string name="project_description_contentDescription">Summary Description</string>
-    <string name="user_description_contentDescription">Summary Description</string>
-    <string name="project_following_image_contentDescription">The following image associated with the project.</string>
-    <string name="project_followed_image_contentDescription">The followed image associated with the project.</string>
-    <string name="user_following_image_contentDescription">The following image associated with the user.</string>
-    <string name="user_followed_image_contentDescription">The followed image associated with the user.</string>
+    <!--ItemGallery-->
+    <string name="item_gallery_image_main_contentDescription">The main image associated with your Project</string>
+    <string name="item_gallery_text_title_contentDescription">The title of your Project</string>
+    <string name="item_gallery_text_description_contentDescription">The description of your Project</string>
+
+    <!--FragmentUserDetails-->
+    <string name="fragment_user_details_text_details_contentDescription">This message is displayed when you have not selected a User to see the details of</string>
+
+    <!--FragmentSearchResult -->
+    <string name="fragment_search_result_progressbar_contentDescription">Progress of the Search</string>
+    <string name="fragment_search_result_no_results_contentDescription">This message is displayed when there are no Search results to display</string>
+    <string name="fragment_search_result_error_contentDescription">This message is displayed when there was an error with the Search</string>
+    <string name="fragment_search_result_no_data_contentDescription">This message is displayed when there was no data returned from the Search (An error occurred)</string>
+
+    <!--FragmentSearch-->
+    <string name="fragment_search_edit_search_contentDescription">Enter the Search that will be performed</string>
+    <string name="fragment_search_nosearch_contentDescription">This message is displayed when there is no Search performed</string>
+
+    <!--FragmentGallery-->
+    <string name="fragment_gallery_nobody_contentDescription">This message is displayed when you have no Projects to display</string>
+
+    <!--FragmentFollowing-->
+    <string name="fragment_following_nobody_contentDescription">This message is displayed when you are not Following any Users</string>
+
+    <!--FragmentFavorites-->
+    <string name="fragment_favorites_nobody_contentDescription">This message is displayed when you have not Favorited any Projects</string>
+
+    <!--ContentUserDetails-->
+    <string name="content_user_details_text_summary_contentDescription">The User summary description</string>
+    <string name="content_user_details_text_count_contentDescription">The number of Projects the User has created</string>
+    <string name="content_user_details_followers_contentDescription">The number of Followers the User has</string>
+    <string name="content_user_details_following_contentDescription">The number of other Users being Followed by this User</string>
+    <string name="content_user_details_button_following_contentDescription">This button allows you the Follow and Un-follow this User</string>
+    <string name="content_user_details_ratings_contentDescription">The average rating that Users have given this User</string>
+    <string name="content_user_details_favorited_contentDescription">The count of others who have Favorited this User</string>
+
+    <!--##/\/\/\/\/\/\/\/\/\##-->
+    <!--# contentDescriptions-->
+    <!--######################-->
+
     <string name="no_details">Select an item to see details</string>
 
     <!--These values are used with Firebase services-->
