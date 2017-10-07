@@ -15,6 +15,7 @@
             android:id="@+id/fragment_following_nobody_TextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="@string/fragment_following_nobody_contentDescription"
             android:gravity="center_vertical|center_horizontal"
             android:padding="@dimen/fab_margin"
             android:text="You need to follow some people"/>

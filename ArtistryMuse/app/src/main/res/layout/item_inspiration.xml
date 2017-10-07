@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:contentDescription="@string/inspiration_image_contentDescription"
+            android:contentDescription="@string/item_inspiration_image_main_contentDescription"
             android:scaleType="centerCrop" />
 
         <LinearLayout
@@ -40,6 +40,7 @@
                     android:id="@+id/title_textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/item_inspiration_edit_title_contentDescription"
                     android:ellipsize="end"
                     android:enabled="false"
                     android:hint="@string/title_inspiration"
@@ -62,6 +63,7 @@
                     android:id="@+id/description_textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/item_inspiration_edit_summary_contentDescription"
                     android:ellipsize="end"
                     android:enabled="false"
                     android:hint="@string/description_inspiration"

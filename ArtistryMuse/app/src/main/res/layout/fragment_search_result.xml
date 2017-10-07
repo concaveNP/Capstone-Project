@@ -18,6 +18,7 @@
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/fragment_search_result_progressbar_contentDescription"
                 android:indeterminate="true" />
 
         </RelativeLayout>
@@ -26,6 +27,7 @@
             android:id="@+id/fragment_search_no_results_Flipper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="@string/fragment_search_result_no_results_contentDescription"
             android:gravity="center_vertical|center_horizontal"
             android:padding="@dimen/fab_margin"
             android:text="No results have been found" />
@@ -34,6 +36,7 @@
             android:id="@+id/fragment_search_error_Flipper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="@string/fragment_search_result_error_contentDescription"
             android:gravity="center_vertical|center_horizontal"
             android:padding="@dimen/fab_margin"
             android:text="An error has occurred during the search" />
@@ -42,6 +45,7 @@
             android:id="@+id/fragment_search_no_data_Flipper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="@string/fragment_search_result_no_data_contentDescription"
             android:gravity="center_vertical|center_horizontal"
             android:padding="@dimen/fab_margin"
             android:text="No response from the search has been found" />

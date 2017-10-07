@@ -21,8 +21,8 @@
             android:id="@+id/main_imageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/item_gallery_image_main_contentDescription"
             android:adjustViewBounds="true"
-            android:contentDescription="@string/project_image_contentDescription"
             android:scaleType="centerCrop" />
 
         <LinearLayout
@@ -32,15 +32,17 @@
 
             <TextView
                 android:id="@+id/title_textView"
-                style="@style/AppTheme.Card.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/item_gallery_text_title_contentDescription"
+                style="@style/AppTheme.Card.Title"
                 android:text="Title" />
 
             <TextView
                 android:id="@+id/description_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/item_gallery_text_description_contentDescription"
                 style="@style/AppTheme.Card.Description"
                 android:ellipsize="end"
                 android:maxLines="3"

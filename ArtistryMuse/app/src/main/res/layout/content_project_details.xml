@@ -47,6 +47,7 @@
                         android:id="@+id/project_count_textView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/project_projects_count_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="0"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -55,9 +56,11 @@
                         android:id="@+id/project_count_label_textView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/project_projects_count_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/projects_label_string"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -70,6 +73,7 @@
                         android:id="@+id/followed_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/project_followed_count_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="0"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -78,6 +82,7 @@
                         android:id="@+id/followed_label_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/project_followed_count_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/followed_label_string"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -94,6 +99,7 @@
                         android:id="@+id/following_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/project_following_count_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="0"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -102,9 +108,11 @@
                         android:id="@+id/following_Label_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/project_following_count_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/following_label_string"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -118,6 +126,7 @@
                     android:id="@+id/favorite_unfavorite_toggleButton"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/project_favorite_button_contentDescription"
                     android:text="Button"
                     android:textOff="@string/favorite_off_text"
                     android:textOn="@string/favorite_on_text" />
@@ -132,6 +141,7 @@
                     android:id="@+id/ratings_TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/project_average_rating_contentDescription"
                     android:text="Average Rating Value"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -146,6 +156,7 @@
                     android:id="@+id/favorited_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/project_favorite_button_contentDescription"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -153,6 +164,7 @@
                     android:id="@+id/ratings_Label_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/project_average_rating_contentDescription"
                     android:text="@string/rating_label_string"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 

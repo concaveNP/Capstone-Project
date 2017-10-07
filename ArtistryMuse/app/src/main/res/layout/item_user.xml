@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:contentDescription="@string/profile_header_image_contentDescription"
+            android:contentDescription="@string/item_user_image_header_contentDescription"
             android:scaleType="fitCenter" />
 
         <include layout="@layout/subcontent_profile_fullname_username" />
@@ -31,6 +31,7 @@
             android:id="@+id/description_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/item_user_text_description_contentDescription"
             style="@style/AppTheme.Card.Description"
             android:ellipsize="end"
             android:maxLines="3"
@@ -43,6 +44,7 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="@dimen/myapp_divider_material"
+            android:contentDescription="@string/item_user_divider_contentDescription"
             android:background="@color/myapp_light_on_dark_dividers"
             android:visibility="gone" />
 
@@ -59,7 +61,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/user_following_image_contentDescription"
+                    android:contentDescription="@string/item_user_image_following_contentDescription"
                     android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
                     android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
                     android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
@@ -70,6 +72,7 @@
                     android:text="TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/item_user_text_following_contentDescription"
                     android:id="@+id/followed_textview"
                     android:layout_gravity="center_vertical" />
 
@@ -83,7 +86,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/user_followed_image_contentDescription"
+                    android:contentDescription="@string/item_user_image_followed_contentDescription"
                     android:paddingBottom="@dimen/myapp_text_uncommon_padding_material"
                     android:paddingEnd="@dimen/myapp_text_uncommon_padding_material"
                     android:paddingStart="@dimen/myapp_text_uncommon_padding_material"
@@ -94,6 +97,7 @@
                     android:text="TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/item_user_text_followed_contentDescription"
                     android:id="@+id/views_textView"
                     android:layout_gravity="center_vertical" />
 

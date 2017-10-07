@@ -8,6 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/widget_configuration_text_configure_contentDescription"
         android:layout_marginBottom="8dp"
         android:text="@string/configure" />
 
@@ -15,12 +16,14 @@
         android:id="@+id/appwidget_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/widget_configuration_edit_title_contentDescription"
         android:inputType="text" />
 
     <Button
         android:id="@+id/add_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/widget_configuration_button_contentDescription"
         android:layout_marginTop="8dp"
         android:text="@string/add_widget" />
 
