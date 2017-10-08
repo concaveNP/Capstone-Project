@@ -24,13 +24,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/widget_margin"
-    android:background="@color/myapp_primary_500">
+    android:background="@color/myApp_primary_500">
 
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/myapp_primary_700"
+        android:background="@color/myApp_primary_700"
         android:padding="10dp"
         android:id="@+id/widget_header_RelativeLayout">
 

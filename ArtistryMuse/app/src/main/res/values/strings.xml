@@ -373,7 +373,7 @@
 
     <!--FragmentSearch-->
     <string name="fragment_search_edit_search_contentDescription">Enter the Search that will be performed</string>
-    <string name="fragment_search_nosearch_contentDescription">This message is displayed when there is no Search performed</string>
+    <string name="fragment_search_no_search_contentDescription">This message is displayed when there is no Search performed</string>
 
     <!--FragmentGallery-->
     <string name="fragment_gallery_nobody_contentDescription">This message is displayed when you have no Projects to display</string>
@@ -413,5 +413,22 @@
     <string name="main_tab_favorites">Favorites</string>
     <string name="main_tab_search">Search</string>
     <string name="main_tab_gallery">Gallery</string>
+    <string name="card_inspiration_image_label">Image</string>
+    <string name="card_inspiration_image_button">INSPIRATION</string>
+    <string name="card_profile_images_label">Images</string>
+    <string name="card_profile_header_button">HEADER</string>
+    <string name="card_profile_profile_button">AVATAR</string>
+    <string name="card_project_image_label">Image</string>
+    <string name="card_project_project_button">PROJECT</string>
+    <string name="content_project_details_averageRatingValue">Average Rating Value</string>
+    <string name="fragment_favorites_nobody">You need to favorite some projects</string>
+    <string name="fragment_following_nobody">You need to follow some people</string>
+    <string name="fragment_gallery_nobody">You need to create some projects</string>
+    <string name="fragment_search_no_search">Perform a search to find results</string>
+    <string name="fragment_search_result_no_results">No results have been found</string>
+    <string name="fragment_search_result_error">An error has occurred during the search</string>
+    <string name="fragment_search_result_no_data">No response from the search has been found</string>
+    <string name="item_gallery_title">Title</string>
+    <string name="zero_text">0</string>
 
 </resources>

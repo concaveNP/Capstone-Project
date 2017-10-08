@@ -532,7 +532,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
                 Paint borderPaint = new Paint();
                 borderPaint.setStyle(Paint.Style.STROKE);
                 borderPaint.setStrokeWidth(borderWidthHalf*2);
-                borderPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.myapp_accent_700, null));
+                borderPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.myApp_accent_700, null));
 
                 canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquare/2, borderPaint);
 

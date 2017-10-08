@@ -278,7 +278,7 @@ public class UserDetailsFragment extends BaseFragment {
         if (mUserModel != null) {
 
             // The follow/unfollow toggle button
-            final ToggleButton followButton = getActivity().findViewById(R.id.follow_unfollow_toggleButton);
+            final ToggleButton followButton = getActivity().findViewById(R.id.follow_un_follow_toggleButton);
 
             // Determine the initial state of the button given the user's list of "following"
             final Map<String, Following> following = mUserModel.getFollowing();

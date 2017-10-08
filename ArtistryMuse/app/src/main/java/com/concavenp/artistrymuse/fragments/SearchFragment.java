@@ -171,7 +171,7 @@ public class SearchFragment extends BaseFragment {
         TabLayout tabLayout = mainView.findViewById(R.id.search_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_nosearch_Flipper)));
+        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_no_search_Flipper)));
 
         return mainView;
 

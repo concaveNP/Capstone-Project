@@ -134,7 +134,7 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
         inspirationButton.setOnClickListener(new ImageButtonListener(ImageType.INSPIRATION.ordinal()));
 
         // Save off the flipper for use in deciding which view to show
-        mFlipper = findViewById(R.id.activity_inpsiration_ViewFlipper);
+        mFlipper = findViewById(R.id.activity_inspiration_ViewFlipper);
 
         // Extract the UID(s) from the Activity parameters
         Intent intent = getIntent();
