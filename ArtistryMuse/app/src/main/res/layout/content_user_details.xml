@@ -38,14 +38,13 @@
             android:orientation="vertical"
             android:padding="@dimen/details_margin">
 
-            <include layout="@layout/subcontent_profile_fullname_username" />
+            <include layout="@layout/subcontent_profile_name_username" />
 
             <TextView
                 android:id="@+id/summary_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/content_user_details_text_summary_contentDescription"
-                android:layout_columnSpan="2"
                 android:layout_marginBottom="@dimen/details_margin"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 tools:text="Summary Description" />
@@ -55,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/details_margin"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="3"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/content_user_details_text_count_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="0"
+                        android:text="@string/zero_text"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -94,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/content_user_details_followers_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="0"
+                        android:text="@string/zero_text"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -120,7 +120,7 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/content_user_details_following_contentDescription"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="0"
+                        android:text="@string/zero_text"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -141,11 +141,10 @@
                 android:gravity="center">
 
                 <ToggleButton
-                    android:id="@+id/follow_unfollow_toggleButton"
+                    android:id="@+id/follow_un_follow_toggleButton"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/content_user_details_button_following_contentDescription"
-                    android:text="Button"
                     android:textOff="@string/following_off_text"
                     android:textOn="@string/follow_on_text" />
             </RelativeLayout>
@@ -160,7 +159,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/content_user_details_ratings_contentDescription"
-                    android:text="Average Rating Value"
+                    android:text="@string/content_project_details_averageRatingValue"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </LinearLayout>
@@ -175,7 +174,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/content_user_details_favorited_contentDescription"
-                    android:text="0"
+                    android:text="@string/zero_text"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
@@ -191,8 +190,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/user_details_RecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:nestedScrollingEnabled="false" />
+                android:layout_height="match_parent"/>
+                <!--android:nestedScrollingEnabled="false" />-->
 
         </LinearLayout>
 

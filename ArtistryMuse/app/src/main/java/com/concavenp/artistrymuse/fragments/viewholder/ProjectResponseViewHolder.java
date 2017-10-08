@@ -78,9 +78,9 @@ public class ProjectResponseViewHolder extends BaseViewHolder {
         // Display items to be populated
         final ImageView mainImageView = itemView.findViewById(R.id.main_imageView);
         final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
-        final TextView usernameTextView = itemView.findViewById(R.id.username_textview);
+        final TextView usernameTextView = itemView.findViewById(R.id.username_textView);
         final TextView descriptionTextView = itemView.findViewById(R.id.description_textView);
-        final TextView followedTextView = itemView.findViewById(R.id.followed_textview);
+        final TextView followedTextView = itemView.findViewById(R.id.followed_textView);
         final TextView followingTextView = itemView.findViewById(R.id.views_textView);
 
         // Verify there is data to work with

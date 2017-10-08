@@ -24,9 +24,9 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/myapp_primary_500</item>
-        <item name="colorPrimaryDark">@color/myapp_primary_700</item>
-        <item name="colorAccent">@color/myapp_accent_A700</item>
+        <item name="colorPrimary">@color/myApp_primary_500</item>
+        <item name="colorPrimaryDark">@color/myApp_primary_700</item>
+        <item name="colorAccent">@color/myApp_accent_A700</item>
 
     </style>
 
@@ -37,31 +37,31 @@
     <style name="WidgetListItemTheme" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.Card">
-        <item name="colorPrimary">@color/myapp_primary_300</item>
-        <item name="colorPrimaryDark">@color/myapp_primary_500</item>
-        <item name="colorAccent">@color/myapp_accent_A700</item>
+        <item name="colorPrimary">@color/myApp_primary_300</item>
+        <item name="colorPrimaryDark">@color/myApp_primary_500</item>
+        <item name="colorAccent">@color/myApp_accent_A700</item>
     </style>
 
     <style name="AppTheme.Card.Title">
-        <item name="android:textSize">@dimen/myapp_text_size_card_material</item>
+        <item name="android:textSize">@dimen/myApp_text_size_card_material</item>
         <item name="android:fontFamily">@string/myapp_font_family_headline_material</item>
-        <item name="android:textColor">@color/myapp_dark_on_light_primary_text</item>
+        <item name="android:textColor">@color/myApp_dark_on_light_primary_text</item>
     </style>
 
     <style name="AppTheme.Card.Description">
-        <item name="android:textSize">@dimen/myapp_text_size_card_material</item>
+        <item name="android:textSize">@dimen/myApp_text_size_card_material</item>
         <item name="android:fontFamily">@string/myapp_font_family_headline_material</item>
-        <item name="android:textColor">@color/myapp_dark_on_light_primary_text</item>
+        <item name="android:textColor">@color/myApp_dark_on_light_primary_text</item>
     </style>
 
     <style name="AppTheme.Card.Byline">
-        <item name="android:textSize">@dimen/myapp_text_size_card_material</item>
+        <item name="android:textSize">@dimen/myApp_text_size_card_material</item>
         <item name="android:fontFamily">@string/myapp_font_family_subhead_material</item>
-        <item name="android:textColor">@color/myapp_dark_on_light_secondary_text</item>
+        <item name="android:textColor">@color/myApp_dark_on_light_secondary_text</item>
     </style>
 
     <style name="AppTheme.EditText">
-        <item name="android:paddingTop">@dimen/myapp_text_edge_padding_material</item>
+        <item name="android:paddingTop">@dimen/myApp_text_edge_padding_material</item>
     </style>
 
 </resources>

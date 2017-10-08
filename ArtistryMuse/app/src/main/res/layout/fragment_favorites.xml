@@ -19,29 +19,21 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ViewFlipper
+    android:id="@+id/fragment_favorites_ViewFlipper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.concavenp.artistrymuse.fragments.FavoritesFragment">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ViewFlipper
-        android:id="@+id/fragment_favorites_ViewFlipper"
+    <TextView
+        android:id="@+id/fragment_favorites_nobody_TextView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:contentDescription="@string/fragment_favorites_nobody_contentDescription"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="@dimen/fab_margin"
+        android:text="@string/fragment_favorites_nobody"/>
 
-        <TextView
-            android:id="@+id/fragment_favorites_nobody_TextView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/fragment_favorites_nobody_contentDescription"
-            android:gravity="center_vertical|center_horizontal"
-            android:padding="@dimen/fab_margin"
-            android:text="You need to favorite some projects"/>
+    <include layout="@layout/content_favorites"/>
 
-        <include layout="@layout/content_favorites"/>
-
-    </ViewFlipper>
-
-</FrameLayout>
+</ViewFlipper>

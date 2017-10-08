@@ -46,7 +46,6 @@
                 android:id="@+id/search_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/fragment_search_edit_search_contentDescription"
                 android:hint="@string/search"
                 android:inputType="text"
                 android:imeOptions="actionSearch"
@@ -64,13 +63,13 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/fragment_search_nosearch_Flipper"
+            android:id="@+id/fragment_search_no_search_Flipper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/fragment_search_nosearch_contentDescription"
+            android:contentDescription="@string/fragment_search_no_search_contentDescription"
             android:gravity="center_vertical|center_horizontal"
             android:padding="@dimen/fab_margin"
-            android:text="Perform a search to find results" />
+            android:text="@string/fragment_search_no_search" />
 
         <LinearLayout
             android:id="@+id/fragment_search_results_Flipper"

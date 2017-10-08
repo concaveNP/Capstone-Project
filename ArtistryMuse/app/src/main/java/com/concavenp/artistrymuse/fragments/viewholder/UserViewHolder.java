@@ -80,7 +80,7 @@ public class UserViewHolder extends BaseViewHolder {
         final TextView authorTextView = itemView.findViewById(R.id.author_TextView);
         final TextView usernameTextView = itemView.findViewById(R.id.username_TextView);
         final TextView descriptionTextView = itemView.findViewById(R.id.description_textView);
-        final TextView followedTextView = itemView.findViewById(R.id.followed_textview);
+        final TextView followedTextView = itemView.findViewById(R.id.followed_textView);
         final TextView followingTextView = itemView.findViewById(R.id.views_textView);
 
         final String uid = following.uid;

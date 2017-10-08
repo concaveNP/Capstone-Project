@@ -368,7 +368,7 @@ public class ProjectDetailsFragment extends BaseFragment {
         if (mUserModel != null) {
 
             // The favorite/unfavorite toggle button
-            final ToggleButton favoriteButton = getView().findViewById(R.id.favorite_unfavorite_toggleButton);
+            final ToggleButton favoriteButton = getView().findViewById(R.id.favorite_un_favorite_toggleButton);
 
             // Determine the initial state of the button given the user's list of "favorites"
             final Map<String, Favorite> favorites = mUserModel.getFavorites();

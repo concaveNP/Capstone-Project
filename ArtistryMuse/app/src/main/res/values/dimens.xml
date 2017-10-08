@@ -21,17 +21,17 @@
 <resources>
 
     <!--Material Design specification values-->
-    <dimen name="myapp_text_size_title_material">20sp</dimen>
-    <dimen name="myapp_text_size_card_material">14sp</dimen>
-    <dimen name="myapp_text_size_subhead_material">16sp</dimen>
-    <dimen name="myapp_text_size_medium_material">18sp</dimen>
-    <dimen name="myapp_text_size_body_1_material">14sp</dimen>
-    <dimen name="myapp_text_size_caption_material">12sp</dimen>
-    <dimen name="myapp_text_edge_padding_material">16dp</dimen>
-    <dimen name="myapp_text_common_padding_material">4dp</dimen>
-    <dimen name="myapp_text_uncommon_padding_material">8dp</dimen>
-    <dimen name="myapp_button_padding_material">8dp</dimen>
-    <dimen name="myapp_divider_material">1dp</dimen>
+    <dimen name="myApp_text_size_title_material">20sp</dimen>
+    <dimen name="myApp_text_size_card_material">14sp</dimen>
+    <dimen name="myApp_text_size_subhead_material">16sp</dimen>
+    <dimen name="myApp_text_size_medium_material">18sp</dimen>
+    <dimen name="myApp_text_size_body_1_material">14sp</dimen>
+    <dimen name="myApp_text_size_caption_material">12sp</dimen>
+    <dimen name="myApp_text_edge_padding_material">16dp</dimen>
+    <dimen name="myApp_text_common_padding_material">4dp</dimen>
+    <dimen name="myApp_text_uncommon_padding_material">8dp</dimen>
+    <dimen name="myApp_button_padding_material">8dp</dimen>
+    <dimen name="myApp_divider_material">1dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

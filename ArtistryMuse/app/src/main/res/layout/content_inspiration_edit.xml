@@ -38,7 +38,7 @@
             android:focusableInTouchMode="true"
             android:isScrollContainer="true"
             android:orientation="vertical"
-            android:background="@color/myapp_primary_300"
+            android:background="@color/myApp_primary_300"
             tools:showIn="@layout/activity_inspiration_edit">
 
             <ImageView
@@ -63,7 +63,6 @@
                     android:id="@+id/title_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/inspiration_edit_title_contentDescription"
                     android:hint="@string/title_project"
                     android:inputType="text|textMultiLine"
                     android:maxLength="@integer/maximum_characters_for_title"
@@ -84,7 +83,6 @@
                     android:id="@+id/description_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/inspiration_edit_description_contentDescription"
                     android:hint="@string/description_project"
                     android:inputType="text|textMultiLine"
                     android:maxLength="@integer/maximum_characters_for_summary"

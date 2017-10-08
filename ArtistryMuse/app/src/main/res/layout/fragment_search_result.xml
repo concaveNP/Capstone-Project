@@ -18,67 +18,60 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ViewFlipper
+    android:id="@+id/fragment_search_ViewFlipper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.concavenp.artistrymuse.fragments.SearchResultFragment">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ViewFlipper
-        android:id="@+id/fragment_search_ViewFlipper"
+    <RelativeLayout
+        android:id="@+id/fragment_search_searching_Flipper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center">
 
-        <RelativeLayout
-            android:id="@+id/fragment_search_searching_Flipper"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/fragment_search_result_progressbar_contentDescription"
+            android:indeterminate="true" />
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/fragment_search_result_progressbar_contentDescription"
-                android:indeterminate="true" />
+    </RelativeLayout>
 
-        </RelativeLayout>
+    <TextView
+        android:id="@+id/fragment_search_no_results_Flipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/fragment_search_result_no_results_contentDescription"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="@dimen/fab_margin"
+        android:text="@string/fragment_search_result_no_results" />
 
-        <TextView
-            android:id="@+id/fragment_search_no_results_Flipper"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/fragment_search_result_no_results_contentDescription"
-            android:gravity="center_vertical|center_horizontal"
-            android:padding="@dimen/fab_margin"
-            android:text="No results have been found" />
+    <TextView
+        android:id="@+id/fragment_search_error_Flipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/fragment_search_result_error_contentDescription"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="@dimen/fab_margin"
+        android:text="@string/fragment_search_result_error" />
 
-        <TextView
-            android:id="@+id/fragment_search_error_Flipper"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/fragment_search_result_error_contentDescription"
-            android:gravity="center_vertical|center_horizontal"
-            android:padding="@dimen/fab_margin"
-            android:text="An error has occurred during the search" />
+    <TextView
+        android:id="@+id/fragment_search_no_data_Flipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/fragment_search_result_no_data_contentDescription"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="@dimen/fab_margin"
+        android:text="@string/fragment_search_result_no_data" />
 
-        <TextView
-            android:id="@+id/fragment_search_no_data_Flipper"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/fragment_search_result_no_data_contentDescription"
-            android:gravity="center_vertical|center_horizontal"
-            android:padding="@dimen/fab_margin"
-            android:text="No response from the search has been found" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/search_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarStyle="outsideOverlay" />
-
-    </ViewFlipper>
-
-</FrameLayout>
+</ViewFlipper>
 
 
 

@@ -38,7 +38,7 @@
             android:focusableInTouchMode="true"
             android:isScrollContainer="true"
             android:orientation="vertical"
-            android:background="@color/myapp_primary_300"
+            android:background="@color/myApp_primary_300"
             tools:showIn="@layout/activity_project_edit">
 
             <ImageView
@@ -101,8 +101,8 @@
                 android:layout_margin="@dimen/card_margin"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbarStyle="outsideOverlay"
-                android:nestedScrollingEnabled="false"/>
+                android:scrollbarStyle="outsideOverlay"/>
+                <!--android:nestedScrollingEnabled="false"/>-->
 
         </LinearLayout>
 
