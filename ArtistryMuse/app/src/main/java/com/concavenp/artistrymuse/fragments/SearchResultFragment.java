@@ -153,7 +153,7 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         // Create the adapter that will be used to hold and paginate through the resulting search data
         switch (mType) {
             case USERS: {
-                mUsersAdapter = new SearchResultAdapter<>(UserResponseViewHolder.class, mInteractionListener, R.layout.item_project);
+                mUsersAdapter = new SearchResultAdapter<>(UserResponseViewHolder.class, mInteractionListener, R.layout.item_user);
                 mUsersAdapter.clearData();
                 mRecycler.setAdapter(mUsersAdapter);
                 break;

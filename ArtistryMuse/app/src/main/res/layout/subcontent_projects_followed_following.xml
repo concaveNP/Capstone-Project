@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <!--
   ~ ArtistryMuse is an application that allows artist to share projects
   ~ they have created along with the inspirations behind them for others to
@@ -24,6 +26,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="4dp"
     android:orientation="horizontal"
     android:weightSum="3"
     android:baselineAligned="false">
@@ -41,31 +47,31 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/rating_imageView"
+                android:id="@+id/projects_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/rating_image_contentDescription"
+                android:contentDescription="@string/content_user_details_text_count_contentDescription"
                 android:paddingEnd="4dp"
                 android:paddingStart="4dp"
-                app:srcCompat="@drawable/ic_star_black_24dp" />
+                app:srcCompat="@drawable/ic_work_black_24dp" />
 
             <TextView
-                android:id="@+id/rating_textView"
+                android:id="@+id/project_count_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/rating_image_contentDescription"
-                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/content_user_details_text_count_contentDescription"
+                android:gravity="center_vertical"
                 android:text="@string/zero_text"/>
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/project_count_label_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/rating_image_contentDescription"
+            android:contentDescription="@string/content_user_details_text_count_contentDescription"
             android:gravity="center"
-            android:text="@string/rating_label_imageView" />
+            android:text="@string/projects_label_string"/>
 
     </LinearLayout>
 
@@ -82,30 +88,31 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/views_imageView"
+                android:id="@+id/followed_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/views_image_contentDescription"
+                android:contentDescription="@string/content_user_details_followers_contentDescription"
                 android:paddingEnd="4dp"
                 android:paddingStart="4dp"
-                app:srcCompat="@drawable/ic_remove_red_eye_black_24dp" />
+                app:srcCompat="@drawable/ic_people_black_24dp"/>
 
             <TextView
-                android:id="@+id/views_textView"
+                android:id="@+id/followed_TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/views_image_contentDescription"
-                android:layout_gravity="center_vertical"/>
+                android:contentDescription="@string/content_user_details_followers_contentDescription"
+                android:gravity="center_vertical"
+                android:text="@string/zero_text"/>
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/followed_label_TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/views_image_contentDescription"
+            android:contentDescription="@string/content_user_details_followers_contentDescription"
             android:gravity="center"
-            android:text="@string/views_label_imageView" />
+            android:text="@string/followed_label_string"/>
 
     </LinearLayout>
 
@@ -122,32 +129,34 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/favorited_imageView"
+                android:id="@+id/followers_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/favorited_image_contentDescription"
+                android:contentDescription="@string/content_user_details_following_contentDescription"
                 android:paddingEnd="4dp"
                 android:paddingStart="4dp"
-                app:srcCompat="@drawable/ic_thumb_up_black_24dp" />
+                app:srcCompat="@drawable/ic_people_outline_black_24dp"/>
 
             <TextView
-                android:id="@+id/favorited_textView"
+                android:id="@+id/following_TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/favorited_image_contentDescription"
-                android:layout_gravity="center_vertical"/>
+                android:contentDescription="@string/content_user_details_following_contentDescription"
+                android:gravity="center_vertical"
+                android:text="@string/zero_text"/>
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/following_Label_TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/favorited_image_contentDescription"
+            android:contentDescription="@string/content_user_details_following_contentDescription"
             android:gravity="center"
-            android:text="@string/favorited_label_textView" />
+            android:text="@string/following_label_string"/>
 
     </LinearLayout>
 
 </LinearLayout>
 
+            
