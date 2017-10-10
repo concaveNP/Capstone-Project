@@ -22,14 +22,21 @@ package com.concavenp.artistrymuse.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.interfaces.OnInteractionListener;
@@ -168,6 +175,23 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
 
     }
 
+    protected StorageReference buildStorageReference(String uid, String imageUid, StorageDataType type) {
+
+        StorageReference result = null;
+
+        String fileReference = buildFileReference(uid, imageUid, type);
+
+        // It is possible for the file reference string to be null, so check for it
+        if ((fileReference != null) && (!fileReference.isEmpty())) {
+
+            result = mStorageRef.child(fileReference);
+
+        }
+
+        return result;
+
+    }
+
     protected void populateImageView(String fileReference, ImageView imageView) {
 
         // For safety, check as well (I've seen it) ...
@@ -185,6 +209,29 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
                         .fitCenter()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
+
+            }
+
+        }
+
+    }
+
+    protected void populateCircularImageView(StorageReference storageReference, final ImageView imageView) {
+
+        // For safety, check as well (I've seen it) ...
+        if (imageView != null) {
+
+            // It is possible for the file reference string to be null, so check for it
+            if (storageReference!= null) {
+
+                // Download directly from StorageReference using Glide
+                Glide.with(this)
+                        .using(mImageLoader)
+                        .load(storageReference)
+                        .asBitmap()
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(createBitmapImageViewTarget(imageView));
 
             }
 
@@ -227,6 +274,45 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
 
         }
 
+    }
+
+    private BitmapImageViewTarget createBitmapImageViewTarget(final ImageView imageView) {
+
+        return new BitmapImageViewTarget(imageView) {
+            @Override
+            protected void setResource(Bitmap bitmap) {
+
+                int bitmapWidth = bitmap.getWidth();
+                int bitmapHeight = bitmap.getHeight();
+                int borderWidthHalf = 5;
+                int bitmapSquareWidth = Math.min(bitmapWidth,bitmapHeight);
+                int newBitmapSquare = bitmapSquareWidth+borderWidthHalf;
+
+                Bitmap roundedBitmap = Bitmap.createBitmap(newBitmapSquare,newBitmapSquare, Bitmap.Config.ARGB_8888);
+
+                // Initialize a new Canvas to draw empty bitmap
+                Canvas canvas = new Canvas(roundedBitmap);
+
+                // Calculation to draw bitmap at the circular bitmap center position
+                int x = borderWidthHalf + bitmapSquareWidth - bitmapWidth;
+                int y = borderWidthHalf + bitmapSquareWidth - bitmapHeight;
+
+                canvas.drawBitmap(bitmap, x, y, null);
+
+                // Initializing a new Paint instance to draw circular border
+                Paint borderPaint = new Paint();
+                borderPaint.setStyle(Paint.Style.STROKE);
+                borderPaint.setStrokeWidth(borderWidthHalf*2);
+                borderPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.myApp_accent_700, null));
+
+                canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquare/2, borderPaint);
+
+                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), roundedBitmap);
+                circularBitmapDrawable.setCircular(true);
+                imageView.setImageDrawable(circularBitmapDrawable);
+
+            }
+        };
     }
 
 }

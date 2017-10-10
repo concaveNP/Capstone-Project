@@ -21,11 +21,11 @@
 
 <FrameLayout
     android:id="@+id/content_user_details_FrameLayout"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="4dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <android.support.v4.widget.NestedScrollView
@@ -35,25 +35,52 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="@dimen/details_margin">
+            android:orientation="vertical">
 
             <include layout="@layout/subcontent_profile_name_username" />
 
-            <TextView
-                android:id="@+id/summary_TextView"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/content_user_details_text_summary_contentDescription"
-                android:layout_marginBottom="@dimen/details_margin"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                tools:text="Summary Description" />
+                android:layout_margin="4dp">
+
+                <EditText
+                    android:id="@+id/description_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:hint="@string/title_description_profile"
+                    style="@style/AppTheme.Card.Description"
+                    android:inputType="none|textNoSuggestions|textMultiLine"
+                    android:maxLength="@integer/maximum_characters_for_description"
+                    android:maxLines="@integer/maximum_lines_for_description" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp">
+
+                <EditText
+                    android:id="@+id/summary_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:hint="@string/title_summary_profile"
+                    style="@style/AppTheme.Card.Description"
+                    android:inputType="none|textNoSuggestions|textMultiLine"
+                    android:maxLength="@integer/maximum_characters_for_summary"
+                    android:maxLines="@integer/maximum_lines_for_summary" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <include layout="@layout/subcontent_projects_followed_following" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:gravity="center">
 
                 <ToggleButton
@@ -74,6 +101,7 @@
                     android:id="@+id/ratings_TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
                     android:contentDescription="@string/content_user_details_ratings_contentDescription"
                     android:text="@string/content_project_details_averageRatingValue"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -87,6 +115,7 @@
 
                 <TextView
                     android:id="@+id/favorited_TextView"
+                    android:layout_margin="4dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/content_user_details_favorited_contentDescription"
@@ -95,6 +124,7 @@
 
                 <TextView
                     android:id="@+id/ratings_Label_TextView"
+                    android:layout_margin="4dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/content_user_details_ratings_contentDescription"
@@ -106,8 +136,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/user_details_RecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-                <!--android:nestedScrollingEnabled="false" />-->
+                android:layout_height="match_parent" />
+            <!--android:nestedScrollingEnabled="false" />-->
 
         </LinearLayout>
 

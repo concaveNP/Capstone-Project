@@ -33,6 +33,7 @@ import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.UserInteractionType;
 import com.concavenp.artistrymuse.fragments.adapter.GalleryAdapter;
 import com.concavenp.artistrymuse.model.Following;
@@ -343,17 +344,23 @@ public class UserDetailsFragment extends BaseFragment {
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_user_details_FrameLayout)));
 
             // Set the profile image
-            ImageView profileImageView = getActivity().findViewById(R.id.avatar_ImageView);
-            populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), USERS), profileImageView);
+//            ImageView profileImageView = getActivity().findViewById(R.id.avatar_ImageView);
+//            populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), USERS), profileImageView);
 
-            // Set the name of the author and the username
+            // Set the avatar, name and username of the author
+            ImageView avatarImageView = getActivity().findViewById(R.id.profile_ImageView);
+            populateCircularImageView(buildStorageReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), avatarImageView);
             TextView authorTextView = getActivity().findViewById(R.id.author_TextView);
             populateTextView(mUserInQuestionModel.getName(), authorTextView);
             TextView usernameTextView = getActivity().findViewById(R.id.username_TextView);
             populateTextView(getString(R.string.user_indication_symbol) + mUserInQuestionModel.getUsername(), usernameTextView);
 
-            // Set the summary description
-            TextView summaryTextView = getActivity().findViewById(R.id.summary_TextView);
+            // Set the description
+            TextView descriptionTextView = getActivity().findViewById(R.id.description_editText);
+            populateTextView(mUserInQuestionModel.getDescription(), descriptionTextView );
+
+            // Set the summary
+            TextView summaryTextView = getActivity().findViewById(R.id.summary_editText);
             populateTextView(mUserInQuestionModel.getSummary(), summaryTextView);
 
             // Set the counts for the projects, followed and following
