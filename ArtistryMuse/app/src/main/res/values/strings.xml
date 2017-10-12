@@ -393,6 +393,12 @@
     <string name="content_user_details_ratings_contentDescription">The average rating that Users have given this User</string>
     <string name="content_user_details_favorited_contentDescription">The count of others who have Favorited this User</string>
 
+    <!--CardProjectsFollowedFollowing-->
+    <string name="card_projects_followed_following_contentDescription">This card shows all of the social connections for this User</string>
+
+    <!--CardRatingViewsFavorited-->
+    <string name="card_rating_views_favorited_contentDescription">This card shows all of the social statistics for this User</string>
+
     <!--##/\/\/\/\/\/\/\/\/\##-->
     <!--# contentDescriptions-->
     <!--######################-->
@@ -403,6 +409,8 @@
     <string name="firebase_separator">/</string>
     <string name="firebase_image_type">.jpg</string>
     <string name="users_title">Users</string>
+    <string name="connections_title">Connections</string>
+    <string name="stats_title">Stats</string>
     <string name="projects_title">Projects</string>
     <string name="number_format">%.1f</string>
     <string name="layout_large">layout_large</string>

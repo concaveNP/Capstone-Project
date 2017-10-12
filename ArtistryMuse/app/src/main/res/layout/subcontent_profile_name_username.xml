@@ -25,7 +25,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="4dp"
+    android:layout_margin="@dimen/half_margin"
     android:orientation="horizontal"
     tools:showIn="@layout/content_user_details">
 
@@ -33,7 +33,7 @@
         android:id="@+id/profile_ImageView"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="4dp"
+        android:layout_margin="@dimen/half_margin"
         android:contentDescription="@string/profile_avatar_image_contentDescription"
         app:srcCompat="@drawable/ic_account_circle_black_24dp" />
 

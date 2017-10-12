@@ -343,10 +343,6 @@ public class UserDetailsFragment extends BaseFragment {
 
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_user_details_FrameLayout)));
 
-            // Set the profile image
-//            ImageView profileImageView = getActivity().findViewById(R.id.avatar_ImageView);
-//            populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), USERS), profileImageView);
-
             // Set the avatar, name and username of the author
             ImageView avatarImageView = getActivity().findViewById(R.id.profile_ImageView);
             populateCircularImageView(buildStorageReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), avatarImageView);

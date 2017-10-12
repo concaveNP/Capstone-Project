@@ -26,10 +26,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
-    android:layout_marginStart="4dp"
-    android:layout_marginEnd="4dp"
-    android:layout_marginTop="4dp"
+    android:layout_margin="@dimen/half_margin"
     android:orientation="horizontal"
     android:weightSum="3"
     android:baselineAligned="false">
@@ -51,8 +48,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/content_user_details_text_count_contentDescription"
-                android:paddingEnd="4dp"
-                android:paddingStart="4dp"
+                android:paddingEnd="@dimen/half_margin"
+                android:paddingStart="@dimen/half_margin"
                 app:srcCompat="@drawable/ic_work_black_24dp" />
 
             <TextView
@@ -92,8 +89,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/content_user_details_followers_contentDescription"
-                android:paddingEnd="4dp"
-                android:paddingStart="4dp"
+                android:paddingEnd="@dimen/half_margin"
+                android:paddingStart="@dimen/half_margin"
                 app:srcCompat="@drawable/ic_people_black_24dp"/>
 
             <TextView
@@ -133,8 +130,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/content_user_details_following_contentDescription"
-                android:paddingEnd="4dp"
-                android:paddingStart="4dp"
+                android:paddingEnd="@dimen/half_margin"
+                android:paddingStart="@dimen/half_margin"
                 app:srcCompat="@drawable/ic_people_outline_black_24dp"/>
 
             <TextView

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ ArtistryMuse is an application that allows artist to share projects
+  ~ they have created along with the inspirations behind them for others to
+  ~ discover and enjoy.
+  ~ Copyright (C) 2017  David A. Todd
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/AppTheme.Card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/connections_card_title_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/card_projects_followed_following_contentDescription"
+            android:paddingBottom="@dimen/details_margin"
+            android:paddingEnd="@dimen/details_margin"
+            android:paddingStart="@dimen/details_margin"
+            android:paddingTop="@dimen/card_top_padding"
+            android:text="@string/connections_title" />
+
+        <include layout="@layout/subcontent_projects_followed_following" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/half_margin"
+            android:gravity="center">
+
+            <ToggleButton
+                android:id="@+id/follow_un_follow_toggleButton"
+                android:layout_width="@dimen/toggle_button_width"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/content_user_details_button_following_contentDescription"
+                android:textOff="@string/following_off_text"
+                android:textOn="@string/follow_on_text" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

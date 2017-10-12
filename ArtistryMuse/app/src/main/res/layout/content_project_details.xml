@@ -144,7 +144,7 @@
 
                 <ToggleButton
                     android:id="@+id/favorite_un_favorite_toggleButton"
-                    android:layout_width="200dp"
+                    android:layout_width="@dimen/toggle_button_width"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/project_favorite_button_contentDescription"
                     android:textOff="@string/favorite_off_text"
@@ -192,8 +192,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/project_details_RecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-            <!--android:nestedScrollingEnabled="false"/>-->
+                android:layout_height="match_parent"
+                android:nestedScrollingEnabled="false"/>
 
         </LinearLayout>
 

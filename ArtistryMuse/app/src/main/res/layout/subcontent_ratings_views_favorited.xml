@@ -24,6 +24,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/half_margin"
     android:orientation="horizontal"
     android:weightSum="3"
     android:baselineAligned="false">
@@ -45,8 +46,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/rating_image_contentDescription"
-                android:paddingEnd="4dp"
-                android:paddingStart="4dp"
+                android:paddingEnd="@dimen/half_margin"
+                android:paddingStart="@dimen/half_margin"
                 app:srcCompat="@drawable/ic_star_black_24dp" />
 
             <TextView
@@ -86,8 +87,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/views_image_contentDescription"
-                android:paddingEnd="4dp"
-                android:paddingStart="4dp"
+                android:paddingEnd="@dimen/half_margin"
+                android:paddingStart="@dimen/half_margin"
                 app:srcCompat="@drawable/ic_remove_red_eye_black_24dp" />
 
             <TextView
@@ -126,8 +127,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/favorited_image_contentDescription"
-                android:paddingEnd="4dp"
-                android:paddingStart="4dp"
+                android:paddingEnd="@dimen/half_margin"
+                android:paddingStart="@dimen/half_margin"
                 app:srcCompat="@drawable/ic_thumb_up_black_24dp" />
 
             <TextView
