@@ -35,18 +35,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/card_projects_followed_following_contentDescription"
-            android:paddingBottom="@dimen/details_margin"
             android:paddingEnd="@dimen/details_margin"
             android:paddingStart="@dimen/details_margin"
             android:paddingTop="@dimen/card_top_padding"
             android:text="@string/connections_title" />
 
-        <include layout="@layout/subcontent_projects_followed_following" />
+        <include
+            layout="@layout/subcontent_projects_followed_following"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/details_margin"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/half_margin"
+            android:paddingBottom="@dimen/card_top_padding"
             android:gravity="center">
 
             <ToggleButton

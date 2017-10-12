@@ -41,7 +41,11 @@
             android:paddingTop="@dimen/card_top_padding"
             android:text="@string/stats_title" />
 
-        <include layout="@layout/subcontent_ratings_views_favorited" />
+        <include
+            layout="@layout/subcontent_ratings_views_favorited"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/card_top_padding" />
 
     </LinearLayout>
 
