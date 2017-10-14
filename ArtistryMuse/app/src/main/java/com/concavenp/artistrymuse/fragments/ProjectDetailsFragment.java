@@ -326,8 +326,8 @@ public class ProjectDetailsFragment extends BaseFragment {
                         try {
 
                             // Set the profile image
-                            ImageView profileImageView = mainView.findViewById(R.id.avatar_ImageView);
-                            populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), profileImageView);
+                            ImageView avatarImageView = mainView.findViewById(R.id.profile_ImageView);
+                            populateCircularImageView(buildStorageReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), avatarImageView);
 
                             // Set the name of the author
                             TextView authorTextView = mainView.findViewById(R.id.author_TextView);
@@ -430,18 +430,18 @@ public class ProjectDetailsFragment extends BaseFragment {
 
                             // Update the ratings count for the project in question
                             int ratingCount = mProjectInQuestionModel.getRatingsCount() - 1;
-                            childUpdates.put(getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + Project.RATINGS_COUNT, ratingCount);
+                            childUpdates.put(getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + getString(R.string.firebase_separator) + Project.RATINGS_COUNT, ratingCount);
 
                             // Update the rating for the project in question
                             double newRating = ((mProjectInQuestionModel.getRating() * mProjectInQuestionModel.getRatingsCount()) - favoriteInQuestion.getRating()) / ratingCount;
                             if (Double.isNaN(newRating)) {
                                 newRating = 0.0;
                             }
-                            childUpdates.put(getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + Project.RATING, newRating);
+                            childUpdates.put(getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + getString(R.string.firebase_separator) + Project.RATING, newRating);
 
                             // Update the Favorited count
                             int favoritedCount = mProjectInQuestionModel.getFavorited() - 1;
-                            childUpdates.put(getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + Project.FAVORITED, favoritedCount);
+                            childUpdates.put(getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + getString(R.string.firebase_separator) + Project.FAVORITED, favoritedCount);
 
                             // Update the Project in question
                             mDatabase.updateChildren(childUpdates);
@@ -473,10 +473,21 @@ public class ProjectDetailsFragment extends BaseFragment {
 
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_project_details)));
 
-            // Display items to be populated
-            final TextView descriptionTextView = getView().findViewById(R.id.description_TextView);
+            // Set the title
+            TextView titleTextView = getActivity().findViewById(R.id.name_editText);
+            populateTextView(mProjectInQuestionModel.getName(), titleTextView);
 
-            populateTextView(mProjectInQuestionModel.getDescription(), descriptionTextView);
+            // Set the description
+            TextView descriptionTextView = getActivity().findViewById(R.id.description_editText);
+            populateTextView(mProjectInQuestionModel.getDescription(), descriptionTextView );
+
+            // Set the counts for the rating, views and favorited
+            TextView ratingTextView = getActivity().findViewById(R.id.rating_textView);
+            populateTextView(String.format(getString(R.string.number_format), mProjectInQuestionModel.getRating()), ratingTextView);
+            TextView viewsTextView = getActivity().findViewById(R.id.views_textView);
+            populateTextView(Integer.toString(mProjectInQuestionModel.getViews()), viewsTextView);
+            TextView favoritedTextView = getActivity().findViewById(R.id.favorited_textView);
+            populateTextView(Integer.toString(mProjectInQuestionModel.getFavorited()), favoritedTextView);
 
             // Provide the recycler view the list of project strings to display
             InspirationAdapter mAdapter = new InspirationAdapter(mProjectInQuestionModel.getInspirations(), mInteractionListener);
@@ -493,7 +504,7 @@ public class ProjectDetailsFragment extends BaseFragment {
 
                 // Update the ratings count for the project in question
                 int viewCount = mProjectInQuestionModel.getViews() + 1;
-                childUpdates.put( getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + Project.VIEWS, viewCount);
+                childUpdates.put( getString(R.string.firebase_separator) + PROJECTS.getType() + getString(R.string.firebase_separator) + mUidForDetails + getString(R.string.firebase_separator) + Project.VIEWS, viewCount);
 
                 // Update the Project in question
                 mDatabase.updateChildren(childUpdates);
