@@ -95,7 +95,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/views_image_contentDescription"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:text="@string/zero_text"/>
 
         </LinearLayout>
 
@@ -135,7 +136,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/favorited_image_contentDescription"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:text="@string/zero_text"/>
 
         </LinearLayout>
 
