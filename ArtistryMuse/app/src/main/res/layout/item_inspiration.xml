@@ -23,15 +23,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/card_margin"
+    android:layout_margin="@dimen/half_margin"
     android:clickable="true"
     android:focusable="true"
+    style="@style/AppTheme.Card"
     android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/AppTheme.Card"
         android:orientation="vertical">
 
         <ImageView
