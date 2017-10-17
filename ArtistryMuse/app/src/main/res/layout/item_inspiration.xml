@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:contentDescription="@string/item_inspiration_image_main_contentDescription"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitCenter" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -87,8 +87,8 @@
                     android:enabled="false"
                     style="@style/AppTheme.Card.Description"
                     android:inputType="text|textMultiLine"
-                    android:maxLength="@integer/maximum_characters_for_summary"
-                    android:maxLines="@integer/maximum_lines_for_summary" />
+                    android:maxLength="@integer/maximum_characters_for_description"
+                    android:maxLines="@integer/maximum_lines_for_description" />
 
             </android.support.design.widget.TextInputLayout>
 

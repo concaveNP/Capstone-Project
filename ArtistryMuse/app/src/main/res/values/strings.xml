@@ -404,19 +404,15 @@
     <!--######################-->
 
     <string name="no_details">Select an item to see details</string>
-
-    <!--These values are used with Firebase services-->
     <string name="firebase_separator">/</string>
     <string name="firebase_image_type">.jpg</string>
     <string name="users_title">Users</string>
     <string name="connections_title">Connections</string>
-    <string name="stats_title">Stats</string>
+    <string name="stats_title">Projects Statistics</string>
     <string name="projects_title">Projects</string>
     <string name="number_format">%.1f</string>
     <string name="layout_large">layout_large</string>
     <string name="user_indication_symbol">\@</string>
-
-    <!--The main activity tab titles-->
     <string name="main_tab_following">Following</string>
     <string name="main_tab_favorites">Favorites</string>
     <string name="main_tab_search">Search</string>
@@ -437,6 +433,7 @@
     <string name="fragment_search_result_error">An error has occurred during the search</string>
     <string name="fragment_search_result_no_data">No response from the search has been found</string>
     <string name="item_gallery_title">Title</string>
+    <string name="item_gallery_description">Description</string>
     <string name="zero_text">0</string>
 
 </resources>

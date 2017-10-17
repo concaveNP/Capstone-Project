@@ -20,6 +20,8 @@
 
 package com.concavenp.artistrymuse.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -92,6 +94,11 @@ public class UserDetailsFragment extends BaseFragment {
     private int favoritesTotal = 0;
     private double averageRatingTotal = 0.0;
     private int viewsTotal = 0;
+
+    /**
+     * The Shared Preferences key lookup value for identifying the flip state position.
+     */
+    private static final String FLIP_POSITION = "FLIP_POSITION";
 
     public UserDetailsFragment() {
 
@@ -349,7 +356,14 @@ public class UserDetailsFragment extends BaseFragment {
         // If there is model data then show the details otherwise tell the user to choose something
         if (mUserInQuestionModel != null) {
 
+            // Flip to the data to display
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_user_details_FrameLayout)));
+
+            // Save the current tab location to the Shared Preferences
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(FLIP_POSITION, true);
+            editor.apply();
 
             // Set the avatar, name and username of the author
             ImageView avatarImageView = getActivity().findViewById(R.id.profile_ImageView);
@@ -450,6 +464,12 @@ public class UserDetailsFragment extends BaseFragment {
 
             // There is no data to display so tell the user
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_user_details_TextView)));
+
+            // Save the current tab location to the Shared Preferences
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(FLIP_POSITION, false);
+            editor.apply();
 
         }
 

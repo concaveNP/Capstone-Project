@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <include layout="@layout/subcontent_ratings_views_favorited"/>
+        <include layout="@layout/subcontent_ratings_views_favorited_centered"/>
 
     </LinearLayout>
 

@@ -41,11 +41,12 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:contentDescription="@string/item_project_image_header_contentDescription"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitCenter" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/avatar_ImageView"
