@@ -27,6 +27,7 @@
     android:layout_height="match_parent"
     android:layout_margin="@dimen/half_margin"
     android:orientation="horizontal"
+    android:id="@+id/profile_name_username_Subcontent"
     tools:showIn="@layout/content_user_details">
 
     <ImageView

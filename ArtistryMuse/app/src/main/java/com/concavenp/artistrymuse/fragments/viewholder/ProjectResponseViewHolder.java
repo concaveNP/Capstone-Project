@@ -57,8 +57,6 @@ public class ProjectResponseViewHolder extends BaseViewHolder {
     @Override
     public void bindToPost(Object pojoJson, final OnInteractionListener listener) {
 
-        // TODO: should be able to abstract this code up into the base - the casting part - not the rest
-
         ProjectResponseHit response;
 
         // We are expected an Following object and nothing else
@@ -77,66 +75,21 @@ public class ProjectResponseViewHolder extends BaseViewHolder {
 
         // Display items to be populated
         final ImageView mainImageView = itemView.findViewById(R.id.main_imageView);
-        final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
-        final TextView usernameTextView = itemView.findViewById(R.id.username_textView);
+        final TextView authorTextView = itemView.findViewById(R.id.author_TextView);
+        final TextView usernameTextView = itemView.findViewById(R.id.username_TextView);
         final TextView descriptionTextView = itemView.findViewById(R.id.description_textView);
-        final TextView followedTextView = itemView.findViewById(R.id.followed_textView);
-        final TextView followingTextView = itemView.findViewById(R.id.views_textView);
+        final TextView favoritedTextView = itemView.findViewById(R.id.favorited_textView);
+        final TextView viewsTextView = itemView.findViewById(R.id.views_textView);
+        final TextView ratingTextView = itemView.findViewById(R.id.rating_textView);
 
         // Verify there is data to work with
-        if (response._source != null) {
+        if (response.get_source() != null) {
 
             populateImageView( buildFileReference( response.get_source().getUid(), response.get_source().getMainImageUid(), StorageDataType.PROJECTS), mainImageView);
             populateTextView( response.get_source().getDescription(), descriptionTextView);
-//                    populateTextView(Integer.toString(user.getfollowedCount), followedTextView);
-//                    populateTextView(Integer.toString(user.getfollowing.size()), followingTextView);
-
-
-            mDatabase.child(USERS.getType()).child(response.get_source().ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
-
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    // Perform the JSON to Object conversion
-                    User user = dataSnapshot.getValue(User.class);
-
-                    // Verify there is a user to work with
-                    if (user != null) {
-
-                        populateImageView(buildFileReference(user.uid, user.profileImageUid, StorageDataType.USERS), profileImageView);
-                        populateTextView(user.username, usernameTextView);
-
-                        // Create stable UID for override
-                        final String uid = user.getUid();
-
-                        // Protection
-                        if ((uid != null) && (!uid.isEmpty())) {
-
-                            // Add a click listener to the view in order for the user to get more details about a selected movie
-                            itemView.setOnClickListener(new View.OnClickListener() {
-
-                                @Override
-                                public void onClick(View view) {
-
-                                    // Notify the the listener (aka MainActivity) of the details selection
-                                    listener.onInteractionSelection(uid, null, StorageDataType.USERS, UserInteractionType.DETAILS);
-
-                                }
-
-                            });
-
-                        }
-
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Do nothing
-                }
-
-            });
+            populateTextView( response.get_source().getFavorited(), favoritedTextView);
+            populateTextView( response.get_source().getViews(), viewsTextView);
+            populateTextView( response.get_source().getRating(), ratingTextView);
 
             // Create stable UID for override
             final String uid = response.get_source().getUid();
@@ -151,8 +104,40 @@ public class ProjectResponseViewHolder extends BaseViewHolder {
                     public void onClick(View view) {
 
                         // Notify the the listener (aka MainActivity) of the details selection
-                        listener.onInteractionSelection(uid, null, StorageDataType.USERS, UserInteractionType.DETAILS);
+                        listener.onInteractionSelection(uid, null, StorageDataType.PROJECTS, UserInteractionType.DETAILS);
 
+                    }
+
+                });
+
+            }
+
+            final String ownerUid = response.get_source().getOwnerUid();
+
+            // Protection
+            if ((ownerUid != null) && (!ownerUid.isEmpty())) {
+
+                mDatabase.child(USERS.getType()).child(ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        // Perform the JSON to Object conversion
+                        User user = dataSnapshot.getValue(User.class);
+
+                        // Verify there is a user to work with
+                        if (user != null) {
+
+                            populateTextView(user.getName(), authorTextView);
+                            populateTextView(usernameTextView.getResources().getString(R.string.user_indication_symbol) + user.getUsername(), usernameTextView);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Do nothing
                     }
 
                 });

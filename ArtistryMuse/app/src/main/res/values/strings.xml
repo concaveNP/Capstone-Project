@@ -250,7 +250,8 @@
     <string name="default_application_uid_value"></string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_summary_profile_card">Information</string>
-    <string name="title_description_profile">Description</string>
+    <string name="title_description_profile">User Description</string>
+    <string name="title_description_project">Description</string>
     <string name="title_summary_profile">Summary</string>
     <string name="title_username_profile">Username</string>
     <string name="title_name_profile">Name</string>
@@ -258,8 +259,8 @@
     <string name="rating_label_imageView">Rating</string>
     <string name="views_label_imageView">Views</string>
     <string name="favorited_label_textView">Favorited</string>
-    <string name="title_project">Title</string>
-    <string name="title_inspiration">Title</string>
+    <string name="title_project">Project Title</string>
+    <string name="title_inspiration">Inspiration Title</string>
     <string name="description_project">Description</string>
     <string name="description_inspiration">Description</string>
     <string name="new_project_title">New Project</string>
@@ -409,6 +410,7 @@
     <string name="users_title">Users</string>
     <string name="connections_title">Connections</string>
     <string name="stats_title">Projects Statistics</string>
+    <string name="stats_title_project">Statistics</string>
     <string name="projects_title">Projects</string>
     <string name="number_format">%.1f</string>
     <string name="layout_large">layout_large</string>
@@ -432,7 +434,7 @@
     <string name="fragment_search_result_no_results">No results have been found</string>
     <string name="fragment_search_result_error">An error has occurred during the search</string>
     <string name="fragment_search_result_no_data">No response from the search has been found</string>
-    <string name="item_gallery_title">Title</string>
+    <string name="item_gallery_title">Project Title</string>
     <string name="item_gallery_description">Description</string>
     <string name="zero_text">0</string>
 
