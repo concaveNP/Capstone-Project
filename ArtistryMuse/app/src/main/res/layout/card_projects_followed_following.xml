@@ -21,7 +21,6 @@
 
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/AppTheme.Card"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -32,43 +31,35 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/stats_card_title_textView"
+            android:id="@+id/connections_card_title_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/profile_text_buttons_contentDescription"
-            android:paddingBottom="@dimen/details_margin"
+            android:contentDescription="@string/card_projects_followed_following_contentDescription"
             android:paddingEnd="@dimen/details_margin"
             android:paddingStart="@dimen/details_margin"
             android:paddingTop="@dimen/card_top_padding"
-            android:text="@string/card_profile_images_label" />
+            android:text="@string/connections_title" />
 
-        <android.support.v7.widget.GridLayout
+        <include
+            layout="@layout/subcontent_projects_followed_following"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:columnCount="2"
+            android:layout_margin="@dimen/details_margin"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingBottom="@dimen/card_top_padding"
-            android:paddingEnd="@dimen/details_margin"
-            android:paddingStart="@dimen/details_margin">
+            android:gravity="center">
 
-            <Button
-                android:id="@+id/profile_header_button"
-                android:layout_width="wrap_content"
+            <ToggleButton
+                android:id="@+id/follow_un_follow_toggleButton"
+                android:layout_width="@dimen/toggle_button_width"
                 android:layout_height="wrap_content"
-                app:layout_column="0"
-                app:layout_columnWeight="1"
-                android:contentDescription="@string/profile_button_header_image_contentDescription"
-                android:text="@string/card_profile_header_button" />
-
-            <Button
-                android:id="@+id/profile_profile_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_column="1"
-                app:layout_columnWeight="1"
-                android:contentDescription="@string/profile_button_profile_image_contentDescription"
-                android:text="@string/card_profile_profile_button" />
-
-        </android.support.v7.widget.GridLayout>
+                android:contentDescription="@string/content_user_details_button_following_contentDescription"
+                android:textOff="@string/following_off_text"
+                android:textOn="@string/follow_on_text" />
+        </RelativeLayout>
 
     </LinearLayout>
 

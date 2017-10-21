@@ -216,8 +216,8 @@ public class ProfileActivity extends ImageAppCompatActivity {
 
                                             // Update the views
                                             favoritedTextView.setText(favoritesResult);
-                                            viewsTextView.setText(ratingsResult);
-                                            ratingTextView.setText(viewsResult);
+                                            viewsTextView.setText(viewsResult);
+                                            ratingTextView.setText(ratingsResult);
 
                                         } catch(Exception ex) {
 

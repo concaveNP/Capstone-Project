@@ -83,7 +83,7 @@ public class UserDetailsActivity extends BaseAppCompatActivity  {
         UserDetailsFragment fragment = UserDetailsFragment.newInstance(mUidForDetails);
 
         // Add the fragment to the 'fragment_container' FrameLayout
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_user_details_container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_user_details_container, fragment).commit();
 
     }
 

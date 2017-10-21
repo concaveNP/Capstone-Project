@@ -23,15 +23,17 @@
     android:tag="@string/layout_large"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.concavenp.artistrymuse.fragments.UserListFragment"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.concavenp.artistrymuse.fragments.UserListFragment">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/following_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/half_margin"
+        android:layout_marginStart="@dimen/half_margin"
         android:scrollbarStyle="outsideOverlay"/>
 
 </FrameLayout>

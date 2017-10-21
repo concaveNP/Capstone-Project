@@ -19,21 +19,27 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
-    android:tag="layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.concavenp.artistrymuse.fragments.UserListFragment">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/card_margin"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/following_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/half_margin"
-        android:layout_marginStart="@dimen/half_margin"
-        android:scrollbarStyle="outsideOverlay" />
+    <TextView
+        android:id="@+id/author_TextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/subcontent_text_author_contentDescription"
+        android:text="@string/default_author_text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/username_TextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/subcontent_text_username_contentDescription"
+        android:text="@string/default_username_text"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</LinearLayout>

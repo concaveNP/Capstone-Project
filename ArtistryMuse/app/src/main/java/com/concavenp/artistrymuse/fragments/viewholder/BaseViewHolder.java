@@ -174,7 +174,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
         } else {
 
-            Log.e(TAG, "The TextView object was null, unable to populate");
+            Log.e(TAG, "The TextView object was null, unable to populate 1");
 
         }
 
@@ -241,7 +241,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
         } else {
 
-            Log.e(TAG, "The TextView object was null, unable to populate");
+            Log.e(TAG, "The TextView object was null, unable to populate 2");
 
         }
 

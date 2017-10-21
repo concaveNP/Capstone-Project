@@ -20,9 +20,12 @@
 
 package com.concavenp.artistrymuse.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +36,11 @@ import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
+import com.concavenp.artistrymuse.StorageDataType;
 import com.concavenp.artistrymuse.UserInteractionType;
 import com.concavenp.artistrymuse.fragments.adapter.GalleryAdapter;
 import com.concavenp.artistrymuse.model.Following;
+import com.concavenp.artistrymuse.model.Project;
 import com.concavenp.artistrymuse.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,6 +50,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.concavenp.artistrymuse.StorageDataType.PROJECTS;
 import static com.concavenp.artistrymuse.StorageDataType.USERS;
 
 /**
@@ -83,6 +89,16 @@ public class UserDetailsFragment extends BaseFragment {
     // Listeners for DB value changes
     private ValueEventListener userValueEventListener;
     private ValueEventListener userInQuestionValueEventListener;
+
+    // Values used to build up the stats
+    private int favoritesTotal = 0;
+    private double averageRatingTotal = 0.0;
+    private int viewsTotal = 0;
+
+    /**
+     * The Shared Preferences key lookup value for identifying the flip state position.
+     */
+    private static final String FLIP_POSITION = "FLIP_POSITION";
 
     public UserDetailsFragment() {
 
@@ -340,20 +356,29 @@ public class UserDetailsFragment extends BaseFragment {
         // If there is model data then show the details otherwise tell the user to choose something
         if (mUserInQuestionModel != null) {
 
+            // Flip to the data to display
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.content_user_details_FrameLayout)));
 
-            // Set the profile image
-            ImageView profileImageView = getActivity().findViewById(R.id.avatar_ImageView);
-            populateImageView(buildFileReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), USERS), profileImageView);
+            // Save the current tab location to the Shared Preferences
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(FLIP_POSITION, true);
+            editor.apply();
 
-            // Set the name of the author and the username
+            // Set the avatar, name and username of the author
+            ImageView avatarImageView = getActivity().findViewById(R.id.profile_ImageView);
+            populateCircularImageView(buildStorageReference(mUserInQuestionModel.getUid(), mUserInQuestionModel.getProfileImageUid(), StorageDataType.USERS), avatarImageView);
             TextView authorTextView = getActivity().findViewById(R.id.author_TextView);
             populateTextView(mUserInQuestionModel.getName(), authorTextView);
             TextView usernameTextView = getActivity().findViewById(R.id.username_TextView);
             populateTextView(getString(R.string.user_indication_symbol) + mUserInQuestionModel.getUsername(), usernameTextView);
 
-            // Set the summary description
-            TextView summaryTextView = getActivity().findViewById(R.id.summary_TextView);
+            // Set the description
+            TextView descriptionTextView = getActivity().findViewById(R.id.description_editText);
+            populateTextView(mUserInQuestionModel.getDescription(), descriptionTextView );
+
+            // Set the summary
+            TextView summaryTextView = getActivity().findViewById(R.id.summary_editText);
             populateTextView(mUserInQuestionModel.getSummary(), summaryTextView);
 
             // Set the counts for the projects, followed and following
@@ -364,11 +389,72 @@ public class UserDetailsFragment extends BaseFragment {
             TextView followedTextView = getActivity().findViewById(R.id.followed_TextView);
             populateTextView(Integer.toString(mUserInQuestionModel.getFollowedCount()), followedTextView);
 
-            // Set the favorited number
-            TextView favoritedTextView = getActivity().findViewById(R.id.favorited_TextView);
-            populateTextView(Integer.toString(mUserInQuestionModel.getFavorites().size()), favoritedTextView);
-            TextView ratingsTextView = getActivity().findViewById(R.id.ratings_TextView);
-            populateTextView("hmmm, this needs thought", ratingsTextView);
+            // Set the counts for the rating, views and favorited
+            final TextView ratingTextView = getActivity().findViewById(R.id.rating_textView);
+            final TextView viewsTextView = getActivity().findViewById(R.id.views_textView);
+            final TextView favoritedTextView = getActivity().findViewById(R.id.favorited_textView);
+
+            Map<String, String> projects = mUserInQuestionModel.getProjects();
+
+            // Protection
+            if (projects != null) {
+
+                // Loop over all of the user's projects and tally up the data
+                for (String projectId : projects.values()) {
+
+                    // Protection
+                    if ((projectId != null) && (!projectId.isEmpty())) {
+
+                        mDatabase.child(PROJECTS.getType()).child(projectId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                // Perform the JSON to Object conversion
+                                Project project = dataSnapshot.getValue(Project.class);
+
+                                // Verify there is a user to work with
+                                if (project != null) {
+
+                                    try {
+
+                                        // Get the needed data out from the JSON
+                                        favoritesTotal += project.getFavorited();
+                                        averageRatingTotal = (averageRatingTotal + project.getRating()) / 2;
+                                        viewsTotal += project.getViews();
+
+                                        // Convert to strings
+                                        String favoritesResult = Integer.toString(favoritesTotal);
+                                        String ratingsResult = String.format(getString(R.string.number_format), averageRatingTotal);
+                                        String viewsResult = Integer.toString(viewsTotal);
+
+                                        // Update the views
+                                        populateTextView(favoritesResult, favoritedTextView);
+                                        populateTextView(ratingsResult, ratingTextView);
+                                        populateTextView(viewsResult, viewsTextView);
+
+                                    } catch(Exception ex) {
+
+                                        Log.e(TAG, "Unable to update views due to problems with the data");
+
+                                    }
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                // Do nothing
+                            }
+
+                        });
+
+                    }
+
+                }
+
+            }
 
             // Provide the recycler view the list of project strings to display
             mAdapter = new GalleryAdapter(mUserInQuestionModel.getProjects(), mInteractionListener, UserInteractionType.DETAILS);
@@ -378,6 +464,12 @@ public class UserDetailsFragment extends BaseFragment {
 
             // There is no data to display so tell the user
             mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_user_details_TextView)));
+
+            // Save the current tab location to the Shared Preferences
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(FLIP_POSITION, false);
+            editor.apply();
 
         }
 

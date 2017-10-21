@@ -23,15 +23,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/card_margin"
+    android:layout_margin="@dimen/half_margin"
     android:clickable="true"
     android:focusable="true"
+    style="@style/AppTheme.Card"
     android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/AppTheme.Card"
         android:orientation="vertical">
 
         <ImageView
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:contentDescription="@string/item_inspiration_image_main_contentDescription"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitCenter" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,7 +60,7 @@
                     android:id="@+id/title_textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/item_inspiration_edit_title_contentDescription"
+                    android:hint="@string/title_inspiration"
                     android:ellipsize="end"
                     android:enabled="false"
                     style="@style/AppTheme.Card.Title"
@@ -82,13 +82,13 @@
                     android:id="@+id/description_textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/item_inspiration_edit_summary_contentDescription"
+                    android:hint="@string/description_inspiration"
                     android:ellipsize="end"
                     android:enabled="false"
                     style="@style/AppTheme.Card.Description"
                     android:inputType="text|textMultiLine"
-                    android:maxLength="@integer/maximum_characters_for_summary"
-                    android:maxLines="@integer/maximum_lines_for_summary" />
+                    android:maxLength="@integer/maximum_characters_for_description"
+                    android:maxLines="@integer/maximum_lines_for_description" />
 
             </android.support.design.widget.TextInputLayout>
 

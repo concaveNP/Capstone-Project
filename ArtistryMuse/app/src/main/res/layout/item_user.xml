@@ -19,14 +19,12 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
-    android:layout_marginEnd="4dp"
-    android:layout_marginStart="4dp"
-    android:layout_marginTop="4dp"
+    android:layout_margin="@dimen/half_margin"
     android:clickable="true"
     android:focusable="true"
     style="@style/AppTheme.Card"
@@ -45,7 +43,7 @@
             android:contentDescription="@string/item_user_image_header_contentDescription"
             android:scaleType="fitCenter" />
 
-        <include layout="@layout/subcontent_profile_name_username" />
+        <include layout="@layout/subcontent_name_username" />
 
         <TextView
             android:id="@+id/description_textView"
@@ -55,10 +53,10 @@
             style="@style/AppTheme.Card.Description"
             android:ellipsize="end"
             android:maxLines="3"
-            android:paddingBottom="@dimen/myApp_text_uncommon_padding_material"
-            android:paddingStart="@dimen/myApp_text_edge_padding_material"
-            android:paddingEnd="@dimen/myApp_text_edge_padding_material"
-            android:paddingTop="@dimen/myApp_text_edge_padding_material"
+            android:paddingBottom="@dimen/half_margin"
+            android:paddingStart="@dimen/card_margin"
+            android:paddingEnd="@dimen/card_margin"
+            android:paddingTop="@dimen/half_margin"
             android:minLines="1" />
 
         <View
@@ -70,53 +68,75 @@
 
         <LinearLayout
             android:orientation="horizontal"
+            android:padding="@dimen/half_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/item_user_image_following_contentDescription"
-                    android:paddingBottom="@dimen/myApp_text_uncommon_padding_material"
-                    android:paddingEnd="@dimen/myApp_text_uncommon_padding_material"
-                    android:paddingStart="@dimen/myApp_text_uncommon_padding_material"
-                    android:paddingTop="@dimen/myApp_text_uncommon_padding_material"
-                    app:srcCompat="@drawable/ic_people_black_24dp" />
+                    android:contentDescription="@string/content_user_details_text_count_contentDescription"
+                    android:padding="@dimen/half_margin"
+                    app:srcCompat="@drawable/ic_work_black_24dp" />
 
                 <TextView
+                    android:id="@+id/project_count_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/item_user_text_following_contentDescription"
-                    android:id="@+id/followed_textView"
+                    android:contentDescription="@string/content_user_details_text_count_contentDescription"
+                    android:padding="@dimen/half_margin"
+                    android:text="@string/zero_text"
                     android:layout_gravity="center_vertical" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/item_user_image_followed_contentDescription"
-                    android:paddingBottom="@dimen/myApp_text_uncommon_padding_material"
-                    android:paddingEnd="@dimen/myApp_text_uncommon_padding_material"
-                    android:paddingStart="@dimen/myApp_text_uncommon_padding_material"
-                    android:paddingTop="@dimen/myApp_text_uncommon_padding_material"
-                    app:srcCompat="@drawable/ic_people_outline_black_24dp" />
+                    android:padding="@dimen/half_margin"
+                    app:srcCompat="@drawable/ic_people_black_24dp" />
 
                 <TextView
+                    android:id="@+id/followed_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/item_user_text_followed_contentDescription"
-                    android:id="@+id/views_textView"
+                    android:padding="@dimen/half_margin"
+                    android:text="@string/zero_text"
+                    android:layout_gravity="center_vertical" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/item_user_image_following_contentDescription"
+                    android:padding="@dimen/half_margin"
+                    app:srcCompat="@drawable/ic_people_outline_black_24dp" />
+
+                <TextView
+                    android:id="@+id/following_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/item_user_text_following_contentDescription"
+                    android:padding="@dimen/half_margin"
+                    android:text="@string/zero_text"
                     android:layout_gravity="center_vertical" />
 
             </LinearLayout>

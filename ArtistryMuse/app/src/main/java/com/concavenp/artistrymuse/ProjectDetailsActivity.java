@@ -83,7 +83,7 @@ public class ProjectDetailsActivity extends BaseAppCompatActivity {
         ProjectDetailsFragment fragment = ProjectDetailsFragment.newInstance(mUidForDetails);
 
         // Add the fragment to the 'fragment_container' FrameLayout
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_project_details_container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_project_details_container, fragment).commit();
 
     }
 

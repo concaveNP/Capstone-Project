@@ -23,6 +23,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/myApp_primary_300"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -33,7 +34,6 @@
         android:focusableInTouchMode="true"
         android:isScrollContainer="true"
         android:orientation="vertical"
-        android:background="@color/myApp_primary_300"
         tools:showIn="@layout/activity_profile">
 
         <RelativeLayout
@@ -98,22 +98,31 @@
         </android.support.design.widget.TextInputLayout>
 
         <include
-            layout="@layout/subcontent_ratings_views_favorited"
+            layout="@layout/card_rating_views_favorited"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/details_margin" />
+            android:layout_marginStart="@dimen/card_margin"
+            android:layout_marginEnd="@dimen/card_margin"
+            android:layout_marginTop="@dimen/half_margin"
+            android:layout_marginBottom="@dimen/half_margin" />
 
         <include
             layout="@layout/card_profile_images"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/details_margin" />
+            android:layout_marginStart="@dimen/card_margin"
+            android:layout_marginEnd="@dimen/card_margin"
+            android:layout_marginTop="@dimen/half_margin"
+            android:layout_marginBottom="@dimen/half_margin" />
 
         <include
             layout="@layout/card_profile_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/details_margin" />
+            android:layout_marginStart="@dimen/card_margin"
+            android:layout_marginEnd="@dimen/card_margin"
+            android:layout_marginTop="@dimen/half_margin"
+            android:layout_marginBottom="@dimen/card_margin" />
 
     </LinearLayout>
 

@@ -25,6 +25,10 @@
     <integer name="maximum_characters_for_title">80</integer>
     <integer name="maximum_lines_for_title">2</integer>
 
+    <!--The maximums values for use with text areas that contain description like information-->
+    <integer name="maximum_characters_for_description">80</integer>
+    <integer name="maximum_lines_for_description">2</integer>
+
     <!--The maximums values for use with text areas that contain summary like information-->
     <integer name="maximum_characters_for_summary">1000</integer>
     <integer name="maximum_lines_for_summary">10</integer>
