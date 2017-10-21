@@ -107,6 +107,7 @@ public class UserViewHolder extends BaseViewHolder {
                         populateTextView(user.getFollowedCount(), followedTextView);
                         populateTextView(user.getFollowing().size(), followingTextView);
 
+                        // Create stable UID for override
                         final String userUid = user.getUid();
 
                         // Protection
@@ -145,14 +146,9 @@ public class UserViewHolder extends BaseViewHolder {
     public void clearImages() {
 
         final ImageView headerImageView = itemView.findViewById(R.id.header_ImageView);
-        final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
 
         if (headerImageView != null) {
             Glide.clear(headerImageView);
-        }
-
-        if (profileImageView != null) {
-            Glide.clear(profileImageView);
         }
 
     }

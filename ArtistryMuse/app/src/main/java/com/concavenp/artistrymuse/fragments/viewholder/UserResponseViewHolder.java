@@ -33,6 +33,8 @@ import com.concavenp.artistrymuse.model.UserResponseHit;
 
 /**
  * Created by dave on 12/2/2016.
+ *
+ *
  */
 public class UserResponseViewHolder extends BaseViewHolder {
 
@@ -69,30 +71,23 @@ public class UserResponseViewHolder extends BaseViewHolder {
 
         // Display items to be populated
         final ImageView headerImageView = itemView.findViewById(R.id.header_ImageView);
-        final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
         final TextView authorTextView = itemView.findViewById(R.id.author_TextView);
         final TextView usernameTextView = itemView.findViewById(R.id.username_TextView);
         final TextView descriptionTextView = itemView.findViewById(R.id.description_textView);
+        final TextView projectsTextView = itemView.findViewById(R.id.project_count_textView);
         final TextView followedTextView = itemView.findViewById(R.id.followed_textView);
-        final TextView followingTextView = itemView.findViewById(R.id.views_textView);
+        final TextView followingTextView = itemView.findViewById(R.id.following_textView);
 
         // Verify there is data to work with
-        if (response._source != null) {
+        if (response.get_source() != null) {
 
             populateImageView( buildFileReference( response.get_source().getUid(), response.get_source().getHeaderImageUid(), StorageDataType.USERS), headerImageView);
-            populateImageView( buildFileReference( response.get_source().getUid(), response.get_source().getProfileImageUid(), StorageDataType.USERS), profileImageView);
-            populateTextView( itemView.getResources().getString(R.string.user_indication_symbol) + response.get_source().getUsername(), usernameTextView);
-            populateTextView( response.get_source().getSummary(), authorTextView);
-            populateTextView( response.get_source().getDescription(), descriptionTextView);
-            populateTextView( response.get_source().getFollowedCount(), followedTextView);
-
-            // Protection against bad data
-            try {
-                populateTextView(Integer.toString(response.get_source().getFollowing().size()), followingTextView);
-            }
-            catch (NullPointerException ex) {
-                populateTextView("", followingTextView);
-            }
+            populateTextView(response.get_source().getName(), authorTextView);
+            populateTextView(usernameTextView.getResources().getString(R.string.user_indication_symbol) + response.get_source().getUsername(), usernameTextView);
+            populateTextView(response.get_source().getDescription(), descriptionTextView);
+            populateTextView(response.get_source().getProjects().size(), projectsTextView);
+            populateTextView(response.get_source().getFollowedCount(), followedTextView);
+            populateTextView(response.get_source().getFollowing().size(), followingTextView);
 
             // Create stable UID for override
             final String uid = response.get_source().getUid();

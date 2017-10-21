@@ -78,11 +78,12 @@ public class ProjectViewHolder extends BaseViewHolder {
 
         // Display items to be populated
         final ImageView mainImageView = itemView.findViewById(R.id.main_imageView);
-        final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
-        final TextView usernameTextView = itemView.findViewById(R.id.username_textView);
+        final TextView authorTextView = itemView.findViewById(R.id.author_TextView);
+        final TextView usernameTextView = itemView.findViewById(R.id.username_TextView);
         final TextView descriptionTextView = itemView.findViewById(R.id.description_textView);
-        final TextView followedTextView = itemView.findViewById(R.id.followed_textView);
-        final TextView followingTextView = itemView.findViewById(R.id.views_textView);
+        final TextView favoritedTextView = itemView.findViewById(R.id.favorited_textView);
+        final TextView viewsTextView = itemView.findViewById(R.id.views_textView);
+        final TextView ratingTextView = itemView.findViewById(R.id.rating_textView);
 
         mDatabase.child(PROJECTS.getType()).child(favorite.uid).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -97,9 +98,11 @@ public class ProjectViewHolder extends BaseViewHolder {
 
                     populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.PROJECTS), mainImageView);
                     populateTextView(project.getDescription(), descriptionTextView);
-//                    populateTextView(user.getfollowedCount, followedTextView);
-//                    populateTextView(user.getfollowing.size(), followingTextView);
+                    populateTextView(project.getFavorited(), favoritedTextView);
+                    populateTextView(project.getViews(), viewsTextView);
+                    populateTextView(project.getRating(), ratingTextView);
 
+                    // Create stable UID for override
                     final String uid = project.getUid();
 
                     // Protection
@@ -126,7 +129,7 @@ public class ProjectViewHolder extends BaseViewHolder {
                     if ((ownerUid != null) && (!ownerUid.isEmpty())) {
 
                         // Query for the User specific data (aka the Project Owner)
-                        mDatabase.child(USERS.getType()).child(project.ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        mDatabase.child(USERS.getType()).child(ownerUid).addListenerForSingleValueEvent(new ValueEventListener() {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -137,8 +140,8 @@ public class ProjectViewHolder extends BaseViewHolder {
                                 // Verify there is a user to work with
                                 if (user != null) {
 
-                                    populateImageView(buildFileReference(user.uid, user.profileImageUid, StorageDataType.USERS), profileImageView);
-                                    populateTextView(user.username, usernameTextView);
+                                    populateTextView(user.getName(), authorTextView);
+                                    populateTextView(usernameTextView.getResources().getString(R.string.user_indication_symbol) + user.getUsername(), usernameTextView);
 
                                 }
 
@@ -169,14 +172,9 @@ public class ProjectViewHolder extends BaseViewHolder {
     public void clearImages() {
 
         final ImageView mainImageView = itemView.findViewById(R.id.main_imageView);
-        final ImageView profileImageView = itemView.findViewById(R.id.avatar_ImageView);
 
         if (mainImageView != null) {
             Glide.clear(mainImageView);
-        }
-
-        if (profileImageView != null) {
-            Glide.clear(profileImageView);
         }
 
     }

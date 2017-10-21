@@ -36,7 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/rating_image_contentDescription"
-            android:padding="@dimen/half_margin"
+            android:paddingStart="@dimen/half_margin"
+            android:paddingEnd="@dimen/half_margin"
             app:srcCompat="@drawable/ic_star_black_24dp" />
 
         <TextView
@@ -44,7 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/rating_image_contentDescription"
-            android:padding="@dimen/half_margin"
+            android:paddingStart="@dimen/half_margin"
+            android:paddingEnd="@dimen/half_margin"
             android:text="@string/zero_text"
             android:layout_gravity="center_vertical" />
 
@@ -60,7 +62,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/views_image_contentDescription"
-            android:padding="@dimen/half_margin"
+            android:paddingStart="@dimen/half_margin"
+            android:paddingEnd="@dimen/half_margin"
             app:srcCompat="@drawable/ic_remove_red_eye_black_24dp" />
 
         <TextView
@@ -68,7 +71,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/views_image_contentDescription"
-            android:padding="@dimen/half_margin"
+            android:paddingStart="@dimen/half_margin"
+            android:paddingEnd="@dimen/half_margin"
             android:text="@string/zero_text"
             android:layout_gravity="center_vertical" />
 
@@ -84,7 +88,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/favorited_image_contentDescription"
-            android:padding="@dimen/half_margin"
+            android:paddingStart="@dimen/half_margin"
+            android:paddingEnd="@dimen/half_margin"
             app:srcCompat="@drawable/ic_thumb_up_black_24dp" />
 
         <TextView
@@ -92,7 +97,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/favorited_image_contentDescription"
-            android:padding="@dimen/half_margin"
+            android:paddingStart="@dimen/half_margin"
+            android:paddingEnd="@dimen/half_margin"
             android:text="@string/zero_text"
             android:layout_gravity="center_vertical" />
 

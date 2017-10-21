@@ -59,13 +59,6 @@
             android:paddingTop="@dimen/half_margin"
             android:minLines="1" />
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/myApp_divider_material"
-            android:contentDescription="@string/item_user_divider_contentDescription"
-            android:background="@color/myApp_light_on_dark_dividers"
-            android:visibility="gone" />
-
         <LinearLayout
             android:orientation="horizontal"
             android:padding="@dimen/half_margin"

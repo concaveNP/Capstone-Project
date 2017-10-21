@@ -36,6 +36,7 @@ import android.widget.ViewFlipper;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
+import com.concavenp.artistrymuse.UserInteractionType;
 import com.concavenp.artistrymuse.fragments.adapter.InspirationAdapter;
 import com.concavenp.artistrymuse.model.Favorite;
 import com.concavenp.artistrymuse.model.Project;
@@ -336,6 +337,18 @@ public class ProjectDetailsFragment extends BaseFragment {
                             // Set the username of the author
                             TextView usernameTextView = mainView.findViewById(R.id.username_TextView);
                             populateTextView(getString(R.string.user_indication_symbol) + mUserInQuestionModel.getUsername(), usernameTextView);
+
+                            // Add a click listener to the view in order for the user of the project to be selected
+                            View profileNameUsernameView = mainView.findViewById(R.id.profile_name_username_Subcontent);
+                            profileNameUsernameView .setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    // Notify the the listener (aka MainActivity) of the details selection
+                                    mInteractionListener.onInteractionSelection(mUserInQuestionModel.getUid(), null, StorageDataType.USERS, UserInteractionType.DETAILS);
+
+                                }
+                            });
 
                         } catch (NullPointerException ex) {
 
