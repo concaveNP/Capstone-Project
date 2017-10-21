@@ -21,6 +21,7 @@
 package com.concavenp.artistrymuse.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -67,10 +68,15 @@ public class SearchFragment extends BaseFragment {
     private EditText mSearchEditText;
     private SearchFragmentPagerAdapter mSearchPagerAdapter;
 
-    // This flipper allows the content of the fragment to show the user either the list search
-    // results or a informative message stating that a search needs to be performed to find
-    // results.
+    /**
+     * This flipper allows the content of the fragment to show the user either the list search
+     * results or a informative message stating that a search needs to be performed to find results.
+     */
     private ViewFlipper mFlipper;
+    /**
+     * The Shared Preferences key lookup value for identifying the last used tab position.
+     */
+    private static final String SEARCH_STRING = "SEARCH_STRING";
 
     /**
      * Use this factory method to create a new instance of
@@ -149,8 +155,6 @@ public class SearchFragment extends BaseFragment {
                         }
                     }
 
-
-
                 }
 
                 return false;
@@ -162,14 +166,14 @@ public class SearchFragment extends BaseFragment {
         mFlipper = mainView.findViewById(R.id.fragment_search_ViewFlipper);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = mainView.findViewById(R.id.search_results_viewpager);
+        ViewPager mViewPager = mainView.findViewById(R.id.search_results_viewpager);
         mSearchPagerAdapter = new SearchFragmentPagerAdapter(this, getChildFragmentManager());
-        viewPager.setAdapter(mSearchPagerAdapter);
-        viewPager.setOffscreenPageLimit(mSearchPagerAdapter.getCount());
+        mViewPager.setAdapter(mSearchPagerAdapter);
+        mViewPager.setOffscreenPageLimit(mSearchPagerAdapter.getCount());
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = mainView.findViewById(R.id.search_tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        TabLayout mTabLayout = mainView.findViewById(R.id.search_tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
 
         mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_search_no_search_Flipper)));
 
@@ -211,6 +215,31 @@ public class SearchFragment extends BaseFragment {
 
         @SuppressWarnings("unused")
         void onSearchButtonInteraction(String search);
+
+    }
+
+    @Override
+    public void onStart() {
+
+        super.onStart();
+
+        // Read in the current tab location from the Shared Preferences and select that tab
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String searchString = sharedPref.getString(SEARCH_STRING, "");
+        mSearchEditText.setText(searchString);
+
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        // Save the current tab location to the Shared Preferences
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(SEARCH_STRING, mSearchEditText.getText().toString());
+        editor.apply();
 
     }
 

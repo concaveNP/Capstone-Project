@@ -74,15 +74,12 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
     private SearchResultAdapter<UserResponseHit, UserResponseViewHolder> mUsersAdapter;
     private SearchResultAdapter<ProjectResponseHit,ProjectResponseViewHolder> mProjectsAdapter;
 
-    private RecyclerView mRecycler;
-
     private EndlessRecyclerOnScrollListener mScrollListener;
 
     private ChildEventListener mChildEventListener;
     private DataSnapshot mDataSnapshot;
 
     private String mSearchText;
-    private StaggeredGridLayoutManager mLayoutManager;
 
     // This flipper allows the content of the fragment to show the user either the list search
     // results or a informative message stating that a search needs to be performed to find
@@ -140,14 +137,14 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         mFlipper = mainView.findViewById(R.id.fragment_search_ViewFlipper);
 
         // The widgets that will "view" the search result data contained within their corresponding adapters
-        mRecycler = mainView.findViewById(R.id.search_recycler_view);
+        RecyclerView mRecycler = mainView.findViewById(R.id.search_recycler_view);
 
         // Use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
         mRecycler.setHasFixedSize(true);
 
         // Set up Layout
         int columnCount = getResources().getInteger(R.integer.list_column_count);
-        mLayoutManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecycler.setLayoutManager(mLayoutManager);
 
         // Create the adapter that will be used to hold and paginate through the resulting search data

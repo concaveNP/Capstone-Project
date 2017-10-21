@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.Pair;
+import android.view.ViewGroup;
 
 import com.concavenp.artistrymuse.R;
 import com.concavenp.artistrymuse.StorageDataType;
@@ -32,6 +33,13 @@ import com.concavenp.artistrymuse.fragments.SearchResultFragment;
 
 /**
  * Created by dave on 2/10/2017.
+ *
+ * References:
+ *
+ * Android ViewPager, FragmentPagerAdapter and orientation changes
+ *      - https://medium.com/@roideuniverse/android-viewpager-fragmentpageradapter-and-orientation-changes-256c23bee035
+ * FragmentPagerAdapter - How to handle Orientation Changes?
+ *      - https://stackoverflow.com/questions/17629463/fragmentpageradapter-how-to-handle-orientation-changes
  */
 public class SearchFragmentPagerAdapter extends FragmentPagerAdapter implements SearchFragment.OnSearchButtonListener {
 
@@ -44,7 +52,7 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter implements 
     /**
      * These are the different search results tabs displayed to the user
      */
-    private Pair<String, SearchResultFragment> tabs[];
+    private Pair<String, SearchResultFragment> tabs[] = new Pair[] {null,null};
 
     public SearchFragmentPagerAdapter(Fragment fragment, FragmentManager fm) {
 
@@ -55,6 +63,15 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter implements 
                 new Pair(fragment.getString(R.string.users_title), SearchResultFragment.newInstance(StorageDataType.USERS)),
                 new Pair(fragment.getString(R.string.projects_title), SearchResultFragment.newInstance(StorageDataType.PROJECTS))
         };
+
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+
+        SearchResultFragment fragment = (SearchResultFragment ) super.instantiateItem(container, position);
+        tabs[position] = new Pair(tabs[position].first, fragment);
+        return fragment;
 
     }
 
