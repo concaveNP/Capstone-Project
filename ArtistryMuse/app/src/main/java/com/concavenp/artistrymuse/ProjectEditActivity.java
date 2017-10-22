@@ -29,6 +29,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,7 +84,9 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
     public static final String EXTRA_DATA = "uid_string_data";
 
     private EditText mTitleEditText;
+    private boolean mTitleEditTextDirty = false;
     private EditText mDescriptionEditText;
+    private boolean mDescriptionEditTextDirty = false;
     private RecyclerView mRecycler;
 
     // Members used in the project's image (aka the "main" image for the project)
@@ -113,6 +117,13 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
     }
 
+    private static final String TITLE_STRING = "TITLE_STRING";
+    private static final String NAME_STRING = "NAME_STRING";
+    private static final String DESCRIPTION_STRING = "DESCRIPTION_STRING";
+    private static final String PROJECT_IMAGE_PATH_STRING = "PROJECT_IMAGE_PATH_STRING";
+    private static final String PROJECT_IMAGE_UID_STRING = "PROJECT_IMAGE_UID_STRING";
+    private static final String PROJECT_UID_STRING = "PROJECT_UID_STRING";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -133,7 +144,39 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
         mProjectImageView = findViewById(R.id.project_imageView);
         mTitleEditText = findViewById(R.id.title_editText);
+        mTitleEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+               // Do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mTitleEditTextDirty = true;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Do nothing
+            }
+        });
         mDescriptionEditText = findViewById(R.id.description_editText);
+        mDescriptionEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mDescriptionEditTextDirty = true;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Do nothing
+            }
+        });
 
         mRecycler = findViewById(R.id.inspirations_recycler_view);
         mRecycler.setHasFixedSize(true);
@@ -148,35 +191,69 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
         // Save off the flipper for use in deciding which view to show
         mFlipper = findViewById(R.id.activity_project_ViewFlipper);
 
-        // Extract the UID from the Activity parameters
-        Intent intent = getIntent();
-        mProjectUid = intent.getStringExtra(EXTRA_DATA);
+        if (savedInstanceState != null) {
 
-        // If there is a UID to work with then we are dealing with editing an existing project
-        // otherwise this is a new project and we will need to create a new UID for it.
-        if ((mProjectUid != null) && (!mProjectUid.isEmpty())) {
+            // Activity Title
+            setTitle(savedInstanceState.getString(TITLE_STRING,""));
 
-            // Set the title
-            setTitle(getString(R.string.edit_project_title));
+            // Name
+            if (savedInstanceState.containsKey(NAME_STRING)) {
+                mTitleEditText.setText(savedInstanceState.getString(NAME_STRING,""));
+                mTitleEditTextDirty = true;
+            }
+
+            // Description
+            if (savedInstanceState.containsKey(DESCRIPTION_STRING)) {
+                mDescriptionEditText.setText(savedInstanceState.getString(DESCRIPTION_STRING,""));
+                mDescriptionEditTextDirty = true;
+            }
+
+            // Project Image
+            mProjectImagePath = savedInstanceState.getString(PROJECT_IMAGE_PATH_STRING, "");
+            String projectImageUid = savedInstanceState.getString(PROJECT_IMAGE_UID_STRING, "");
+            if ((mProjectImagePath.isEmpty()) || (projectImageUid.isEmpty())) {
+
+                mProjectImagePath = null;
+                mProjectImageUid = null;
+
+            } else {
+
+                // There is a valid path and UUID to convert from
+                mProjectImageUid = UUID.fromString(projectImageUid);
+
+            }
+
+            // Project UID
+            mProjectUid = savedInstanceState.getString(PROJECT_UID_STRING, UUID.randomUUID().toString());
+
+            // Create and clear a new Project model object to work with
+            createAndDisplayModel();
 
         } else {
 
-            // Set the title
-            setTitle(getString(R.string.new_project_title));
+            // Extract the UID from the Activity parameters
+            Intent intent = getIntent();
+            mProjectUid = intent.getStringExtra(EXTRA_DATA);
 
-            // This is a new project for the user, so we must create a new UID for it
-            mProjectUid = UUID.randomUUID().toString();
+            // If there is a UID to work with then we are dealing with editing an existing project
+            // otherwise this is a new project and we will need to create a new UID for it.
+            if ((mProjectUid != null) && (!mProjectUid.isEmpty())) {
 
-            // Create and clear a new Project model object to work with
-            mProjectModel = new Project();
-            mProjectModel.clear();
+                // Set the title
+                setTitle(getString(R.string.edit_project_title));
 
-            // Set the members according to view of this user
-            mProjectModel.setUid(mProjectUid);
-            mProjectModel.setOwnerUid(getUid());
-            mProjectModel.setCreationDate(new Date().getTime());
+            } else {
 
-            display(mProjectModel);
+                // Set the title
+                setTitle(getString(R.string.new_project_title));
+
+                // This is a new project for the user, so we must create a new UID for it
+                mProjectUid = UUID.randomUUID().toString();
+
+                // Create and clear a new Project model object to work with
+                createAndDisplayModel();
+
+            }
 
         }
 
@@ -196,11 +273,38 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
 
     }
 
+    private void createAndDisplayModel() {
+
+        // Create and clear a new Project model object to work with
+        mProjectModel = new Project();
+        mProjectModel.clear();
+
+        // Set the members according to view of this user
+        mProjectModel.setUid(mProjectUid);
+        mProjectModel.setOwnerUid(getUid());
+        mProjectModel.setCreationDate(new Date().getTime());
+
+        // Display the current data
+        display(mProjectModel);
+
+    }
+
     private void display(Project project) {
 
-        populateTextView(project.getName(), mTitleEditText);
-        populateTextView(project.getDescription(), mDescriptionEditText);
-        populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.PROJECTS), mProjectImageView);
+        // Only update the these values if the User is not actively trying to change them (aka dirty flagged)
+        if (!mTitleEditTextDirty) {
+            populateTextView(project.getName(), mTitleEditText);
+        }
+        if (!mDescriptionEditTextDirty) {
+            populateTextView(project.getDescription(), mDescriptionEditText);
+        }
+
+        // If there is an Image path set then the User is actively changing the image
+        if ((mProjectImagePath == null) || (mProjectImagePath.isEmpty())) {
+            populateImageView(buildFileReference(project.getUid(), project.getMainImageUid(), StorageDataType.PROJECTS), mProjectImageView);
+        } else {
+            populateThumbnailImageView(mProjectImagePath, mProjectImageView);
+        }
 
         Map<String, Inspiration> inspirations = project.getInspirations();
 
@@ -348,12 +452,13 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
         }
 
     }
+
     @Override
     protected void onStart() {
 
         super.onStart();
 
-        // Pull the Inspiration in question info from the Database and keep listening for changes
+        // Pull the Project in question info from the Database and keep listening for changes
         if ((mProjectUid != null) && (!mProjectUid.isEmpty())) {
 
             // Verify there is a title set
@@ -412,7 +517,7 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
                     // Perform the JSON to Object conversion
                     final Project project = dataSnapshot.getValue(Project.class);
 
-                    // Verify there is a user to work with
+                    // Verify there is a Project to work with
                     if (project != null) {
 
                         mProjectModel = project;
@@ -433,6 +538,43 @@ public class ProjectEditActivity extends ImageAppCompatActivity {
         }
 
         return projectInQuestionValueEventListener;
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        super.onSaveInstanceState(outState);
+
+        // Activity title
+        String activityTitle = getTitle().toString();
+        if (!activityTitle.isEmpty()) {
+            outState.putString(TITLE_STRING, activityTitle);
+        }
+
+        // Title
+        String name = mTitleEditText.getText().toString();
+        if ((!name.isEmpty()) && (mTitleEditTextDirty)) {
+            outState.putString(NAME_STRING, name);
+        }
+
+        // Description
+        String description = mDescriptionEditText.getText().toString();
+        if ((!description.isEmpty()) && (mDescriptionEditTextDirty)) {
+            outState.putString(DESCRIPTION_STRING, description);
+        }
+
+        // Project image
+        if ((mProjectImagePath != null) && (!mProjectImagePath.isEmpty())) {
+            outState.putString(PROJECT_IMAGE_PATH_STRING, mProjectImagePath);
+            outState.putString(PROJECT_IMAGE_UID_STRING,mProjectImageUid.toString());
+        }
+
+        // Project UID
+        String projectUid = mProjectUid;
+        if ((projectUid != null) && (!projectUid.isEmpty())) {
+            outState.putString(PROJECT_UID_STRING, projectUid);
+        }
 
     }
 

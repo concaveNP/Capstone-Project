@@ -26,6 +26,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,7 +75,9 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
     public static final String EXTRA_DATA_INSPIRATION = "uid_inspiration_string_data";
 
     private EditText mTitleEditText;
+    private boolean mTitleEditTextDirty = false;
     private EditText mDescriptionEditText;
+    private boolean mDescriptionEditTextDirty = false;
 
     // Members used in the inspiration's image (aka the "main" image for the project)
     private String mInspirationImagePath;
@@ -108,6 +112,14 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
 
     }
 
+    private static final String TITLE_STRING = "TITLE_STRING";
+    private static final String NAME_STRING = "NAME_STRING";
+    private static final String DESCRIPTION_STRING = "DESCRIPTION_STRING";
+    private static final String INSPIRATION_IMAGE_PATH_STRING = "INSPIRATION_IMAGE_PATH_STRING";
+    private static final String INSPIRATION_IMAGE_UID_STRING = "INSPIRATION_IMAGE_UID_STRING";
+    private static final String PROJECT_UID_STRING = "PROJECT_UID_STRING";
+    private static final String INSPIRATION_UID_STRING = "INSPIRATION_UID_STRING";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -128,7 +140,39 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
 
         mInspirationImageView = findViewById(R.id.inspiration_imageView);
         mTitleEditText = findViewById(R.id.title_editText);
+        mTitleEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mTitleEditTextDirty = true;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Do nothing
+            }
+        });
         mDescriptionEditText = findViewById(R.id.description_editText);
+        mDescriptionEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mDescriptionEditTextDirty = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Do nothing
+            }
+        });
 
         Button inspirationButton = findViewById(R.id.inspiration_image_button);
         inspirationButton.setOnClickListener(new ImageButtonListener(ImageType.INSPIRATION.ordinal()));
@@ -136,46 +180,109 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
         // Save off the flipper for use in deciding which view to show
         mFlipper = findViewById(R.id.activity_inspiration_ViewFlipper);
 
-        // Extract the UID(s) from the Activity parameters
-        Intent intent = getIntent();
-        mProjectUid = intent.getStringExtra(EXTRA_DATA_PROJECT);
-        mInspirationUid = intent.getStringExtra(EXTRA_DATA_INSPIRATION);
+        if (savedInstanceState != null) {
 
-        // If there is a UID to work with then we are dealing with editing an existing project
-        // otherwise this is a new project and we will need to create a new UID for it.
-        if ((mInspirationUid != null) && (!mInspirationUid.isEmpty())) {
+            // Activity Title
+            setTitle(savedInstanceState.getString(TITLE_STRING,""));
 
-            // Set the title
-            setTitle(getString(R.string.edit_inspiration_title));
+            // Name
+            if (savedInstanceState.containsKey(NAME_STRING)) {
+                mTitleEditText.setText(savedInstanceState.getString(NAME_STRING,""));
+                mTitleEditTextDirty = true;
+            }
+
+            // Description
+            if (savedInstanceState.containsKey(DESCRIPTION_STRING)) {
+                mDescriptionEditText.setText(savedInstanceState.getString(DESCRIPTION_STRING,""));
+                mDescriptionEditTextDirty = true;
+            }
+
+            // Inspiration Image
+            mInspirationImagePath = savedInstanceState.getString(INSPIRATION_IMAGE_PATH_STRING, "");
+            String inspirationImageUid = savedInstanceState.getString(INSPIRATION_IMAGE_UID_STRING, "");
+            if ((mInspirationImagePath.isEmpty()) || (inspirationImageUid.isEmpty())) {
+
+                mInspirationImagePath = null;
+                mInspirationImageUid = null;
+
+            } else {
+
+                // There is a valid path and UUID to convert from
+                mInspirationImageUid = UUID.fromString(inspirationImageUid);
+
+            }
+
+            // Project UID
+            mProjectUid = savedInstanceState.getString(PROJECT_UID_STRING, UUID.randomUUID().toString());
+
+            // Inspiration UID
+            mInspirationUid = savedInstanceState.getString(INSPIRATION_UID_STRING, UUID.randomUUID().toString());
+
+            // Create and clear a new Project model object to work with
+            createAndDisplayModel();
 
         } else {
 
-            // Set the title
-            setTitle(getString(R.string.new_inspiration_title));
+            // Extract the UID(s) from the Activity parameters
+            Intent intent = getIntent();
+            mProjectUid = intent.getStringExtra(EXTRA_DATA_PROJECT);
+            mInspirationUid = intent.getStringExtra(EXTRA_DATA_INSPIRATION);
 
-            // This is a new inspiration for the project, so we must create a new UID for it
-            mInspirationUid = UUID.randomUUID().toString();
+            // If there is a UID to work with then we are dealing with editing an existing project
+            // otherwise this is a new project and we will need to create a new UID for it.
+            if ((mInspirationUid != null) && (!mInspirationUid.isEmpty())) {
 
-            // Create and clear a new Inspiration model object to work with
-            mInspirationModel = new Inspiration();
-            mInspirationModel.clear();
+                // Set the title
+                setTitle(getString(R.string.edit_inspiration_title));
 
-            // Set the members according to view of this user
-            mInspirationModel.setUid(mInspirationUid);
-            mInspirationModel.setProjectUid(mProjectUid);
-            mInspirationModel.setCreationDate(new Date().getTime());
+            } else {
 
-            display(mInspirationModel);
+                // Set the title
+                setTitle(getString(R.string.new_inspiration_title));
+
+                // This is a new inspiration for the project, so we must create a new UID for it
+                mInspirationUid = UUID.randomUUID().toString();
+
+                // Create and clear a new Inspiration model object to work with
+                createAndDisplayModel();
+
+            }
 
         }
 
     }
 
+    private void createAndDisplayModel() {
+
+        // Create and clear a new Inspiration model object to work with
+        mInspirationModel = new Inspiration();
+        mInspirationModel.clear();
+
+        // Set the members according to view of this user
+        mInspirationModel.setUid(mInspirationUid);
+        mInspirationModel.setProjectUid(mProjectUid);
+        mInspirationModel.setCreationDate(new Date().getTime());
+
+        display(mInspirationModel);
+
+    }
+
     private void display(Inspiration inspiration) {
 
-        populateTextView(inspiration.getName(), mTitleEditText);
-        populateTextView(inspiration.getDescription(), mDescriptionEditText);
-        populateImageView(buildFileReference(mProjectUid, inspiration.getImageUid(), StorageDataType.PROJECTS), mInspirationImageView);
+        // Only update the these values if the User is not actively trying to change them (aka dirty flagged)
+        if (!mTitleEditTextDirty) {
+            populateTextView(inspiration.getName(), mTitleEditText);
+        }
+        if (!mDescriptionEditTextDirty) {
+            populateTextView(inspiration.getDescription(), mDescriptionEditText);
+        }
+
+        // If there is an Image path set then the User is actively changing the image
+        if ((mInspirationImagePath == null) || (mInspirationImagePath.isEmpty())) {
+            populateImageView(buildFileReference(mProjectUid, inspiration.getImageUid(), StorageDataType.PROJECTS), mInspirationImageView);
+        } else {
+            populateThumbnailImageView(mInspirationImagePath, mInspirationImageView);
+        }
 
     }
 
@@ -407,6 +514,49 @@ public class InspirationEditActivity extends ImageAppCompatActivity {
         }
 
         return inspirationInQuestionValueEventListener;
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        super.onSaveInstanceState(outState);
+
+        // Activity title
+        String activityTitle = getTitle().toString();
+        if (!activityTitle.isEmpty()) {
+            outState.putString(TITLE_STRING, activityTitle);
+        }
+
+        // Title
+        String name = mTitleEditText.getText().toString();
+        if ((!name.isEmpty()) && (mTitleEditTextDirty)) {
+            outState.putString(NAME_STRING, name);
+        }
+
+        // Description
+        String description = mDescriptionEditText.getText().toString();
+        if ((!description.isEmpty()) && (mDescriptionEditTextDirty)) {
+            outState.putString(DESCRIPTION_STRING, description);
+        }
+
+        // Inspiration image
+        if ((mInspirationImagePath != null) && (!mInspirationImagePath.isEmpty())) {
+            outState.putString(INSPIRATION_IMAGE_PATH_STRING, mInspirationImagePath);
+            outState.putString(INSPIRATION_IMAGE_UID_STRING, mInspirationImageUid.toString());
+        }
+
+        // Project UID
+        String projectUid = mProjectUid;
+        if ((projectUid != null) && (!projectUid.isEmpty())) {
+            outState.putString(PROJECT_UID_STRING, projectUid);
+        }
+
+        // Inspiration UID
+        String inspirationUid = mInspirationUid;
+        if ((inspirationUid != null) && (!inspirationUid.isEmpty())) {
+            outState.putString(INSPIRATION_UID_STRING, inspirationUid);
+        }
 
     }
 
