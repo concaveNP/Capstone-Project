@@ -90,9 +90,17 @@ public class ProfileActivity extends ImageAppCompatActivity {
 
     // The other widgets making up part of the user's profile
     private EditText mNameEditText;
+    private boolean mNameEditTextDirty = false;
     private EditText mUsernameEditText;
+    private boolean mUsernameEditTextDirty = false;
     private EditText mSummaryEditText;
+    private boolean mSummaryEditTextDirty = false;
     private EditText mDescriptionEditText;
+    private boolean mDescriptionEditTextDirty = false;
+
+    private TextView favoritedTextView;
+    private TextView viewsTextView;
+    private TextView ratingTextView;
 
     // Values used to build up the stats
     private int favoritesTotal = 0;
@@ -115,6 +123,15 @@ public class ProfileActivity extends ImageAppCompatActivity {
         PROFILE
 
     }
+
+    private static final String PROFILE_IMAGE_PATH_STRING = "PROFILE_IMAGE_PATH_STRING";
+    private static final String PROFILE_IMAGE_UID_STRING = "PROFILE_IMAGE_UID_STRING";
+    private static final String HEADER_IMAGE_PATH_STRING = "HEADER_IMAGE_PATH_STRING";
+    private static final String HEADER_IMAGE_UID_STRING = "HEADER_IMAGE_UID_STRING";
+    private static final String NAME_STRING = "NAME_STRING";
+    private static final String USERNAME_STRING = "USERNAME_STRING ";
+    private static final String DESCRIPTION_STRING = "DESCRIPTION_STRING";
+    private static final String SUMMARY_STRING = "SUMMARY_STRING";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,9 +160,9 @@ public class ProfileActivity extends ImageAppCompatActivity {
         mSummaryEditText = findViewById(R.id.summary_editText);
 
         // The "statistical" fields are generated data that is not "saved" by the user
-        final TextView favoritedTextView = findViewById(R.id.favorited_textView);
-        final TextView viewsTextView = findViewById(R.id.views_textView);
-        final TextView ratingTextView = findViewById(R.id.rating_textView);
+        favoritedTextView = findViewById(R.id.favorited_textView);
+        viewsTextView = findViewById(R.id.views_textView);
+        ratingTextView = findViewById(R.id.rating_textView);
 
         Button profileButton = findViewById(R.id.profile_profile_button);
         profileButton.setOnClickListener(new ImageButtonListener(ImageType.PROFILE.ordinal()));
@@ -155,6 +172,74 @@ public class ProfileActivity extends ImageAppCompatActivity {
 
         // Save off the flipper for use in deciding which view to show
         mFlipper = findViewById(R.id.activity_profile_ViewFlipper);
+
+        if (savedInstanceState != null) {
+
+            // Project Image
+            mProfileImagePath = savedInstanceState.getString(PROFILE_IMAGE_PATH_STRING, "");
+            String profileImageUid = savedInstanceState.getString(PROFILE_IMAGE_UID_STRING, "");
+            if ((mProfileImagePath.isEmpty()) || (profileImageUid.isEmpty())) {
+
+                mProfileImagePath = null;
+                mProfileImageUid = null;
+
+            } else {
+
+                // There is a valid path and UUID to convert from
+                mProfileImageUid = UUID.fromString(profileImageUid);
+
+                // Populate from the User's current unsaved change
+                populateThumbnailImageView(mProfileImagePath , mProfileImageView);
+
+            }
+
+            // Header Image
+            mHeaderImagePath = savedInstanceState.getString(HEADER_IMAGE_PATH_STRING, "");
+            String headerImageUid = savedInstanceState.getString(HEADER_IMAGE_UID_STRING, "");
+            if ((mHeaderImagePath.isEmpty()) || (headerImageUid.isEmpty())) {
+
+                mHeaderImagePath = null;
+                mHeaderImageUid = null;
+
+            } else {
+
+                // There is a valid path and UUID to convert from
+                mHeaderImageUid = UUID.fromString(headerImageUid);
+
+            }
+
+            // Name
+            if (savedInstanceState.containsKey(NAME_STRING)) {
+                mNameEditText.setText(savedInstanceState.getString(NAME_STRING,""));
+                mNameEditTextDirty = true;
+            }
+
+            // Username
+            if (savedInstanceState.containsKey(USERNAME_STRING)) {
+                mUsernameEditText.setText(savedInstanceState.getString(USERNAME_STRING,""));
+                mUsernameEditTextDirty = true;
+            }
+
+            // Description
+            if (savedInstanceState.containsKey(DESCRIPTION_STRING)) {
+                mDescriptionEditText.setText(savedInstanceState.getString(DESCRIPTION_STRING,""));
+                mDescriptionEditTextDirty = true;
+            }
+
+            // Summary
+            if (savedInstanceState.containsKey(DESCRIPTION_STRING)) {
+                mSummaryEditText.setText(savedInstanceState.getString(SUMMARY_STRING,""));
+                mSummaryEditTextDirty = true;
+            }
+
+        }
+
+        // Update the display by using DB value if required
+        display();
+
+    }
+
+    private void display() {
 
         // Query for the currently saved user uid via the Saved Preferences
         mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -172,12 +257,35 @@ public class ProfileActivity extends ImageAppCompatActivity {
                     mUser = user;
 
                     // Update the profile details
-                    populateCircularImageView(buildStorageReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), mProfileImageView);
-                    populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), mHeaderImageView);
-                    populateTextView(user.getName(), mNameEditText);
-                    populateTextView(user.getUsername(), mUsernameEditText);
-                    populateTextView(user.getDescription(), mDescriptionEditText);
-                    populateTextView(user.getSummary(), mSummaryEditText);
+
+                    Log.d(TAG, "PRE solution");
+                    // If there is an Image path set then the User is actively changing the image
+                    if ((mProfileImagePath == null) || (mProfileImagePath.isEmpty())) {
+                        Log.d(TAG, "DB solution PROFILE");
+                        populateCircularImageView(buildStorageReference(user.getUid(), user.getProfileImageUid(), StorageDataType.USERS), mProfileImageView);
+                    } else {
+                        Log.d(TAG, "USER solution PROFILE");
+                        populateCircularImageView(mProfileImagePath, mProfileImageView);
+                    }
+                    if ((mHeaderImagePath == null) || (mHeaderImagePath.isEmpty())) {
+                        Log.d(TAG, "DB solution HEADER");
+                        populateImageView(buildFileReference(user.getUid(), user.getHeaderImageUid(), StorageDataType.USERS), mHeaderImageView);
+                    } else {
+                        Log.d(TAG, "USER solution HEADER");
+                        populateImageView(mHeaderImagePath, mHeaderImageView);
+                    }
+                    if (!mNameEditTextDirty) {
+                        populateTextView(user.getName(), mNameEditText);
+                    }
+                    if (!mUsernameEditTextDirty) {
+                        populateTextView(user.getUsername(), mUsernameEditText);
+                    }
+                    if (!mDescriptionEditTextDirty) {
+                        populateTextView(user.getDescription(), mDescriptionEditText);
+                    }
+                    if (!mSummaryEditTextDirty) {
+                        populateTextView(user.getSummary(), mSummaryEditText);
+                    }
 
                     // Initialize the data points before running the numbers
                     favoritesTotal = 0;
@@ -453,5 +561,48 @@ public class ProfileActivity extends ImageAppCompatActivity {
 
         return result;
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Profile image
+        if ((mProfileImagePath != null) && (!mProfileImagePath.isEmpty())) {
+            outState.putString(PROFILE_IMAGE_PATH_STRING, mProfileImagePath);
+            outState.putString(PROFILE_IMAGE_UID_STRING, mProfileImageUid.toString());
+        }
+
+        // Header image
+        if ((mHeaderImagePath != null) && (!mHeaderImagePath.isEmpty())) {
+            outState.putString(HEADER_IMAGE_PATH_STRING, mHeaderImagePath);
+            outState.putString(HEADER_IMAGE_UID_STRING, mHeaderImageUid.toString());
+        }
+
+        // Name
+        String name = mNameEditText.getText().toString();
+        if (!name.isEmpty()) {
+            outState.putString(NAME_STRING,name);
+        }
+
+        // Username
+        String username = mUsernameEditText.getText().toString();
+        if (!username.isEmpty()) {
+            outState.putString(USERNAME_STRING,username);
+        }
+
+        // Description
+        String description = mDescriptionEditText.getText().toString();
+        if (!description.isEmpty()) {
+            outState.putString(DESCRIPTION_STRING,description);
+        }
+
+        // Summary
+        String summary = mSummaryEditText.getText().toString();
+        if (!summary.isEmpty()) {
+            outState.putString(SUMMARY_STRING,summary);
+        }
+
+    }
+
 }
 

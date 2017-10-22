@@ -52,7 +52,7 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter implements 
     /**
      * These are the different search results tabs displayed to the user
      */
-    private Pair<String, SearchResultFragment> tabs[] = new Pair[] {null,null};
+    private Pair<String, SearchResultFragment> tabs[];
 
     public SearchFragmentPagerAdapter(Fragment fragment, FragmentManager fm) {
 

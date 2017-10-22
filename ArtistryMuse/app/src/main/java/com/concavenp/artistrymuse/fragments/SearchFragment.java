@@ -21,8 +21,8 @@
 package com.concavenp.artistrymuse.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
@@ -77,6 +77,7 @@ public class SearchFragment extends BaseFragment {
      * The Shared Preferences key lookup value for identifying the last used tab position.
      */
     private static final String SEARCH_STRING = "SEARCH_STRING";
+    private String mSearchString = "";
 
     /**
      * Use this factory method to create a new instance of
@@ -218,28 +219,35 @@ public class SearchFragment extends BaseFragment {
 
     }
 
+    /**
+     * Save off the User entered search string.
+     *
+     * @param outState - The bundle that will be presented to this fragment upon re-creation
+     */
     @Override
-    public void onStart() {
+    public void onSaveInstanceState(Bundle outState) {
 
-        super.onStart();
+        super.onSaveInstanceState(outState);
 
-        // Read in the current tab location from the Shared Preferences and select that tab
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        String searchString = sharedPref.getString(SEARCH_STRING, "");
-        mSearchEditText.setText(searchString);
+        outState.putString(SEARCH_STRING,mSearchEditText.getText().toString());
 
     }
 
+    /**
+     * Restore the instance data saved.  This includes the User entered search string.
+     *
+     * @param savedInstanceState - The bundle of instance data saved
+     */
     @Override
-    public void onStop() {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
-        super.onStop();
+        super.onActivityCreated(savedInstanceState);
 
-        // Save the current tab location to the Shared Preferences
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(SEARCH_STRING, mSearchEditText.getText().toString());
-        editor.apply();
+        if (savedInstanceState != null) {
+
+            mSearchEditText.setText(savedInstanceState.getString(SEARCH_STRING, ""));
+
+        }
 
     }
 
