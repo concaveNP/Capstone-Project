@@ -50,9 +50,13 @@ public class FollowingFragment extends BaseFragment {
     @SuppressWarnings("unused")
     private static final String TAG = FollowingFragment.class.getSimpleName();
 
-    // This flipper allows the content of the fragment to show the user either the list of people
-    // they are following or message stating they need to follow somebody (list is empty).
+    /**
+     * This flipper allows the content of the fragment to show the user either the list of people
+     * they are following or message stating they need to follow somebody (list is empty).
+     */
     private ViewFlipper mFlipper;
+
+    private ValueEventListener mEventListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -86,10 +90,25 @@ public class FollowingFragment extends BaseFragment {
         // Save off the flipper for use in deciding which view to show
         mFlipper = mainView.findViewById(R.id.fragment_following_ViewFlipper);
 
-        // Refresh the data displayed
-        refresh();
-
         return mainView;
+
+    }
+
+    @Override
+    public void onStart() {
+
+        super.onStart();
+
+        mDatabase.child(USERS.getType()).child(getUid()).addValueEventListener(getListener());
+
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        mDatabase.child(USERS.getType()).child(getUid()).removeEventListener(getListener());
 
     }
 
@@ -97,46 +116,51 @@ public class FollowingFragment extends BaseFragment {
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    @Override
-    public void refresh() {
+    private ValueEventListener getListener() {
 
-        // First check to see if the user is following anybody yet
-        mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        if (mEventListener == null) {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            mEventListener = new ValueEventListener() {
 
-                // Perform the JSON to Object conversion
-                final User user = dataSnapshot.getValue(User.class);
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                // Verify there is a user to work with
-                if (user != null) {
+                    // Perform the JSON to Object conversion
+                    final User user = dataSnapshot.getValue(User.class);
 
-                    Map<String, Following> following = user.getFollowing();
+                    // Verify there is a user to work with
+                    if (user != null) {
 
-                    // Check to see if the user is following anybody
-                    if ((following != null) && (!following.isEmpty())) {
+                        Map<String, Following> following = user.getFollowing();
 
-                        // Yes, the user is following someone, so flip to that view
-                        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.following_frame)));
+                        // Check to see if the user is following anybody
+                        if ((following != null) && (!following.isEmpty())) {
 
-                    }
-                    else {
+                            // Yes, the user is following someone, so flip to that view
+                            mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.following_frame)));
 
-                        // View flip to the "Follow People"
-                        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_following_nobody_TextView)));
+                        }
+                        else {
+
+                            // View flip to the "Follow People"
+                            mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_following_nobody_TextView)));
+
+                        }
+
                     }
 
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Do nothing
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Do nothing
-            }
+            };
 
-        });
+        }
+
+        return mEventListener;
 
     }
 

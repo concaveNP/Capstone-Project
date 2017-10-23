@@ -66,6 +66,8 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
     private FirebaseRecyclerAdapter<Following, UserViewHolder> mAdapter;
     private RecyclerView mRecycler;
 
+    private ValueEventListener mEventListener;
+
     /**
      * Flag that indicates if the user's device should be treated as "large" or not.  The flag will
      * be used to determine how clicks within a list entry of users should handled.
@@ -115,10 +117,25 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecycler.setLayoutManager(staggeredGridLayoutManager);
 
-        // Refresh the data displayed
-        refresh();
-
         return mainView;
+
+    }
+
+    @Override
+    public void onStart() {
+
+        super.onStart();
+
+        mDatabase.child(USERS.getType()).child(getUid()).addValueEventListener(getListener());
+
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        mDatabase.child(USERS.getType()).child(getUid()).removeEventListener(getListener());
 
     }
 
@@ -126,68 +143,72 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    @Override
-    public void refresh() {
+    private ValueEventListener getListener() {
 
-        // First check to see if the user is following anybody yet
-        mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        if (mEventListener == null) {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            mEventListener = new ValueEventListener() {
 
-                // Perform the JSON to Object conversion
-                final User user = dataSnapshot.getValue(User.class);
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                // Verify there is a user to work with
-                if (user != null) {
+                    // Perform the JSON to Object conversion
+                    final User user = dataSnapshot.getValue(User.class);
 
-                    Map<String, Following> following = user.getFollowing();
+                    // Verify there is a user to work with
+                    if (user != null) {
 
-                    // Check to see if the user is following anybody
-                    if ((following != null) && (!following.isEmpty())) {
+                        Map<String, Following> following = user.getFollowing();
 
-                        // Set up FirebaseRecyclerAdapter with the Query
-                        Query postsQuery = getQuery(mDatabase);
-                        mAdapter = new FirebaseRecyclerAdapter<Following, UserViewHolder>(Following.class, R.layout.item_user, UserViewHolder.class, postsQuery) {
+                        // Check to see if the user is following anybody
+                        if ((following != null) && (!following.isEmpty())) {
 
-                            @Override
-                            protected void populateViewHolder(final UserViewHolder viewHolder, final Following model, final int position) {
+                            // Set up FirebaseRecyclerAdapter with the Query
+                            Query postsQuery = getQuery(mDatabase);
+                            mAdapter = new FirebaseRecyclerAdapter<Following, UserViewHolder>(Following.class, R.layout.item_user, UserViewHolder.class, postsQuery) {
 
-                                // Perform the binding based upon being a tablet or phone
-                                if (largeDevice) {
-                                    viewHolder.bindToPost(model, UserListFragment.this);
-                                } else {
-                                    viewHolder.bindToPost(model, mInteractionListener);
+                                @Override
+                                protected void populateViewHolder(final UserViewHolder viewHolder, final Following model, final int position) {
+
+                                    // Perform the binding based upon being a tablet or phone
+                                    if (largeDevice) {
+                                        viewHolder.bindToPost(model, UserListFragment.this);
+                                    } else {
+                                        viewHolder.bindToPost(model, mInteractionListener);
+                                    }
+
                                 }
 
-                            }
+                                @Override
+                                public void onViewRecycled(UserViewHolder holder) {
 
-                            @Override
-                            public void onViewRecycled(UserViewHolder holder) {
+                                    super.onViewRecycled(holder);
 
-                                super.onViewRecycled(holder);
+                                    // Clear out the Glide memory used for the images associated with this ViewHolder
+                                    holder.clearImages();
 
-                                // Clear out the Glide memory used for the images associated with this ViewHolder
-                                holder.clearImages();
+                                }
 
-                            }
+                            };
 
-                        };
+                            mRecycler.setAdapter(mAdapter);
 
-                        mRecycler.setAdapter(mAdapter);
+                        }
 
                     }
 
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Do nothing
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Do nothing
-            }
+            };
 
-        });
+        }
+
+        return mEventListener;
 
     }
 

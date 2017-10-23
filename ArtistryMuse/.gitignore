@@ -3,7 +3,7 @@
 
 ### Android template
 # Built application files
-*.apk
+#*.apk
 *.ap_
 
 # Files for the ART/Dalvik VM
@@ -43,10 +43,10 @@ captures/
 /.idea/libraries
 
 # Keystore files
-*.jks
+#*.jks
 
 # The file containing the various Keys and Secrets used for cloud and services interaction.
 /testData/users/
 /testData/projects/
 /testData/FLICKR_KEYS_and_SECRETS.properties
-/KeyStore/ArtistryMuseUdacity.jks
+#/KeyStore/ArtistryMuseUdacity.jks
