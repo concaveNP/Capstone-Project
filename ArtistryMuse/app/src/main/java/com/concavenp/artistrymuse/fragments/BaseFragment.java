@@ -50,6 +50,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by dave on 3/25/2017.
+ *
+ *
  */
 public abstract class BaseFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -263,7 +265,6 @@ public abstract class BaseFragment extends Fragment implements SharedPreferences
      * A lazy loader of the SharedPreferences.
      *
      * @param context - The context for which to aquire the SharedPreferences
-     * @return - The SharedPreferences
      */
     private void loadSharedPreferences(Context context) {
 
