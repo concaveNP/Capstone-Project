@@ -61,6 +61,12 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
     private FirebaseRecyclerAdapter<Favorite, ProjectViewHolder> mAdapter;
     private RecyclerView mRecycler;
 
+    private ValueEventListener mEventListener;
+
+    /**
+     * Flag that indicates if the user's device should be treated as "large" or not.  The flag will
+     * be used to determine how clicks within a list entry of projects should handled.
+     */
     private boolean largeDevice = false;
 
     /**
@@ -98,7 +104,7 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
             largeDevice = true;
         }
 
-        mRecycler = (RecyclerView) mainView.findViewById(R.id.favorites_recycler_view);
+        mRecycler = mainView.findViewById(R.id.favorites_recycler_view);
         mRecycler.setHasFixedSize(true);
 
         // Set up Layout
@@ -106,78 +112,97 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
         StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecycler.setLayoutManager(sglm);
 
-        // Refresh the data displayed
-        refresh();
-
         return mainView;
+    }
+
+    @Override
+    public void onStart() {
+
+        super.onStart();
+
+        mDatabase.child(USERS.getType()).child(getUid()).addValueEventListener(getListener());
+
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        mDatabase.child(USERS.getType()).child(getUid()).removeEventListener(getListener());
+
     }
 
     /**
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    @Override
-    public void refresh() {
+    private ValueEventListener getListener() {
 
-        // First check to see if the user favorited any projects yet
-        mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        if (mEventListener == null) {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            mEventListener = new ValueEventListener() {
 
-                // Perform the JSON to Object conversion
-                final User user = dataSnapshot.getValue(User.class);
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                // Verify there is a user to work with
-                if (user != null) {
+                    // Perform the JSON to Object conversion
+                    final User user = dataSnapshot.getValue(User.class);
 
-                    Map<String, Favorite> favorites = user.getFavorites();
+                    // Verify there is a user to work with
+                    if (user != null) {
 
-                    // Check to see if the user has any favorites
-                    if ((favorites != null) && (!favorites.isEmpty())) {
+                        Map<String, Favorite> favorites = user.getFavorites();
 
-                        // Set up FirebaseRecyclerAdapter with the Query
-                        Query postsQuery = getQuery(mDatabase);
-                        mAdapter = new FirebaseRecyclerAdapter<Favorite, ProjectViewHolder>(Favorite.class, R.layout.item_project, ProjectViewHolder.class, postsQuery) {
+                        // Check to see if the user has any favorites
+                        if ((favorites != null) && (!favorites.isEmpty())) {
 
-                            @Override
-                            protected void populateViewHolder(final ProjectViewHolder viewHolder, final Favorite model, final int position) {
+                            // Set up FirebaseRecyclerAdapter with the Query
+                            Query postsQuery = getQuery(mDatabase);
+                            mAdapter = new FirebaseRecyclerAdapter<Favorite, ProjectViewHolder>(Favorite.class, R.layout.item_project, ProjectViewHolder.class, postsQuery) {
 
-                                // Perform the binding based upon being a tablet or phone
-                                if (largeDevice) {
-                                    viewHolder.bindToPost(model, ProjectListFragment.this);
-                                } else {
-                                    viewHolder.bindToPost(model, mInteractionListener);
+                                @Override
+                                protected void populateViewHolder(final ProjectViewHolder viewHolder, final Favorite model, final int position) {
+
+                                    // Perform the binding based upon being a tablet or phone
+                                    if (largeDevice) {
+                                        viewHolder.bindToPost(model, ProjectListFragment.this);
+                                    } else {
+                                        viewHolder.bindToPost(model, mInteractionListener);
+                                    }
+
                                 }
 
-                            }
+                                @Override
+                                public void onViewRecycled(ProjectViewHolder holder) {
 
-                            @Override
-                            public void onViewRecycled(ProjectViewHolder holder) {
+                                    super.onViewRecycled(holder);
 
-                                super.onViewRecycled(holder);
+                                    // Clear out the Glide memory used for the images associated with this ViewHolder
+                                    holder.clearImages();
 
-                                // Clear out the Glide memory used for the images associated with this ViewHolder
-                                holder.clearImages();
+                                }
 
-                            }
+                            };
 
-                        };
+                            mRecycler.setAdapter(mAdapter);
 
-                        mRecycler.setAdapter(mAdapter);
+                        }
 
                     }
 
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Do nothing
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Do nothing
-            }
+            };
 
-        });
+        }
+
+        return mEventListener;
 
     }
 

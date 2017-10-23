@@ -59,9 +59,13 @@ public class GalleryFragment extends BaseFragment {
     private FirebaseRecyclerAdapter<String, GalleryViewHolder> mAdapter;
     private RecyclerView mRecycler;
 
-    // This flipper allows the content of the fragment to show the user either the list of the
-    // user's projects or message stating they need to create some projects (list is empty).
+    /**
+     * This flipper allows the content of the fragment to show the user either the list of the
+     * user's projects or message stating they need to create some projects (list is empty).
+     */
     private ViewFlipper mFlipper;
+
+    private ValueEventListener mEventListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -108,80 +112,101 @@ public class GalleryFragment extends BaseFragment {
         return mainView;
     }
 
+    @Override
+    public void onStart() {
+
+        super.onStart();
+
+        mDatabase.child(USERS.getType()).child(getUid()).addValueEventListener(getListener());
+
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+
+        mDatabase.child(USERS.getType()).child(getUid()).removeEventListener(getListener());
+
+    }
+
     /**
      * Performs the work of re-querying the cloud services for data to be displayed.  An adapter
      * is used to translate the data retrieved into the populated displayed view.
      */
-    @Override
-    public void refresh() {
+    private ValueEventListener getListener() {
 
-        // First check to see if the user has any projects yet
-        mDatabase.child(USERS.getType()).child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        if (mEventListener == null) {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            mEventListener = new ValueEventListener() {
 
-                // Perform the JSON to Object conversion
-                final User user = dataSnapshot.getValue(User.class);
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                // Verify there is a user to work with
-                if (user != null) {
+                    // Perform the JSON to Object conversion
+                    final User user = dataSnapshot.getValue(User.class);
 
-                    Map<String, String> projects = user.getProjects();
+                    // Verify there is a user to work with
+                    if (user != null) {
 
-                    // Check to see if the user is following anybody
-                    if ((projects != null) && (!projects.isEmpty())) {
+                        Map<String, String> projects = user.getProjects();
 
-                        // Yes, the user has projects, so flip to that view
-                        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.gallery_recycler_view)));
+                        // Check to see if the user is following anybody
+                        if ((projects != null) && (!projects.isEmpty())) {
 
-                        // Set up FirebaseRecyclerAdapter with the Query
-                        Query postsQuery = getQuery(mDatabase);
-                        mAdapter = new FirebaseRecyclerAdapter<String, GalleryViewHolder>(String.class, R.layout.item_gallery, GalleryViewHolder.class, postsQuery) {
+                            // Yes, the user has projects, so flip to that view
+                            mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.gallery_recycler_view)));
 
-                            @Override
-                            protected void populateViewHolder(final GalleryViewHolder viewHolder, final String uid, final int position) {
+                            // Set up FirebaseRecyclerAdapter with the Query
+                            Query postsQuery = getQuery(mDatabase);
+                            mAdapter = new FirebaseRecyclerAdapter<String, GalleryViewHolder>(String.class, R.layout.item_gallery, GalleryViewHolder.class, postsQuery) {
 
-                                viewHolder.setUserInteractionType(UserInteractionType.EDIT);
-                                viewHolder.bindToPost(uid, mInteractionListener);
+                                @Override
+                                protected void populateViewHolder(final GalleryViewHolder viewHolder, final String uid, final int position) {
 
-                            }
+                                    viewHolder.setUserInteractionType(UserInteractionType.EDIT);
+                                    viewHolder.bindToPost(uid, mInteractionListener);
 
-                            @Override
-                            public void onViewRecycled(GalleryViewHolder holder) {
+                                }
 
-                                super.onViewRecycled(holder);
+                                @Override
+                                public void onViewRecycled(GalleryViewHolder holder) {
 
-                                // Clear out the Glide memory used for the images associated with this ViewHolder
-                                holder.clearImages();
+                                    super.onViewRecycled(holder);
 
-                            }
+                                    // Clear out the Glide memory used for the images associated with this ViewHolder
+                                    holder.clearImages();
 
-                        };
+                                }
 
-                        mRecycler.setAdapter(mAdapter);
+                            };
 
-                    }
-                    else {
+                            mRecycler.setAdapter(mAdapter);
 
-                        // View flip to the Gallery of projects
-                        mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_gallery_nobody_TextView)));
+                        }
+                        else {
+
+                            // View flip to the Gallery of projects
+                            mFlipper.setDisplayedChild(mFlipper.indexOfChild(mFlipper.findViewById(R.id.fragment_gallery_nobody_TextView)));
+                        }
+
                     }
 
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Do nothing
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Do nothing
-            }
+            };
 
-        });
+        }
+
+        return mEventListener;
 
     }
 
-    // TODO: can this method be pulled into a base class - it's used in several other fragments
     private Query getQuery(DatabaseReference databaseReference) {
 
         String userId = getUid();

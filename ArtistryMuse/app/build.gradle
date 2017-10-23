@@ -28,12 +28,20 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     signingConfigs {
         release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
+            keyAlias 'ArtistryMuseUdacity'
+            keyPassword 'ZWam3Bf6TZH6FzW6apNP'
+            storeFile file('../KeyStore/ArtistryMuseUdacity.jks')
+            storePassword '6tS4m6WzyTBQdmyQ9Jbj'
         }
     }
+//    signingConfigs {
+//        release {
+//            keyAlias keystoreProperties['keyAlias']
+//            keyPassword keystoreProperties['keyPassword']
+//            storeFile file(keystoreProperties['storeFile'])
+//            storePassword keystoreProperties['storePassword']
+//        }
+//    }
     compileSdkVersion 26
     buildToolsVersion '26.0.1'
     defaultConfig {
@@ -53,6 +61,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
         }
     }
     productFlavors {
