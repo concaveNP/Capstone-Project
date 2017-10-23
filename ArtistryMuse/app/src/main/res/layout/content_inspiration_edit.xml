@@ -63,7 +63,7 @@
                     android:id="@+id/title_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/title_project"
+                    android:hint="@string/title_inspiration"
                     android:inputType="text|textMultiLine"
                     android:maxLength="@integer/maximum_characters_for_title"
                     android:maxLines="@integer/maximum_lines_for_title" />
