@@ -106,9 +106,6 @@ public class GalleryFragment extends BaseFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mRecycler.setLayoutManager(linearLayoutManager);
 
-        // Refresh the data displayed
-        refresh();
-
         return mainView;
     }
 
