@@ -34,6 +34,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.Settings" parent="Theme.AppCompat.DayNight.DarkActionBar" >
+        <item name="colorPrimary">@color/myApp_primary_500</item>
+        <item name="colorPrimaryDark">@color/myApp_primary_700</item>
+        <item name="colorAccent">@color/myApp_accent_A700</item>
+    </style>
+
     <style name="WidgetListItemTheme" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppTheme.Card">

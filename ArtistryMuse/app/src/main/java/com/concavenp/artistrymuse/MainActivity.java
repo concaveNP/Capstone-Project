@@ -327,17 +327,15 @@ public class MainActivity extends BaseAppCompatActivity implements
             }
             case R.id.action_settings: {
 
-                // User chose the "Settings" item, show the app settings UI...
-                Intent intent = new Intent(this, SettingsActivity.class);
+                Intent modifySettings = new Intent(MainActivity.this,SettingsActivity.class);
 
-                // For now, give the activity some extra parameters that will tell it to use a
-                // specific PreferenceFragment when starting up.  These lines can be removed when
-                // the user preference settings gets more complex and require displaying preference
-                // headers to the user.
-//                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.GeneralPreferenceFragment.class.getName());
-//                intent.putExtra(PreferenceActivity.EXTRA_NO_HEADERS, true);
+                // For now, give the activity some extra parameters that will tell it to use a specific
+                // PreferenceFragment when starting up.  These lines can be removed when the user
+                // preference settings gets more complex and require displaying preference headers to the user.
+                modifySettings.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.GeneralPreferenceFragment.class.getName());
+                modifySettings.putExtra(PreferenceActivity.EXTRA_NO_HEADERS, true);
 
-                startActivity(intent);
+                startActivity(modifySettings);
 
                 // We handled it
                 result = true;

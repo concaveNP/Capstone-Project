@@ -23,26 +23,15 @@ package com.concavenp.artistrymuse;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -56,6 +45,11 @@ import java.util.List;
  * Android Design: Settings</a> for design guidelines and the <a
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
+ *
+ * References:
+ *
+ * Change Activity's theme programmatically
+ *      - https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
@@ -66,23 +60,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
     /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
-     */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
-
-            // For all other preferences, set the summary to the value's
-            // simple string representation.
-            preference.setSummary(stringValue);
-
-            return true;
-        }
-    };
-
-    /**
      * Helper method to determine if the device has an extra-large screen. For
      * example, 10" tablets are extra-large.
      */
@@ -91,27 +68,21 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
 
-    /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
-     * immediately updated upon calling this method. The exact display format is
-     * dependent on the type of preference.
-     *
-     * @see #sBindPreferenceSummaryToValueListener
-     */
-    private static void bindPreferenceSummaryToValue(Preference preference, boolean defaultValue) {
-        // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-
-        // Trigger the listener immediately with the preference's current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getBoolean(preference.getKey(), defaultValue));
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
+
+    }
+
+    @Override
+    public Resources.Theme getTheme() {
+
+        Resources.Theme theme = super.getTheme();
+
+        theme.applyStyle(R.style.AppTheme_Settings, true);
+
+        return theme;
 
     }
 
@@ -177,8 +148,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
 
-
-            bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.media_scanning_key)), true);
+            findPreference(getResources().getString(R.string.media_scanning_key)).setSummary(
+                    getResources().getString(R.string.pref_description_media_scanning));
         }
 
         @Override
