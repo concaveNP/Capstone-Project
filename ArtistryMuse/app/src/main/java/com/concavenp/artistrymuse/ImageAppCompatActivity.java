@@ -22,11 +22,14 @@ package com.concavenp.artistrymuse;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -43,6 +46,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.UUID;
 
 /**
@@ -51,15 +56,14 @@ import java.util.UUID;
  *
  * How to achieve a full-screen dialog as described in material guidelines?
  *      - http://stackoverflow.com/questions/31606871/how-to-achieve-a-full-screen-dialog-as-described-in-material-guidelines
- *
  * Dialog to pick image from gallery or from camera
  *      - http://stackoverflow.com/questions/10165302/dialog-to-pick-image-from-gallery-or-from-camera
- *
  * Taking Photos Simply
  *      - https://developer.android.com/training/camera/photobasics.html
- *
  * Disable auto focus on edit text
  *      - http://stackoverflow.com/questions/7593887/disable-auto-focus-on-edit-text
+ * Context::getExternalFilesDir
+ *      - https://developer.android.com/reference/android/content/Context.html#getExternalFilesDir(java.lang.String)
  */
 @SuppressWarnings("StatementWithEmptyBody")
 public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
@@ -202,6 +206,26 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
 
                     // Save off the values generated from the image creation
                     setSpecificImageData(getType());
+
+                    // If the user has the setting for making the files available outside this app then copy it
+                    // Get the sort type that should be used when requesting data from the movie DB
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                    boolean scanMedia = prefs.getBoolean(getResources().getString(R.string.media_scanning_key), true);
+                    if (scanMedia ) {
+
+                        File file = new File(mImagePath);
+
+                        // Tell the media scanner about the new file so that it is immediately available to the user.
+                        MediaScannerConnection.scanFile(this,
+                                new String[] { file.toString() }, null,
+                                new MediaScannerConnection.OnScanCompletedListener() {
+                                    public void onScanCompleted(String path, Uri uri) {
+                                        Log.i("ExternalStorage", "Scanned " + path + ":");
+                                        Log.i("ExternalStorage", "-> uri=" + uri);
+                                    }
+                                });
+
+                    }
 
                     // Load the captured image into the ImageView widget
                     switch(getRectangleOrCircle(getType())) {
@@ -346,6 +370,43 @@ public abstract class ImageAppCompatActivity extends BaseAppCompatActivity {
         return ImageShape.IMAGE_SHAPE_RECTANGLE;
 
     }
+
+//    private class ProcessPrivateToPublic extends AsyncTask<File, Void, Void> {
+//
+//        @Override
+//        protected Void doInBackground(File... file) {
+//            try {
+//                // Very simple code to copy a picture from the application's
+//                // resource into the external file.  Note that this code does
+//                // no error checking, and assumes the picture is small (does not
+//                // try to copy it in chunks).  Note that if external storage is
+//                // not currently mounted this will silently fail.
+//                InputStream is = getResources().openRawResource(R.drawable.balloons);
+//                OutputStream os = new FileOutputStream(file);
+//                byte[] data = new byte[is.available()];
+//                is.read(data);
+//                os.write(data);
+//                is.close();
+//                os.close();
+//
+//                // Tell the media scanner about the new file so that it is
+//                // immediately available to the user.
+//                MediaScannerConnection.scanFile(this,
+//                        new String[] { file.toString() }, null,
+//                        new MediaScannerConnection.OnScanCompletedListener() {
+//                            public void onScanCompleted(String path, Uri uri) {
+//                                Log.i("ExternalStorage", "Scanned " + path + ":");
+//                                Log.i("ExternalStorage", "-> uri=" + uri);
+//                            }
+//                        });
+//            } catch (IOException e) {
+//                // Unable to create file, likely because external storage is
+//                // not currently mounted.
+//                Log.w("ExternalStorage", "Error writing " + file, e);
+//            }
+//        }
+//
+//    }
 
     private class ProcessExternalUriTask extends AsyncTask<ImageView, Void, Void> {
 
