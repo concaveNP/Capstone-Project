@@ -57,6 +57,7 @@ public class FavoritesFragment extends BaseFragment {
     private ViewFlipper mFlipper;
 
     private ValueEventListener mEventListener;
+    private View mainView;
 
     /**
      * Use this factory method to create a new instance of
@@ -85,10 +86,7 @@ public class FavoritesFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View mainView = inflater.inflate(R.layout.fragment_favorites, container, false);
-
-        // Save off the flipper for use in deciding which view to show
-        mFlipper = mainView.findViewById(R.id.fragment_favorites_ViewFlipper);
+        mainView = inflater.inflate(R.layout.fragment_favorites, container, false);
 
         return mainView;
     }
@@ -123,6 +121,9 @@ public class FavoritesFragment extends BaseFragment {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    // Save off the flipper for use in deciding which view to show
+                    mFlipper = mainView.findViewById(R.id.fragment_favorites_ViewFlipper);
 
                     // Perform the JSON to Object conversion
                     final User user = dataSnapshot.getValue(User.class);
