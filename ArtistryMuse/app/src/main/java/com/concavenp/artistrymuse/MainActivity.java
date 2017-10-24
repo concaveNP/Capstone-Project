@@ -27,6 +27,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.MainThread;
@@ -328,6 +329,14 @@ public class MainActivity extends BaseAppCompatActivity implements
 
                 // User chose the "Settings" item, show the app settings UI...
                 Intent intent = new Intent(this, SettingsActivity.class);
+
+                // For now, give the activity some extra parameters that will tell it to use a
+                // specific PreferenceFragment when starting up.  These lines can be removed when
+                // the user preference settings gets more complex and require displaying preference
+                // headers to the user.
+//                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.GeneralPreferenceFragment.class.getName());
+//                intent.putExtra(PreferenceActivity.EXTRA_NO_HEADERS, true);
+
                 startActivity(intent);
 
                 // We handled it
