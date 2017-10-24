@@ -65,7 +65,7 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
 
     private FirebaseRecyclerAdapter<Following, UserViewHolder> mAdapter;
     private RecyclerView mRecycler;
-
+    private View mainView;
     private ValueEventListener mEventListener;
 
     /**
@@ -73,7 +73,6 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
      * be used to determine how clicks within a list entry of users should handled.
      */
     private boolean largeDevice = false;
-
     /**
      * Use this factory method to create a new instance of
      * this fragment.
@@ -101,21 +100,13 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View mainView = inflater.inflate(R.layout.fragment_user_list, container, false);
+        mainView = inflater.inflate(R.layout.fragment_user_list, container, false);
 
         // Store off the layout size using tag values within the view
         String tag = (String)mainView.getTag();
         if (tag.equals(getString(R.string.layout_large))) {
             largeDevice = true;
         }
-
-        mRecycler = mainView.findViewById(R.id.following_recycler_view);
-        mRecycler.setHasFixedSize(true);
-
-        // Set up Layout
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecycler.setLayoutManager(staggeredGridLayoutManager);
 
         return mainView;
 
@@ -151,6 +142,14 @@ public class UserListFragment extends BaseFragment implements OnInteractionListe
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    mRecycler = mainView.findViewById(R.id.following_recycler_view);
+                    mRecycler.setHasFixedSize(true);
+
+                    // Set up Layout
+                    int columnCount = getResources().getInteger(R.integer.list_column_count);
+                    StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+                    mRecycler.setLayoutManager(staggeredGridLayoutManager);
 
                     // Perform the JSON to Object conversion
                     final User user = dataSnapshot.getValue(User.class);

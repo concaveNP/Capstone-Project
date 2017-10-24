@@ -66,6 +66,7 @@ public class GalleryFragment extends BaseFragment {
     private ViewFlipper mFlipper;
 
     private ValueEventListener mEventListener;
+    private View mainView;
 
     /**
      * Use this factory method to create a new instance of
@@ -94,17 +95,8 @@ public class GalleryFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View mainView = inflater.inflate(R.layout.fragment_gallery, container, false);
+        mainView = inflater.inflate(R.layout.fragment_gallery, container, false);
 
-        // Save off the flipper for use in deciding which view to show
-        mFlipper = mainView.findViewById(R.id.fragment_gallery_ViewFlipper);
-
-        mRecycler = mainView.findViewById(R.id.gallery_recycler_view);
-        mRecycler.setHasFixedSize(true);
-
-        // Set up Layout
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        mRecycler.setLayoutManager(linearLayoutManager);
 
         return mainView;
     }
@@ -139,6 +131,16 @@ public class GalleryFragment extends BaseFragment {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    // Save off the flipper for use in deciding which view to show
+                    mFlipper = mainView.findViewById(R.id.fragment_gallery_ViewFlipper);
+
+                    mRecycler = mainView.findViewById(R.id.gallery_recycler_view);
+                    mRecycler.setHasFixedSize(true);
+
+                    // Set up Layout
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                    mRecycler.setLayoutManager(linearLayoutManager);
 
                     // Perform the JSON to Object conversion
                     final User user = dataSnapshot.getValue(User.class);

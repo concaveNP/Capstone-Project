@@ -60,7 +60,7 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
 
     private FirebaseRecyclerAdapter<Favorite, ProjectViewHolder> mAdapter;
     private RecyclerView mRecycler;
-
+    private View mainView;
     private ValueEventListener mEventListener;
 
     /**
@@ -96,21 +96,13 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View mainView = inflater.inflate(R.layout.fragment_project_list, container, false);
+        mainView = inflater.inflate(R.layout.fragment_project_list, container, false);
 
         // Store off the layout size using tag values within the view
         String tag = (String)mainView.getTag();
         if (tag.equals(getString(R.string.layout_large))) {
             largeDevice = true;
         }
-
-        mRecycler = mainView.findViewById(R.id.favorites_recycler_view);
-        mRecycler.setHasFixedSize(true);
-
-        // Set up Layout
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecycler.setLayoutManager(sglm);
 
         return mainView;
     }
@@ -145,6 +137,14 @@ public class ProjectListFragment extends BaseFragment implements OnInteractionLi
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    mRecycler = mainView.findViewById(R.id.favorites_recycler_view);
+                    mRecycler.setHasFixedSize(true);
+
+                    // Set up Layout
+                    int columnCount = getResources().getInteger(R.integer.list_column_count);
+                    StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+                    mRecycler.setLayoutManager(sglm);
 
                     // Perform the JSON to Object conversion
                     final User user = dataSnapshot.getValue(User.class);
