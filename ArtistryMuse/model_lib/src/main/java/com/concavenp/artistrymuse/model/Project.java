@@ -20,6 +20,7 @@
 
 package com.concavenp.artistrymuse.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,9 @@ import java.util.Map;
  * Created by dave on 10/14/2016.
  */
 @SuppressWarnings("unused")
-public class Project {
+public class Project implements Serializable {
+
+    private static final long serialVersionUID = 2006663677075260559L;
 
     public static final String PROJECT = "project";
 

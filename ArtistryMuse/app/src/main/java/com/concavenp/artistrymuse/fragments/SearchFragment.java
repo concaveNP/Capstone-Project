@@ -73,11 +73,12 @@ public class SearchFragment extends BaseFragment {
      * results or a informative message stating that a search needs to be performed to find results.
      */
     private ViewFlipper mFlipper;
+
     /**
      * The Shared Preferences key lookup value for identifying the last used tab position.
      */
     private static final String SEARCH_STRING = "SEARCH_STRING";
-    private String mSearchString = "";
+    private static final String FLIP_ACTIVE_SEARCH_STRING = "FLIP_ACTIVE_SEARCH_STRING";
 
     /**
      * Use this factory method to create a new instance of
@@ -230,6 +231,7 @@ public class SearchFragment extends BaseFragment {
         super.onSaveInstanceState(outState);
 
         outState.putString(SEARCH_STRING,mSearchEditText.getText().toString());
+        outState.putInt(FLIP_ACTIVE_SEARCH_STRING, mFlipper.getDisplayedChild());
 
     }
 
@@ -246,6 +248,7 @@ public class SearchFragment extends BaseFragment {
         if (savedInstanceState != null) {
 
             mSearchEditText.setText(savedInstanceState.getString(SEARCH_STRING, ""));
+            mFlipper.setDisplayedChild(savedInstanceState.getInt(FLIP_ACTIVE_SEARCH_STRING, 0));
 
         }
 

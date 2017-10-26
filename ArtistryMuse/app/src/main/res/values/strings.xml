@@ -284,5 +284,6 @@
     <string name="item_gallery_title">Project Title</string>
     <string name="item_gallery_description">Description</string>
     <string name="zero_text">0</string>
+    <string name="save">Save</string>
 
 </resources>

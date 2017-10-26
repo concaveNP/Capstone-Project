@@ -20,11 +20,15 @@
 
 package com.concavenp.artistrymuse.model;
 
+import java.io.Serializable;
+
 /**
  * Created by dave on 11/3/2016.
  */
 
-public class Following {
+public class Following implements Serializable {
+
+    private static final long serialVersionUID = -4278997784774126194L;
 
     public String uid = "";
     public Long lastUpdatedDate = 0L;

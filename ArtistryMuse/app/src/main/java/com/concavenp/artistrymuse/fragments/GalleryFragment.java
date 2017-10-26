@@ -97,8 +97,8 @@ public class GalleryFragment extends BaseFragment {
         // Inflate the layout for this fragment
         mainView = inflater.inflate(R.layout.fragment_gallery, container, false);
 
-
         return mainView;
+
     }
 
     @Override
