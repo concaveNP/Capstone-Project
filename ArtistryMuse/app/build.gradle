@@ -20,11 +20,6 @@
 
 apply plugin: 'com.android.application'
 
-// Load keystore from a properties file in the root of the project directory
-def keystorePropertiesFile = rootProject.file("keystore.properties");
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 android {
     signingConfigs {
         release {
@@ -34,14 +29,7 @@ android {
             storePassword '6tS4m6WzyTBQdmyQ9Jbj'
         }
     }
-//    signingConfigs {
-//        release {
-//            keyAlias keystoreProperties['keyAlias']
-//            keyPassword keystoreProperties['keyPassword']
-//            storeFile file(keystoreProperties['storeFile'])
-//            storePassword keystoreProperties['storePassword']
-//        }
-//    }
+
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
