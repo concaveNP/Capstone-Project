@@ -89,6 +89,7 @@ public class FavoritesFragment extends BaseFragment {
         mainView = inflater.inflate(R.layout.fragment_favorites, container, false);
 
         return mainView;
+
     }
 
     @Override

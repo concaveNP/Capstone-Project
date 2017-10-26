@@ -20,6 +20,7 @@
 
 package com.concavenp.artistrymuse.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,9 @@ import java.util.List;
  * Created by dave on 1/23/2017.
  */
 
-public class UserHits {
+public class UserHits implements Serializable {
+
+    private static final long serialVersionUID = -7898109408617361289L;
 
     public List<UserResponseHit> hits = new ArrayList<>();
     public float max_score = 0.0f;

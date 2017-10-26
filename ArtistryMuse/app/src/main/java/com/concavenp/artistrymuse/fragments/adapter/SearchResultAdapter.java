@@ -114,6 +114,12 @@ public class SearchResultAdapter<E, VH extends BaseViewHolder> extends RecyclerV
 
     }
 
+    public List<E> getData() {
+
+        return mResultItems;
+
+    }
+
     public void add(List<E> results) {
 
         mResultItems.addAll(results);

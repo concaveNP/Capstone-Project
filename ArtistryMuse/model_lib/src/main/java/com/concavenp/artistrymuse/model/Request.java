@@ -20,11 +20,15 @@
 
 package com.concavenp.artistrymuse.model;
 
+import java.io.Serializable;
+
 /**
  * Created by dave on 12/22/2016.
  */
 @SuppressWarnings("unused")
-public class Request {
+public class Request implements Serializable {
+
+    private static final long serialVersionUID = -1710422237997017591L;
 
     public static final String SEARCH = "search";
     public static final String RESPONSE = "response";

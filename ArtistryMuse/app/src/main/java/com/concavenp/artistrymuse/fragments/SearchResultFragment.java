@@ -21,6 +21,7 @@
 package com.concavenp.artistrymuse.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -50,6 +51,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -80,6 +87,12 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
     private DataSnapshot mDataSnapshot;
 
     private String mSearchText;
+
+    /**
+     * The Shared Preferences key lookup value for identifying the last used tab position.
+     */
+    private static final String SEARCH_STRING = "SEARCH_STRING_";
+    private static final String FLIP_ACTIVE_SEARCH_STRING = "FLIP_ACTIVE_SEARCH_STRING";
 
     // This flipper allows the content of the fragment to show the user either the list search
     // results or a informative message stating that a search needs to be performed to find
@@ -394,6 +407,86 @@ public class SearchResultFragment extends BaseFragment implements SearchFragment
         Query myTopPostsQuery = databaseReference.child(Request.SEARCH).child(Request.RESPONSE).child(uuid.toString());
 
         return myTopPostsQuery;
+
+    }
+
+    /**
+     * Save off the User entered search string.
+     *
+     * @param outState - The bundle that will be presented to this fragment upon re-creation
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(FLIP_ACTIVE_SEARCH_STRING + getDatabaseNameFromType(), mFlipper.getDisplayedChild());
+
+        try {
+            switch (mType) {
+                case USERS: {
+                    List<UserResponseHit> list = mUsersAdapter.getData();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ObjectOutputStream oos = new ObjectOutputStream(baos);
+                    oos.writeObject(list);
+                    outState.putByteArray(SEARCH_STRING + getDatabaseNameFromType(), baos.toByteArray());
+                    break;
+                }
+                case PROJECTS: {
+                    List<ProjectResponseHit> list = mProjectsAdapter.getData();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ObjectOutputStream oos = new ObjectOutputStream(baos);
+                    oos.writeObject(list);
+                    outState.putByteArray(SEARCH_STRING + getDatabaseNameFromType(), baos.toByteArray());
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Restore the instance data saved.  This includes the User entered search string.
+     *
+     * @param savedInstanceState - The bundle of instance data saved
+     */
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+
+            mFlipper.setDisplayedChild(savedInstanceState.getInt(FLIP_ACTIVE_SEARCH_STRING + getDatabaseNameFromType(), 0));
+
+            try {
+                switch (mType) {
+                    case USERS: {
+                        ByteArrayInputStream bais = new ByteArrayInputStream(savedInstanceState.getByteArray(SEARCH_STRING + getDatabaseNameFromType()));
+                        ObjectInputStream ois = new ObjectInputStream(bais);
+                        List<UserResponseHit> list = (List<UserResponseHit>) ois.readObject();
+                        mUsersAdapter.clearData();
+                        mUsersAdapter.add(list);
+                        break;
+                    }
+                    case PROJECTS: {
+                        ByteArrayInputStream bais = new ByteArrayInputStream(savedInstanceState.getByteArray(SEARCH_STRING + getDatabaseNameFromType()));
+                        ObjectInputStream ois = new ObjectInputStream(bais);
+                        List<ProjectResponseHit> list = (List<ProjectResponseHit>) ois.readObject();
+                        mProjectsAdapter.clearData();
+                        mProjectsAdapter.add(list);
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
 
     }
 

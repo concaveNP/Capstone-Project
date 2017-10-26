@@ -20,6 +20,7 @@
 
 package com.concavenp.artistrymuse.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,9 @@ import jdk.nashorn.internal.ir.annotations.Ignore;
  * the DB
  */
 @SuppressWarnings("unused")
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = -3172739934499917068L;
 
     public static final String USER = "user";
 

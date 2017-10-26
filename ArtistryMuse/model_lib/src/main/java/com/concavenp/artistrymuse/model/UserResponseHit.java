@@ -20,11 +20,19 @@
 
 package com.concavenp.artistrymuse.model;
 
+import java.io.Serializable;
+
 /**
  * Created by dave on 12/22/2016.
+ *
+ * Reference:
+ *
+ * How to binary (de)serialize object into/form string?
+ *      - https://stackoverflow.com/questions/13568248/how-to-binary-deserialize-object-into-form-string
  */
+public class UserResponseHit implements Serializable {
 
-public class UserResponseHit {
+    private static final long serialVersionUID = -4807218362343875826L;
 
     public String _id = "";
     public String _index = "";

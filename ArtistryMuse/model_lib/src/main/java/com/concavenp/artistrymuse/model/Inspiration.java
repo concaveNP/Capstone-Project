@@ -20,11 +20,15 @@
 
 package com.concavenp.artistrymuse.model;
 
+import java.io.Serializable;
+
 /**
  * Created by dave on 11/3/2016.
  */
 
-public class Inspiration {
+public class Inspiration implements Serializable {
+
+    private static final long serialVersionUID = 6662967625263592216L;
 
     public Long creationDate = 0L;
     public String description = "";

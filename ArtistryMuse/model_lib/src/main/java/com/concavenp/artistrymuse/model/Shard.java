@@ -20,11 +20,15 @@
 
 package com.concavenp.artistrymuse.model;
 
+import java.io.Serializable;
+
 /**
  * Created by dave on 1/23/2017.
  */
 
-public class Shard {
+public class Shard implements Serializable {
+
+    private static final long serialVersionUID = -3954765837819774567L;
 
     public int failed = 0;
     public int successful = 0;

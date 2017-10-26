@@ -20,6 +20,7 @@
 
 package com.concavenp.artistrymuse.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,9 @@ import java.util.Map;
  * Created by dave on 1/4/2017.
  */
 
-public class Data {
+public class Data implements Serializable {
+
+    private static final long serialVersionUID = -1741008797370373929L;
 
     public Map<String,User> users = new HashMap<>();
     public Map<String,Project> projects = new HashMap<>();
