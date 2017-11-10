@@ -20,13 +20,19 @@
 
 apply plugin: 'com.android.application'
 
+// Load keystore from a properties file in the root of the project directory
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+
     signingConfigs {
         release {
-            keyAlias 'ArtistryMuseUdacity'
-            keyPassword 'ZWam3Bf6TZH6FzW6apNP'
-            storeFile file('../KeyStore/ArtistryMuseUdacity.jks')
-            storePassword '6tS4m6WzyTBQdmyQ9Jbj'
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
 
